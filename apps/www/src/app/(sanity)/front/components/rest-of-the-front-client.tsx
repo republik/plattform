@@ -1,32 +1,19 @@
 'use client'
 
-import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
-import GridTeaser from '@/app/(sanity)/components/teaser/grid'
-import { css } from '@republik/theme/css'
+import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
+import { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
-
-const gridStyle = css({
-  gridColumn: 'breakout',
-  display: 'grid',
-  gridTemplateColumns: '1fr',
-  md: { gridTemplateColumns: 'repeat(2, 1fr)' },
-  lg: { gridTemplateColumns: 'repeat(3, 1fr)' },
-  columnGap: '4',
-  rowGap: '12',
-})
 
 export function RestOfTheFrontClient({
   initialTeasers,
   pageSize,
   loadMoreAction,
 }: {
-  initialTeasers: TeaserListItemType[]
+  initialTeasers: TeaserLargeFragmentType[]
   pageSize: number
-  // returns the next page given the current offset
-  loadMoreAction: (offset: number) => Promise<TeaserListItemType[]>
+  loadMoreAction: (offset: number) => Promise<TeaserLargeFragmentType[]>
 }) {
   const [teasers, setTeasers] = useState(initialTeasers)
-  // if the first page came back short, there is nothing more to load
   const [hasMore, setHasMore] = useState(initialTeasers.length >= pageSize)
   const [isPending, startTransition] = useTransition()
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -47,7 +34,7 @@ export function RestOfTheFrontClient({
       ([entry]) => {
         if (entry.isIntersecting && !isPending) loadMore()
       },
-      { rootMargin: '600px' }, // start loading before the user reaches the end
+      { rootMargin: '600px' },
     )
     observer.observe(sentinel)
     return () => observer.disconnect()
@@ -55,11 +42,9 @@ export function RestOfTheFrontClient({
 
   return (
     <>
-      <div className={gridStyle}>
-        {teasers.map((teaser) => (
-          <GridTeaser key={teaser._id} teaser={teaser} />
-        ))}
-      </div>
+      {teasers.map((teaser, i) => (
+        <TeaserItem key={i} reference={teaser} />
+      ))}
       {hasMore && <div ref={sentinelRef} aria-hidden />}
     </>
   )

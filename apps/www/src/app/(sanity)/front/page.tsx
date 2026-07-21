@@ -15,6 +15,10 @@ export default async function FrontPage() {
 
   const { _id, title, pageBuilder = [], oldestPublishDate } = front
 
+  const restOfFrontStart = oldestPublishDate
+    ? stegaClean(oldestPublishDate)
+    : undefined
+
   return (
     <EventTrackingContext category='Front'>
       <h1 className={css({ srOnly: true })}>
@@ -25,9 +29,7 @@ export default async function FrontPage() {
         <Block key={block._key} block={block} documentId={_id} />
       ))}
 
-      <RestOfTheFront
-        before={oldestPublishDate ? stegaClean(oldestPublishDate) : undefined}
-      />
+      {restOfFrontStart && <RestOfTheFront before={restOfFrontStart} />}
     </EventTrackingContext>
   )
 }
