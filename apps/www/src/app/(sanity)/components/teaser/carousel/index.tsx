@@ -1,8 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import {
-  Heading,
-  LinkOverlay,
-} from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
@@ -17,22 +14,28 @@ const carouselItemStyle = css({
   cursor: 'pointer',
   position: 'relative',
   m: '2',
+  minHeight: '360px',
   width: 'full',
   display: 'flex',
   flexDirection: 'column',
-  // fall back to no background / inherited text color when the teaser
-  // doesn't define custom colors
   backgroundColor: 'var(--teaser-bg, transparent)',
   color: 'var(--teaser-color, inherit)',
   border: '1px solid',
   borderColor: 'divider',
-  // a custom background replaces the border
   '&[data-has-background]': {
     border: 'none',
   },
 })
 
-export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
+export function CarouselTeaser({
+  teaser,
+  imageStyle = 'NORMAL',
+  skipDescription = false,
+}: {
+  teaser: TeaserListItemType
+  imageStyle?: string
+  skipDescription?: boolean
+}) {
   const backgroundColor = stegaClean(teaser.backgroundColor?.hex)
   const color = stegaClean(teaser.color?.hex)
 
@@ -43,8 +46,6 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
         scrollSnapAlign: 'start',
         scrollSnapMarginLeft: '15px',
         display: 'flex',
-        // grow to fill leftover space (up to a cap) when few tiles, but keep
-        // a fixed basis and never shrink so many tiles overflow and scroll
         flex: '1 0 248px',
         maxWidth: '400px',
       })}
@@ -59,27 +60,41 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
           } as CSSProperties
         }
       >
-        <TeaserImage
-          image={teaser.image}
-          alt=''
-          width={400}
-          className={css({ width: 'full', height: 'auto' })}
-        />
+        {imageStyle !== 'NONE' && (
+          <TeaserImage
+            image={teaser.image}
+            alt=''
+            width={400}
+            style={{
+              width: imageStyle === 'SMALL' ? '50%' : 'full',
+              margin: imageStyle === 'SMALL' ? '40px auto 0' : 0,
+              height: 'auto',
+            }}
+          />
+        )}
         <div
+          style={{
+            marginTop: imageStyle === 'NONE' ? 'auto' : '0',
+            marginBottom: imageStyle === 'NONE' ? 'auto' : '0',
+          }}
           className={css({
-            px: '3',
+            px: '6',
             py: '6',
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
-            gap: '2',
+            gap: '4',
           })}
         >
-          <Heading teaser={teaser} />
+          {teaser.heading && (
+            <h5 style={{ color: teaser.headingColor?.hex ?? color }}>
+              {stegaClean(teaser.heading.title)}
+            </h5>
+          )}
           <h4 className='editorial'>
             <LinkOverlay teaser={teaser} />
           </h4>
-          {teaser.description && (
+          {teaser.description && !skipDescription && (
             <p className='description'>
               <InlinePortableText value={teaser.description} />
             </p>

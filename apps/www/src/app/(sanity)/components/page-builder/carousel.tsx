@@ -27,10 +27,17 @@ export async function Carousel({
   teaserList,
   documentId,
   blockKey,
+  options,
 }: {
   teaserList: TeaserListBlockFragmentType
   documentId: string
   blockKey: string
+  options?: {
+    imageStyle?: string
+    skipDescription?: boolean
+    color?: string
+    backgroundColor?: string
+  }
 }) {
   const { title, maxItems, series } = teaserList
   // We display series in chronological order, starting with the first episode
@@ -67,7 +74,12 @@ export async function Carousel({
       )}
       <div className={carousel}>
         {teasers.map((teaser) => (
-          <CarouselTeaser key={teaser._id} teaser={teaser} />
+          <CarouselTeaser
+            key={teaser._id}
+            teaser={teaser}
+            imageStyle={options?.imageStyle}
+            skipDescription={options?.skipDescription}
+          />
         ))}
       </div>
     </>

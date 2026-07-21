@@ -38,6 +38,12 @@ export async function TeaserList({
         teaserList={teaserList}
         documentId={documentId}
         blockKey={blockKey}
+        options={{
+          imageStyle: teaserList.imageStyle,
+          skipDescription: teaserList.skipDescription,
+          color: teaserList.color?.hex,
+          backgroundColor: teaserList.backgroundColor?.hex,
+        }}
       />
     )
 

@@ -3,6 +3,10 @@ import { defineQuery } from 'next-sanity'
 
 export const TEASER_LIST_BLOCK_FRAGMENT = /* groq */ `
   appearance,
+  color,
+  backgroundColor,
+  imageStyle,
+  skipDescription,
   maxItems,
   title,
   "total": select(
