@@ -47,6 +47,7 @@
     "@orbiting/backend-modules-referral-campaigns": "*",
     "@orbiting/backend-modules-republik": "*",
     "@orbiting/backend-modules-republik-crowdfundings": "*",
+    "@orbiting/backend-modules-sanity": "*",
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-schedulers": "*",
     "@orbiting/backend-modules-search": "*",

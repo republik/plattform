@@ -106,6 +106,9 @@ const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail'
 
 const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
 const { CockpitWorker } = require('./workers/cockpit')
+const {
+  PublishNotificationWorker,
+} = require('@orbiting/backend-modules-sanity')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -138,6 +141,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     // port of old schedulers
 
     StatsCacheWorker,
+    PublishNotificationWorker,
   ]
 
   if (

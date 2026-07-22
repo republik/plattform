@@ -11,7 +11,7 @@ const middleware = async (
   pgdb: any,
   t: any,
   _redis: any,
-  context: any,
+  _context: any,
 ) => {
   server.post(
     '/webhooks/sanity/discussions',
@@ -31,7 +31,7 @@ const middleware = async (
     '/webhooks/sanity/publish-notification',
     bodyParser.json(),
     verifySanityToken,
-    publishNotificationHandler(context),
+    publishNotificationHandler,
   )
 
   // No auth middleware — the signature is HMAC-verified inline

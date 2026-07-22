@@ -18,3 +18,4 @@ export {
 } from './lib/document'
 export type { GenericDocument } from './lib/document'
 export { repoIdToSanityId } from './lib/legacyId'
+export { PublishNotificationWorker } from './lib/workers/PublishNotificationWorker'
