@@ -1,13 +1,11 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import {
-  Heading,
-  LinkOverlay,
-} from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
 import {
   TeaserListItemType,
   upcomingTeaser,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
+import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
 import { css, cx } from '@republik/theme/css'
 
 export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
@@ -34,14 +32,7 @@ export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
       )}
     >
       <Heading teaser={teaser} />
-      {/* standalone teaser documents carry no theme */}
-      <h4
-        className={
-          ('theme' in teaser ? teaser.theme?.name : undefined) !== 'EDITORIAL'
-            ? 'meta'
-            : ''
-        }
-      >
+      <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
         <LinkOverlay teaser={teaser} />
       </h4>
       <p className='description'>

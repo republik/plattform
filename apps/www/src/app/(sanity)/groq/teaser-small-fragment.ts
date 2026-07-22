@@ -18,10 +18,11 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   },
   theme {
     name,
+    accentColor,
   },
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
-  "headingColor": coalesce(teaserSmall.headingColor, theme.accentColor),
+  "headingColor": teaserSmall.headingColor,
 `
 
 // Hack to not rely on the main query for types

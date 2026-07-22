@@ -1,5 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
