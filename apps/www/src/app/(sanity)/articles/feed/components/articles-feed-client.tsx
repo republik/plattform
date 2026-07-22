@@ -46,7 +46,7 @@ export function ArticlesFeedClient({
   return (
     <>
       {teasers.map((teaser) => (
-        <FeedTeaser key={teaser._id} teaser={teaser} />
+        <FeedTeaser key={teaser._id} teaser={teaser} skipPublishDate />
       ))}
       {hasMore && <div ref={sentinelRef} aria-hidden />}
     </>
