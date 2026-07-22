@@ -21,11 +21,6 @@ type ArrayOf<T> = Array<
 >
 
 // Source: ../../../studio/schema.json
-export type ChartConfig = {
-  settings?: Code
-  data?: Code
-}
-
 export type Src = {
   mp4?: string
   hls?: string
@@ -36,6 +31,11 @@ export type EmbedCommentDiscussion = {
   id?: string
   path?: string
   title?: string
+}
+
+export type ChartConfig = {
+  settings?: Code
+  data?: Code
 }
 
 export type AudioCover = {
@@ -191,7 +191,7 @@ export type Front = {
       } & TeaserList)
     | ({
         _key: string
-      } & MeineRepublik)
+      } & MyRepublik)
     | ({
         _key: string
       } & BestOfDialogue)
@@ -254,12 +254,12 @@ export type Vorlage = {
   content?: ArticleEditor
   publishDate?: string
   emailSubject?: string
-  notificationTitle?: string
+  pushNotificationText?: string
   articleRecommendations?: ArrayOf<ArticleReference | PageReference>
+  seo?: Seo
   cover?: EditorialImage
   teaserSmall?: TeaserSmall
   teaserLarge?: TeaserLarge
-  seo?: Seo
   suppressSyntheticReadAloud?: boolean
   syntheticVoice?:
     | 'huebsch-311-054-rpblk'
@@ -460,16 +460,7 @@ export type PageEditor = Array<
     } & Divider)
   | ({
       _key: string
-    } & Chart)
-  | ({
-      _key: string
     } & EmbedVideo)
-  | ({
-      _key: string
-    } & EmbedTwitter)
-  | ({
-      _key: string
-    } & EmbedComment)
   | ({
       _key: string
     } & EmbedDataWrapper)
@@ -481,10 +472,19 @@ export type PageEditor = Array<
     } & Button)
   | ({
       _key: string
+    } & StoryComponent)
+  | ({
+      _key: string
+    } & EmbedTwitter)
+  | ({
+      _key: string
+    } & EmbedComment)
+  | ({
+      _key: string
     } & DynamicComponent)
   | ({
       _key: string
-    } & StoryComponent)
+    } & Chart)
 >
 
 export type ArticleEditor = Array<
@@ -552,25 +552,13 @@ export type ArticleEditor = Array<
     } & Divider)
   | ({
       _key: string
-    } & Chart)
-  | ({
-      _key: string
     } & EmbedVideo)
-  | ({
-      _key: string
-    } & EmbedTwitter)
-  | ({
-      _key: string
-    } & EmbedComment)
   | ({
       _key: string
     } & EmbedDataWrapper)
   | ({
       _key: string
     } & Html)
-  | ({
-      _key: string
-    } & DynamicComponent)
   | ({
       _key: string
     } & StoryComponent)
@@ -580,6 +568,18 @@ export type ArticleEditor = Array<
   | ({
       _key: string
     } & Button)
+  | ({
+      _key: string
+    } & EmbedTwitter)
+  | ({
+      _key: string
+    } & EmbedComment)
+  | ({
+      _key: string
+    } & DynamicComponent)
+  | ({
+      _key: string
+    } & Chart)
 >
 
 export type Caption = {
@@ -666,12 +666,12 @@ export type Article = {
   content?: ArticleEditor
   publishDate?: string
   emailSubject?: string
-  notificationTitle?: string
+  pushNotificationText?: string
   articleRecommendations?: ArrayOf<ArticleReference | PageReference>
+  seo?: Seo
   cover?: EditorialImage
   teaserSmall?: TeaserSmall
   teaserLarge?: TeaserLarge
-  seo?: Seo
   suppressSyntheticReadAloud?: boolean
   syntheticVoice?:
     | 'huebsch-311-054-rpblk'
@@ -765,21 +765,6 @@ export type Theme = {
   darkMode?: boolean
 }
 
-export type Seo = {
-  _type: 'seo'
-  title?: string
-  description?: string
-  useImageBuilder?: boolean
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  imageBuilder?: SeoImageBuilder
-}
-
 export type EditorialImage = {
   _type: 'editorialImage'
   asset?: SanityImageAssetReference
@@ -796,6 +781,21 @@ export type EditorialImage = {
   alt?: string
   caption?: Caption
   size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
+}
+
+export type Seo = {
+  _type: 'seo'
+  title?: string
+  description?: string
+  useImageBuilder?: boolean
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageBuilder?: SeoImageBuilder
 }
 
 export type Link = {
@@ -1087,9 +1087,7 @@ export type Page = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  skipTitleBlock?: boolean
   cover?: EditorialImage
-  useCoverAsTitle?: boolean
   heading?: PageReference
   title: InlineEditor
   description?: InlineEditor
@@ -1127,8 +1125,8 @@ export type Code = {
   highlightedLines?: Array<number>
 }
 
-export type MeineRepublik = {
-  _type: 'meineRepublik'
+export type MyRepublik = {
+  _type: 'myRepublik'
   enabled?: boolean
 }
 
@@ -1141,8 +1139,21 @@ export type TeaserList = {
   _type: 'teaserList'
   title?: string
   source?: Source
-  appearance?: 'FEED' | 'GRID' | 'CAROUSEL'
   maxItems?: number
+  appearance?: 'FEED' | 'GRID' | 'CAROUSEL'
+  imageStyle?: 'NORMAL' | 'SMALL' | 'NONE'
+  skipDescription?: boolean
+  color?: Color
+  backgroundColor?: Color
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
 }
 
 export type ArticleCollection = {
@@ -1164,22 +1175,13 @@ export type ArticleCollection = {
   archived?: boolean
 }
 
-export type Color = {
-  _type: 'color'
-  hex?: string
-  alpha?: number
-  hsl?: HslaColor
-  hsv?: HsvaColor
-  rgb?: RgbaColor
-}
-
 export type SeoImageBuilder = {
   _type: 'seoImageBuilder'
   text?: string
   fontSize?: number
+  layout?: 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
   textPosition?: 'top' | 'center' | 'bottom'
   inverted?: boolean
-  layout?: 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
   backgroundImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -1327,9 +1329,9 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
-  | ChartConfig
   | Src
   | EmbedCommentDiscussion
+  | ChartConfig
   | AudioCover
   | AudioCoverCrop
   | AudioGenerationResult
@@ -1371,8 +1373,8 @@ export type AllSanitySchemaTypes =
   | Article
   | Discussion
   | Theme
-  | Seo
   | EditorialImage
+  | Seo
   | Link
   | Variable
   | IfNot
@@ -1403,11 +1405,11 @@ export type AllSanitySchemaTypes =
   | Menu
   | Page
   | Code
-  | MeineRepublik
+  | MyRepublik
   | BestOfDialogue
   | TeaserList
-  | ArticleCollection
   | Color
+  | ArticleCollection
   | SeoImageBuilder
   | MediaTag
   | RgbaColor
@@ -2190,7 +2192,7 @@ export type FRONT_QUERY_RESULT = {
       }
     | {
         _key: string
-        _type: 'meineRepublik'
+        _type: 'myRepublik'
       }
     | {
         _key: string
@@ -2263,8 +2265,8 @@ export type PAGE_QUERY_RESULT = {
     caption?: Caption
     size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
   } | null
-  skipTitleBlock: boolean | null
-  useCoverAsTitle: boolean | null
+  skipTitleBlock: null
+  useCoverAsTitle: null
   heading: {
     _id: string
     title: InlineEditor

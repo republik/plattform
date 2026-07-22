@@ -10,8 +10,6 @@ import {
   ShareImage,
 } from '../../components/share-image/share-image'
 
-export const runtime = 'edge'
-
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get('slug')
 
@@ -46,6 +44,12 @@ export async function GET(req: NextRequest) {
 
   const fonts = await loadShareImageFonts()
 
+  // Cache in production, but never in dev
+  const cacheControl =
+    process.env.NODE_ENV === 'development'
+      ? 'no-store'
+      : 'public, immutable, no-transform, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+
   return new ImageResponse(
     (
       <ShareImage
@@ -71,8 +75,7 @@ export async function GET(req: NextRequest) {
         style: font.style,
       })),
       headers: {
-        'cache-control':
-          'public, immutable, no-transform, max-age=300, s-maxage=3600, stale-while-revalidate=86400',
+        'cache-control': cacheControl,
       },
     },
   )
