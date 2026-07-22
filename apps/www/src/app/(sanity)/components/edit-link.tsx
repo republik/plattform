@@ -10,12 +10,18 @@ export function EditLink(props: EditUrlProps) {
       href={href}
       target='_blank'
       rel='noopener noreferrer'
-      title='Im Studio bearbeiten'
       className={css({
-        color: 'orange',
+        px: '4',
+        py: '2',
+        backgroundColor: 'orange',
+        borderRadius: 'full',
+        color: 'white',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '2',
       })}
     >
-      <SquarePen />
+      <SquarePen size={20} /> Im Studio bearbeiten
     </a>
   )
 }
