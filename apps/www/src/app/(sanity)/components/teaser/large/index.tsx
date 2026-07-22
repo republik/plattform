@@ -6,49 +6,15 @@ import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-f
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 
 export function TeaserLarge(props: TeaserLargeFragmentType) {
-  const sanityDataAttribute = dataAttribute({
-    type: props._type,
-    id: props._id,
-    path: 'teaserLarge',
-  })
-
   switch (props.teaser?.layout) {
     case 'IMAGE':
-      return (
-        <div
-          data-teaser-layout={props.teaser.layout}
-          data-sanity={sanityDataAttribute}
-        >
-          <ImageTeaser {...props} />
-        </div>
-      )
+      return <ImageTeaser {...props} />
     case 'TEXT':
-      return (
-        <div
-          data-teaser-layout={props.teaser.layout}
-          data-sanity={sanityDataAttribute}
-        >
-          <TextTeaser {...props} />
-        </div>
-      )
+      return <TextTeaser {...props} />
     case 'VIGNETTE':
-      return (
-        <div
-          data-teaser-layout={props.teaser.layout}
-          data-sanity={sanityDataAttribute}
-        >
-          <VignetteTeaser {...props} />
-        </div>
-      )
+      return <VignetteTeaser {...props} />
     case 'SPLIT':
-      return (
-        <div
-          data-teaser-layout={props.teaser.layout}
-          data-sanity={sanityDataAttribute}
-        >
-          <SplitTeaser {...props} />
-        </div>
-      )
+      return <SplitTeaser {...props} />
     default:
       return null
   }
