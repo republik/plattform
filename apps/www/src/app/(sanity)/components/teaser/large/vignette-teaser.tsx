@@ -1,6 +1,10 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  Heading,
+  TeaserLargeImage,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -10,12 +14,11 @@ const teaserStyle = cva({
     position: 'relative',
     px: '4',
     py: '8',
-    padding: '30px 15px 40px 15px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '6',
+    gap: '8',
     md: {
       py: '16',
     },
@@ -27,10 +30,12 @@ const teaserStyle = cva({
 
 const teaserTitle = cva({
   base: {
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
     md: { fontSize: '58px', lineHeight: '60px' },
     lg: { fontSize: '80px', lineHeight: '90px' },
+    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -46,9 +51,11 @@ const teaserTitle = cva({
     },
     size: {
       SMALL: {
+        fontSize: '26px',
+        lineHeight: '32px',
         md: {
-          fontSize: '58px',
-          lineHeight: '60px',
+          fontSize: '48px',
+          lineHeight: '54px',
         },
       },
       MEDIUM: {
@@ -75,11 +82,13 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
+  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
+  position: 'relative', // place above the link overlay
 })
 
 const imageStyle = css({
@@ -96,12 +105,15 @@ const imageStyle = css({
     maxWidth: '360px',
     maxHeight: '360px',
   },
+  zIndex: 1, // place above the link overlay
 })
 
 export function VignetteTeaser({
+  _id,
   _type,
   slug,
   theme,
+  heading,
   teaser,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
@@ -109,15 +121,35 @@ export function VignetteTeaser({
   return (
     <div
       className={teaserStyle()}
-      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+      style={{
+        color: teaser.color?.hex,
+        backgroundColor: teaser.backgroundColor?.hex,
+      }}
     >
-      <div>
+      <div className={css({ position: 'relative', zIndex: 1 })}>
         <TeaserLargeImage
+          data-sanity={dataAttribute({
+            id: _id,
+            type: _type,
+            path: 'teaserLarge.image',
+          })}
           image={teaser.image}
           className={imageStyle}
           alt={''}
           sizes={'(max-width: 768px) 100vw, 50vw'}
         />
+
+        {teaser.imageCredits && (
+          <span
+            className={css({
+              fontSize: 'xs',
+              pt: '1',
+              display: 'block',
+            })}
+          >
+            {teaser.imageCredits}
+          </span>
+        )}
       </div>
       <div
         className={css({
@@ -127,11 +159,13 @@ export function VignetteTeaser({
           flexDirection: 'column',
           gap: '3',
           md: {
-            padding: '0 13%',
+            px: '13%',
+            gap: '6',
           },
         })}
-        style={{ color: teaser.color?.hex }}
       >
+        {heading && <Heading heading={heading} />}
+
         <Link href={href} className={linkOverlay()}>
           <h2
             className={teaserTitle({

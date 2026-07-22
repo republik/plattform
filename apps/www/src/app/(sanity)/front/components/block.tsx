@@ -1,3 +1,5 @@
+import { BestOfDialogue } from '@/app/(sanity)/components/page-builder/best-of-dialogue'
+import { MyRepublik } from '@/app/(sanity)/components/page-builder/my-republik'
 import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
 import { TeaserList } from '@/app/(sanity)/components/page-builder/teaser-list'
 import { FrontBuilderBlock } from '@/app/(sanity)/groq/front-query'
@@ -24,6 +26,12 @@ export function Block({
 
     case 'teaserLarge':
       return <TeaserItem reference={block.reference} />
+
+    case 'myRepublik':
+      return <MyRepublik />
+
+    case 'bestOfDialogue':
+      return <BestOfDialogue />
 
     default:
       return null

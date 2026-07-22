@@ -14,8 +14,6 @@ export async function TeaserList({
 }) {
   const appearance = teaserList.appearance
 
-  console.log({ teaserList })
-
   if (appearance === 'FEED')
     return (
       <TeaserFeedServer
@@ -40,6 +38,12 @@ export async function TeaserList({
         teaserList={teaserList}
         documentId={documentId}
         blockKey={blockKey}
+        options={{
+          imageStyle: teaserList.imageStyle,
+          skipDescription: teaserList.skipDescription,
+          color: teaserList.color?.hex,
+          backgroundColor: teaserList.backgroundColor?.hex,
+        }}
       />
     )
 

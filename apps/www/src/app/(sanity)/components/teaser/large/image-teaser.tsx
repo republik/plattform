@@ -1,12 +1,21 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  Heading,
+  TeaserLargeImage,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 
 const teaserTextContainer = css({
+  py: '10',
+  px: '4',
   md: {
+    py: '20',
+    px: '15%',
+  },
+  lg: {
     position: 'absolute',
     inset: 0,
     overflow: 'hidden',
@@ -21,6 +30,7 @@ const teaserTextPosition = cva({
     display: 'flex',
     flexDirection: 'column',
     gap: '3',
+    md: { gap: '6' },
   },
   variants: {
     position: {
@@ -71,12 +81,14 @@ const teaserTextPosition = cva({
 const teaserTitle = cva({
   base: {
     textStyle: 'editorialTitle',
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
     md: {
       fontSize: '58px',
       lineHeight: '60px',
     },
+    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -107,6 +119,7 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
+  position: 'relative', // place above the link overlay
 })
 
 const teaserContainer = css({
@@ -118,12 +131,14 @@ const teaserContainer = css({
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
+  position: 'relative', // place above the link overlay
 })
 
 export function ImageTeaser({
   _type,
   slug,
   theme,
+  heading,
   teaser,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
@@ -131,21 +146,49 @@ export function ImageTeaser({
   return (
     <div
       className={teaserContainer}
-      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+      style={{
+        color: teaser.color?.hex,
+        backgroundColor: teaser.backgroundColor?.hex,
+      }}
     >
-      <TeaserLargeImage
-        image={teaser.image}
-        className={css({ display: 'block', width: '100%', height: 'auto' })}
-        alt={''}
-        sizes={'100vw'}
-      />
+      <div className={css({ position: 'relative' })}>
+        <TeaserLargeImage
+          image={teaser.image}
+          className={css({ display: 'block', width: '100%', height: 'auto' })}
+          alt={''}
+          sizes={'100vw'}
+        />
+
+        {teaser.imageCredits && (
+          <span
+            className={css({
+              fontSize: 'xs',
+              pl: '2',
+              pt: '1',
+              display: 'block',
+
+              md: {
+                position: 'absolute',
+                bottom: '0',
+                left: 'calc(1lh + 0.25rem)',
+                transform: 'rotate(-90deg)',
+                transformOrigin: 'bottom left',
+              },
+            })}
+          >
+            {teaser.imageCredits}
+          </span>
+        )}
+      </div>
+
       <div className={teaserTextContainer}>
         <div
           className={teaserTextPosition({
             position: teaser.textPosition,
           })}
-          style={{ color: teaser.color?.hex }}
         >
+          {heading && <Heading heading={heading} />}
+
           <Link href={href} className={linkOverlay()}>
             <h2
               className={teaserTitle({

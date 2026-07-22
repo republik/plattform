@@ -3,15 +3,18 @@ import { TEASER_LARGE_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
 export const TEASER_LARGE_FRAGMENT = /* groq */ `
+  _id,
   _type,
   "slug": slug.current,
   heading->{
     _id,
-    "title": pt::text(title),
+    "title": coalesce(^.teaserLarge.heading, pt::text(title)),
+    "slug": slug.current,
   },
   theme {
     name,
   },
+  publishDate,
   "teaser": teaserLarge {
     layout,
     "title": coalesce(title, ^.title),

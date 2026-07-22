@@ -11,6 +11,8 @@ import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list
 import { css, cx } from '@republik/theme/css'
 
 export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
+  if (!teaser) return null
+
   return (
     <div
       style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
@@ -22,10 +24,10 @@ export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'divider',
-          position: 'relative', // for the link overlay placement
+          position: 'relative',
           display: 'flex',
           flexDirection: 'column',
-          gap: '2',
+          gap: 2,
           // exclude last item from border
           '&:last-of-type': { borderBottom: 'none', pb: 0 },
         }),

@@ -2,6 +2,13 @@ import { css } from '@republik/theme/css'
 
 export const typography = css({
   // title of the document
+  '& h3.editorial': {
+    fontFamily: 'republikSerif',
+    fontWeight: 'black',
+    fontSize: 'xl',
+    lineHeight: 1.1,
+    md: { fontSize: '2xl' },
+  },
   '& h4': {
     fontFamily: 'rubis',
     fontWeight: 'medium',

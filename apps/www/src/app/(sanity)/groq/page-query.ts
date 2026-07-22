@@ -17,8 +17,6 @@ export const PAGE_QUERY = defineQuery(
     cover {
       ...
     },
-    skipTitleBlock,
-    useCoverAsTitle,
     heading->{
       _id,
       title,

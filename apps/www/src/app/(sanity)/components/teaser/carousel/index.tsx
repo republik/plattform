@@ -1,14 +1,12 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import {
-  Heading,
-  LinkOverlay,
-} from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
   upcomingTeaser,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
+import { timeFormat } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import type { CSSProperties } from 'react'
@@ -16,26 +14,33 @@ import type { CSSProperties } from 'react'
 const carouselItemStyle = css({
   cursor: 'pointer',
   position: 'relative',
-  m: '2',
-  width: '248px',
+  m: '1',
+  minHeight: '360px',
+  width: 'full',
   display: 'flex',
-  flexShrink: 0,
   flexDirection: 'column',
-  // fall back to no background / inherited text color when the teaser
-  // doesn't define custom colors
   backgroundColor: 'var(--teaser-bg, transparent)',
   color: 'var(--teaser-color, inherit)',
   border: '1px solid',
   borderColor: 'divider',
-  // a custom background replaces the border
   '&[data-has-background]': {
     border: 'none',
   },
 })
 
-export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
+export function CarouselTeaser({
+  teaser,
+  imageStyle = 'NORMAL',
+  skipDescription = false,
+}: {
+  teaser: TeaserListItemType
+  imageStyle?: string
+  skipDescription?: boolean
+}) {
   const backgroundColor = stegaClean(teaser.backgroundColor?.hex)
   const color = stegaClean(teaser.color?.hex)
+  const noImage = stegaClean(imageStyle) === 'NONE'
+  const smallImage = stegaClean(imageStyle) === 'SMALL'
 
   return (
     <div
@@ -44,8 +49,8 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
         scrollSnapAlign: 'start',
         scrollSnapMarginLeft: '15px',
         display: 'flex',
-        '&:first-child': { ml: 'auto' },
-        '&:last-child': { mr: 'auto' },
+        flex: '1 0 248px',
+        maxWidth: '400px',
       })}
     >
       <div
@@ -58,24 +63,55 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
           } as CSSProperties
         }
       >
-        <TeaserImage image={teaser.image} alt='' width={248} />
+        {!noImage && (
+          <TeaserImage
+            image={teaser.image}
+            alt=''
+            width={400}
+            style={{
+              width: smallImage ? '50%' : 'full',
+              margin: smallImage ? '40px auto 0' : 0,
+              height: 'auto',
+            }}
+          />
+        )}
         <div
+          style={{
+            marginTop: noImage ? 'auto' : '0',
+            marginBottom: noImage ? 'auto' : '0',
+          }}
           className={css({
-            px: '3',
+            px: '6',
             py: '6',
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
-            gap: '2',
+            gap: '4',
           })}
         >
-          <Heading teaser={teaser} />
-          <h4 className='editorial'>
-            <LinkOverlay teaser={teaser} />
-          </h4>
-          {teaser.description && (
+          {teaser.heading && (
+            <h5 style={{ color: teaser.headingColor?.hex ?? color }}>
+              {stegaClean(teaser.heading.title)}
+            </h5>
+          )}
+          {skipDescription ? (
+            <h3 className='editorial'>
+              <LinkOverlay teaser={teaser} />
+            </h3>
+          ) : (
+            <h4 className='editorial'>
+              <LinkOverlay teaser={teaser} />
+            </h4>
+          )}
+          {teaser.description && !skipDescription && (
             <p className='description'>
               <InlinePortableText value={teaser.description} />
+            </p>
+          )}
+
+          {teaser._type !== 'page' && !skipDescription && (
+            <p className='time'>
+              {timeFormat('%d.%m.%Y')(new Date(teaser.publishDate))}
             </p>
           )}
         </div>
