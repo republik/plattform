@@ -6,6 +6,7 @@ import {
   upcomingTeaser,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
+import { timeFormat } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import type { CSSProperties } from 'react'
@@ -38,6 +39,8 @@ export function CarouselTeaser({
 }) {
   const backgroundColor = stegaClean(teaser.backgroundColor?.hex)
   const color = stegaClean(teaser.color?.hex)
+  const noImage = stegaClean(imageStyle) === 'NONE'
+  const smallImage = stegaClean(imageStyle) === 'SMALL'
 
   return (
     <div
@@ -60,22 +63,22 @@ export function CarouselTeaser({
           } as CSSProperties
         }
       >
-        {imageStyle !== 'NONE' && (
+        {!noImage && (
           <TeaserImage
             image={teaser.image}
             alt=''
             width={400}
             style={{
-              width: imageStyle === 'SMALL' ? '50%' : 'full',
-              margin: imageStyle === 'SMALL' ? '40px auto 0' : 0,
+              width: smallImage ? '50%' : 'full',
+              margin: smallImage ? '40px auto 0' : 0,
               height: 'auto',
             }}
           />
         )}
         <div
           style={{
-            marginTop: imageStyle === 'NONE' ? 'auto' : '0',
-            marginBottom: imageStyle === 'NONE' ? 'auto' : '0',
+            marginTop: noImage ? 'auto' : '0',
+            marginBottom: noImage ? 'auto' : '0',
           }}
           className={css({
             px: '6',
@@ -91,12 +94,24 @@ export function CarouselTeaser({
               {stegaClean(teaser.heading.title)}
             </h5>
           )}
-          <h4 className='editorial'>
-            <LinkOverlay teaser={teaser} />
-          </h4>
+          {skipDescription ? (
+            <h3 className='editorial'>
+              <LinkOverlay teaser={teaser} />
+            </h3>
+          ) : (
+            <h4 className='editorial'>
+              <LinkOverlay teaser={teaser} />
+            </h4>
+          )}
           {teaser.description && !skipDescription && (
             <p className='description'>
               <InlinePortableText value={teaser.description} />
+            </p>
+          )}
+
+          {teaser._type !== 'page' && !skipDescription && (
+            <p className='time'>
+              {timeFormat('%d.%m.%Y')(new Date(teaser.publishDate))}
             </p>
           )}
         </div>

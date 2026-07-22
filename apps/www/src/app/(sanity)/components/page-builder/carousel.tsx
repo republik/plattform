@@ -10,17 +10,26 @@ import {
 } from '@/app/(sanity)/groq/teasers-small-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
+import { stegaClean } from 'next-sanity'
+import type { CSSProperties } from 'react'
 import React from 'react'
 
 const DEFAULT_TEASERS_LIMIT = 12
 
-const carousel = css({
+// Full-bleed section that optionally carries a custom background / text color
+// (falls back to transparent / inherited when none is set).
+const carouselSection = css({
   gridColumn: 'full',
+  backgroundColor: 'var(--carousel-bg, transparent)',
+  color: 'var(--carousel-color, inherit)',
+  py: '6',
+})
+
+const carousel = css({
   display: 'flex',
   overflowX: 'scroll',
   scrollSnapType: 'x mandatory',
   pb: '2',
-  mb: '6',
 })
 
 export async function Carousel({
@@ -59,8 +68,19 @@ export async function Carousel({
   )
   if (!teasers.length) return null
 
+  const backgroundColor = stegaClean(options?.backgroundColor)
+  const color = stegaClean(options?.color)
+
   return (
-    <>
+    <section
+      className={carouselSection}
+      style={
+        {
+          ...(backgroundColor && { '--carousel-bg': backgroundColor }),
+          ...(color && { '--carousel-color': color }),
+        } as CSSProperties
+      }
+    >
       {!!title && (
         <h2
           className={css({
@@ -82,6 +102,6 @@ export async function Carousel({
           />
         ))}
       </div>
-    </>
+    </section>
   )
 }
