@@ -14,7 +14,7 @@ import type { CSSProperties } from 'react'
 const carouselItemStyle = css({
   cursor: 'pointer',
   position: 'relative',
-  m: '2',
+  m: '1',
   minHeight: '360px',
   width: 'full',
   display: 'flex',

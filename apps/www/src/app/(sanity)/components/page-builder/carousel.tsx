@@ -22,7 +22,7 @@ const carouselSection = css({
   gridColumn: 'full',
   backgroundColor: 'var(--carousel-bg, transparent)',
   color: 'var(--carousel-color, inherit)',
-  py: '6',
+  p: '4',
 })
 
 const carousel = css({
@@ -84,9 +84,12 @@ export async function Carousel({
       {!!title && (
         <h2
           className={css({
-            textStyle: 'subtitleBold',
-            textAlign: 'center',
-            mt: '8',
+            textStyle: 'sansSerifRegular',
+            fontSize: '22px',
+            my: '4',
+            md: {
+              fontSize: '30px',
+            },
           })}
         >
           {title}
