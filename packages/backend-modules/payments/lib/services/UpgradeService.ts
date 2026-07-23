@@ -1,3 +1,4 @@
+import Stripe from 'stripe'
 import { PgDb } from 'pogi'
 import { Logger } from '@orbiting/backend-modules-logger'
 import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
@@ -225,7 +226,34 @@ export class UpgradeService {
     )
   }
 
-  public async markUpgradeAsResolved(upgradeId: string) {
+  public async markUpgradeAsResolved(
+    upgradeId: string,
+    subscriptionStatus: Stripe.Subscription.Status,
+  ) {
+    const upgrade = await this.subscriptionUpgradeRepo.getSubscriptionUpgrade(
+      upgradeId,
+    )
+
+    if (upgrade?.externalId && subscriptionStatus === 'active') {
+      try {
+        await this.paymentService.releaseScheduleSubscription(
+          'PROJECT_R',
+          upgrade.externalId,
+        )
+      } catch (e) {
+        // schedule may already be released/canceled (retried webhook, manual fix) — don't block resolution on it
+        this.logger.info(
+          { upgradeId, externalId: upgrade.externalId, error: e },
+          'failed to release subscription schedule; continuing',
+        )
+      }
+    } else if (upgrade?.externalId) {
+      this.logger.info(
+        { upgradeId, externalId: upgrade.externalId, subscriptionStatus },
+        'subscription not active yet; not releasing schedule',
+      )
+    }
+
     return await this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(
       upgradeId,
       {

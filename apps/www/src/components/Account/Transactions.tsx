@@ -1,9 +1,11 @@
 import { TransactionsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useTranslation } from '@/lib/withT'
 import { useQuery } from '@apollo/client'
 import { Loader } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 
 export function Transactions() {
+  const { t } = useTranslation()
   const { data, loading, error } = useQuery(TransactionsDocument)
 
   return (
@@ -12,6 +14,14 @@ export function Transactions() {
       error={error}
       render={() => {
         const transactions = data.me?.transactions ?? []
+
+        if (transactions.length === 0) {
+          return (
+            <p className={css({ color: 'textSoft' })}>
+              {t('account/transactions/empty')}
+            </p>
+          )
+        }
 
         return (
           <table className={css({ width: 'full' })}>
