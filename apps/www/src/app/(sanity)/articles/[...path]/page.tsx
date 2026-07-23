@@ -102,6 +102,8 @@ export default async function ArticlePage({
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
       <article
+        // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
+        data-force-theme={theme?.darkMode ? 'dark' : undefined}
         className={editorialContent({
           theme: theme?.name,
         })}

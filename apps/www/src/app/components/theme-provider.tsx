@@ -4,9 +4,7 @@ import { ThemeProvider as NextThemeProvider } from 'next-themes'
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
-  useEffect,
   useState,
 } from 'react'
 
@@ -14,50 +12,27 @@ export { useTheme } from 'next-themes'
 
 type Theme = 'dark' | 'light' | undefined
 
-// Two force sources with fixed precedence: an explicit `manual` toggle (the
-// Sanity preview dark-mode button) wins over a `content` force (an article/page
-// whose theme.darkMode is set) — see `forcedTheme` below.
-type ForceSource = 'content' | 'manual'
+// Runtime theme override for the Sanity preview dark-mode toggle: the Studio
+// posts a message that `preview-theme-listener` turns into `forcedTheme`.
+//
+// Content-driven dark mode (`theme.darkMode` on an article/page) is not handled
+// here — the page renders a `data-force-theme="dark"` marker matched by the
+// `dark` Panda condition (see `preset-republik.ts`).
+const SetManualThemeCtx = createContext<(theme: Theme) => void>(() => {})
 
-const ForceThemeCtx = createContext<(source: ForceSource, theme: Theme) => void>(
-  () => {},
-)
-
-export function useForceTheme(theme: Theme) {
-  const setForce = useContext(ForceThemeCtx)
-  useEffect(() => {
-    setForce('content', theme)
-    return () => setForce('content', undefined)
-  }, [theme, setForce])
-}
-
-export const useSetManualTheme = () => {
-  const setForce = useContext(ForceThemeCtx)
-  return useCallback((theme: Theme) => setForce('manual', theme), [setForce])
-}
+export const useSetManualTheme = () => useContext(SetManualThemeCtx)
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [forced, setForced] = useState<Record<ForceSource, Theme>>({
-    content: undefined,
-    manual: undefined,
-  })
-  const setForce = useCallback(
-    (source: ForceSource, theme: Theme) =>
-      setForced((prev) => ({ ...prev, [source]: theme })),
-    [],
-  )
+  const [manual, setManual] = useState<Theme>(undefined)
   return (
-    <ForceThemeCtx.Provider value={setForce}>
+    <SetManualThemeCtx.Provider value={setManual}>
       <NextThemeProvider
         attribute='data-theme'
         disableTransitionOnChange
-        forcedTheme={forced.manual ?? forced.content}
+        forcedTheme={manual}
       >
-        {/* <Head>
-        <meta name='theme-color' content='var(--color-default)' />
-      </Head> */}
         {children}
       </NextThemeProvider>
-    </ForceThemeCtx.Provider>
+    </SetManualThemeCtx.Provider>
   )
 }

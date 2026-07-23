@@ -7,7 +7,11 @@ export const presetRepublik = definePreset({
   conditions: {
     extend: {
       light: '[data-theme="light"] &',
-      dark: '[data-theme="dark"] &',
+      // Dark applies when an ancestor is `[data-theme="dark"]`, or when a
+      // `data-force-theme="dark"` marker exists anywhere in the document — the
+      // latter puts the whole app in dark mode and outranks a `[data-theme]` set
+      // on `<html>` (e.g. by next-themes).
+      dark: ':is([data-theme="dark"], :root:has([data-force-theme="dark"])) &',
       stateOpen: '&[data-state="open"]',
       stateClosed: '&[data-state="closed"]',
     },
