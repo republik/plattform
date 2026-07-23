@@ -11,7 +11,7 @@ export function LinkOverlay({ teaser }: { teaser: TeaserListItemType }) {
   const trackEvent = useTrackEvent()
 
   const href =
-    teaser._type === 'teaser'
+    teaser._type === 'teaserSmall'
       ? stegaClean(teaser.href)
       : teaser._type === 'article'
       ? `/articles${teaser.slug}`

@@ -11,32 +11,32 @@ import { defineQuery } from 'next-sanity'
 export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   _id,
   _type,
-  "title": teaserSmall.title,
-  "description": teaserSmall.description,
-  "byline": teaserSmall.${BYLINE_FRAGMENT},
+  "title": teaserSmallConfig.title,
+  "description": teaserSmallConfig.description,
+  "byline": teaserSmallConfig.${BYLINE_FRAGMENT},
   "href": select(
     target[0]->_type == "article" => "/articles" + target[0]->slug.current,
     target[0]->_type == "page" => "/pages" + target[0]->slug.current,
     defined(target[0].href) => target[0].href
   ),
-  "image": teaserSmall.image,
+  "image": teaserSmallConfig.image,
   publishDate,
   upcomingOnly,
   "heading": {
-    "title": teaserSmall.heading
+    "title": teaserSmallConfig.heading
   },
   "theme": {
-    "accentColor": teaserSmall.headingColor,
+    "accentColor": teaserSmallConfig.headingColor,
     "name": "EDITORIAL",
   },
-  "color": teaserSmall.color,
-  "backgroundColor": teaserSmall.backgroundColor,
-  "headingColor": teaserSmall.headingColor,
+  "color": teaserSmallConfig.color,
+  "backgroundColor": teaserSmallConfig.backgroundColor,
+  "headingColor": teaserSmallConfig.headingColor,
 `
 
 // Hack to not rely on the main query for types
 const TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY = defineQuery(
-  `*[_type == "teaser"]{
+  `*[_type == "teaserSmall"]{
     ${TEASER_SMALL_DOCUMENT_FRAGMENT}
   }`,
 )

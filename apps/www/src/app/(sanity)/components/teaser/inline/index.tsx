@@ -35,10 +35,7 @@ export function InlineTeaser({
         {isCurrentEpisode ? `Sie lesen: ${label}` : label}
       </h6>
       <TeaserImage
-        className={css({
-          width: 'full',
-          height: 'auto',
-        })}
+
         image={teaser.image}
         alt=''
         height={640}

@@ -1,5 +1,4 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
-import type { Heading } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'
 import type {
@@ -8,6 +7,14 @@ import type {
 } from '@sanity/image-url'
 import { stegaClean } from 'next-sanity'
 import { Image, type ImageProps } from 'next-sanity/image'
+
+export function getHref(target: string, _type: string) {
+  return _type === 'article'
+    ? `/articles${target}`
+    : _type === 'page'
+    ? `/pages${target}`
+    : target
+}
 
 function ImagePlaceholder(props: { 'data-sanity'?: string }) {
   return (

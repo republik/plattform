@@ -1,19 +1,13 @@
 import { TEASER_LARGE_FRAGMENT } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { defineQuery } from 'next-sanity'
 
-export const FRONT_FEED_EXCLUDED_COLLECTIONS = [
-  'Briefings',
-  'Kolumnen',
-  'Newsletter',
-]
-
 export const FRONT_FEED_QUERY = defineQuery(`
   *[
-    _type == "article" &&
-    defined(publishDate) &&
-    publishDate < $before &&
-    coalesce(count(articleCollections[collection->title in $excludedCollections]), 0) == 0
-  ] | order(publishDate desc) [$start...$end] {
+    _type == "teaserLarge" &&
+    target[0]->_type == "article" &&
+    defined(target[0]->publishDate) &&
+    !(_id in *[_type == "front"] | order(publishDate desc)[0].pageBuilder[]._ref)
+  ] | order(target[0]->publishDate desc) [$start...$end] {
     ${TEASER_LARGE_FRAGMENT}
   }
-`);
+`)

@@ -1,5 +1,8 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  getHref,
+  Heading,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -74,12 +77,12 @@ const teaserByline = css({
 
 export function TextTeaser({
   _type,
-  slug,
+  target,
   theme,
   teaser,
   heading,
 }: TeaserLargeFragmentType) {
-  const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
+  const href = getHref(target, _type)
 
   return (
     <div
