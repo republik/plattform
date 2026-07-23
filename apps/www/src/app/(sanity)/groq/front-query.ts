@@ -21,10 +21,6 @@ export const FRONT_QUERY = defineQuery(
         "reference": @->{${TEASER_LARGE_FRAGMENT}}
       },
     },
-    // oldest article shown as a teaserLarge — the endless feed continues below it
-    "oldestPublishDate": (
-      pageBuilder[_type == "teaserLarge"] | order(@->publishDate asc)
-    )[0]->publishDate,
   }`,
 )
 

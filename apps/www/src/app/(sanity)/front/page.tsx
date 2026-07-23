@@ -7,7 +7,6 @@ import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
-import { stegaClean } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
 export default async function FrontPage() {
@@ -15,11 +14,7 @@ export default async function FrontPage() {
 
   if (!front) notFound()
 
-  const { _id, title, pageBuilder = [], oldestPublishDate } = front
-
-  const restOfFrontStart = oldestPublishDate
-    ? stegaClean(oldestPublishDate)
-    : undefined
+  const { _id, title, pageBuilder = [] } = front
 
   return (
     <EventTrackingContext category='Front'>
@@ -59,7 +54,7 @@ export default async function FrontPage() {
         ))}
       </div>
 
-      {restOfFrontStart && <FrontFeed before={restOfFrontStart} />}
+      <FrontFeed />
     </EventTrackingContext>
   )
 }

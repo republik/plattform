@@ -2,6 +2,7 @@ import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
 import { ARTICLE_TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   robots: {
@@ -15,10 +16,12 @@ export default async function ArticleTeaserPage({
   const { path } = await params
   const slug = `/${path.join('/')}`
 
-  const { data: article } = await sanityFetch({
+  const { data: teaser } = await sanityFetch({
     query: ARTICLE_TEASER_QUERY,
     params: { slug },
   })
 
-  return <TeaserLarge {...article} />
+  if (!teaser) notFound()
+
+  return <TeaserLarge {...teaser} />
 }

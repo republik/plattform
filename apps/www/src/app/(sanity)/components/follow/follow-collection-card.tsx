@@ -39,6 +39,7 @@ function FollowCollectionCard({
         <TeaserImage
           image={collection.image}
           width={360}
+          height={360}
           alt={collection.title}
           style={{ objectFit: 'cover', borderRadius: 120, marginLeft: 'auto' }}
         />
