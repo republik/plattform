@@ -4,6 +4,7 @@ import { ThemeProvider as NextThemeProvider } from 'next-themes'
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -11,44 +12,52 @@ import {
 
 export { useTheme } from 'next-themes'
 
-const ForceThemeCtx = createContext<(t: 'dark' | 'light' | undefined) => void>(
+type Theme = 'dark' | 'light' | undefined
+
+// Two force sources with fixed precedence: an explicit `manual` toggle (the
+// Sanity preview dark-mode button) wins over a `content` force (an article/page
+// whose theme.darkMode is set). Both only affect the visual theme, never content.
+type ForceSource = 'content' | 'manual'
+
+const ForceThemeCtx = createContext<(source: ForceSource, theme: Theme) => void>(
   () => {},
 )
 
-// A manual theme override, separate from the content-driven force above. Used by
-// the Sanity preview dark-mode toggle. It takes precedence over the content
-// force (`manual ?? forced`), so an editor's explicit toggle wins.
-const ManualThemeCtx = createContext<
-  (t: 'dark' | 'light' | undefined) => void
->(() => {})
-
-export function useForceTheme(theme: 'dark' | 'light' | undefined) {
-  const setForced = useContext(ForceThemeCtx)
+export function useForceTheme(theme: Theme) {
+  const setForce = useContext(ForceThemeCtx)
   useEffect(() => {
-    setForced(theme)
-    return () => setForced(undefined)
-  }, [theme, setForced])
+    setForce('content', theme)
+    return () => setForce('content', undefined)
+  }, [theme, setForce])
 }
 
-export const useSetManualTheme = () => useContext(ManualThemeCtx)
+export const useSetManualTheme = () => {
+  const setForce = useContext(ForceThemeCtx)
+  return useCallback((theme: Theme) => setForce('manual', theme), [setForce])
+}
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [forced, setForced] = useState<'dark' | 'light' | undefined>()
-  const [manual, setManual] = useState<'dark' | 'light' | undefined>()
+  const [forced, setForced] = useState<Record<ForceSource, Theme>>({
+    content: undefined,
+    manual: undefined,
+  })
+  const setForce = useCallback(
+    (source: ForceSource, theme: Theme) =>
+      setForced((prev) => ({ ...prev, [source]: theme })),
+    [],
+  )
   return (
-    <ForceThemeCtx.Provider value={setForced}>
-      <ManualThemeCtx.Provider value={setManual}>
-        <NextThemeProvider
-          attribute='data-theme'
-          disableTransitionOnChange
-          forcedTheme={manual ?? forced}
-        >
-          {/* <Head>
+    <ForceThemeCtx.Provider value={setForce}>
+      <NextThemeProvider
+        attribute='data-theme'
+        disableTransitionOnChange
+        forcedTheme={forced.manual ?? forced.content}
+      >
+        {/* <Head>
         <meta name='theme-color' content='var(--color-default)' />
       </Head> */}
-          {children}
-        </NextThemeProvider>
-      </ManualThemeCtx.Provider>
+        {children}
+      </NextThemeProvider>
     </ForceThemeCtx.Provider>
   )
 }
