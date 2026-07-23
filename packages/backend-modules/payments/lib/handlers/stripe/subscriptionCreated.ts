@@ -98,29 +98,26 @@ class SubscriptionCreatedWorkflow
       const upgradeId = subscription.metadata[INTERNAL_REF]
 
       await Promise.all([
-				queue.send<ConfirmUpgradeSubscriptionTransactionalWorker>(
-					"payments:transactional:confirm:upgrade:subscription",
-					{
-						$version: "v1",
-						eventSourceId: event.id,
-						userId: userId,
-						subscriptionId: subscription.id,
-						upgradeId: upgradeId,
-						company: company,
-					},
-				),
-				queue.send<SyncMailchimpSetupWorker>(
-					"payments:mailchimp:sync:setup",
-					{
-						$version: "v1",
-						eventSourceId: event.id,
-						userId: userId,
-					},
-				),
-				(async () => {
-					return this.upgradeService.markUpgradeAsResolved(upgradeId, subscription.status);
-				})(),
-			])
+        queue.send<ConfirmUpgradeSubscriptionTransactionalWorker>(
+          'payments:transactional:confirm:upgrade:subscription',
+          {
+            $version: 'v1',
+            eventSourceId: event.id,
+            userId: userId,
+            subscriptionId: subscription.id,
+            upgradeId: upgradeId,
+            company: company,
+          },
+        ),
+        queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        }),
+        async () => {
+          return this.upgradeService.markUpgradeAsResolved(upgradeId)
+        },
+      ])
     }
 
     return

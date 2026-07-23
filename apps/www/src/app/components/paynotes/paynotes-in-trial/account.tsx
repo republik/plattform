@@ -1,9 +1,9 @@
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 
-import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useMe } from '@/lib/context/MeContext'
 import { timeFormat } from '@/lib/utils/format'
 import { useTranslation } from '@/lib/withT'
@@ -17,10 +17,10 @@ const dayFormat = timeFormat('%e. %B %Y')
 function AccountCta() {
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
-  const { inNativeApp } = useInNativeApp()
+  const { isNativeApp } = usePlatformInformation()
   const { t } = useTranslation()
 
-  if (inNativeApp) return <NativeCta />
+  if (isNativeApp) return <NativeCta />
 
   return (
     <form
