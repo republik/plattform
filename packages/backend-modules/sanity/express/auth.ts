@@ -28,3 +28,28 @@ export const verifySanityToken = (
 
   next()
 }
+
+// Deliberately a distinct secret from SANITY_WEBHOOK_TOKEN: this one is
+// shipped into studio's public browser bundle (Sanity inlines every
+// SANITY_STUDIO_*-prefixed var at build time), so it must be independently
+// rotatable and scoped to read-only access if it ever leaks. Generic (not
+// named after any one endpoint) so future read-only routes can share it
+// rather than minting a new token each time.
+export const verifyReadToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const secret = process.env.SANITY_STUDIO_READ_TOKEN
+  if (!secret) {
+    req.log.error('SANITY_STUDIO_READ_TOKEN is not set')
+    return res.status(500).end()
+  }
+
+  const token = req.headers.authorization?.replace(/^Bearer /, '')
+  if (!token || !safeCompare(token, secret)) {
+    return res.status(401).end()
+  }
+
+  next()
+}

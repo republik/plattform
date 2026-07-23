@@ -34,3 +34,54 @@ export const fetchArticleForNotification = (documentId: string) =>
     { id: documentId },
     { perspective: 'raw' },
   )
+
+const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
+
+// Read-only counterpart to PublishNotificationWorker#notifyPublish: resolves
+// the same recipient set (articleCollection subscribers ∪ contributor
+// subscribers, deduped by user) but only counts them, for the studio
+// subscriber-count endpoint (express/subscriberCount.ts) to show editors how
+// many people a publish-with-notifications decision would reach.
+export const getSubscriberCountForArticle = async (
+  documentId: string,
+  context: any,
+): Promise<{ totalCount: number } | null> => {
+  const article = await fetchArticleForNotification(documentId)
+  if (!article) {
+    return null
+  }
+
+  const articleCollectionIds = (article.articleCollections ?? [])
+    .map((entry) => entry.collection?._id)
+    .filter((id): id is string => Boolean(id))
+  const authorUserIds = (article.contributors ?? [])
+    .map((entry) => entry.contributor?.userId)
+    .filter((id): id is string => Boolean(id))
+
+  const [collectionSubs, authorSubs] = await Promise.all([
+    Subscriptions.getSubscriptionsForUserAndObjects(
+      null,
+      { type: 'Document', ids: articleCollectionIds, filters: ['Document'] },
+      context,
+      { onlyEligibles: true },
+    ),
+    Subscriptions.getSubscriptionsForUserAndObjects(
+      null,
+      { type: 'User', ids: authorUserIds, filters: ['Document'] },
+      context,
+      { onlyEligibles: true },
+    ),
+  ])
+
+  const [collectionUsers, authorUsers] = await Promise.all([
+    Subscriptions.getUsersWithSubscriptions(collectionSubs, context),
+    Subscriptions.getUsersWithSubscriptions(authorSubs, context),
+  ])
+
+  const uniqueUserIds = new Set<string>()
+  for (const user of [...collectionUsers, ...authorUsers]) {
+    uniqueUserIds.add(user.__subscription.userId)
+  }
+
+  return { totalCount: uniqueUserIds.size }
+}
