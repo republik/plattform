@@ -1409,6 +1409,10 @@
       "value": "Ihre Anfrage wird geprüft"
     },
     {
+      "key": "api/access/email/recipient/in_review_firsttimevoters/subject",
+      "value": "Dein Antrag auf ein kostenloses Erstwähler-Abo"
+    },
+    {
       "key": "api/access/email/recipient/recommendations/subject",
       "value": "Leseempfehlungen aus der Republik"
     },

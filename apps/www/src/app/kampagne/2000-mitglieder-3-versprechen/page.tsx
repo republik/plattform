@@ -8,9 +8,10 @@ import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
+import Script from 'next/script'
 
 const journalismPromiseStyle = css({
-  pb: 8,
+  pb: 12,
   '& h3': {
     textStyle: 'campaignSubhead',
     mb: 2,
@@ -61,6 +62,8 @@ export default async function Page() {
         className={css({
           background: 'campaign26Background',
           color: 'campaign26',
+          display: 'flex',
+          flexDirection: 'row',
         })}
       >
         <ArticleSection
@@ -93,33 +96,52 @@ export default async function Page() {
               <Logo />
             </Link>
           </div>
-          <h2
+          <div
             className={css({
-              textStyle: 'campaignHeading',
-              mt: '12',
-              mb: '2',
-              md: { mb: '4' },
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+              md: { flexDirection: 'row-reverse' },
             })}
           >
-            Dank <FinalCount>2000</FinalCount>&nbsp;neuen Mitgliedern lösen wir
-            3&nbsp;Versprechen ein.
-          </h2>
-          <p
-            className={css({
-              textStyle: 'airy',
-              mb: '6',
-            })}
-          >
-            Unser eigentliches Ziel von 2000 haben wir bei weitem übertroffen,
-            das ist grossartig! Jetzt machen wir uns an die Arbeit.{' '}
-            <br
+            <div>
+              <h2
+                className={css({
+                  textStyle: 'campaignHeading',
+                  mt: '12',
+                  mb: '2',
+                  md: { mb: '4' },
+                })}
+              >
+                Dank <FinalCount>2000</FinalCount>&nbsp;neuen Mitgliedern lösen
+                wir 3&nbsp;Versprechen ein.
+              </h2>
+              <p
+                className={css({
+                  textStyle: 'airy',
+                  mb: '6',
+                })}
+              >
+                Unser eigentliches Ziel von 2000 haben wir bei weitem
+                übertroffen, das ist grossartig! Jetzt machen wir uns an die
+                Arbeit.{' '}
+                <br
+                  className={css({
+                    display: 'none',
+                    md: { display: 'block', mb: '2' },
+                  })}
+                />
+                Hier sehen Sie, wo wir stehen.
+              </p>
+            </div>
+            <div
               className={css({
-                display: 'none',
-                md: { display: 'block', mb: '2' },
+                width: '100%',
               })}
-            />
-            Hier sehen Sie, wo wir stehen.
-          </p>
+            >
+              <Video />
+            </div>
+          </div>
         </ArticleSection>
       </div>
       <div
@@ -132,7 +154,6 @@ export default async function Page() {
         <ArticleSection
           className={css({
             py: 6,
-            md: { display: 'grid', gridTemplateColumns: '1fr 1fr' },
           })}
         >
           <div>
@@ -157,24 +178,19 @@ export default async function Page() {
                 Wir verschenken ein Jahr Republik an Menschen, die zum ersten
                 Mal abstimmen oder wählen.
               </p>
-              <p className='status'>Status: in Arbeit</p>
-              <div
-                className={css({
-                  mt: 6,
-                  mb: 3,
-                  md: {
-                    display: 'none',
-                  },
-                })}
-              >
-                <Video />
-              </div>
+              <p className='status'>
+                Status: umgesetzt
+                <br />
+                <span className={css({ color: 'campaign26.justChocolate' })}>
+                  <a href='https://shop.republik.ch/erstwaehlerinnen'>
+                    shop.republik.ch/erstwaehlerinnen
+                  </a>
+                </span>
+              </p>
             </JournalismPromise>
             <JournalismPromise count={2}>
               <h3>
-                Journalismus für
-                <br />
-                Schulen
+                Journalismus für Schulen
               </h3>
               <p>
                 Wir stellen die Republik an Schweizer Oberstufenschulen,
@@ -202,27 +218,6 @@ export default async function Page() {
               </p>
               <p className='status'>Status: in Arbeit</p>
             </JournalismPromise>
-          </div>
-          <div
-            className={css({
-              display: 'none',
-              md: {
-                display: 'flex',
-                alignItems: 'center',
-              },
-              lg: {
-                ml: 20,
-                mr: -20,
-              },
-            })}
-          >
-            <div
-              className={css({
-                width: '100%',
-              })}
-            >
-              <Video />
-            </div>
           </div>
         </ArticleSection>
       </div>
