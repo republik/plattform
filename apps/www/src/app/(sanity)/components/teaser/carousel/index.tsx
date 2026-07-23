@@ -1,5 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
@@ -39,6 +39,7 @@ export function CarouselTeaser({
 }) {
   const backgroundColor = stegaClean(teaser.backgroundColor?.hex)
   const color = stegaClean(teaser.color?.hex)
+
   const noImage = stegaClean(imageStyle) === 'NONE'
   const smallImage = stegaClean(imageStyle) === 'SMALL'
 
@@ -68,8 +69,9 @@ export function CarouselTeaser({
             image={teaser.image}
             alt=''
             width={400}
+            height={400}
             style={{
-              width: smallImage ? '50%' : 'full',
+              width: smallImage ? '50%' : '100%',
               margin: smallImage ? '40px auto 0' : 0,
               height: 'auto',
             }}
@@ -90,7 +92,14 @@ export function CarouselTeaser({
           })}
         >
           {teaser.heading && (
-            <h5 style={{ color: teaser.headingColor?.hex ?? color }}>
+            <h5
+              style={{
+                color:
+                  teaser.headingColor?.hex ??
+                  teaser.theme?.accentColor?.hex ??
+                  color,
+              }}
+            >
               {stegaClean(teaser.heading.title)}
             </h5>
           )}

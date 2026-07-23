@@ -7,7 +7,7 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   _type,
   "title": coalesce(teaserSmall.title, title),
   "description": coalesce(teaserSmall.description, description),
-  "byline": coalesce(teaserSmall.${BYLINE_FRAGMENT}, ${BYLINE_FRAGMENT}),
+  "byline": teaserSmall.${BYLINE_FRAGMENT},
   "slug": slug.current,
   "image": teaserSmall.image,
   publishDate,
@@ -18,10 +18,11 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   },
   theme {
     name,
+    accentColor,
   },
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
-  "headingColor": coalesce(teaserSmall.headingColor, theme.accentColor),
+  "headingColor": teaserSmall.headingColor,
 `
 
 // Hack to not rely on the main query for types

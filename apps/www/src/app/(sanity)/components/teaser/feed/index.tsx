@@ -1,16 +1,26 @@
+import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import {
-  Heading,
-  LinkOverlay,
-} from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
 import {
   TeaserListItemType,
   upcomingTeaser,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
+import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
+import { timeFormat } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
+import { stegaClean } from 'next-sanity'
+import { Fragment } from 'react'
 
-export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
+const formatDate = timeFormat('%d.%m.%Y')
+
+export default function FeedTeaser({
+  teaser,
+  skipPublishDate,
+}: {
+  teaser: TeaserListItemType
+  skipPublishDate?: boolean
+}) {
   if (!teaser) return null
 
   return (
@@ -19,8 +29,8 @@ export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
       className={cx(
         typography,
         css({
-          pb: 8,
-          mb: 8,
+          pb: 6,
+          mb: 6,
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'divider',
@@ -34,22 +44,35 @@ export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
       )}
     >
       <Heading teaser={teaser} />
-      {/* standalone teaser documents carry no theme */}
-      <h4
-        className={
-          ('theme' in teaser ? teaser.theme?.name : undefined) !== 'EDITORIAL'
-            ? 'meta'
-            : ''
-        }
-      >
+      <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
         <LinkOverlay teaser={teaser} />
       </h4>
-      <p className='description'>
-        <InlinePortableText value={teaser.description} />
-      </p>
-      <p className='byline'>
-        <InlinePortableText value={teaser.byline} />
-      </p>
+      {hasContent(teaser.description) && (
+        <p className='description'>
+          <InlinePortableText value={teaser.description} />
+        </p>
+      )}
+      {(hasContent(teaser.byline) || !skipPublishDate) && (
+        <p className='byline'>
+          {[
+            hasContent(teaser.byline) && (
+              <InlinePortableText key='byline' value={teaser.byline} />
+            ),
+            !skipPublishDate && teaser.publishDate && (
+              <span key='date'>
+                {formatDate(new Date(stegaClean(teaser.publishDate)))}
+              </span>
+            ),
+          ]
+            .filter(Boolean)
+            .map((part, index) => (
+              <Fragment key={index}>
+                {index > 0 && ', '}
+                {part}
+              </Fragment>
+            ))}
+        </p>
+      )}
     </div>
   )
 }

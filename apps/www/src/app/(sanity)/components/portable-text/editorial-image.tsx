@@ -1,7 +1,10 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import type { EditorialImage, GroupedEditorialImage } from '@/sanity.types'
 import { cva } from '@republik/theme/css'
-import { getImageDimensions } from '@sanity/asset-utils'
+import {
+  getImageDimensions,
+  type SanityImageDimensions,
+} from '@sanity/asset-utils'
 import { Image } from 'next-sanity/image'
 import { useId } from 'react'
 import { Caption } from './caption'
@@ -34,7 +37,7 @@ const figureStyle = cva({
   },
 })
 
-const image = cva({
+const imageStyle = cva({
   base: {
     display: 'block',
     width: '100%',
@@ -60,6 +63,10 @@ export function EditorialImage({
   const captionId = useId()
   const { _type, asset, imageDark, alt, caption } = value
 
+  if (!asset) {
+    return null
+  }
+
   const size = _type === 'editorialImage' ? value.size : undefined
 
   const isGrouped = _type === 'groupedEditorialImage'
@@ -70,19 +77,29 @@ export function EditorialImage({
   // (to optimize image loading) but this media query gives us the best quality.
   const sizes = isGrouped ? '(max-width: 607px) 100vw, 50vw' : '100vw'
 
-  if (!asset) {
+  let imageProps: { src: string; dimensions: SanityImageDimensions }
+  let darkImageProps:
+    | { src: string; dimensions: SanityImageDimensions }
+    | undefined
+
+  try {
+    const src = urlFor(value).url()
+    imageProps = {
+      src,
+      dimensions: getImageDimensions(src),
+    }
+
+    if (imageDark) {
+      const darkSrc = urlFor(imageDark).url()
+      darkImageProps = {
+        src: darkSrc,
+        dimensions: getImageDimensions(darkSrc),
+      }
+    }
+  } catch (e) {
+    console.warn(e)
     return null
   }
-
-  const src = urlFor(value).url()
-  const dimensions = getImageDimensions(src)
-
-  const darkImage = imageDark
-    ? {
-        src: urlFor(imageDark).url(),
-        dimensions: getImageDimensions(urlFor(imageDark).url()),
-      }
-    : undefined
 
   return (
     <figure
@@ -91,24 +108,36 @@ export function EditorialImage({
       role='group'
       aria-labelledby={captionId}
     >
-      {darkImage && (
+      {darkImageProps ? (
+        <>
+          <Image
+            className={imageStyle({ only: 'dark' })}
+            src={darkImageProps.src}
+            alt={alt ?? ''}
+            width={darkImageProps.dimensions.width}
+            height={darkImageProps.dimensions.height}
+            sizes={sizes}
+          />
+          <Image
+            className={imageStyle({ only: 'light' })}
+            src={imageProps.src}
+            alt={alt ?? ''}
+            width={imageProps.dimensions.width}
+            height={imageProps.dimensions.height}
+            sizes={sizes}
+          />
+        </>
+      ) : (
         <Image
-          className={image({ only: 'dark' })}
-          src={darkImage.src}
+          className={imageStyle()}
+          src={imageProps.src}
           alt={alt ?? ''}
-          width={darkImage.dimensions.width}
-          height={darkImage.dimensions.height}
+          width={imageProps.dimensions.width}
+          height={imageProps.dimensions.height}
           sizes={sizes}
         />
       )}
-      <Image
-        className={image({ only: darkImage ? 'light' : undefined })}
-        src={src}
-        alt={alt ?? ''}
-        width={dimensions.width}
-        height={dimensions.height}
-        sizes={sizes}
-      />
+
       {caption && <Caption id={captionId} caption={caption} />}
     </figure>
   )

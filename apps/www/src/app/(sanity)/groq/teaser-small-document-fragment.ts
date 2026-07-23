@@ -6,6 +6,8 @@ import { defineQuery } from 'next-sanity'
 // TEASER_SMALL_FRAGMENT so both can be rendered by the same components.
 // Teasers have no own page: "href" resolves the first target (article/page
 // reference or plain link) and is null when the teaser links nowhere.
+
+// Duplication of color to maximise type compatibility with teaser-small-fragment
 export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   _id,
   _type,
@@ -22,6 +24,10 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   upcomingOnly,
   "heading": {
     "title": teaserSmall.heading
+  },
+  "theme": {
+    "accentColor": teaserSmall.headingColor,
+    "name": "EDITORIAL",
   },
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
