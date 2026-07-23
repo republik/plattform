@@ -16,7 +16,7 @@ type Theme = 'dark' | 'light' | undefined
 
 // Two force sources with fixed precedence: an explicit `manual` toggle (the
 // Sanity preview dark-mode button) wins over a `content` force (an article/page
-// whose theme.darkMode is set). Both only affect the visual theme, never content.
+// whose theme.darkMode is set) — see `forcedTheme` below.
 type ForceSource = 'content' | 'manual'
 
 const ForceThemeCtx = createContext<(source: ForceSource, theme: Theme) => void>(
