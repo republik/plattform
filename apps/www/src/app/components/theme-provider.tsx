@@ -15,6 +15,13 @@ const ForceThemeCtx = createContext<(t: 'dark' | 'light' | undefined) => void>(
   () => {},
 )
 
+// A manual theme override, separate from the content-driven force above. Used by
+// the Sanity preview dark-mode toggle. It takes precedence over the content
+// force (`manual ?? forced`), so an editor's explicit toggle wins.
+const ManualThemeCtx = createContext<
+  (t: 'dark' | 'light' | undefined) => void
+>(() => {})
+
 export function useForceTheme(theme: 'dark' | 'light' | undefined) {
   const setForced = useContext(ForceThemeCtx)
   useEffect(() => {
@@ -23,20 +30,25 @@ export function useForceTheme(theme: 'dark' | 'light' | undefined) {
   }, [theme, setForced])
 }
 
+export const useSetManualTheme = () => useContext(ManualThemeCtx)
+
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [forced, setForced] = useState<'dark' | 'light' | undefined>()
+  const [manual, setManual] = useState<'dark' | 'light' | undefined>()
   return (
     <ForceThemeCtx.Provider value={setForced}>
-      <NextThemeProvider
-        attribute='data-theme'
-        disableTransitionOnChange
-        forcedTheme={forced}
-      >
-        {/* <Head>
+      <ManualThemeCtx.Provider value={setManual}>
+        <NextThemeProvider
+          attribute='data-theme'
+          disableTransitionOnChange
+          forcedTheme={manual ?? forced}
+        >
+          {/* <Head>
         <meta name='theme-color' content='var(--color-default)' />
       </Head> */}
-        {children}
-      </NextThemeProvider>
+          {children}
+        </NextThemeProvider>
+      </ManualThemeCtx.Provider>
     </ForceThemeCtx.Provider>
   )
 }
