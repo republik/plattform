@@ -16,7 +16,7 @@ export default async function SanityFrontLayout({
         <div
           className={css({
             color: 'text',
-            position: 'relative',
+            pb: '16-32',
           })}
         >
           {children}

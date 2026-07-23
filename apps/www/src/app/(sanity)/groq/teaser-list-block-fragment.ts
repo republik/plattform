@@ -16,7 +16,7 @@ export const TEASER_LIST_BLOCK_FRAGMENT = /* groq */ `
         _type == "article" &&
         ^.source.collection._ref in articleCollections[].collection._ref
       ) || (
-        _type == "teaserSmall" &&
+        _type == "teaser" &&
         collection._ref == ^.source.collection._ref
       )
     ]),

@@ -10,7 +10,7 @@ export const TEASERS_SMALL_QUERY_DESC = defineQuery(`
           _type in ["article", "page"] => {
             ${TEASER_SMALL_FRAGMENT}
           },
-          _type == "teaserSmall" => {
+          _type == "teaser" => {
             ${TEASER_SMALL_DOCUMENT_FRAGMENT}
           }
         },
@@ -19,14 +19,14 @@ export const TEASERS_SMALL_QUERY_DESC = defineQuery(`
             _type == "article" &&
             ^.source.collection._ref in articleCollections[].collection._ref
           ) || (
-            _type == "teaserSmall" &&
+            _type == "teaser" &&
             collection._ref == ^.source.collection._ref
           )
         ] | order(publishDate desc) [$start...$end] {
           _type == "article" => {
             ${TEASER_SMALL_FRAGMENT}
           },
-          _type == "teaserSmall" => {
+          _type == "teaser" => {
             ${TEASER_SMALL_DOCUMENT_FRAGMENT}
           }
         }, []

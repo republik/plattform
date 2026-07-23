@@ -1,4 +1,3 @@
-import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { Block } from '@/app/(sanity)/front/components/block'
 import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
@@ -7,6 +6,7 @@ import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { stegaClean } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
 export default async function FrontPage() {
@@ -14,24 +14,17 @@ export default async function FrontPage() {
 
   if (!front) notFound()
 
-  const { _id, title, pageBuilder = [] } = front
+  const { _id, title, pageBuilder = [], oldestPublishDate } = front
+
+  const restOfFrontStart = oldestPublishDate
+    ? stegaClean(oldestPublishDate)
+    : undefined
 
   return (
     <EventTrackingContext category='Front'>
       <h1 className={css({ srOnly: true })}>
         <InlinePortableText value={title} />
       </h1>
-
-      <div
-        className={css({
-          position: 'absolute',
-          top: '8',
-          right: '8',
-          zIndex: 999,
-        })}
-      >
-        <EditLink documentId={_id} documentType='front' />
-      </div>
 
       <div
         data-sanity={dataAttribute({
@@ -54,7 +47,7 @@ export default async function FrontPage() {
         ))}
       </div>
 
-      <FrontFeed />
+      {restOfFrontStart && <FrontFeed before={restOfFrontStart} />}
     </EventTrackingContext>
   )
 }

@@ -32,7 +32,10 @@ export default function GridTeaser({
     >
       {label && <h6 dangerouslySetInnerHTML={{ __html: label }} />}
       <TeaserImage
-
+        className={css({
+          width: 'full',
+          height: 'auto',
+        })}
         image={teaser.image}
         alt=''
         width={640}

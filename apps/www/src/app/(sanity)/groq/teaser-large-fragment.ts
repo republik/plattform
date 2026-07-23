@@ -2,33 +2,25 @@ import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { TEASER_LARGE_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
-// teaserLarge is now its own document that references an article/page via
-// target[0]. Its own fields are overrides; anything unset falls back to the
-// referenced document. Output shape matches the previous fragment so the
-// large-teaser components keep working unchanged.
 export const TEASER_LARGE_FRAGMENT = /* groq */ `
   _id,
-  "_type": target[0]->_type,
-  // link can either be a plain link OR a referenced doc
-  "target": coalesce(target[0]->slug.current, target[0].href),
-  "publishDate": target[0]->publishDate,
-  "theme": {
-    "name": target[0]->theme.name,
-    "accentColor": target[0]->theme.accentColor,
+  _type,
+  "slug": slug.current,
+  heading->{
+    _id,
+    "title": coalesce(^.teaserLarge.heading, pt::text(title)),
+    "slug": slug.current,
   },
-  // heading: own string override, else the referenced doc's format title
-  "heading": select(
-    defined(heading) => { "title": heading },
-    defined(target[0]->heading) => {
-      "title": pt::text(target[0]->heading->title)
-    }
-  ),
-  "teaser": {
+  theme {
+    name,
+  },
+  publishDate,
+  "teaser": teaserLarge {
     layout,
-    "title": coalesce(title, target[0]->title),
-    "description": coalesce(description, target[0]->description),
-    "byline": coalesce(${BYLINE_FRAGMENT}, target[0]->${BYLINE_FRAGMENT}),
-    "image": coalesce(image, target[0]->image),
+    "title": coalesce(title, ^.title),
+    "description": coalesce(description, ^.description),
+    "byline": coalesce(${BYLINE_FRAGMENT}, ^.${BYLINE_FRAGMENT}),
+    image,
     imageCredits,
     imagePosition,
     imagePadding,
@@ -42,7 +34,7 @@ export const TEASER_LARGE_FRAGMENT = /* groq */ `
 
 // Hack to not rely on the main query for types
 const TEASER_LARGE_FRAGMENT_QUERY = defineQuery(
-  `*[_type == "teaserLarge"][0]{
+  `*[_type in ["article", "page"]][0]{
     ${TEASER_LARGE_FRAGMENT}
   }`,
 )

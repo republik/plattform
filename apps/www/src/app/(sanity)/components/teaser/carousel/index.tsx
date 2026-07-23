@@ -43,8 +43,6 @@ export function CarouselTeaser({
   const noImage = stegaClean(imageStyle) === 'NONE'
   const smallImage = stegaClean(imageStyle) === 'SMALL'
 
-  const heading = teaser.heading && stegaClean(teaser.heading.title)
-
   return (
     <div
       style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
@@ -71,9 +69,8 @@ export function CarouselTeaser({
             image={teaser.image}
             alt=''
             width={400}
-            height={400}
             style={{
-              width: smallImage ? '50%' : '100%',
+              width: smallImage ? '50%' : 'full',
               margin: smallImage ? '40px auto 0' : 0,
               height: 'auto',
             }}
@@ -93,7 +90,7 @@ export function CarouselTeaser({
             gap: '4',
           })}
         >
-          {heading && (
+          {teaser.heading && (
             <h5
               style={{
                 color:
@@ -102,7 +99,7 @@ export function CarouselTeaser({
                   color,
               }}
             >
-              {heading}
+              {stegaClean(teaser.heading.title)}
             </h5>
           )}
           {skipDescription ? (

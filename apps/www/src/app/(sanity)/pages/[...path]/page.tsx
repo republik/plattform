@@ -32,30 +32,13 @@ export async function generateMetadata({
     return { title: 'Seite nicht gefunden' }
   }
 
-  let images = null
-
-  try {
-    if (data.useImageBuilder) {
-      // Rendered "Share Image" (old style) generated on the fly by /api/og.
-      images = {
-        url: new URL(
-          `/api/og?slug=${encodeURIComponent(slug)}`,
-          process.env.NEXT_PUBLIC_BASE_URL,
-        ).toString(),
-        width: 1200,
-        height: 630,
-      }
-    } else if (data.image) {
-      // Static social image: point directly at the Sanity CDN crop.
-      images = {
+  const images = data.image
+    ? {
         url: urlFor(data.image).width(1200).height(630).url(),
         width: 1200,
         height: 630,
       }
-    }
-  } catch (error) {
-    console.error('Error generating image URL:', error)
-  }
+    : null
 
   return {
     title: data.title,
@@ -117,7 +100,7 @@ export default async function PostPage({
         )}
 
         <div className={css({ display: 'grid', placeContent: 'center' })}>
-          <EditLink documentId={_id} documentType='page' />
+          <EditLink _id={_id} documentType='page' />
         </div>
 
         {(pageBuilder ?? []).map((block) => (

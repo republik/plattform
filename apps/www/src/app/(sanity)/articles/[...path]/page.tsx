@@ -38,24 +38,13 @@ export async function generateMetadata({
   let images = null
 
   try {
-    if (data.useImageBuilder) {
-      // Rendered "Share Image" (old style) generated on the fly by /api/og.
-      images = {
-        url: new URL(
-          `/api/og?slug=${encodeURIComponent(slug)}`,
-          process.env.NEXT_PUBLIC_BASE_URL,
-        ).toString(),
-        width: 1200,
-        height: 630,
-      }
-    } else if (data.image) {
-      // Static social image: point directly at the Sanity CDN crop.
-      images = {
-        url: urlFor(data.image).width(1200).height(630).url(),
-        width: 1200,
-        height: 630,
-      }
-    }
+    images = data.image
+      ? {
+          url: urlFor(data.image).width(1200).height(630).url(),
+          width: 1200,
+          height: 630,
+        }
+      : null
   } catch (error) {
     console.error('Error generating image URL:', error)
   }
@@ -131,7 +120,7 @@ export default async function ArticlePage({
         </p>
 
         <div>
-          <EditLink documentId={article._id} documentType='article' />
+          <EditLink _id={article._id} documentType='article' />
         </div>
 
         <ArticlePortableText value={article.content} />

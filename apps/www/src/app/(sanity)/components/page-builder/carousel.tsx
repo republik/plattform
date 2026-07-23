@@ -29,7 +29,7 @@ const carousel = css({
   display: 'flex',
   overflowX: 'scroll',
   scrollSnapType: 'x mandatory',
-  pb: '8',
+  pb: '2',
 })
 
 export async function Carousel({
