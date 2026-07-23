@@ -1,8 +1,40 @@
 'use client'
 
+import { groupByDate } from '@/app/(sanity)/articles/feed/components/group-by-date'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { css, cx } from '@republik/theme/css'
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
+
+const groupStyle = css({
+  display: 'grid',
+  gridTemplateColumns: { base: '1fr', lg: '120px 1fr' },
+  columnGap: '8',
+  alignItems: 'start',
+})
+
+const dateHeaderStyle = css({
+  borderTopWidth: 1,
+  borderTopStyle: 'solid',
+  borderTopColor: 'divider',
+  py: '4',
+  whiteSpace: 'pre-line',
+  textStyle: 'sans',
+  fontSize: 's',
+  position: 'sticky',
+  top: '0',
+  alignSelf: 'start',
+  background: 'pageBackground',
+  zIndex: 1,
+  lg: { pb: '6' },
+})
+
+const teaserGroupStyle = css({
+  borderTopWidth: 1,
+  borderTopStyle: 'solid',
+  borderTopColor: 'divider',
+  pt: '6',
+})
 
 export function ArticlesFeedClient({
   initialTeasers,
@@ -43,10 +75,34 @@ export function ArticlesFeedClient({
     return () => observer.disconnect()
   }, [hasMore, isPending, loadMore])
 
+  const groups = groupByDate(teasers)
+
   return (
     <>
-      {teasers.map((teaser) => (
-        <FeedTeaser key={teaser._id} teaser={teaser} skipPublishDate />
+      {groups.map((group) => (
+        <section key={group.key} className={groupStyle}>
+          <h2
+            className={cx(
+              dateHeaderStyle,
+              css({ display: 'block', lg: { display: 'none' } }),
+            )}
+          >
+            {group.label}
+          </h2>
+          <h2
+            className={cx(
+              dateHeaderStyle,
+              css({ display: 'none', lg: { display: 'block' } }),
+            )}
+          >
+            {group.labelLg}
+          </h2>
+          <div className={teaserGroupStyle}>
+            {group.teasers.map((teaser) => (
+              <FeedTeaser key={teaser._id} teaser={teaser} skipPublishDate />
+            ))}
+          </div>
+        </section>
       ))}
       {hasMore && <div ref={sentinelRef} aria-hidden />}
     </>

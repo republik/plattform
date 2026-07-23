@@ -29,8 +29,8 @@ export default function FeedTeaser({
       className={cx(
         typography,
         css({
-          pb: 8,
-          mb: 8,
+          pb: 6,
+          mb: 6,
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'divider',
