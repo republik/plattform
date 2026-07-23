@@ -1,5 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import {
+  getHref,
   Heading,
   TeaserLargeImage,
 } from '@/app/(sanity)/components/teaser/large/helpers'
@@ -194,12 +195,12 @@ const imageCredits = cva({
 export function SplitTeaser({
   _id,
   _type,
-  slug,
+  target,
   theme,
   heading,
   teaser,
 }: TeaserLargeFragmentType) {
-  const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
+  const href = getHref(target, _type)
 
   return (
     <div

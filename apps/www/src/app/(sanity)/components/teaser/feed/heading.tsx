@@ -9,7 +9,7 @@ export function Heading({ teaser }: { teaser: TeaserListItemType }) {
 
   if (!teaser?.heading) return null
 
-  if (teaser._type === 'teaser') {
+  if (teaser._type === 'teaserSmall') {
     return (
       <h5 style={{ color: teaser.headingColor?.hex }}>
         {stegaClean(teaser.heading.title)}

@@ -27,7 +27,7 @@ export function TeaserImage({
   height,
   ...imageProps
 }: {
-  image: TeaserSmall['image']
+  image: TeaserSmall['teaserSmallConfig']['image']
   width: number
   height: number
 } & Omit<ImageProps, 'src' | 'width' | 'height'>) {

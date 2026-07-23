@@ -1,19 +1,15 @@
 import { TEASER_LARGE_FRAGMENT } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { defineQuery } from 'next-sanity'
 
-export const FRONT_FEED_EXCLUDED_COLLECTIONS = [
-  'Briefings',
-  'Kolumnen',
-  'Newsletter',
-]
-
+// teaserLarge documents referencing an article, ordered by the referenced
+// article's publishDate, continuing below the oldest curated teaser ($before).
 export const FRONT_FEED_QUERY = defineQuery(`
   *[
-    _type == "article" &&
-    defined(publishDate) &&
-    publishDate < $before &&
-    coalesce(count(articleCollections[collection->title in $excludedCollections]), 0) == 0
-  ] | order(publishDate desc) [$start...$end] {
+    _type == "teaserLarge" &&
+    target[0]->_type == "article" &&
+    defined(target[0]->publishDate) &&
+    target[0]->publishDate < $before
+  ] | order(target[0]->publishDate desc) [$start...$end] {
     ${TEASER_LARGE_FRAGMENT}
   }
-`);
+`)

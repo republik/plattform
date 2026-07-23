@@ -3,7 +3,6 @@ import { SplitTeaser } from '@/app/(sanity)/components/teaser/large/split-teaser
 import { TextTeaser } from '@/app/(sanity)/components/teaser/large/text-teaser'
 import { VignetteTeaser } from '@/app/(sanity)/components/teaser/large/vignette-teaser'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
-import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 
 export function TeaserLarge(props: TeaserLargeFragmentType) {
   switch (props.teaser?.layout) {

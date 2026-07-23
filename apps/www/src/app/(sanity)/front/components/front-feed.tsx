@@ -1,7 +1,4 @@
-import {
-  FRONT_FEED_EXCLUDED_COLLECTIONS,
-  FRONT_FEED_QUERY,
-} from '@/app/(sanity)/groq/front-feed-query'
+import { FRONT_FEED_QUERY } from '@/app/(sanity)/groq/front-feed-query'
 import { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { FrontFeedClient } from './front-feed-client'
@@ -15,7 +12,6 @@ export async function FrontFeed({ before }: { before: string }) {
       query: FRONT_FEED_QUERY,
       params: {
         before,
-        excludedCollections: FRONT_FEED_EXCLUDED_COLLECTIONS,
         start: offset,
         end: offset + PAGE_SIZE,
       },

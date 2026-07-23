@@ -43,6 +43,8 @@ export function CarouselTeaser({
   const noImage = stegaClean(imageStyle) === 'NONE'
   const smallImage = stegaClean(imageStyle) === 'SMALL'
 
+  const heading = teaser.heading && stegaClean(teaser.heading.title)
+
   return (
     <div
       style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
@@ -91,7 +93,7 @@ export function CarouselTeaser({
             gap: '4',
           })}
         >
-          {teaser.heading && (
+          {heading && (
             <h5
               style={{
                 color:
@@ -100,7 +102,7 @@ export function CarouselTeaser({
                   color,
               }}
             >
-              {stegaClean(teaser.heading.title)}
+              {heading}
             </h5>
           )}
           {skipDescription ? (
