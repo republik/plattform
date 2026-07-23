@@ -1,3 +1,5 @@
+'use client'
+
 import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
 
 import { useMe } from '@/lib/context/MeContext'
