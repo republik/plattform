@@ -5,5 +5,5 @@ import { stegaClean } from 'next-sanity'
 export function hasContent(
   value?: PortableTextBlock | ArbitraryTypedObject[] | PortableTextBlock[],
 ) {
-  return !!value && stegaClean(toPlainText(value)).trim() !== ''
+  return !value || stegaClean(toPlainText(value)).trim() !== ''
 }

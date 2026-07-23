@@ -1,5 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
@@ -32,7 +32,10 @@ export default function GridTeaser({
     >
       {label && <h6 dangerouslySetInnerHTML={{ __html: label }} />}
       <TeaserImage
-
+        className={css({
+          width: 'full',
+          height: 'auto',
+        })}
         image={teaser.image}
         alt=''
         width={640}

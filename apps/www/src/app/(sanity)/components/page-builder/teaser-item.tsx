@@ -5,12 +5,8 @@ import { css } from '@republik/theme/css'
 export function TeaserItem({
   reference,
 }: {
-  reference: TeaserLargeFragmentType | null
+  reference: TeaserLargeFragmentType
 }) {
-  if (!reference) {
-    return null
-  }
-
   return (
     <div className={css({ gridColumn: 'full', m: 0 })}>
       <TeaserLarge {...reference} />

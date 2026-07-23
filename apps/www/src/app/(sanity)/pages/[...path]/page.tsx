@@ -115,7 +115,7 @@ export default async function PostPage({
         )}
 
         <div className={css({ display: 'grid', placeContent: 'center' })}>
-          <EditLink documentId={_id} documentType='page' />
+          <EditLink _id={_id} documentType='page' />
         </div>
 
         {(pageBuilder ?? []).map((block) => (

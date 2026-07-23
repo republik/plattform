@@ -129,7 +129,7 @@ export default async function ArticlePage({
         </p>
 
         <div>
-          <EditLink documentId={article._id} documentType='article' />
+          <EditLink _id={article._id} documentType='article' />
         </div>
 
         <ArticlePortableText value={article.content} />
