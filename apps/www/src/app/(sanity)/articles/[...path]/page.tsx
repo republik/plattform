@@ -1,3 +1,4 @@
+import { ContentWall } from '@/app/(sanity)/articles/[...path]/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
@@ -83,6 +84,7 @@ export default async function ArticlePage({
     description,
     byline,
     articleCollection,
+    readingAccess,
   } = article
   const seriesId = articleCollection?.series && articleCollection?._id
 
@@ -121,7 +123,9 @@ export default async function ArticlePage({
           <EditLink documentId={article._id} documentType='article' />
         </div>
 
-        <ArticlePortableText value={article.content} />
+        <ContentWall readingAccess={readingAccess}>
+          <ArticlePortableText value={article.content} />
+        </ContentWall>
 
         <FollowArticle
           seriesId={seriesId}

@@ -30,6 +30,7 @@ export const ARTICLE_QUERY = defineQuery(
       darkMode
     },
     ${PORTABLE_TEXT_CONTENT_FRAGMENT},
+    readingAccess,
     contributors[]{
       _id,
       kind,
