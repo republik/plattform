@@ -51,6 +51,7 @@
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-schedulers": "*",
     "@orbiting/backend-modules-search": "*",
+    "@orbiting/backend-modules-search-typesense": "*",
     "@orbiting/backend-modules-slack": "*",
     "@orbiting/backend-modules-sms": "*",
     "@orbiting/backend-modules-statistics": "*",

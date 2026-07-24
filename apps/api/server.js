@@ -7,6 +7,10 @@ const {
 const {
   NotifyListener: SearchNotifyListener,
 } = require('@orbiting/backend-modules-search')
+const {
+  Listener: SearchTypesenseListener,
+  graphql: searchTypesense,
+} = require('@orbiting/backend-modules-search-typesense')
 const { t } = require('@orbiting/backend-modules-translate')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
@@ -173,6 +177,7 @@ const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
+  SEARCH_TYPESENSE_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
@@ -215,6 +220,7 @@ const run = async (workerId, config) => {
     publikator,
     documents,
     search,
+    searchTypesense,
     redirections,
     discussions,
     notifications,
@@ -349,6 +355,11 @@ const runOnce = async () => {
     searchNotifyListener = await SearchNotifyListener.start(context)
   }
 
+  let searchTypesenseListener
+  if (SEARCH_TYPESENSE_LISTENER && SEARCH_TYPESENSE_LISTENER !== 'false') {
+    searchTypesenseListener = await SearchTypesenseListener.start(context)
+  }
+
   let accessScheduler
   if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
     console.log('ACCESS_SCHEDULER prevented scheduler from being started', {
@@ -454,6 +465,7 @@ const runOnce = async () => {
     await Promise.all(
       [
         searchNotifyListener && searchNotifyListener.close(),
+        searchTypesenseListener && searchTypesenseListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
         databroomScheduler && databroomScheduler.close(),
