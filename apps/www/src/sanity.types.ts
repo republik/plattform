@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type Src = {
   mp4?: string
   hls?: string
@@ -666,17 +666,20 @@ export type Contributor = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title: string
-  description?: string
-  portrait?: {
+  portraitImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     _type: 'image'
   }
+  title: string
+  shortBio?: string
+  gender?: 'm' | 'f' | 'd' | 'na'
+  prolitterisId?: string
+  prolitterisFirstname?: string
+  prolitterisLastname?: string
   userId?: string
-  slug?: Slug
 }
 
 export type DiscussionReference = {
@@ -1818,14 +1821,8 @@ export type ARTICLE_QUERY_RESULT = {
     kind: string | null
     slug: string | null
     name: string | null
-    description: string | null
-    portrait: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
+    description: null
+    portrait: null
   }> | null
   articleCollection: {
     _id: string

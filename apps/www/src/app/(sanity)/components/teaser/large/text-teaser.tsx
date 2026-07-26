@@ -45,11 +45,16 @@ const teaserTitle = cva({
           lineHeight: '72px',
         },
       },
+      // `md` is left untouched here so MEDIUM/LARGE still grow through
+      // `base.md` (100/110) first, matching legacy's `mUp` step, before
+      // their own further growth at `lg`/`xlg` (legacy's `tUp`/`dUp` steps).
       LARGE: {
-        md: { fontSize: '125px', lineHeight: '137px' },
-        lg: { fontSize: '156px', lineHeight: '169px' },
+        lg: { fontSize: '125px', lineHeight: '137px' },
+        xlg: { fontSize: '156px', lineHeight: '169px' },
       },
-      MEDIUM: { md: { fontSize: '125px', lineHeight: '137px' } },
+      MEDIUM: { lg: { fontSize: '125px', lineHeight: '137px' } },
+      // Caps at the shared `base.md` step (100/110) — legacy TypoHeadline's
+      // default never grows past `mUp`.
       STANDARD: {},
     },
   },
