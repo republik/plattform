@@ -1,4 +1,4 @@
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 
 import { Button } from '@/app/components/ui/button'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'

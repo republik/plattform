@@ -1,3 +1,5 @@
+import CampaignPaynote from '@/app/(sanity)/components/paynotes/campaign/campaign-paynote'
+import { PaynoteOverlay } from '@/app/(sanity)/components/paynotes/paynote/paynote-overlay'
 import { PaynotesProvider } from '@/app/(sanity)/components/paynotes/paynotes-context'
 
 // Route-group layout: wraps every route under (sanity) so the paynotes
@@ -7,5 +9,11 @@ export default function SanityGroupLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <PaynotesProvider>{children}</PaynotesProvider>
+  return (
+    <PaynotesProvider>
+      {children}
+      <PaynoteOverlay />
+      <CampaignPaynote />
+    </PaynotesProvider>
+  )
 }

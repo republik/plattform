@@ -2,7 +2,7 @@
 import CampaignMembershipsCounter from '@/app/kampagne/components/campaign-memberships-counter'
 import { Offers } from '@/app/kampagne/components/campaign-offers'
 import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import Login from '@/app/components/paynotes/regwall/login'
 import { ArticleSection } from '@/app/components/ui/section'
 import {

@@ -1,10 +1,10 @@
 'use client'
 
-import CampaignPaywall from '@/app/(sanity)/components/paynotes/campaign/campaign-paywall'
 import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import Paywall from '@/app/(sanity)/components/paynotes/paywall'
 import Regwall from '@/app/(sanity)/components/paynotes/regwall'
 import { Article } from '@/sanity.types'
+import { css } from '@republik/theme/css'
 import { usePathname } from 'next/navigation'
 import { ReactNode, useEffect } from 'react'
 
@@ -32,9 +32,10 @@ export function ContentWall({
   return (
     <>
       <div className='regwall'>{hasPaywall ? <p>TODO</p> : children}</div>
-      <Regwall />
-      <Paywall />
-      <CampaignPaywall />
+      <div className={css({ gridColumn: 'full' })}>
+        <Regwall key={`regwall-${pathname}`} />
+        <Paywall key={`paywall-${pathname}`} />
+      </div>
     </>
   )
 }

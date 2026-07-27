@@ -1,4 +1,4 @@
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 
 import { PaynoteContainer } from '@/app/components/ui/containers'
 import {

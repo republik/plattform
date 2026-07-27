@@ -1,7 +1,7 @@
 'use client'
 
 import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
