@@ -241,6 +241,7 @@ const upsertOrDeleteUser = async (pgdb: PgDb, userId: string) => {
         'biography',
         'statement',
         'portraitUrl',
+        'email',
         'hasPublicProfile',
         'createdAt',
       ],

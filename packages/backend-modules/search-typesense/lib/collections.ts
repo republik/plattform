@@ -93,6 +93,13 @@ export interface TypesenseUserDocument {
   credentialVerified?: boolean
   /** Resized/bw display URL, see @orbiting/backend-modules-republik/lib/portrait. */
   portrait?: string
+  /**
+   * Admin-only field -- indexed so admin/support callers can search users by
+   * email, but stripped from every non-admin scoped key's results via
+   * exclude_fields (see lib/scopedKey.ts). Never exposed to public/member
+   * tiers.
+   */
+  email?: string
   /** Kept for completeness/debugging; searchScope is what filters actually use. */
   hasPublicProfile: boolean
   /**
@@ -175,6 +182,7 @@ const usersFields: CollectionCreateSchema['fields'] = [
   { name: 'credential', type: 'string', optional: true, index: false },
   { name: 'credentialVerified', type: 'bool', optional: true, index: false },
   { name: 'portrait', type: 'string', optional: true, index: false },
+  { name: 'email', type: 'string', optional: true },
   { name: 'hasPublicProfile', type: 'bool', index: false },
   { name: 'searchScope', type: 'string', facet: true },
   { name: 'createdAt', type: 'int64' },
