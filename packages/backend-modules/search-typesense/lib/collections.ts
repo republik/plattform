@@ -130,10 +130,22 @@ export interface TypesenseArticleDocument {
    * Blueprint Function, which populates `contributors` from `byline`) --
    * a structured facet alongside the freeform `byline` text. */
   authors?: string[]
+  /** JSON-encoded CreditsNode[] (see republik/studio's
+   * shared/search/bylineToCredits.ts) -- the article's byline exactly as
+   * authored, with internalLink spans resolved to `/~slug` profile links. */
+  credits?: string
   /** True if a produced mp3 exists, or synthetic read-aloud isn't suppressed. */
   hasAudio?: boolean
   /** "produced" | "synthetic" -- absent if there's no audio at all. */
   audioSourceKind?: string
+  /** The `backendDiscussionId` field on the article's referenced Sanity
+   * `discussion` document -- the Postgres `discussions.id` for that thread.
+   * Used to batch-fetch live comment counts/paths for search results
+   * client-side; Typesense itself carries no live discussion data. */
+  discussionId?: string
+  /** The article's `theme.accentColor` (hex) -- Spitzmarke/border accent
+   * color, mirroring the old format.meta.color. */
+  accentColor?: string
   /** Always "public" -- articles carry no privacy dimension today. */
   searchScope: 'public'
 }
@@ -141,15 +153,15 @@ export interface TypesenseArticleDocument {
 const commentsFields: CollectionCreateSchema['fields'] = [
   { name: 'id', type: 'string' },
   { name: 'contentString', type: 'string' },
-  { name: 'authorName', type: 'string', optional: true, facet: true },
-  { name: 'authorId', type: 'string', optional: true },
-  { name: 'authorSlug', type: 'string', optional: true },
-  { name: 'authorPortrait', type: 'string', optional: true },
-  { name: 'authorCredential', type: 'string', optional: true },
-  { name: 'authorCredentialVerified', type: 'bool', optional: true },
-  { name: 'discussionId', type: 'string', facet: true },
-  { name: 'articlePath', type: 'string', optional: true, facet: true },
-  { name: 'tag', type: 'string', optional: true, facet: true },
+  { name: 'authorName', type: 'string', optional: true },
+  { name: 'authorId', type: 'string', optional: true, index: false },
+  { name: 'authorSlug', type: 'string', optional: true, index: false },
+  { name: 'authorPortrait', type: 'string', optional: true, index: false },
+  { name: 'authorCredential', type: 'string', optional: true, index: false },
+  { name: 'authorCredentialVerified', type: 'bool', optional: true, index: false },
+  { name: 'discussionId', type: 'string', index: false },
+  { name: 'articlePath', type: 'string', optional: true, index: false },
+  { name: 'tag', type: 'string', optional: true, index: false },
   { name: 'createdAt', type: 'int64' },
   { name: 'searchScope', type: 'string', facet: true },
 ]
@@ -157,31 +169,34 @@ const commentsFields: CollectionCreateSchema['fields'] = [
 const usersFields: CollectionCreateSchema['fields'] = [
   { name: 'id', type: 'string' },
   { name: 'name', type: 'string' },
-  { name: 'username', type: 'string', optional: true, facet: true },
+  { name: 'username', type: 'string', optional: true, index: false },
   { name: 'biography', type: 'string', optional: true },
   { name: 'statement', type: 'string', optional: true },
-  { name: 'credential', type: 'string', optional: true },
-  { name: 'credentialVerified', type: 'bool', optional: true },
-  { name: 'portrait', type: 'string', optional: true },
-  { name: 'hasPublicProfile', type: 'bool', facet: true },
+  { name: 'credential', type: 'string', optional: true, index: false },
+  { name: 'credentialVerified', type: 'bool', optional: true, index: false },
+  { name: 'portrait', type: 'string', optional: true, index: false },
+  { name: 'hasPublicProfile', type: 'bool', index: false },
   { name: 'searchScope', type: 'string', facet: true },
   { name: 'createdAt', type: 'int64' },
 ]
 
 const articlesFields: CollectionCreateSchema['fields'] = [
   { name: 'id', type: 'string' },
-  { name: 'type', type: 'string', facet: true },
+  { name: 'type', type: 'string', index: false },
   { name: 'title', type: 'string' },
   { name: 'byline', type: 'string', optional: true },
   { name: 'description', type: 'string', optional: true },
   { name: 'plainTextBody', type: 'string' },
-  { name: 'slug', type: 'string', optional: true },
+  { name: 'slug', type: 'string', optional: true, index: false },
   { name: 'publishDate', type: 'int64' },
-  { name: 'readingAccess', type: 'string', optional: true },
+  { name: 'readingAccess', type: 'string', optional: true, index: false },
   { name: 'collections', type: 'string[]', optional: true, facet: true },
   { name: 'authors', type: 'string[]', optional: true, facet: true },
+  { name: 'credits', type: 'string', optional: true, index: false },
   { name: 'hasAudio', type: 'bool', optional: true, facet: true },
-  { name: 'audioSourceKind', type: 'string', optional: true, facet: true },
+  { name: 'audioSourceKind', type: 'string', optional: true, index: false },
+  { name: 'discussionId', type: 'string', optional: true, index: false },
+  { name: 'accentColor', type: 'string', optional: true, index: false },
   { name: 'searchScope', type: 'string', facet: true },
 ]
 
