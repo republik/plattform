@@ -18,9 +18,7 @@ export default async function FrontPage() {
 
   return (
     <EventTrackingContext category='Front'>
-      <h1 className={css({ srOnly: true })}>
-        <InlinePortableText value={title} />
-      </h1>
+      <h1 className={css({ srOnly: true })}>Republik Magazin</h1>
 
       <div
         className={css({
