@@ -1,5 +1,3 @@
-export const DEFAULT_FILTERS = [{ key: 'template', value: 'front', not: true }]
-
 export const SUPPORTED_FILTERS = [
   {
     key: 'type',
@@ -34,7 +32,6 @@ export const LATEST_SORT = {
   direction: 'DESC',
 }
 
-export const DEFAULT_AGGREGATION_KEYS = ['type', 'audioSourceKind']
 export const DEFAULT_FILTER = SUPPORTED_FILTERS[0]
 export const DEFAULT_SORT = {
   key: 'relevance',
