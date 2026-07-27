@@ -48,9 +48,20 @@ export interface TypesenseCommentDocument {
   contentString: string
   /** Absent entirely when the comment is anonymous. */
   authorName?: string
+  /** Absent under the same conditions as authorName (anonymous comment). */
+  authorId?: string
+  /** Profile slug (username, falls back to id) -- absent when authorName is. */
+  authorSlug?: string
+  /** Resized/bw display URL, see @orbiting/backend-modules-republik/lib/portrait. */
+  authorPortrait?: string
+  /** Author's single "listed" credential description, if any. */
+  authorCredential?: string
+  authorCredentialVerified?: boolean
   discussionId: string
   /** Absent when the discussion isn't tied to a document/article. */
   articlePath?: string
+  /** First tag on the comment, if any -- surfaced as the topic/context line. */
+  tag?: string
   /** unix ms */
   createdAt: number
   /**
@@ -79,6 +90,9 @@ export interface TypesenseUserDocument {
   statement?: string
   /** Resolved single "listed" credential description. */
   credential?: string
+  credentialVerified?: boolean
+  /** Resized/bw display URL, see @orbiting/backend-modules-republik/lib/portrait. */
+  portrait?: string
   /** Kept for completeness/debugging; searchScope is what filters actually use. */
   hasPublicProfile: boolean
   /**
@@ -116,6 +130,10 @@ export interface TypesenseArticleDocument {
    * Blueprint Function, which populates `contributors` from `byline`) --
    * a structured facet alongside the freeform `byline` text. */
   authors?: string[]
+  /** True if a produced mp3 exists, or synthetic read-aloud isn't suppressed. */
+  hasAudio?: boolean
+  /** "produced" | "synthetic" -- absent if there's no audio at all. */
+  audioSourceKind?: string
   /** Always "public" -- articles carry no privacy dimension today. */
   searchScope: 'public'
 }
@@ -124,8 +142,14 @@ const commentsFields: CollectionCreateSchema['fields'] = [
   { name: 'id', type: 'string' },
   { name: 'contentString', type: 'string' },
   { name: 'authorName', type: 'string', optional: true, facet: true },
+  { name: 'authorId', type: 'string', optional: true },
+  { name: 'authorSlug', type: 'string', optional: true },
+  { name: 'authorPortrait', type: 'string', optional: true },
+  { name: 'authorCredential', type: 'string', optional: true },
+  { name: 'authorCredentialVerified', type: 'bool', optional: true },
   { name: 'discussionId', type: 'string', facet: true },
   { name: 'articlePath', type: 'string', optional: true, facet: true },
+  { name: 'tag', type: 'string', optional: true, facet: true },
   { name: 'createdAt', type: 'int64' },
   { name: 'searchScope', type: 'string', facet: true },
 ]
@@ -137,6 +161,8 @@ const usersFields: CollectionCreateSchema['fields'] = [
   { name: 'biography', type: 'string', optional: true },
   { name: 'statement', type: 'string', optional: true },
   { name: 'credential', type: 'string', optional: true },
+  { name: 'credentialVerified', type: 'bool', optional: true },
+  { name: 'portrait', type: 'string', optional: true },
   { name: 'hasPublicProfile', type: 'bool', facet: true },
   { name: 'searchScope', type: 'string', facet: true },
   { name: 'createdAt', type: 'int64' },
@@ -154,6 +180,8 @@ const articlesFields: CollectionCreateSchema['fields'] = [
   { name: 'readingAccess', type: 'string', optional: true },
   { name: 'collections', type: 'string[]', optional: true, facet: true },
   { name: 'authors', type: 'string[]', optional: true, facet: true },
+  { name: 'hasAudio', type: 'bool', optional: true, facet: true },
+  { name: 'audioSourceKind', type: 'string', optional: true, facet: true },
   { name: 'searchScope', type: 'string', facet: true },
 ]
 

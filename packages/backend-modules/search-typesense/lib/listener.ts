@@ -190,6 +190,7 @@ const upsertOrDeleteComment = async (pgdb: PgDb, commentId: string) => {
           'published',
           'adminUnpublished',
           'createdAt',
+          'tags',
         ],
       },
     )
@@ -239,6 +240,7 @@ const upsertOrDeleteUser = async (pgdb: PgDb, userId: string) => {
         'username',
         'biography',
         'statement',
+        'portraitUrl',
         'hasPublicProfile',
         'createdAt',
       ],

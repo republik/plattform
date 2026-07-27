@@ -1,6 +1,26 @@
 import { TypesenseUserDocument } from '../collections'
 
 /**
+ * Mirrors @orbiting/backend-modules-republik/lib/portrait's resize/bw URL
+ * building (duplicated rather than depended on, to avoid a cross-package
+ * import into a package that otherwise has no dependency on `republik`).
+ */
+const getPortraitUrl = (portraitUrl: string | null): string | undefined => {
+  if (!portraitUrl) {
+    return undefined
+  }
+  try {
+    const url = new URL(portraitUrl)
+    url.searchParams.set('resize', '384x384')
+    url.searchParams.set('bw', '1')
+    url.searchParams.set('format', 'auto')
+    return url.toString()
+  } catch {
+    return undefined
+  }
+}
+
+/**
  * Minimal shape of a public.users row needed to build a Typesense user
  * document. Reference: @orbiting/backend-modules-search/lib/inserts/user.js
  */
@@ -11,12 +31,14 @@ export interface UserRow {
   username: string | null
   biography: string | null
   statement: string | null
+  portraitUrl: string | null
   hasPublicProfile: boolean
   createdAt: Date | string | number
 }
 
 export interface ListedCredential {
   description: string | null
+  verified: boolean | null
 }
 
 export interface UserTransformDeps {
@@ -36,7 +58,7 @@ export const makeUserDeps = (pgdb: PgDb): UserTransformDeps => ({
   getListedCredential: async (userId) =>
     pgdb.public.credentials.findOne(
       { userId, isListed: true },
-      { fields: ['description'], limit: 1 },
+      { fields: ['description', 'verified'], limit: 1 },
     ),
 })
 
@@ -56,6 +78,7 @@ export const transformUser = async (
 ): Promise<TypesenseUserDocument> => {
   const listedCredential = await deps.getListedCredential(row.id)
   const credential = listedCredential?.description?.trim() || undefined
+  const portraitUrl = getPortraitUrl(row.portraitUrl)
 
   const name = [row.firstName, row.lastName].filter(Boolean).join(' ').trim()
 
@@ -78,6 +101,10 @@ export const transformUser = async (
   }
   if (credential) {
     doc.credential = credential
+    doc.credentialVerified = !!listedCredential?.verified
+  }
+  if (portraitUrl) {
+    doc.portrait = portraitUrl
   }
 
   return doc

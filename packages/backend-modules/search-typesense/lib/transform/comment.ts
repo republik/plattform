@@ -20,6 +20,7 @@ export interface CommentRow {
   published: boolean
   adminUnpublished: boolean
   createdAt: Date | string | number
+  tags: string[] | null
 }
 
 export interface DiscussionRow {
@@ -36,8 +37,16 @@ export interface DiscussionPreferencesRow {
 }
 
 export interface UserRow {
+  id: string
   firstName: string | null
   lastName: string | null
+  username: string | null
+  portraitUrl: string | null
+}
+
+export interface CredentialRow {
+  description: string | null
+  verified: boolean | null
 }
 
 export interface CommentTransformDeps {
@@ -47,6 +56,7 @@ export interface CommentTransformDeps {
     userId: string,
     discussionId: string,
   ) => Promise<DiscussionPreferencesRow | null>
+  getCredential: (credentialId: string) => Promise<CredentialRow | null>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,7 +69,10 @@ type PgDb = any
  */
 export const makeCommentDeps = (pgdb: PgDb): CommentTransformDeps => ({
   getUser: async (userId) =>
-    pgdb.public.users.findOne({ id: userId }, { fields: ['firstName', 'lastName'] }),
+    pgdb.public.users.findOne(
+      { id: userId },
+      { fields: ['id', 'firstName', 'lastName', 'username', 'portraitUrl'] },
+    ),
   getDiscussion: async (discussionId) =>
     pgdb.public.discussions.findOne(
       { id: discussionId },
@@ -70,10 +83,35 @@ export const makeCommentDeps = (pgdb: PgDb): CommentTransformDeps => ({
       { userId, discussionId },
       { fields: ['anonymous', 'credentialId'] },
     ),
+  getCredential: async (credentialId) =>
+    pgdb.public.credentials.findOne(
+      { id: credentialId },
+      { fields: ['description', 'verified'] },
+    ),
 })
 
 const toUnixMs = (value: Date | string | number): number =>
   new Date(value).getTime()
+
+/**
+ * Mirrors @orbiting/backend-modules-republik/lib/portrait's resize/bw URL
+ * building (duplicated rather than depended on, to avoid a cross-package
+ * import into a package that otherwise has no dependency on `republik`).
+ */
+const getPortraitUrl = (portraitUrl: string | null): string | undefined => {
+  if (!portraitUrl) {
+    return undefined
+  }
+  try {
+    const url = new URL(portraitUrl)
+    url.searchParams.set('resize', '384x384')
+    url.searchParams.set('bw', '1')
+    url.searchParams.set('format', 'auto')
+    return url.toString()
+  } catch {
+    return undefined
+  }
+}
 
 /**
  * A comment must never be present in the Typesense index if its discussion
@@ -135,11 +173,31 @@ export const transformComment = async (
 
     if (authorName) {
       doc.authorName = authorName
+      doc.authorId = user.id
+      doc.authorSlug = user.username || user.id
+
+      const portraitUrl = getPortraitUrl(user.portraitUrl)
+      if (portraitUrl) {
+        doc.authorPortrait = portraitUrl
+      }
+
+      const credential = discussionPreferences?.credentialId
+        ? await deps.getCredential(discussionPreferences.credentialId)
+        : null
+      const credentialDescription = credential?.description?.trim()
+      if (credentialDescription) {
+        doc.authorCredential = credentialDescription
+        doc.authorCredentialVerified = !!credential?.verified
+      }
     }
   }
 
   if (discussion?.path) {
     doc.articlePath = discussion.path
+  }
+
+  if (row.tags?.[0]) {
+    doc.tag = row.tags[0]
   }
 
   return doc
