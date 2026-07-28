@@ -5,10 +5,8 @@ import { useSetManualTheme } from '@/app/components/theme-provider'
 
 /**
  * Receives the dark-mode toggle from the Sanity Studio preview header and turns
- * it into a manual `forcedTheme` override. The Studio and this app run on
- * different origins, so the toggle can only reach us via `postMessage` (see the
- * PreviewHeader component in the studio repo). The message shape is the shared
- * contract between the two repos; `theme` is `'dark'` or `undefined` (off).
+ * it into a manual `forcedTheme` override. The message shape is the shared
+ * contract between the two repos; `theme` is `'dark'` or `'light'`.
  */
 export function PreviewThemeListener() {
   const setManual = useSetManualTheme()
