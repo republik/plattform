@@ -1,4 +1,4 @@
-import { defineCliConfig } from 'sanity/cli'
+import { defineCliConfig } from '@sanity/cli'
 
 const schemaPath =
   process.env.SANITY_SCHEMA_JSON ?? '../../../studio/schema.json'
