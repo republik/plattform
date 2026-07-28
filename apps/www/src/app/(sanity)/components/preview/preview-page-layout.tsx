@@ -1,4 +1,5 @@
 import { PreviewStatus } from '@/app/(sanity)/components/preview/preview-status'
+import { PreviewThemeListener } from '@/app/(sanity)/components/preview/preview-theme-listener'
 import { SanityLive } from '@/app/(sanity)/lib/live'
 import { resolvePerspectiveFromCookies } from 'next-sanity/live'
 import { VisualEditing } from 'next-sanity/visual-editing'
@@ -18,6 +19,7 @@ export async function PreviewPageLayout({
       <SanityLive />
       <VisualEditing />
       <PreviewStatus perspective={perspective} />
+      <PreviewThemeListener />
       {children}
     </>
   )
