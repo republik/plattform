@@ -37,12 +37,13 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     imageGroup: ImageGroup,
     infoBox: InfoBox,
     divider: () => <hr />,
-    // This is the web, we never render emailOnly blocks :)
-    emailOnly: () => null,
     webOnly: WebOnly,
     html: Html,
     embedVideo: LegacyEmbedVideo,
     seriesNav: SeriesNav,
+    // This is the web, we never render emailOnly/voiceTag blocks :)
+    emailOnly: () => null,
+    voiceTag: () => null,
     // Wrap function because renderNode can't be passed to a client component
     button: ({ value }) => <Button value={value} />,
     if: ({ value }) => <Conditional value={value} />,
