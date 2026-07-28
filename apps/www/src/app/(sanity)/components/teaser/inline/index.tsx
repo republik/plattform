@@ -14,7 +14,7 @@ export function InlineTeaser({
   label?: string
 }) {
   const pathname = usePathname()
-  const isCurrentEpisode = pathname === `/articles${teaser.slug}`
+  const isCurrentEpisode = pathname === teaser.slug
 
   return (
     <div
@@ -35,7 +35,6 @@ export function InlineTeaser({
         {isCurrentEpisode ? `Sie lesen: ${label}` : label}
       </h6>
       <TeaserImage
-
         image={teaser.image}
         alt=''
         height={640}

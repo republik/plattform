@@ -1465,509 +1465,10 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint
 
-// Source: src/app/(sanity)/groq/article-query.ts
-// Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,      byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      name,      accentColor,      darkMode    },      content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[featured == true][0].collection->{      _id,      title,      description,      image,      series    },    articleRecommendations[]->{        _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,    }  }
-export type ARTICLE_QUERY_RESULT = {
-  _id: string
-  title: InlineEditor
-  description: InlineEditor | null
-  byline: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs: Array<
-      | {
-          _key: string
-          _type: 'internalLink'
-          reference: ArticleReference | ContributorReference | PageReference
-          slug: string | null
-        }
-      | {
-          _key: string
-          _type: 'link'
-          href?: string
-          title?: string
-        }
-    > | null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
-  cover: {
-    _type: 'editorialImage'
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    imageDark?: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    }
-    alt?: string
-    caption?: Caption
-    size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
-  } | null
-  heading: {
-    _id: string
-    title: InlineEditor
-    slug: string
-  } | null
-  newsletter: {
-    title: string
-    description: string | null
-    frequency: string | null
-    image: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      imageDark?: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      }
-      _type: 'image'
-    } | null
-    name: string
-  } | null
-  theme: {
-    name: 'EDITORIAL' | 'META' | 'PAGE' | null
-    accentColor: Color | null
-    darkMode: boolean | null
-  } | null
-  content: Array<
-    | {
-        children?: Array<
-          | ({
-              _key: string
-            } & Variable)
-          | ({
-              _key: string
-            } & VoiceTag)
-          | {
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }
-        >
-        style?: 'heading' | 'normal' | 'note'
-        listItem?: 'bullet' | 'number'
-        markDefs: Array<
-          | {
-              _key: string
-              _type: 'expandableLink'
-              content?: InlineEditor
-              href?: string
-              reference?:
-                | ArticleReference
-                | ContributorReference
-                | PageReference
-            }
-          | {
-              _key: string
-              _type: 'internalLink'
-              reference: ArticleReference | ContributorReference | PageReference
-              slug: string | null
-            }
-          | {
-              _key: string
-              _type: 'link'
-              href?: string
-              title?: string
-            }
-        > | null
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | {
-        _key: string
-        _type: 'blockQuote'
-        body?: NestedEditor
-        caption?: Caption
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'button'
-        text?: string
-        url?: string
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'chart'
-        title?: InlineEditor
-        description?: InlineEditor
-        chartConfig?: ChartConfig
-        source?: InlineEditor
-        size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'divider'
-        style?: string
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'dynamicComponent'
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-        src?: string
-        identifier?:
-          | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
-          | 'CLIMATE_LAB_COUNTER'
-          | 'CLIMATE_LAB_INLINE_TEASER'
-          | 'COMPACT_DETAILS_FORM'
-          | 'EDGE_QUESTION'
-          | 'ELECTION_CANDIDACY'
-          | 'ELECTION_RESULT_DIVERSITY'
-          | 'ELECTION_RESULT'
-          | 'ELECTION'
-          | 'INSTANT_SURVEY'
-          | 'MANIFEST'
-          | 'NEWSLETTER_SIGNUP'
-          | 'POSTCARD_GALLERY'
-          | 'POSTCARD'
-          | 'QUESTIONNAIRE_OVERVIEW'
-          | 'QUESTIONNAIRE_SUBMISSIONS'
-          | 'QUESTIONNAIRE'
-          | 'REASONS_VIDEO'
-          | 'TEAM_TEASER'
-          | 'TESTIMONIAL_LIST'
-          | 'TRIAL_FORM'
-          | 'VOTE_COUNTER'
-          | 'VOTE_RESULT'
-          | 'VOTEBOX'
-        props?: Code
-        autoHtml?: boolean
-        html?: Code
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'editorialImage'
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        imageDark?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        }
-        alt?: string
-        caption?: Caption
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'emailOnly'
-        body?: NestedEditor
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'embedComment'
-        id?: string
-        content?: string
-        tags?: Array<string>
-        createdAt?: string
-        updatedAt?: string
-        parentIds?: Array<string>
-        discussion?: EmbedCommentDiscussion
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'embedDataWrapper'
-        datawrapperId?: string
-        forceDark?: boolean
-        plain?: boolean
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'embedTwitter'
-        url?: string
-        id?: string
-        createdAt?: string
-        retrievedAt?: string
-        text?: string
-        html?: string
-        userId?: string
-        userName?: string
-        userScreenName?: string
-        userProfileImageUrl?: string
-        image?: string
-        more?: string
-        playable?: boolean
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'embedVideo'
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-        platform?: 'vimeo' | 'youtube'
-        url?: string
-        id?: string
-        title?: string
-        createdAt?: string
-        retrievedAt?: string
-        userName?: string
-        userUrl?: string
-        userProfileImageUrl?: string
-        thumbnail?: string
-        aspectRatio?: number
-        durationMs?: number
-        mediaId?: string
-        src?: Src
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'html'
-        html?: string
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'if'
-        present: 'hasAccess' | 'lastName'
-        body?: NestedEditor
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'ifNot'
-        present: 'hasAccess' | 'lastName'
-        body?: NestedEditor
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'imageGroup'
-        images?: Array<
-          {
-            _key: string
-          } & GroupedEditorialImage
-        >
-        caption?: Caption
-        size?: 'BREAKOUT' | 'NARROW' | 'NORMAL'
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'infoBox'
-        title?: string
-        image?: AsideImage
-        body?: NestedEditor
-        size?: 'breakout' | 'float'
-        figureSize?: 'L' | 'M' | 'S'
-        figureFloat?: boolean
-        collapsible?: boolean
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'pullQuote'
-        text?: string
-        source?: string
-        image?: AsideImage
-        size?: 'breakout' | 'float' | 'narrow'
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'seriesNav'
-        series: ArticleCollectionReference
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'storyComponent'
-        url?: string
-        tagname?: string
-        componentData?: Code
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'webOnly'
-        body?: NestedEditor
-        markDefs: null
-      }
-  > | null
-  contributors: Array<{
-    _id: null
-    kind: string | null
-    slug: string | null
-    name: string | null
-    description: null
-    portrait: null
-  }> | null
-  articleCollection: {
-    _id: string
-    title: string
-    description: string | null
-    image: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      imageDark?: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      }
-      _type: 'image'
-    } | null
-    series: boolean | null
-  } | null
-  articleRecommendations: Array<
-    | {
-        _id: string
-        _type: 'article'
-        title: InlineEditor
-        description: InlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
-        slug: string
-        image: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          imageDark?: ImageDark
-          _type: 'image'
-        } | null
-        publishDate: string | null
-        heading: {
-          _id: string
-          title: string
-          slug: string
-        } | null
-        theme: {
-          name: 'EDITORIAL' | 'META' | 'PAGE' | null
-          accentColor: Color | null
-        } | null
-        color: Color | null
-        backgroundColor: Color | null
-        headingColor: Color | null
-      }
-    | {
-        _id: string
-        _type: 'page'
-        title: InlineEditor
-        description: InlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
-        slug: string
-        image: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          imageDark?: ImageDark
-          _type: 'image'
-        } | null
-        publishDate: string | null
-        heading: {
-          _id: string
-          title: string
-          slug: string
-        } | null
-        theme: {
-          name: 'EDITORIAL' | 'META' | 'PAGE' | null
-          accentColor: Color | null
-        } | null
-        color: Color | null
-        backgroundColor: Color | null
-        headingColor: Color | null
-      }
-  > | null
-} | null
-
 // Source: src/app/(sanity)/groq/article-teaser-query.ts
-// Variable: ARTICLE_TEASER_QUERY
-// Query: *[_type == "teaserLarge" && target[0]->slug.current == $slug][0]{      _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }  }
-export type ARTICLE_TEASER_QUERY_RESULT = {
+// Variable: TEASER_LARGE_QUERY
+// Query: *[_type == "teaserLarge" && _id == $id][0]{      _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }  }
+export type TEASER_LARGE_QUERY_RESULT = {
   _id: string
   _type: 'article' | 'page' | null
   target: string | null
@@ -2039,7 +1540,7 @@ export type ARTICLE_TEASER_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/articles-query.ts
 // Variable: ARTICLES_QUERY
-// Query: *[    _type == "article" &&    defined(slug.current) &&    defined(publishDate) &&    coalesce(showInFeed, true)  ] | order(publishDate desc) [$start...$end] {      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  }
+// Query: *[    _type == "article" &&    defined(slug.current) &&    defined(publishDate) &&    coalesce(showInFeed, true)  ] | order(publishDate desc) [$start...$end] {      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  }
 export type ARTICLES_QUERY_RESULT = Array<{
   _id: string
   _type: 'article'
@@ -2098,7 +1599,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
 
 // Source: src/app/(sanity)/groq/byline-fragment.ts
 // Variable: BYLINE_FRAGMENT_QUERY
-// Query: *[_type == "article"][0]{      byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }  }
+// Query: *[_type == "article"][0]{      byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }  }
 export type BYLINE_FRAGMENT_QUERY_RESULT = {
   byline: Array<{
     children?: Array<{
@@ -2157,9 +1658,852 @@ export type CTA_BLOCK_FRAGMENT_QUERY_RESULT = {
   } | null
 } | null
 
+// Source: src/app/(sanity)/groq/document-query.ts
+// Variable: DOCUMENT_QUERY
+// Query: *[_type in ["article", "page"] && slug.current == $slug][0]{    _id,    _type,    title,    description,    "slug": slug.current,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    theme {      name,      accentColor,      darkMode    },    _type == "article" => {        byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },      newsletter->{        title,        description,        frequency,        image,        name,      },        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },      contributors[]{        _id,        kind,        "slug": contributor->userId,        "name": contributor->title,        "description": contributor->description,        "portrait": contributor->portrait      },      "articleCollection": articleCollections[featured == true][0].collection->{        _id,        title,        description,        image,        series      },      articleRecommendations[]->{          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,      }    },    _type == "page" => {      pageBuilder[]{        _key,        _type,        _type == "menu" => {            hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current      }    }  }        },        _type == "callToAction" => {            target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }        },        _type == "editorBlock" => {            content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }        },        _type == "teaserList" => {            appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref        },        _type == "teaserLarge" => {          "reference": @->{  _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }}        },      }    }  }
+export type DOCUMENT_QUERY_RESULT =
+  | {
+      _id: string
+      _type: 'article'
+      title: InlineEditor
+      description: InlineEditor | null
+      slug: string
+      cover: {
+        _type: 'editorialImage'
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        imageDark?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        }
+        alt?: string
+        caption?: Caption
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+      } | null
+      heading: {
+        _id: string
+        title: InlineEditor
+        slug: string
+      } | null
+      theme: {
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
+        accentColor: Color | null
+        darkMode: boolean | null
+      } | null
+      byline: Array<{
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal'
+        listItem?: never
+        markDefs: Array<
+          | {
+              _key: string
+              _type: 'internalLink'
+              reference: ArticleReference | ContributorReference | PageReference
+              slug: string | null
+            }
+          | {
+              _key: string
+              _type: 'link'
+              href?: string
+              title?: string
+            }
+        > | null
+        level?: number
+        _type: 'block'
+        _key: string
+      }> | null
+      newsletter: {
+        title: string
+        description: string | null
+        frequency: string | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          imageDark?: {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            _type: 'image'
+          }
+          _type: 'image'
+        } | null
+        name: string
+      } | null
+      content: Array<
+        | {
+            children?: Array<
+              | ({
+                  _key: string
+                } & Variable)
+              | ({
+                  _key: string
+                } & VoiceTag)
+              | {
+                  marks?: Array<string>
+                  text?: string
+                  _type: 'span'
+                  _key: string
+                }
+            >
+            style?: 'heading' | 'normal' | 'note'
+            listItem?: 'bullet' | 'number'
+            markDefs: Array<
+              | {
+                  _key: string
+                  _type: 'expandableLink'
+                  content?: InlineEditor
+                  href?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
+                }
+              | {
+                  _key: string
+                  _type: 'internalLink'
+                  reference:
+                    ArticleReference | ContributorReference | PageReference
+                  slug: string | null
+                }
+              | {
+                  _key: string
+                  _type: 'link'
+                  href?: string
+                  title?: string
+                }
+            > | null
+            level?: number
+            _type: 'block'
+            _key: string
+          }
+        | {
+            _key: string
+            _type: 'blockQuote'
+            body?: NestedEditor
+            caption?: Caption
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'button'
+            text?: string
+            url?: string
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'chart'
+            title?: InlineEditor
+            description?: InlineEditor
+            chartConfig?: ChartConfig
+            source?: InlineEditor
+            size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'divider'
+            style?: string
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'dynamicComponent'
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+            src?: string
+            identifier?:
+              | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
+              | 'CLIMATE_LAB_COUNTER'
+              | 'CLIMATE_LAB_INLINE_TEASER'
+              | 'COMPACT_DETAILS_FORM'
+              | 'EDGE_QUESTION'
+              | 'ELECTION_CANDIDACY'
+              | 'ELECTION_RESULT_DIVERSITY'
+              | 'ELECTION_RESULT'
+              | 'ELECTION'
+              | 'INSTANT_SURVEY'
+              | 'MANIFEST'
+              | 'NEWSLETTER_SIGNUP'
+              | 'POSTCARD_GALLERY'
+              | 'POSTCARD'
+              | 'QUESTIONNAIRE_OVERVIEW'
+              | 'QUESTIONNAIRE_SUBMISSIONS'
+              | 'QUESTIONNAIRE'
+              | 'REASONS_VIDEO'
+              | 'TEAM_TEASER'
+              | 'TESTIMONIAL_LIST'
+              | 'TRIAL_FORM'
+              | 'VOTE_COUNTER'
+              | 'VOTE_RESULT'
+              | 'VOTEBOX'
+            props?: Code
+            autoHtml?: boolean
+            html?: Code
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'editorialImage'
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            imageDark?: {
+              asset?: SanityImageAssetReference
+              media?: unknown
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              _type: 'image'
+            }
+            alt?: string
+            caption?: Caption
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'emailOnly'
+            body?: NestedEditor
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'embedComment'
+            id?: string
+            content?: string
+            tags?: Array<string>
+            createdAt?: string
+            updatedAt?: string
+            parentIds?: Array<string>
+            discussion?: EmbedCommentDiscussion
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'embedDataWrapper'
+            datawrapperId?: string
+            forceDark?: boolean
+            plain?: boolean
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'embedTwitter'
+            url?: string
+            id?: string
+            createdAt?: string
+            retrievedAt?: string
+            text?: string
+            html?: string
+            userId?: string
+            userName?: string
+            userScreenName?: string
+            userProfileImageUrl?: string
+            image?: string
+            more?: string
+            playable?: boolean
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'embedVideo'
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+            platform?: 'vimeo' | 'youtube'
+            url?: string
+            id?: string
+            title?: string
+            createdAt?: string
+            retrievedAt?: string
+            userName?: string
+            userUrl?: string
+            userProfileImageUrl?: string
+            thumbnail?: string
+            aspectRatio?: number
+            durationMs?: number
+            mediaId?: string
+            src?: Src
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'html'
+            html?: string
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'if'
+            present: 'hasAccess' | 'lastName'
+            body?: NestedEditor
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'ifNot'
+            present: 'hasAccess' | 'lastName'
+            body?: NestedEditor
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'imageGroup'
+            images?: Array<
+              {
+                _key: string
+              } & GroupedEditorialImage
+            >
+            caption?: Caption
+            size?: 'BREAKOUT' | 'NARROW' | 'NORMAL'
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'infoBox'
+            title?: string
+            image?: AsideImage
+            body?: NestedEditor
+            size?: 'breakout' | 'float'
+            figureSize?: 'L' | 'M' | 'S'
+            figureFloat?: boolean
+            collapsible?: boolean
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'pullQuote'
+            text?: string
+            source?: string
+            image?: AsideImage
+            size?: 'breakout' | 'float' | 'narrow'
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'seriesNav'
+            series: ArticleCollectionReference
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'storyComponent'
+            url?: string
+            tagname?: string
+            componentData?: Code
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+            markDefs: null
+          }
+        | {
+            _key: string
+            _type: 'webOnly'
+            body?: NestedEditor
+            markDefs: null
+          }
+      > | null
+      contributors: Array<{
+        _id: null
+        kind: string | null
+        slug: string | null
+        name: string | null
+        description: null
+        portrait: null
+      }> | null
+      articleCollection: {
+        _id: string
+        title: string
+        description: string | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          imageDark?: {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            _type: 'image'
+          }
+          _type: 'image'
+        } | null
+        series: boolean | null
+      } | null
+      articleRecommendations: Array<
+        | {
+            _id: string
+            _type: 'article'
+            title: InlineEditor
+            description: InlineEditor | null
+            byline: Array<{
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'normal'
+              listItem?: never
+              markDefs: Array<
+                | {
+                    _key: string
+                    _type: 'internalLink'
+                    reference:
+                      ArticleReference | ContributorReference | PageReference
+                    slug: string | null
+                  }
+                | {
+                    _key: string
+                    _type: 'link'
+                    href?: string
+                    title?: string
+                  }
+              > | null
+              level?: number
+              _type: 'block'
+              _key: string
+            }> | null
+            slug: string
+            image: {
+              asset?: SanityImageAssetReference
+              media?: unknown
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              imageDark?: ImageDark
+              _type: 'image'
+            } | null
+            publishDate: string | null
+            heading: {
+              _id: string
+              title: string
+              slug: string
+            } | null
+            theme: {
+              name: 'EDITORIAL' | 'META' | 'PAGE' | null
+              accentColor: Color | null
+            } | null
+            color: Color | null
+            backgroundColor: Color | null
+            headingColor: Color | null
+          }
+        | {
+            _id: string
+            _type: 'page'
+            title: InlineEditor
+            description: InlineEditor | null
+            byline: Array<{
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'normal'
+              listItem?: never
+              markDefs: Array<
+                | {
+                    _key: string
+                    _type: 'internalLink'
+                    reference:
+                      ArticleReference | ContributorReference | PageReference
+                    slug: string | null
+                  }
+                | {
+                    _key: string
+                    _type: 'link'
+                    href?: string
+                    title?: string
+                  }
+              > | null
+              level?: number
+              _type: 'block'
+              _key: string
+            }> | null
+            slug: string
+            image: {
+              asset?: SanityImageAssetReference
+              media?: unknown
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              imageDark?: ImageDark
+              _type: 'image'
+            } | null
+            publishDate: string | null
+            heading: {
+              _id: string
+              title: string
+              slug: string
+            } | null
+            theme: {
+              name: 'EDITORIAL' | 'META' | 'PAGE' | null
+              accentColor: Color | null
+            } | null
+            color: Color | null
+            backgroundColor: Color | null
+            headingColor: Color | null
+          }
+      > | null
+    }
+  | {
+      _id: string
+      _type: 'page'
+      title: InlineEditor
+      description: InlineEditor | null
+      slug: string
+      cover: {
+        _type: 'editorialImage'
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        imageDark?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        }
+        alt?: string
+        caption?: Caption
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+      } | null
+      heading: {
+        _id: string
+        title: InlineEditor
+        slug: string
+      } | null
+      theme: {
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
+        accentColor: Color | null
+        darkMode: boolean | null
+      } | null
+      pageBuilder: Array<
+        | {
+            _key: string
+            _type: 'callToAction'
+            target:
+              | {
+                  _id: string
+                  _type: 'articleCollection'
+                  title: string
+                  description: string | null
+                }
+              | {
+                  _id: string
+                  _type: 'newsletter'
+                  name: string
+                  title: string
+                }
+              | {
+                  _id: string
+                  _type: 'podcast'
+                  podigeeSlug: string | null
+                  spotifyUrl: string | null
+                  appleUrl: string | null
+                }
+          }
+        | {
+            _key: string
+            _type: 'editorBlock'
+            content: Array<
+              | {
+                  children?: Array<{
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }>
+                  style?: 'heading' | 'normal' | 'note'
+                  listItem?: 'bullet' | 'number'
+                  markDefs: Array<
+                    | {
+                        _key: string
+                        _type: 'expandableLink'
+                        content?: InlineEditor
+                        href?: string
+                        reference?:
+                          | ArticleReference
+                          | ContributorReference
+                          | PageReference
+                      }
+                    | {
+                        _key: string
+                        _type: 'internalLink'
+                        reference:
+                          | ArticleReference
+                          | ContributorReference
+                          | PageReference
+                        slug: string | null
+                      }
+                    | {
+                        _key: string
+                        _type: 'link'
+                        href?: string
+                        title?: string
+                      }
+                  > | null
+                  level?: number
+                  _type: 'block'
+                  _key: string
+                }
+              | {
+                  _key: string
+                  _type: 'blockQuote'
+                  body?: NestedEditor
+                  caption?: Caption
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'button'
+                  text?: string
+                  url?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'chart'
+                  title?: InlineEditor
+                  description?: InlineEditor
+                  chartConfig?: ChartConfig
+                  source?: InlineEditor
+                  size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'divider'
+                  style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'dynamicComponent'
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+                  src?: string
+                  identifier?:
+                    | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
+                    | 'CLIMATE_LAB_COUNTER'
+                    | 'CLIMATE_LAB_INLINE_TEASER'
+                    | 'COMPACT_DETAILS_FORM'
+                    | 'EDGE_QUESTION'
+                    | 'ELECTION_CANDIDACY'
+                    | 'ELECTION_RESULT_DIVERSITY'
+                    | 'ELECTION_RESULT'
+                    | 'ELECTION'
+                    | 'INSTANT_SURVEY'
+                    | 'MANIFEST'
+                    | 'NEWSLETTER_SIGNUP'
+                    | 'POSTCARD_GALLERY'
+                    | 'POSTCARD'
+                    | 'QUESTIONNAIRE_OVERVIEW'
+                    | 'QUESTIONNAIRE_SUBMISSIONS'
+                    | 'QUESTIONNAIRE'
+                    | 'REASONS_VIDEO'
+                    | 'TEAM_TEASER'
+                    | 'TESTIMONIAL_LIST'
+                    | 'TRIAL_FORM'
+                    | 'VOTE_COUNTER'
+                    | 'VOTE_RESULT'
+                    | 'VOTEBOX'
+                  props?: Code
+                  autoHtml?: boolean
+                  html?: Code
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'editorialImage'
+                  asset?: SanityImageAssetReference
+                  media?: unknown
+                  hotspot?: SanityImageHotspot
+                  crop?: SanityImageCrop
+                  imageDark?: {
+                    asset?: SanityImageAssetReference
+                    media?: unknown
+                    hotspot?: SanityImageHotspot
+                    crop?: SanityImageCrop
+                    _type: 'image'
+                  }
+                  alt?: string
+                  caption?: Caption
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'embedComment'
+                  id?: string
+                  content?: string
+                  tags?: Array<string>
+                  createdAt?: string
+                  updatedAt?: string
+                  parentIds?: Array<string>
+                  discussion?: EmbedCommentDiscussion
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'embedDataWrapper'
+                  datawrapperId?: string
+                  forceDark?: boolean
+                  plain?: boolean
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'embedTwitter'
+                  url?: string
+                  id?: string
+                  createdAt?: string
+                  retrievedAt?: string
+                  text?: string
+                  html?: string
+                  userId?: string
+                  userName?: string
+                  userScreenName?: string
+                  userProfileImageUrl?: string
+                  image?: string
+                  more?: string
+                  playable?: boolean
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'embedVideo'
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+                  platform?: 'vimeo' | 'youtube'
+                  url?: string
+                  id?: string
+                  title?: string
+                  createdAt?: string
+                  retrievedAt?: string
+                  userName?: string
+                  userUrl?: string
+                  userProfileImageUrl?: string
+                  thumbnail?: string
+                  aspectRatio?: number
+                  durationMs?: number
+                  mediaId?: string
+                  src?: Src
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'html'
+                  html?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'imageGroup'
+                  images?: Array<
+                    {
+                      _key: string
+                    } & GroupedEditorialImage
+                  >
+                  caption?: Caption
+                  size?: 'BREAKOUT' | 'NARROW' | 'NORMAL'
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  image?: AsideImage
+                  body?: NestedEditor
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  collapsible?: boolean
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'pullQuote'
+                  text?: string
+                  source?: string
+                  image?: AsideImage
+                  size?: 'breakout' | 'float' | 'narrow'
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'storyComponent'
+                  url?: string
+                  tagname?: string
+                  componentData?: Code
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+                  markDefs: null
+                }
+            > | null
+          }
+        | {
+            _key: string
+            _type: 'menu'
+            hasSeparator: boolean | null
+            heading: {
+              title: string | null
+              page: {
+                _id: string
+                title: string
+                slug: string
+              } | null
+            } | null
+            pages: Array<
+              | {
+                  _key: string
+                  _type: 'link'
+                  href: string | null
+                  title: string | null
+                }
+              | {
+                  _key: string
+                  _type: 'reference'
+                  page: {
+                    _id: string
+                    title: string
+                    slug: string
+                  }
+                }
+            > | null
+          }
+        | {
+            _key: string
+            _type: 'reference'
+          }
+        | {
+            _key: string
+            _type: 'teaserList'
+            appearance: 'CAROUSEL' | 'FEED' | 'GRID' | null
+            color: Color | null
+            backgroundColor: Color | null
+            imageStyle: 'NONE' | 'NORMAL' | 'SMALL' | null
+            skipDescription: boolean | null
+            maxItems: number | null
+            title: string | null
+            total: number | 0 | null
+            series: boolean | false
+            collectionId: string | null
+          }
+      > | null
+    }
+  | null
+
 // Source: src/app/(sanity)/groq/front-feed-query.ts
 // Variable: FRONT_FEED_QUERY
-// Query: *[    _type == "teaserLarge" &&    target[0]->_type == "article" &&    defined(target[0]->publishDate) &&    !(_id in *[_type == "front"] | order(publishDate desc)[0].pageBuilder[]._ref)  ] | order(target[0]->publishDate desc) [$start...$end] {      _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }  }
+// Query: *[    _type == "teaserLarge" &&    target[0]->_type == "article" &&    defined(target[0]->publishDate) &&    !(_id in *[_type == "front"] | order(publishDate desc)[0].pageBuilder[]._ref)  ] | order(target[0]->publishDate desc) [$start...$end] {      _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }  }
 export type FRONT_FEED_QUERY_RESULT = Array<{
   _id: string
   _type: 'article' | 'page' | null
@@ -2232,7 +2576,7 @@ export type FRONT_FEED_QUERY_RESULT = Array<{
 
 // Source: src/app/(sanity)/groq/front-query.ts
 // Variable: FRONT_QUERY
-// Query: *[_type == "front"] | order(publishDate desc)[0]{    _id,    title,    pageBuilder[]{      _key,      _type,      _type == "teaserList" => {          appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref      },      _type == "teaserLarge" => {        "reference": @->{  _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }}      },    },  }
+// Query: *[_type == "front"] | order(publishDate desc)[0]{    _id,    title,    pageBuilder[]{      _key,      _type,      _type == "teaserList" => {          appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref      },      _type == "teaserLarge" => {        "reference": @->{  _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }}      },    },  }
 export type FRONT_QUERY_RESULT = {
   _id: string
   title: InlineEditor
@@ -2300,356 +2644,9 @@ export type MENU_BLOCK_FRAGMENT_QUERY_RESULT = {
   } | null
 } | null
 
-// Source: src/app/(sanity)/groq/page-query.ts
-// Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    description,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    theme {      name,      accentColor,      darkMode    },    pageBuilder[]{      _key,      _type,      _type == "menu" => {          hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current      }    }  }      },      _type == "callToAction" => {          target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }      },      _type == "editorBlock" => {          content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }      },      _type == "teaserList" => {          appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref      },      _type == "teaserLarge" => {        "reference": @->{  _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }}      },    }  }
-export type PAGE_QUERY_RESULT = {
-  _id: string
-  title: InlineEditor
-  description: InlineEditor | null
-  cover: {
-    _type: 'editorialImage'
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    imageDark?: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    }
-    alt?: string
-    caption?: Caption
-    size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
-  } | null
-  heading: {
-    _id: string
-    title: InlineEditor
-    slug: string
-  } | null
-  theme: {
-    name: 'EDITORIAL' | 'META' | 'PAGE' | null
-    accentColor: Color | null
-    darkMode: boolean | null
-  } | null
-  pageBuilder: Array<
-    | {
-        _key: string
-        _type: 'callToAction'
-        target:
-          | {
-              _id: string
-              _type: 'articleCollection'
-              title: string
-              description: string | null
-            }
-          | {
-              _id: string
-              _type: 'newsletter'
-              name: string
-              title: string
-            }
-          | {
-              _id: string
-              _type: 'podcast'
-              podigeeSlug: string | null
-              spotifyUrl: string | null
-              appleUrl: string | null
-            }
-      }
-    | {
-        _key: string
-        _type: 'editorBlock'
-        content: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'heading' | 'normal' | 'note'
-              listItem?: 'bullet' | 'number'
-              markDefs: Array<
-                | {
-                    _key: string
-                    _type: 'expandableLink'
-                    content?: InlineEditor
-                    href?: string
-                    reference?:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
-                  }
-                | {
-                    _key: string
-                    _type: 'internalLink'
-                    reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
-                    slug: string | null
-                  }
-                | {
-                    _key: string
-                    _type: 'link'
-                    href?: string
-                    title?: string
-                  }
-              > | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-          | {
-              _key: string
-              _type: 'blockQuote'
-              body?: NestedEditor
-              caption?: Caption
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'button'
-              text?: string
-              url?: string
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'chart'
-              title?: InlineEditor
-              description?: InlineEditor
-              chartConfig?: ChartConfig
-              source?: InlineEditor
-              size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'divider'
-              style?: string
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'dynamicComponent'
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-              src?: string
-              identifier?:
-                | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
-                | 'CLIMATE_LAB_COUNTER'
-                | 'CLIMATE_LAB_INLINE_TEASER'
-                | 'COMPACT_DETAILS_FORM'
-                | 'EDGE_QUESTION'
-                | 'ELECTION_CANDIDACY'
-                | 'ELECTION_RESULT_DIVERSITY'
-                | 'ELECTION_RESULT'
-                | 'ELECTION'
-                | 'INSTANT_SURVEY'
-                | 'MANIFEST'
-                | 'NEWSLETTER_SIGNUP'
-                | 'POSTCARD_GALLERY'
-                | 'POSTCARD'
-                | 'QUESTIONNAIRE_OVERVIEW'
-                | 'QUESTIONNAIRE_SUBMISSIONS'
-                | 'QUESTIONNAIRE'
-                | 'REASONS_VIDEO'
-                | 'TEAM_TEASER'
-                | 'TESTIMONIAL_LIST'
-                | 'TRIAL_FORM'
-                | 'VOTE_COUNTER'
-                | 'VOTE_RESULT'
-                | 'VOTEBOX'
-              props?: Code
-              autoHtml?: boolean
-              html?: Code
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'editorialImage'
-              asset?: SanityImageAssetReference
-              media?: unknown
-              hotspot?: SanityImageHotspot
-              crop?: SanityImageCrop
-              imageDark?: {
-                asset?: SanityImageAssetReference
-                media?: unknown
-                hotspot?: SanityImageHotspot
-                crop?: SanityImageCrop
-                _type: 'image'
-              }
-              alt?: string
-              caption?: Caption
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'embedComment'
-              id?: string
-              content?: string
-              tags?: Array<string>
-              createdAt?: string
-              updatedAt?: string
-              parentIds?: Array<string>
-              discussion?: EmbedCommentDiscussion
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'embedDataWrapper'
-              datawrapperId?: string
-              forceDark?: boolean
-              plain?: boolean
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'embedTwitter'
-              url?: string
-              id?: string
-              createdAt?: string
-              retrievedAt?: string
-              text?: string
-              html?: string
-              userId?: string
-              userName?: string
-              userScreenName?: string
-              userProfileImageUrl?: string
-              image?: string
-              more?: string
-              playable?: boolean
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'embedVideo'
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-              platform?: 'vimeo' | 'youtube'
-              url?: string
-              id?: string
-              title?: string
-              createdAt?: string
-              retrievedAt?: string
-              userName?: string
-              userUrl?: string
-              userProfileImageUrl?: string
-              thumbnail?: string
-              aspectRatio?: number
-              durationMs?: number
-              mediaId?: string
-              src?: Src
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'html'
-              html?: string
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'imageGroup'
-              images?: Array<
-                {
-                  _key: string
-                } & GroupedEditorialImage
-              >
-              caption?: Caption
-              size?: 'BREAKOUT' | 'NARROW' | 'NORMAL'
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'infoBox'
-              title?: string
-              image?: AsideImage
-              body?: NestedEditor
-              size?: 'breakout' | 'float'
-              figureSize?: 'L' | 'M' | 'S'
-              figureFloat?: boolean
-              collapsible?: boolean
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'pullQuote'
-              text?: string
-              source?: string
-              image?: AsideImage
-              size?: 'breakout' | 'float' | 'narrow'
-              markDefs: null
-            }
-          | {
-              _key: string
-              _type: 'storyComponent'
-              url?: string
-              tagname?: string
-              componentData?: Code
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
-              markDefs: null
-            }
-        > | null
-      }
-    | {
-        _key: string
-        _type: 'menu'
-        hasSeparator: boolean | null
-        heading: {
-          title: string | null
-          page: {
-            _id: string
-            title: string
-            slug: string
-          } | null
-        } | null
-        pages: Array<
-          | {
-              _key: string
-              _type: 'link'
-              href: string | null
-              title: string | null
-            }
-          | {
-              _key: string
-              _type: 'reference'
-              page: {
-                _id: string
-                title: string
-                slug: string
-              }
-            }
-        > | null
-      }
-    | {
-        _key: string
-        _type: 'reference'
-      }
-    | {
-        _key: string
-        _type: 'teaserList'
-        appearance: 'CAROUSEL' | 'FEED' | 'GRID' | null
-        color: Color | null
-        backgroundColor: Color | null
-        imageStyle: 'NONE' | 'NORMAL' | 'SMALL' | null
-        skipDescription: boolean | null
-        maxItems: number | null
-        title: string | null
-        total: number | 0 | null
-        series: boolean | false
-        collectionId: string | null
-      }
-  > | null
-} | null
-
 // Source: src/app/(sanity)/groq/portable-text-content-fragment.ts
 // Variable: PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY
-// Query: *[_type == "page"][0]{    "block": pageBuilder[_type == "editorBlock"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }    }  }
+// Query: *[_type == "page"][0]{    "block": pageBuilder[_type == "editorBlock"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }    }  }
 export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
   block: {
     content: Array<
@@ -2669,17 +2666,13 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 content?: InlineEditor
                 href?: string
                 reference?:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
+                  ArticleReference | ContributorReference | PageReference
               }
             | {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
+                  ArticleReference | ContributorReference | PageReference
                 slug: string | null
               }
             | {
@@ -2961,7 +2954,7 @@ export type SEO_QUERY_RESULT =
 
 // Source: src/app/(sanity)/groq/series-menu-query.ts
 // Variable: SERIES_MENU_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    "articleCollection": articleCollections[featured == true][0].collection->{      _id,      title,      description,      image,      series,      "episodes": *[        _type == "article" &&        ^._id in articleCollections[].collection._ref      ] | order(publishDate asc) {          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,      }    },  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    "articleCollection": articleCollections[featured == true][0].collection->{      _id,      title,      description,      image,      series,      "episodes": *[        _type == "article" &&        ^._id in articleCollections[].collection._ref      ] | order(publishDate asc) {          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,      }    },  }
 export type SERIES_MENU_QUERY_RESULT = {
   _id: string
   articleCollection: {
@@ -3043,7 +3036,7 @@ export type SERIES_MENU_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/series-nav-query.ts
 // Variable: SERIES_NAV_QUERY
-// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    slug,    "episodes": *[      _type == "article" &&      ^._id in articleCollections[].collection._ref    ] | order(publishDate asc) {        _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,    }  }
+// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    slug,    "episodes": *[      _type == "article" &&      ^._id in articleCollections[].collection._ref    ] | order(publishDate asc) {        _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,    }  }
 export type SERIES_NAV_QUERY_RESULT = {
   _id: string
   title: string
@@ -3122,7 +3115,7 @@ export type SERIES_NAV_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/teaser-large-fragment.ts
 // Variable: TEASER_LARGE_FRAGMENT_QUERY
-// Query: *[_type == "teaserLarge"][0]{      _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }  }
+// Query: *[_type == "teaserLarge"][0]{      _id,  "_type": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }  }
 export type TEASER_LARGE_FRAGMENT_QUERY_RESULT = {
   _id: string
   _type: 'article' | 'page' | null
@@ -3213,7 +3206,7 @@ export type TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/teaser-small-document-fragment.ts
 // Variable: TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY
-// Query: *[_type == "teaserSmall"]{      _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => "/articles" + target[0]->slug.current,    target[0]->_type == "page" => "/pages" + target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,  }
+// Query: *[_type == "teaserSmall"]{      _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,  }
 export type TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT = Array<{
   _id: string
   _type: 'teaserSmall'
@@ -3271,7 +3264,7 @@ export type TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT = Array<{
 
 // Source: src/app/(sanity)/groq/teaser-small-fragment.ts
 // Variable: TEASER_SMALL_FRAGMENT_QUERY
-// Query: *[_type in ["article", "page"]]{      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  }
+// Query: *[_type in ["article", "page"]]{      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  }
 export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
   | {
       _id: string
@@ -3387,7 +3380,7 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
 
 // Source: src/app/(sanity)/groq/teasers-small-query.ts
 // Variable: TEASERS_SMALL_QUERY_DESC
-// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => "/articles" + target[0]->slug.current,    target[0]->_type == "page" => "/pages" + target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaserSmall" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate desc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => "/articles" + target[0]->slug.current,    target[0]->_type == "page" => "/pages" + target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
+// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaserSmall" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate desc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
 export type TEASERS_SMALL_QUERY_DESC_RESULT =
   | {
       block: null
@@ -3701,7 +3694,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
 
 // Source: src/app/(sanity)/groq/teasers-small-query.ts
 // Variable: TEASERS_SMALL_QUERY_ASC
-// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaser" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => "/articles" + target[0]->slug.current,    target[0]->_type == "page" => "/pages" + target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaser" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate asc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaser" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => "/articles" + target[0]->slug.current,    target[0]->_type == "page" => "/pages" + target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
+// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaser" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaser" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate asc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": coalesce(^.teaserSmall.heading, pt::text(title)),    "slug": slug.current,  },  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,          },          _type == "teaser" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => reference->slug.current,          reference->_type == "page" => reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  publishDate,  upcomingOnly,  "heading": {    "title": teaserSmallConfig.heading  },  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
 export type TEASERS_SMALL_QUERY_ASC_RESULT =
   | {
       block: null
@@ -3901,24 +3894,23 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n    \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image,\n      series\n    },\n    articleRecommendations[]->{\n      \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n    }\n  }': ARTICLE_QUERY_RESULT
-    '*[_type == "teaserLarge" && target[0]->slug.current == $slug][0]{\n    \n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }': ARTICLE_TEASER_QUERY_RESULT
-    '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true)\n  ] | order(publishDate desc) [$start...$end] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n  }': ARTICLES_QUERY_RESULT
-    '*[_type == "article"][0]{\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n  }': BYLINE_FRAGMENT_QUERY_RESULT
+    '*[_type == "teaserLarge" && _id == $id][0]{\n    \n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }': TEASER_LARGE_QUERY_RESULT
+    '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true)\n  ] | order(publishDate desc) [$start...$end] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n  }': ARTICLES_QUERY_RESULT
+    '*[_type == "article"][0]{\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n  }': BYLINE_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "callToAction"][0]{\n      \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n    }\n  }': CTA_BLOCK_FRAGMENT_QUERY_RESULT
-    '\n  *[\n    _type == "teaserLarge" &&\n    target[0]->_type == "article" &&\n    defined(target[0]->publishDate) &&\n    !(_id in *[_type == "front"] | order(publishDate desc)[0].pageBuilder[]._ref)\n  ] | order(target[0]->publishDate desc) [$start...$end] {\n    \n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }\n': FRONT_FEED_QUERY_RESULT
-    '*[_type == "front"] | order(publishDate desc)[0]{\n    _id,\n    title,\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "teaserList" => {\n        \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n      },\n    },\n  }': FRONT_QUERY_RESULT
+    '*[_type in ["article", "page"] && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n\n    _type == "article" => {\n      \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n      newsletter->{\n        title,\n        description,\n        frequency,\n        image,\n        name,\n      },\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n      contributors[]{\n        _id,\n        kind,\n        "slug": contributor->userId,\n        "name": contributor->title,\n        "description": contributor->description,\n        "portrait": contributor->portrait\n      },\n      "articleCollection": articleCollections[featured == true][0].collection->{\n        _id,\n        title,\n        description,\n        image,\n        series\n      },\n      articleRecommendations[]->{\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n      }\n    },\n\n    _type == "page" => {\n      pageBuilder[]{\n        _key,\n        _type,\n        _type == "menu" => {\n          \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n        },\n        _type == "callToAction" => {\n          \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n        },\n        _type == "editorBlock" => {\n          \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n        },\n        _type == "teaserList" => {\n          \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n        },\n        _type == "teaserLarge" => {\n          "reference": @->{\n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n        },\n      }\n    }\n  }': DOCUMENT_QUERY_RESULT
+    '\n  *[\n    _type == "teaserLarge" &&\n    target[0]->_type == "article" &&\n    defined(target[0]->publishDate) &&\n    !(_id in *[_type == "front"] | order(publishDate desc)[0].pageBuilder[]._ref)\n  ] | order(target[0]->publishDate desc) [$start...$end] {\n    \n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }\n': FRONT_FEED_QUERY_RESULT
+    '*[_type == "front"] | order(publishDate desc)[0]{\n    _id,\n    title,\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "teaserList" => {\n        \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n      },\n    },\n  }': FRONT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "menu"][0]{\n      \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n    }\n  }': MENU_BLOCK_FRAGMENT_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "menu" => {\n        \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n      },\n      _type == "callToAction" => {\n        \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n      },\n      _type == "editorBlock" => {\n        \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n      },\n      _type == "teaserList" => {\n        \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n      },\n    }\n  }': PAGE_QUERY_RESULT
-    '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n    }\n  }': PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
+    '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n    }\n  }': PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
     '*[slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': SEO_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image,\n      series,\n      "episodes": *[\n        _type == "article" &&\n        ^._id in articleCollections[].collection._ref\n      ] | order(publishDate asc) {\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n      }\n    },\n  }': SERIES_MENU_QUERY_RESULT
-    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n    slug,\n\n    "episodes": *[\n      _type == "article" &&\n      ^._id in articleCollections[].collection._ref\n    ] | order(publishDate asc) {\n      \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n    }\n  }': SERIES_NAV_QUERY_RESULT
-    '*[_type == "teaserLarge"][0]{\n    \n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }': TEASER_LARGE_FRAGMENT_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image,\n      series,\n      "episodes": *[\n        _type == "article" &&\n        ^._id in articleCollections[].collection._ref\n      ] | order(publishDate asc) {\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n      }\n    },\n  }': SERIES_MENU_QUERY_RESULT
+    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n    slug,\n\n    "episodes": *[\n      _type == "article" &&\n      ^._id in articleCollections[].collection._ref\n    ] | order(publishDate asc) {\n      \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n    }\n  }': SERIES_NAV_QUERY_RESULT
+    '*[_type == "teaserLarge"][0]{\n    \n  _id,\n  "_type": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }': TEASER_LARGE_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "teaserList"][0]{\n      \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n    }\n  }': TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT
-    '*[_type == "teaserSmall"]{\n    \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => "/articles" + target[0]->slug.current,\n    target[0]->_type == "page" => "/pages" + target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n  }': TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT
-    '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n  }': TEASER_SMALL_FRAGMENT_QUERY_RESULT
-    '\n  *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => "/articles" + target[0]->slug.current,\n    target[0]->_type == "page" => "/pages" + target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaserSmall" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate desc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => "/articles" + target[0]->slug.current,\n    target[0]->_type == "page" => "/pages" + target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_DESC_RESULT
-    '\n   *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaser" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => "/articles" + target[0]->slug.current,\n    target[0]->_type == "page" => "/pages" + target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaser" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate asc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaser" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => "/articles" + target[0]->slug.current,\n    target[0]->_type == "page" => "/pages" + target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_ASC_RESULT
+    '*[_type == "teaserSmall"]{\n    \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n  }': TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT
+    '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n  }': TEASER_SMALL_FRAGMENT_QUERY_RESULT
+    '\n  *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaserSmall" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate desc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_DESC_RESULT
+    '\n   *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaser" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaser" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate asc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n\n          },\n          _type == "teaser" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => reference->slug.current,\n          reference->_type == "page" => reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  publishDate,\n  upcomingOnly,\n  "heading": {\n    "title": teaserSmallConfig.heading\n  },\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_ASC_RESULT
   }
 }

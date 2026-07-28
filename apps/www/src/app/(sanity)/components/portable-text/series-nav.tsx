@@ -30,8 +30,7 @@ export async function SeriesNav({
       <Infobox title={series.title}>
         {!compact && (
           <p>
-            {series.description}{' '}
-            <Link href={`/pages${series.slug}`}>Zur Übersicht.</Link>
+            {series.description} <Link href={series.slug}>Zur Übersicht.</Link>
           </p>
         )}
       </Infobox>

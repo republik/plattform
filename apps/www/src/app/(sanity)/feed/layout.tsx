@@ -3,7 +3,7 @@ import { PageLayout } from '@/app/components/layout'
 import { css } from '@republik/theme/css'
 import { draftMode } from 'next/headers'
 
-export default async function SanityPageLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -11,6 +11,7 @@ export default async function SanityPageLayout({
   if ((await draftMode()).isEnabled) {
     return <PreviewPageLayout>{children}</PreviewPageLayout>
   }
+
   return (
     <PageLayout>
       <div
