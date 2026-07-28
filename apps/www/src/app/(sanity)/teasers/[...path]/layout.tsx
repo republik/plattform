@@ -1,6 +1,4 @@
-import { DisableDraftMode } from '@/app/(sanity)/components/disable-draft-mode'
-import { SanityLive } from '@/app/(sanity)/lib/live'
-import { VisualEditing } from 'next-sanity/visual-editing'
+import { PreviewPageLayout } from '@/app/(sanity)/components/preview/preview-page-layout'
 import { draftMode } from 'next/headers'
 
 export default async function TeaserLayout({
@@ -8,16 +6,8 @@ export default async function TeaserLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <>
-      {children}
-      <SanityLive />
-      {(await draftMode()).isEnabled && (
-        <>
-          <VisualEditing />
-          <DisableDraftMode />
-        </>
-      )}
-    </>
-  )
+  if ((await draftMode()).isEnabled) {
+    return <PreviewPageLayout>{children}</PreviewPageLayout>
+  }
+  return null
 }
