@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { useRouter } from 'next/router'
+import { usePathname, useRouter } from 'next/navigation'
 
 import scrollIntoView from 'scroll-into-view'
 
@@ -29,7 +29,7 @@ const SubmissionView = ({
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+  const pathname = usePathname()
 
   const { loading, error, data } = useQuery(
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
@@ -74,7 +74,7 @@ const SubmissionView = ({
         render={() => {
           if (error) {
             if (process.browser) {
-              router.replace({ pathname })
+              router.replace(pathname)
             }
             return null
           }
@@ -84,7 +84,7 @@ const SubmissionView = ({
           const submission = results.nodes[0]
           if (!submission) {
             if (process.browser) {
-              router.replace({ pathname })
+              router.replace(pathname)
             }
             return null
           }

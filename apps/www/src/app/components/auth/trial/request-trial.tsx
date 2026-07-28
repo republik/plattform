@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
@@ -22,8 +22,10 @@ import { TrialFormProps } from '.'
 // This component is used in the trial flow when the user is already authenticated.
 const RequestTrial = (props: TrialFormProps) => {
   const gql = useApolloClient()
-  const router = useRouter()
-  const { query } = router
+  const searchParams = useSearchParams()
+  // getConversionPayload enumerates with Object.keys, so it needs a plain object
+  // rather than the URLSearchParams instance useSearchParams returns.
+  const query = Object.fromEntries(searchParams)
   const { t } = useTranslation()
   const trackEvent = useTrackEvent()
   const [pending, setPending] = useState(false)
