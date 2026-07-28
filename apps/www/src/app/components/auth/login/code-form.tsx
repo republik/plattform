@@ -40,8 +40,6 @@ export function CodeForm({
 }: CodeFormProps) {
   const codeId = useId()
   const searchParams = useSearchParams()
-  // getConversionPayload enumerates with Object.keys, so it needs a plain object
-  // rather than the URLSearchParams instance useSearchParams returns.
   const query = Object.fromEntries(searchParams)
   const trackEvent = useTrackEvent()
   const formRef = useRef<HTMLFormElement>(null)

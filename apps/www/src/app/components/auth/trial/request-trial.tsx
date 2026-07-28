@@ -23,8 +23,6 @@ import { TrialFormProps } from '.'
 const RequestTrial = (props: TrialFormProps) => {
   const gql = useApolloClient()
   const searchParams = useSearchParams()
-  // getConversionPayload enumerates with Object.keys, so it needs a plain object
-  // rather than the URLSearchParams instance useSearchParams returns.
   const query = Object.fromEntries(searchParams)
   const { t } = useTranslation()
   const trackEvent = useTrackEvent()
