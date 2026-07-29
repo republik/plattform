@@ -7,7 +7,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { notFound } from 'next/navigation'
 
-export default async function FrontPage({
+export default async function FrontPreviewPage({
   params,
 }: PageProps<'/preview/fronts/[id]'>) {
   const { id } = await params
@@ -21,9 +21,7 @@ export default async function FrontPage({
   const { _id, pageBuilder = [] } = front
 
   return (
-    <EventTrackingContext category='Front'>
-      <h1 className={css({ srOnly: true })}>Republik Magazin</h1>
-
+    <>
       <div
         data-sanity={dataAttribute({
           id: _id,
@@ -46,6 +44,6 @@ export default async function FrontPage({
       </div>
 
       <FrontFeed />
-    </EventTrackingContext>
+    </>
   )
 }
