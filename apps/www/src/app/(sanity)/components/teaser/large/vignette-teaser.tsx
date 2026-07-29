@@ -115,7 +115,7 @@ export function VignetteTeaser({
   heading,
   teaser,
 }: TeaserLargeFragmentType) {
-  const href = target
+  const href = target ?? '#'
 
   return (
     <div

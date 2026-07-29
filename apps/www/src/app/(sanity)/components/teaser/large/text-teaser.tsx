@@ -78,13 +78,12 @@ const teaserByline = css({
 })
 
 export function TextTeaser({
-  _type,
   target,
   theme,
   teaser,
   heading,
 }: TeaserLargeFragmentType) {
-  const href = target
+  const href = target ?? '#'
 
   return (
     <div
