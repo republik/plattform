@@ -1,4 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { paginate } = require('@orbiting/backend-modules-utils')
 const Collection = require('../../../lib/Collection')
 
 // Bare document refs, no `Document` resolution: Sanity-backed content has no
@@ -6,10 +7,12 @@ const Collection = require('../../../lib/Collection')
 // here and fetch preview data straight from Sanity. Rows carry "repoId" or
 // "sanityId" (never both, see the collectionDocumentItems check constraint),
 // which is exactly the CollectionItemRef shape — no field resolvers needed.
-module.exports = async (_, { collectionName }, context) => {
+module.exports = async (_, args, context) => {
+  const { collectionName } = args
   const { user: me } = context
+
   if (!Roles.userIsInRoles(me, ['member'])) {
-    return []
+    return paginate(args, [])
   }
 
   const collection = await Collection.byNameForUser(
@@ -18,14 +21,16 @@ module.exports = async (_, { collectionName }, context) => {
     context,
   )
   if (!collection) {
-    return []
+    return paginate(args, [])
   }
 
-  return Collection.findDocumentItems(
+  const items = await Collection.findDocumentItems(
     {
       collectionId: collection.id,
       userId: me.id,
     },
     context,
   )
+
+  return paginate(args, items)
 }

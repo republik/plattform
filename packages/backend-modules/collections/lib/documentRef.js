@@ -1,4 +1,5 @@
 const { isSanityRef, fromSanityRef } = require('@orbiting/backend-modules-sanity')
+const { getParsedDocumentId } = require('../../search/lib/Documents')
 
 // `collectionDocumentItems` stores publikator documents in "repoId" — a FK to
 // publikator.repos, so a Sanity `_id` can never go there — and Sanity
@@ -20,6 +21,29 @@ const refToColumns = (ref) => {
   return isSanityRef(ref) ? { sanityId: fromSanityRef(ref) } : { repoId: ref }
 }
 
+// A *client-supplied* id, by contrast, can't be trusted to say which kind it
+// is: it may be a publikator repoId or base64 documentId, a bare Sanity `_id`
+// (with or without the `drafts.` prefix), or an already-prefixed ref. Rather
+// than resolve the document (an ES or Sanity round trip per id, which defeats
+// the point of a batch lookup) we return every column value it could match and
+// let the query decide. A wrong-kind candidate simply matches nothing: no row
+// holds a repoId in "sanityId" or vice versa.
+const inputToColumns = (value) => {
+  if (isSanityRef(value)) {
+    return { sanityId: fromSanityRef(value) }
+  }
+
+  // Tolerant of base64 documentIds and plain repoIds alike; for a Sanity uuid
+  // it hands the value straight back.
+  const { repoId } = getParsedDocumentId(value)
+
+  return {
+    repoId: repoId || undefined,
+    sanityId: value.replace(/^drafts\./, ''),
+  }
+}
+
 module.exports = {
   refToColumns,
+  inputToColumns,
 }

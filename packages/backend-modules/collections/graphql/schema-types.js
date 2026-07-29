@@ -40,6 +40,12 @@ type CollectionItemRef {
   sanityId: ID
 }
 
+type CollectionItemRefConnection {
+  totalCount: Int!
+  pageInfo: CollectionItemPageInfo!
+  nodes: [CollectionItemRef!]!
+}
+
 type CollectionItemConnection {
   totalCount: Int!
   pageInfo: CollectionItemPageInfo!

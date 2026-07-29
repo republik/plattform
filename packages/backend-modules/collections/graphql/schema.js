@@ -11,11 +11,32 @@ type queries {
   """
   The current user's items in a collection, as bare document references —
   no \`Document\` resolution. For content (e.g. Sanity-backed articles) whose
-  preview data the client fetches itself. The full list also lets a client
-  tell whether a given document is in the collection without a per-document
-  round trip.
+  preview data the client fetches itself. Newest first.
   """
-  userCollectionItems(collectionName: String!): [CollectionItemRef!]!
+  userCollectionItems(
+    collectionName: String!
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): CollectionItemRefConnection!
+
+  """
+  A single item, or null when the document is not in the collection.
+  \`documentId\` accepts a publikator repoId or base64 documentId, or a
+  Sanity \`_id\`.
+  """
+  userCollectionItem(documentId: ID!, collectionName: String!): CollectionItemRef
+
+  """
+  Batch equivalent of \`userCollectionItem\`: returns one entry per
+  \`documentIds\` entry, in the same order, null where the document is not in
+  the collection.
+  """
+  userCollectionItemsByIds(
+    documentIds: [ID!]!
+    collectionName: String!
+  ): [CollectionItemRef]!
 }
 
 type mutations {

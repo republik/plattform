@@ -2,7 +2,7 @@ const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
 } = require('./ProgressOptOut')
-const { refToColumns } = require('./documentRef')
+const { refToColumns, inputToColumns } = require('./documentRef')
 
 const assignUserId = (collection, userId) =>
   collection && {
@@ -43,6 +43,45 @@ const findDocumentItems = ({ documentRef, ...args }, { pgdb }) =>
       { orderBy: ['updatedAt desc'] },
     )
     .then((items) => items.map(spreadItemData))
+
+// Looks up items for client-supplied document ids, without resolving the
+// documents themselves. Returns one entry per input id, in input order, null
+// where the document isn't in the collection — positional alignment is the
+// contract callers rely on, so duplicates and misses both keep their slot.
+const findDocumentItemsByInputIds = async (
+  { collectionId, userId, inputIds },
+  { pgdb },
+) => {
+  const columns = inputIds.map(inputToColumns)
+  const repoIds = [...new Set(columns.map((c) => c.repoId).filter(Boolean))]
+  const sanityIds = [...new Set(columns.map((c) => c.sanityId).filter(Boolean))]
+
+  // One branch per column, both scoped to the collection and user. Nesting the
+  // scope inside each branch (rather than pairing a top-level `or` with sibling
+  // keys) keeps the AND/OR precedence unambiguous.
+  const branches = []
+  if (repoIds.length) {
+    branches.push({ collectionId, userId, repoId: repoIds })
+  }
+  if (sanityIds.length) {
+    branches.push({ collectionId, userId, sanityId: sanityIds })
+  }
+  if (!branches.length) {
+    return inputIds.map(() => null)
+  }
+
+  const rows = await pgdb.public.collectionDocumentItems.find({
+    or: branches.map((and) => ({ and })),
+  })
+
+  return columns.map(({ repoId, sanityId }) => {
+    const row = rows.find(
+      (r) =>
+        (repoId && r.repoId === repoId) || (sanityId && r.sanityId === sanityId),
+    )
+    return row ? spreadItemData(row) : null
+  })
+}
 
 const findDocumentItemsByCollectionNames = (
   { names, progress, userId, lastDays },
@@ -283,6 +322,7 @@ module.exports = {
   byIdForUser,
 
   findDocumentItems,
+  findDocumentItemsByInputIds,
   findDocumentItemsByCollectionNames,
 
   getDocumentItem,
