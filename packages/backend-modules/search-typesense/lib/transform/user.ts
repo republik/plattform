@@ -32,7 +32,6 @@ export interface UserRow {
   biography: string | null
   statement: string | null
   portraitUrl: string | null
-  email: string | null
   hasPublicProfile: boolean
   createdAt: Date | string | number
 }
@@ -106,9 +105,6 @@ export const transformUser = async (
   }
   if (portraitUrl) {
     doc.portrait = portraitUrl
-  }
-  if (row.email) {
-    doc.email = row.email
   }
 
   return doc

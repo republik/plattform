@@ -125,7 +125,6 @@ const reindexUsers = async (
           'biography',
           'statement',
           'portraitUrl',
-          'email',
           'hasPublicProfile',
           'createdAt',
         ],

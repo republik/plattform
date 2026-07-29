@@ -44,6 +44,7 @@ export const getDatedCollectionName = (kind: CollectionKind): string =>
  * See lib/transform/comment.ts for the enforcement of this rule.
  */
 export interface TypesenseCommentDocument {
+  /** The `public.comments.id` UUID -- Typesense's document primary key. */
   id: string
   contentString: string
   /** Absent entirely when the comment is anonymous. */
@@ -81,8 +82,21 @@ export interface TypesenseCommentDocument {
  * Unlike comments, ALL users are written here, including users with
  * hasPublicProfile: false. Privacy enforcement happens at query time via
  * searchScope (see lib/scopedKey.ts), not at write time.
+ *
+ * Carries NO email. Scoped search keys can constrain which *documents* a
+ * caller sees (filter_by) and which fields come back (exclude_fields), but
+ * they cannot constrain `query_by` -- and the key is handed to the browser,
+ * so `query_by` is caller-controlled. An indexed `email` here would let any
+ * public-tier key probe `query_by=email&q=<address>` and read the answer off
+ * the hit/no-hit plus the `highlights` array, even with the value excluded
+ * from the returned document. Collection access is a property of the *parent*
+ * key (see lib/scopedKey.ts), so keeping email out of this collection
+ * entirely is the only boundary a caller-supplied query_by cannot reach
+ * around. Admin email search lives in Postgres (adminUsers resolver in
+ * @orbiting/backend-modules-republik-crowdfundings).
  */
 export interface TypesenseUserDocument {
+  /** The `public.users.id` UUID -- Typesense's document primary key. */
   id: string
   name: string
   username?: string
@@ -93,13 +107,6 @@ export interface TypesenseUserDocument {
   credentialVerified?: boolean
   /** Resized/bw display URL, see @orbiting/backend-modules-republik/lib/portrait. */
   portrait?: string
-  /**
-   * Admin-only field -- indexed so admin/support callers can search users by
-   * email, but stripped from every non-admin scoped key's results via
-   * exclude_fields (see lib/scopedKey.ts). Never exposed to public/member
-   * tiers.
-   */
-  email?: string
   /** Kept for completeness/debugging; searchScope is what filters actually use. */
   hasPublicProfile: boolean
   /**
@@ -121,6 +128,18 @@ export interface TypesenseUserDocument {
  * there) -- kept here purely as the schema contract both repos must agree on.
  */
 export interface TypesenseArticleDocument {
+  /**
+   * The Sanity document `_id`. Typesense treats `id` as the document's
+   * primary key (auto-generating one when a write omits it), so this MUST be
+   * set explicitly and MUST be stable across re-syncs -- otherwise every
+   * sync of the same article inserts a second document instead of replacing
+   * the first.
+   *
+   * Note for the writer side (republik/studio): a Sanity draft's `_id` is
+   * prefixed (`drafts.<id>`) and would therefore land as a *separate*
+   * Typesense document from its published counterpart. Only published
+   * documents belong in this collection.
+   */
   id: string
   /** "article" | "page" */
   type: string
@@ -182,7 +201,6 @@ const usersFields: CollectionCreateSchema['fields'] = [
   { name: 'credential', type: 'string', optional: true, index: false },
   { name: 'credentialVerified', type: 'bool', optional: true, index: false },
   { name: 'portrait', type: 'string', optional: true, index: false },
-  { name: 'email', type: 'string', optional: true },
   { name: 'hasPublicProfile', type: 'bool', index: false },
   { name: 'searchScope', type: 'string', facet: true },
   { name: 'createdAt', type: 'int64' },

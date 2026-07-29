@@ -20,11 +20,17 @@ import { getClient } from './client'
  * that was needed only because privacy was originally going to be gated by a
  * `users`-only field (`hasPublicProfile`).
  *
- * `filter_by` alone only gates which *documents* a tier can see, not which
- * *fields* on an in-scope document -- some fields (e.g. the user document's
- * `email`) must stay admin-only regardless of searchScope, so the embedded
- * `exclude_fields` param strips them for non-admin tiers. See
- * ADMIN_ONLY_FIELDS below.
+ * No collection here carries a field that must be hidden per tier, so no
+ * `exclude_fields` is embedded. That is deliberate and worth preserving:
+ * `exclude_fields` only strips a field from the *returned document*, and a
+ * scoped key cannot constrain `query_by` at all. Since the key is handed to
+ * the browser, `query_by` is caller-controlled -- so an indexed-but-excluded
+ * sensitive field is still probeable via hit/no-hit and `highlights`. If a
+ * field must never be searchable by a tier, it belongs in a separate
+ * collection behind its own parent key (the collection restriction above is
+ * the only boundary a caller-supplied query_by cannot reach around), not in
+ * `exclude_fields`. This is why the user document carries no email; see
+ * TypesenseUserDocument in lib/collections.ts.
  *
  * Expects one pre-created parent search-only key (see
  * script/create-search-keys.ts, a one-time ops step -- Typesense never
@@ -75,29 +81,6 @@ const filterForTier = (tier: SearchCallerTier): string | undefined => {
 }
 
 /**
- * Fields on TypesenseUserDocument that carry data admin/support callers may
- * see (e.g. to search/contact users by email) but that must never reach a
- * public or member-scoped key's results, regardless of searchScope/filter_by
- * (those only gate which documents are returned, not which fields on them).
- */
-const ADMIN_ONLY_FIELDS = ['email']
-
-/**
- * The exclude_fields param for a given caller tier -- strips admin-only
- * fields from non-admin scoped keys so they never appear in a public/member
- * search response even if a document itself is within scope.
- */
-const excludeFieldsForTier = (tier: SearchCallerTier): string | undefined => {
-  switch (tier) {
-    case 'public':
-    case 'member':
-      return ADMIN_ONLY_FIELDS.join(',')
-    case 'admin':
-      return undefined
-  }
-}
-
-/**
  * Mints a scoped search key for the given caller tier.
  *
  * @param tier  'public' for unauthenticated callers, 'member' for
@@ -115,7 +98,6 @@ export const generateScopedSearchKey = (
 
   const key = client.keys().generateScopedSearchKey(getParentKey(), {
     filter_by: filterForTier(tier),
-    exclude_fields: excludeFieldsForTier(tier),
     expires_at: expiresAtUnix,
   })
 
