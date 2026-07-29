@@ -2,9 +2,9 @@ import { BestOfDialogue } from '@/app/(sanity)/components/page-builder/best-of-d
 import { MyRepublik } from '@/app/(sanity)/components/page-builder/my-republik'
 import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
 import { TeaserList } from '@/app/(sanity)/components/page-builder/teaser-list'
-import { FrontBuilderBlock } from '@/app/(sanity)/groq/front-query'
+import { FrontBuilderBlock } from '@/app/(sanity)/groq/front-latest-query'
 
-export function Block({
+export function FrontBlock({
   block,
   documentId,
 }: {
