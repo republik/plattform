@@ -11,7 +11,18 @@ type CollectionItem implements CollectionItemInterface {
   id: ID!
   createdAt: DateTime!
   collection: Collection!
+
+  """
+  Null for Sanity-backed items — they have no GraphQL \`Document\`. Read
+  \`sanityId\` and fetch preview data from Sanity instead.
+  """
   document: Document
+
+  "publikator repoId, when the item points at a publikator document"
+  repoId: ID
+
+  "Sanity \`_id\`, when the item points at Sanity-backed content"
+  sanityId: ID
 }
 
 """
