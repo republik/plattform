@@ -49,6 +49,17 @@ export const DOCUMENT_QUERY = defineQuery(
     },
 
     _type == "article" => {
+      _updatedAt,
+      publishDate,
+      // Plain text and SEO overrides, used for the JSON-LD linked data
+      "plainTitle": pt::text(title),
+      "plainDescription": pt::text(description),
+      seo {
+        title,
+        description,
+        image,
+        useImageBuilder
+      },
       ${BYLINE_FRAGMENT},
       newsletter->{
         title,
@@ -61,7 +72,8 @@ export const DOCUMENT_QUERY = defineQuery(
       contributors[]{
         _id,
         kind,
-        "slug": contributor->userId,
+        // Same profile slug as the byline links
+        "slug": coalesce(contributor->slug.current, contributor->userId),
         "name": contributor->title,
         "description": contributor->description,
         "portrait": contributor->portrait
