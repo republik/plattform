@@ -2,6 +2,7 @@ const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
 } = require('./ProgressOptOut')
+const { refToColumns } = require('./documentRef')
 
 const assignUserId = (collection, userId) =>
   collection && {
@@ -32,9 +33,15 @@ const byNameForUser = (name, userId, { loaders }) =>
 const byIdForUser = (id, userId, { loaders }) =>
   loaders.Collection.byKeyObj.load({ id }).then((c) => assignUserId(c, userId))
 
-const findDocumentItems = (args, { pgdb }) =>
+const findDocumentItems = ({ documentRef, ...args }, { pgdb }) =>
   pgdb.public.collectionDocumentItems
-    .find(args, { orderBy: ['updatedAt desc'] })
+    .find(
+      {
+        ...args,
+        ...refToColumns(documentRef),
+      },
+      { orderBy: ['updatedAt desc'] },
+    )
     .then((items) => items.map(spreadItemData))
 
 const findDocumentItemsByCollectionNames = (
@@ -53,7 +60,10 @@ const findDocumentItemsByCollectionNames = (
       progress
         ? `
     LEFT JOIN "collectionDocumentItems" progress_item ON
-      progress_item."repoId" = document_item."repoId" AND
+      -- IS NOT DISTINCT FROM, not =: exactly one of the two columns is set on
+      -- any given row, so the unused one is NULL on both sides.
+      progress_item."repoId" IS NOT DISTINCT FROM document_item."repoId" AND
+      progress_item."sanityId" IS NOT DISTINCT FROM document_item."sanityId" AND
       progress_item."userId" = document_item."userId" AND
       progress_item."collectionId" = (SELECT id FROM collections WHERE name = :progressCollectionName)
     `
@@ -62,6 +72,10 @@ const findDocumentItemsByCollectionNames = (
     WHERE
       document_item."userId" = :userId
       AND c.name = ANY(:names)
+      -- publikator items only: this feeds \`User.collectionItems\`, whose
+      -- \`document\` field needs a resolvable GraphQL Document. Sanity-backed
+      -- items are served by the \`userCollectionItems\` query instead.
+      AND document_item."repoId" IS NOT NULL
       ${lastDays ? `AND document_item."updatedAt" >= :afterDate` : ''}
       ${
         progress === 'FINISHED'
@@ -162,13 +176,20 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
     .then(spreadItemData)
 }
 
-const getDocumentItem = async (args, context) =>
-  getItem('CollectionDocumentItem', args, context)
+const getDocumentItem = async ({ documentRef, ...args }, context) =>
+  getItem(
+    'CollectionDocumentItem',
+    {
+      ...args,
+      ...refToColumns(documentRef),
+    },
+    context,
+  )
 
 const upsertDocumentItem = async (
   userId,
   collectionId,
-  repoId,
+  documentRef,
   data,
   context,
 ) =>
@@ -177,18 +198,18 @@ const upsertDocumentItem = async (
     {
       userId,
       collectionId,
-      repoId,
+      ...refToColumns(documentRef),
     },
     data,
     context,
   )
 
-const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
+const deleteDocumentItem = (userId, collectionId, documentRef, { pgdb }) =>
   pgdb.public.collectionDocumentItems
     .deleteAndGetOne({
       userId,
       collectionId,
-      repoId,
+      ...refToColumns(documentRef),
     })
     .then(spreadItemData)
 

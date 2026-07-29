@@ -20,15 +20,16 @@ module.exports = async (_, { documentId, collectionName, data }, context) => {
   if (!doc) {
     throw new Error(t(`api/collections/document/404`))
   }
-  // `doc.meta.repoId` (not the parsed input) is the canonical storage key —
-  // for a publikator document these are always equal; for a Sanity-backed
-  // one it's the loader's normalized `sanity:`-prefixed ref.
-  const repoId = doc.meta.repoId
+  // `doc.meta.repoId` (not the parsed input) is the canonical ref — for a
+  // publikator document these are always equal; for a Sanity-backed one it's
+  // the loader's normalized `sanity:`-prefixed ref, which Collection stores in
+  // the separate "sanityId" column.
+  const documentRef = doc.meta.repoId
 
   const item = await Collection.upsertDocumentItem(
     me.id,
     collection.id,
-    repoId,
+    documentRef,
     data,
     context,
   )

@@ -9,10 +9,13 @@ type queries {
   collectionsStats: CollectionsStats!
 
   """
-  Root-level equivalent of \`Document.userCollectionItem\`, for content
-  (e.g. Sanity-backed articles) that doesn't resolve to a GraphQL \`Document\`.
+  The current user's items in a collection, as bare document references —
+  no \`Document\` resolution. For content (e.g. Sanity-backed articles) whose
+  preview data the client fetches itself. The full list also lets a client
+  tell whether a given document is in the collection without a per-document
+  round trip.
   """
-  userCollectionItem(documentId: ID!, collectionName: String!): CollectionItem
+  userCollectionItems(collectionName: String!): [CollectionItemRef!]!
 }
 
 type mutations {

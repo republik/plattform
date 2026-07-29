@@ -40,14 +40,16 @@ const migrateSubscriptions = async (pgdb: any) => {
   }
 }
 
+// Unlike subscriptions.objectDocumentId (a bare text column), this table keys
+// publikator documents via a FK to publikator.repos — so migrating a row means
+// moving the id from "repoId" to the separate "sanityId" column, not rewriting
+// it in place.
 const migrateCollectionItems = async (pgdb: any) => {
-  const rows = await pgdb.public.collectionDocumentItems.find({})
+  const rows = await pgdb.public.collectionDocumentItems.find({
+    'repoId !=': null,
+  })
   const legacyRepoIds = [
-    ...new Set(
-      rows
-        .map((row: any) => row.repoId)
-        .filter((id: string) => id && !isSanityRef(id)),
-    ),
+    ...new Set(rows.map((row: any) => row.repoId).filter(Boolean)),
   ] as string[]
 
   console.log(
@@ -58,12 +60,33 @@ const migrateCollectionItems = async (pgdb: any) => {
     const doc = await fetchDocumentByLegacyRepoId(repoId)
     if (!doc) continue
 
-    const sanityRef = toSanityRef(doc._id)
-    await pgdb.public.collectionDocumentItems.update(
-      { repoId },
-      { repoId: sanityRef },
+    const sanityId = doc._id.replace(/^drafts\./, '')
+
+    // A user may already hold a Sanity-keyed row for the same document in the
+    // same collection (e.g. they re-bookmarked it after the content moved).
+    // The partial unique index would reject the update, so drop the redundant
+    // legacy row instead.
+    const conflicting = await pgdb.public.collectionDocumentItems.find({
+      sanityId,
+    })
+    const conflictKeys = new Set(
+      conflicting.map((row: any) => `${row.collectionId}:${row.userId}`),
     )
-    console.log(`collectionDocumentItems: ${repoId} -> ${sanityRef}`)
+
+    for (const row of rows.filter((r: any) => r.repoId === repoId)) {
+      const key = `${row.collectionId}:${row.userId}`
+      if (conflictKeys.has(key)) {
+        await pgdb.public.collectionDocumentItems.delete({ id: row.id })
+        console.log(`collectionDocumentItems: ${row.id} dropped (duplicate)`)
+        continue
+      }
+      conflictKeys.add(key)
+      await pgdb.public.collectionDocumentItems.update(
+        { id: row.id },
+        { repoId: null, sanityId },
+      )
+      console.log(`collectionDocumentItems: ${repoId} -> sanityId ${sanityId}`)
+    }
   }
 }
 

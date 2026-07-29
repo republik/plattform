@@ -14,6 +14,21 @@ type CollectionItem implements CollectionItemInterface {
   document: Document
 }
 
+"""
+A reference to a document in a collection, without resolving the document
+itself. Exactly one of \`repoId\` / \`sanityId\` is set.
+"""
+type CollectionItemRef {
+  id: ID!
+  createdAt: DateTime!
+
+  "publikator repoId, when the item points at a publikator document"
+  repoId: ID
+
+  "Sanity \`_id\`, when the item points at Sanity-backed content"
+  sanityId: ID
+}
+
 type CollectionItemConnection {
   totalCount: Int!
   pageInfo: CollectionItemPageInfo!

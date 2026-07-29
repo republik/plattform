@@ -10,7 +10,13 @@ const {
 
 // Wraps a generic Sanity document into the minimal shape callers of this
 // loader actually read (Collection.js's `meta.repoId` destructure,
-// notification content building) — not a full Sanity Document GraphQL type.
+// notification content building).
+//
+// Deliberately NOT a usable GraphQL `Document`: resolving one needs mdast
+// content we don't have, and faking it would only produce broken teasers.
+// Nothing exposes this through the `Document` type — clients read Sanity-backed
+// collection items via the `userCollectionItems` query and fetch their preview
+// data from Sanity.
 const toDocumentShape = (repoId, doc) => ({
   id: repoId,
   repoId,

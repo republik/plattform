@@ -20,6 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
+    "@orbiting/backend-modules-sanity": "*",
     "dataloader": "^2.0.0"
   }
 }
