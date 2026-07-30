@@ -1,7 +1,13 @@
 'use client'
 
 import { css, cx } from '@republik/theme/css'
-import { useRef } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react'
 import { ACTION_ICON_SIZE, actionStyle } from './action-style'
 
 const trackStyle = css({
@@ -64,6 +70,46 @@ function ReadingPositionIcon({ percent }: { percent: number }) {
       />
     </svg>
   )
+}
+
+/**
+ * Delays revealing the row by one render pass so the pre-insertion
+ * `document.documentElement.scrollHeight` can be captured cleanly, then
+ * compensates if it lands above the reader's current scroll position — an
+ * insertion within view is fine to just show as-is. Not relying on the
+ * browser's native scroll anchoring (`overflow-anchor`, on by default): it
+ * didn't prevent the jump in testing.
+ *
+ * The extra render happens inside `useLayoutEffect`, so the state update it
+ * schedules re-renders and re-flushes layout effects before the browser
+ * paints — no flicker, and no need to keep measuring on every render.
+ */
+function useScrollShiftReveal(
+  ref: RefObject<HTMLElement | null>,
+  hasPosition: boolean,
+) {
+  const [visible, setVisible] = useState(false)
+  const baselineScrollHeight = useRef(0)
+
+  useLayoutEffect(() => {
+    if (!hasPosition || visible) return
+    baselineScrollHeight.current = document.documentElement.scrollHeight
+    setVisible(true)
+  }, [hasPosition, visible])
+
+  useLayoutEffect(() => {
+    if (!visible) return
+    const el = ref.current
+    if (!el || el.getBoundingClientRect().bottom > 0) return
+
+    const delta =
+      document.documentElement.scrollHeight - baselineScrollHeight.current
+    if (delta > 0) {
+      window.scrollBy({ top: delta, behavior: 'instant' })
+    }
+  }, [visible])
+
+  return visible
 }
 
 function scrollToReadingPosition({
@@ -144,9 +190,11 @@ export function JumpToReadingPosition({
   documentId?: string
 }) {
   const ref = useRef<HTMLButtonElement>(null)
-  const { percent, position } = useReadingPosition({ documentId })
+  const { position, percent } = useReadingPosition({ documentId })
 
-  if (percent === undefined) {
+  const visible = useScrollShiftReveal(ref, percent !== undefined)
+
+  if (percent === undefined || !visible) {
     return null
   }
 
