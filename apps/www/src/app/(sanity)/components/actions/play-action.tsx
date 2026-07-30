@@ -6,7 +6,7 @@ import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracki
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { CirclePlay, CirclePause } from 'lucide-react'
 import { css, cx } from '@republik/theme/css'
-import { actionButtonStyle, ACTION_ICON_SIZE } from './action-button-style'
+import { actionStyle, ACTION_ICON_SIZE } from './action-style'
 
 const pillStyle = css({
   alignItems: 'center',
@@ -19,7 +19,7 @@ const pillStyle = css({
   paddingY: '2',
 })
 
-export function PlayButton({
+export function PlayAction({
   documentId,
   durationMs,
   mp3,
@@ -84,7 +84,7 @@ export function PlayButton({
 
   return (
     <button
-      className={cx(actionButtonStyle, pillStyle)}
+      className={cx(actionStyle, pillStyle)}
       data-active={isActive || undefined}
       onClick={onClick}
       title={isActive && isPlaying ? 'Pausieren' : 'Anhören'}

@@ -1,14 +1,15 @@
 'use client'
 
-import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/action-buttons/action-button-style'
-import { BookmarkButton } from '@/app/(sanity)/components/action-buttons/bookmark-button'
-import { PdfDownloadButton } from '@/app/(sanity)/components/action-buttons/pdf-download-button'
-import { PlayButton } from '@/app/(sanity)/components/action-buttons/play-button'
+import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/actions/action-style'
+import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-action'
+import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
+import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
+import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
 import {
   JumpToReadingPosition,
   MarkAsRead,
-} from '@/app/(sanity)/components/action-buttons/reading-position-button'
-import { ShareButton } from '@/app/(sanity)/components/action-buttons/share-button'
+} from '@/app/(sanity)/components/actions/reading-position-action'
+import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
@@ -85,11 +86,11 @@ function audioQueueDocumentId(article: {
   return btoa(repoId)
 }
 
-export type ActionBarProps = {
+export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
 }
 
-export function ActionBar({ article }: ActionBarProps) {
+export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
   const documentId = collectionsDocumentId(article)
   const audioDocumentId = audioQueueDocumentId(article)
   const path = article.slug
@@ -104,17 +105,10 @@ export function ActionBar({ article }: ActionBarProps) {
         gap: '5',
       })}
     >
-      <PlayButton
-        documentId={audioDocumentId}
-        durationMs={article.audioDurationMs ?? undefined}
-        mp3={article.audioSourceMp3 ?? undefined}
-        path={path}
-        sanityId={article._id}
-        title={title}
-      />
-      <BookmarkButton documentId={documentId} />
-      <ShareButton title={title} path={path} />
+      <BookmarkAction documentId={documentId} />
+      <ShareAction title={title} path={path} />
       <JumpToReadingPosition documentId={documentId} />
+      <DiscussionAction path={path} longLabel />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
@@ -131,7 +125,7 @@ export function ActionBar({ article }: ActionBarProps) {
             className={menuPanelStyle}
           >
             <DropdownMenu.Item asChild>
-              <PdfDownloadButton
+              <PdfDownloadAction
                 path={path}
                 version={article._updatedAt}
                 className={menuItemStyle}

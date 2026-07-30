@@ -10,7 +10,7 @@ import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { Facebook, Link, Mail, Share as ShareIcon } from 'lucide-react'
 import { useState } from 'react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
+import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
 
 const menuPanelStyle = css({
   backgroundColor: 'background.overlay',
@@ -45,7 +45,7 @@ const menuItemStyle = css({
   },
 })
 
-export function ShareButton({ title, path }: { title: string; path: string }) {
+export function ShareAction({ title, path }: { title: string; path: string }) {
   const url = new URL(path, PUBLIC_BASE_URL).toString()
   const emailSubject = `Republik: ${title}`
   const { isNativeApp } = usePlatformInformation()
@@ -58,7 +58,7 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
   if (isNativeApp) {
     return (
       <button
-        className={actionButtonStyle}
+        className={actionStyle}
         onClick={() => {
           trackEvent({ action: 'shareNative', name: url })
           postMessage({
@@ -69,7 +69,7 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
         type='button'
       >
         <ShareIcon size={ACTION_ICON_SIZE} />
-        Teilen
+        <span className={actionLabelStyle}>Teilen</span>
       </button>
     )
   }
@@ -109,9 +109,9 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
 
   return (
     <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger aria-label='Teilen' className={actionButtonStyle}>
+      <DropdownMenu.Trigger aria-label='Teilen' className={actionStyle}>
         <ShareIcon size={ACTION_ICON_SIZE} />
-        Teilen
+        <span className={actionLabelStyle}>Teilen</span>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

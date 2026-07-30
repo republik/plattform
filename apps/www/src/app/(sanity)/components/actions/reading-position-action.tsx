@@ -8,9 +8,9 @@ import { useMutation } from '@apollo/client'
 import { css, cx } from '@republik/theme/css'
 import { CircleCheck, CircleDashed } from 'lucide-react'
 import { useRef } from 'react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
+import { ACTION_ICON_SIZE, actionStyle } from './action-style'
 
-// `actionButtonStyle` assumes something clickable; the read state only reports state.
+// `actionStyle` assumes something clickable; the read state only reports state.
 const indicatorStyle = css({
   cursor: 'default',
   _hover: { color: 'text' },
@@ -95,7 +95,7 @@ function useReadingPosition({ documentId }: { documentId?: string }) {
       | undefined,
     // Gated on membership because the reference now exists for every article,
     // so without this the menu would offer signed-out readers an action the API
-    // rejects. Failures are swallowed with a warning, as in `PlayButton`.
+    // rejects. Failures are swallowed with a warning, as in `PlayAction`.
     markAsRead:
       documentId && isMember
         ? async () => {
@@ -131,7 +131,7 @@ export function MarkAsRead({
 
   return (
     <button
-      className={cx(actionButtonStyle, className)}
+      className={cx(actionStyle, className)}
       onClick={() => {
         markAsRead()
         trackEvent({ action: 'markAsRead', name: documentId })
@@ -166,7 +166,7 @@ export function JumpToReadingPosition({
     const read = t('article/actionbar/progress/read')
     return (
       <span
-        className={cx(actionButtonStyle, indicatorStyle, className)}
+        className={cx(actionStyle, indicatorStyle, className)}
         title={read}
       >
         <CircleCheck size={ACTION_ICON_SIZE} />
@@ -177,7 +177,7 @@ export function JumpToReadingPosition({
 
   return (
     <button
-      className={cx(actionButtonStyle, className)}
+      className={cx(actionStyle, className)}
       onClick={() => {
         // The action bar renders inside the <article>, which is the element the
         // stored position is measured against.

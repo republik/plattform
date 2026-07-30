@@ -12,9 +12,9 @@ import {
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
+import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
 
-export function BookmarkButton({ documentId }: { documentId: string }) {
+export function BookmarkAction({ documentId }: { documentId: string }) {
   const client = useApolloClient()
   const trackEvent = useTrackEvent()
   const [isPending, setIsPending] = useState(false)
@@ -98,7 +98,7 @@ export function BookmarkButton({ documentId }: { documentId: string }) {
   // Non-members and not-yet-resolved membership both render as a disabled
   return (
     <button
-      className={actionButtonStyle}
+      className={actionStyle}
       data-active={isBookmarked || undefined}
       disabled={isPending || loading || !canBookmark}
       onClick={toggleBookmark}
@@ -121,7 +121,9 @@ export function BookmarkButton({ documentId }: { documentId: string }) {
           size={ACTION_ICON_SIZE}
         />
       )}
-      {isBookmarked ? 'Gemerkt' : 'Merken'}
+      <span className={actionLabelStyle}>
+        {isBookmarked ? 'Gemerkt' : 'Merken'}
+      </span>
     </button>
   )
 }
