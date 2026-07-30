@@ -37,8 +37,8 @@ export function InlineTeaser({
       <TeaserImage
         image={teaser.image}
         alt=''
-        height={640}
-        width={480}
+        height={480}
+        width={640}
         sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
       />
       <h5
