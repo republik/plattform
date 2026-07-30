@@ -5,9 +5,11 @@ import { useMe } from '@/lib/context/MeContext'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
 import { rememberAudioItem, getKnownAudioItem } from '../helpers/audioItemCache'
+import { getAudioQueueItemsByIds } from '@/app/(sanity)/groq/audio-queue-items-server'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
 import { reportError } from '@/lib/errors/reportError'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import {
   AddAudioQueueItemRefDocument,
@@ -38,6 +40,29 @@ function refDocumentId(ref: AudioQueueItemRefFragment): string | null {
   if (ref.repoId) return btoa(ref.repoId)
   if (ref.sanityId) return `sanity:${ref.sanityId}`
   return null
+}
+
+/**
+ * Shapes a Sanity `AUDIO_QUEUE_ITEMS_QUERY` result into an `AudioPlayerItem`.
+ * Cover art is intentionally left out — resizing a raw Sanity image URL
+ * client-side isn't wired up, and `AudioCover` already falls back to a
+ * generated placeholder when `image` is unset.
+ */
+function toAudioPlayerItem(content: AudioQueueItemContent): AudioPlayerItem {
+  const id = `sanity:${content._id}`
+  return {
+    id,
+    meta: {
+      title: content.title,
+      path: content.path,
+      publishDate: content.publishDate,
+      audioSource: {
+        mediaId: id,
+        mp3: content.audioSourceMp3,
+        durationMs: content.audioDurationMs ?? 0,
+      },
+    },
+  } as unknown as AudioPlayerItem
 }
 
 /**
@@ -110,8 +135,51 @@ const useAudioQueue = (): {
     AudioQueueItemRefFragmentDoc,
     audioQueueData?.userAudioQueue || [],
   )
+  // `audioItemCache` only lives for the current page session — a reload
+  // loses it, since nothing was added/played yet to repopulate it. For
+  // Sanity-backed refs (which, unlike legacy repoIds, have a real batch
+  // content lookup) fetch whatever the cache doesn't already know, so a
+  // reloaded queue still renders. Legacy repoId items have no such lookup
+  // (only `document(path:)`, singular) and stay session-only — an accepted
+  // gap, since that content is being migrated to Sanity regardless.
+  const [hydratedSanityItems, setHydratedSanityItems] = useState<
+    Map<string, AudioPlayerItem>
+  >(new Map())
+
+  const missingSanityIds = audioQueueRefs
+    .filter(
+      (ref) =>
+        ref.sanityId &&
+        !getKnownAudioItem(refDocumentId(ref)) &&
+        !hydratedSanityItems.has(ref.sanityId),
+    )
+    .map((ref) => ref.sanityId)
+
+  useEffect(() => {
+    if (missingSanityIds.length === 0) return
+    let cancelled = false
+    getAudioQueueItemsByIds(missingSanityIds)
+      .then((items) => {
+        if (cancelled || items.length === 0) return
+        setHydratedSanityItems((previous) => {
+          const next = new Map(previous)
+          items.forEach((item) => next.set(item._id, toAudioPlayerItem(item)))
+          return next
+        })
+      })
+      .catch((error) => reportError('useAudioQueue: hydrate from Sanity', error))
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [missingSanityIds.join(',')])
+
   const audioQueueItems = audioQueueRefs.map((ref) =>
-    mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))),
+    mergeQueueItem(
+      ref,
+      getKnownAudioItem(refDocumentId(ref)) ??
+        (ref.sanityId ? hydratedSanityItems.get(ref.sanityId) : undefined),
+    ),
   )
   const isLoading = meLoading || audioQueueIsLoading
 
