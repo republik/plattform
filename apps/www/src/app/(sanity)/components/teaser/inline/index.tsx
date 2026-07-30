@@ -2,7 +2,10 @@
 
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
-import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import {
+  TeaserListItemType,
+  upcomingTeaser,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { css } from '@republik/theme/css'
 import { usePathname } from 'next/navigation'
 
@@ -10,15 +13,17 @@ export function InlineTeaser({
   teaser,
   label,
 }: {
-  teaser: TeaserSmallFragmentType
+  teaser: TeaserListItemType
   label?: string
 }) {
   const pathname = usePathname()
-  const isCurrentEpisode = pathname === teaser.slug
+  const upcoming = upcomingTeaser(teaser)
+  const isCurrentEpisode = 'slug' in teaser && pathname === teaser.slug
 
   return (
     <div
       key={teaser._id}
+      style={{ opacity: upcoming ? 0.5 : 1 }}
       className={css({
         position: 'relative',
         display: 'flex',
