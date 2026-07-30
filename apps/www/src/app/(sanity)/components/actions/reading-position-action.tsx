@@ -1,20 +1,70 @@
 'use client'
 
-import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
-import { useMe } from '@/lib/context/MeContext'
-import { useTranslation } from '@/lib/withT'
-import { UpsertDocumentProgressDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation } from '@apollo/client'
 import { css, cx } from '@republik/theme/css'
-import { CircleCheck, CircleDashed } from 'lucide-react'
 import { useRef } from 'react'
 import { ACTION_ICON_SIZE, actionStyle } from './action-style'
 
-// `actionStyle` assumes something clickable; the read state only reports state.
-const indicatorStyle = css({
-  cursor: 'default',
-  _hover: { color: 'text' },
+const trackStyle = css({
+  color: 'divider',
 })
+
+const arcStyle = css({
+  transformBox: 'fill-box',
+  transformOrigin: 'center',
+  transform: 'rotate(-90deg)',
+  transition: 'stroke-dashoffset 0.35s',
+})
+
+const pillStyle = css({
+  alignItems: 'center',
+  backgroundColor: 'hover',
+  borderRadius: '9999px',
+  display: 'inline-flex',
+  gap: '2',
+  paddingLeft: '2',
+  paddingRight: '3',
+  paddingY: '2',
+})
+
+/**
+ * Percentage ring, adapted from the legacy `ProgressCircle`
+ * (`packages/styleguide/src/components/Progress/Circle.tsx`): a `divider`
+ * track behind a `currentColor` arc that fills clockwise from 12 o'clock.
+ */
+function ReadingPositionIcon({ percent }: { percent: number }) {
+  const r = 10
+  const circumference = 2 * Math.PI * r
+  const clamped = Math.min(Math.max(percent, 0), 100)
+
+  return (
+    <svg
+      width={ACTION_ICON_SIZE}
+      height={ACTION_ICON_SIZE}
+      viewBox='0 0 24 24'
+      fill='none'
+    >
+      <circle
+        className={trackStyle}
+        cx='12'
+        cy='12'
+        r={r}
+        stroke='currentColor'
+        strokeWidth={2}
+      />
+      <circle
+        className={arcStyle}
+        cx='12'
+        cy='12'
+        r={r}
+        stroke='currentColor'
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeDasharray={circumference}
+        strokeDashoffset={circumference - (clamped / 100) * circumference}
+      />
+    </svg>
+  )
+}
 
 function scrollToReadingPosition({
   container,
@@ -64,9 +114,6 @@ function scrollToReadingPosition({
  * Reading position of the current article, keyed by `sanity:<_id>` — the same
  * reference bookmarks use (see `collectionsDocumentId`).
  *
- * WRITING works: `upsertDocumentProgress` accepts a Sanity reference and returns
- * the stored values.
- *
  * READING does not exist yet. `userCollectionItem(collectionName: "progress")`
  * returns a `CollectionItemRef` — `{ id, createdAt, repoId, sanityId }` — which
  * says *that* a position is stored but not what it is; `percentage`, `nodeId` and
@@ -77,14 +124,9 @@ function scrollToReadingPosition({
  * So the position indicator cannot render and scroll restore has nothing to
  * restore to. Both come back as soon as the API exposes the values by document
  * id — at which point this hook regains its query and `percent`/`position` stop
- * being undefined. Private to this module: `MarkAsRead` and
- * `JumpToReadingPosition` each call it themselves rather than receiving props
- * from the action bar.
+ * being undefined.
  */
 function useReadingPosition({ documentId }: { documentId?: string }) {
-  const { isMember } = useMe()
-  const [upsertProgress] = useMutation(UpsertDocumentProgressDocument)
-
   return {
     /** Rounded percentage — always undefined until the API exposes it. */
     percent: undefined as number | undefined,
@@ -93,91 +135,24 @@ function useReadingPosition({ documentId }: { documentId?: string }) {
     position: undefined as
       | { nodeId?: string | null; percentage?: number | null }
       | undefined,
-    // Gated on membership because the reference now exists for every article,
-    // so without this the menu would offer signed-out readers an action the API
-    // rejects. Failures are swallowed with a warning, as in `PlayAction`.
-    markAsRead:
-      documentId && isMember
-        ? async () => {
-            try {
-              await upsertProgress({
-                variables: { documentId, percentage: 1, nodeId: '' },
-              })
-            } catch (error) {
-              console.warn('ActionBar: could not mark article as read', error)
-            }
-          }
-        : undefined,
   }
-}
-
-export function MarkAsRead({
-  documentId,
-  className,
-}: {
-  documentId?: string
-  /** Overrides the standalone look, e.g. when embedded in a menu. */
-  className?: string
-}) {
-  const { t } = useTranslation()
-  const trackEvent = useTrackEvent()
-  const { isRead, markAsRead } = useReadingPosition({ documentId })
-
-  // Nothing left to mark once the article is read, or once we know it can't
-  // be marked at all (no position reference yet, or not a member).
-  if (isRead || !markAsRead) {
-    return null
-  }
-
-  return (
-    <button
-      className={cx(actionStyle, className)}
-      onClick={() => {
-        markAsRead()
-        trackEvent({ action: 'markAsRead', name: documentId })
-      }}
-      type='button'
-    >
-      <CircleCheck size={ACTION_ICON_SIZE} />
-      {t('article/actionbar/progress/markasread')}
-    </button>
-  )
 }
 
 export function JumpToReadingPosition({
   documentId,
-  className,
 }: {
   documentId?: string
-  /** Overrides the standalone look, e.g. when embedded in a menu. */
-  className?: string
 }) {
   const ref = useRef<HTMLButtonElement>(null)
-  const { t } = useTranslation()
-  const { percent, isRead, position } = useReadingPosition({ documentId })
+  const { percent, position } = useReadingPosition({ documentId })
 
   if (percent === undefined) {
     return null
   }
 
-  // A finished article has nowhere useful to jump to, so it stays a plain
-  // indicator rather than a button that scrolls to the very end.
-  if (isRead) {
-    const read = t('article/actionbar/progress/read')
-    return (
-      <span
-        className={cx(actionStyle, indicatorStyle, className)}
-        title={read}
-      >
-        <CircleCheck size={ACTION_ICON_SIZE} />
-        {read}
-      </span>
-    )
-  }
-
   return (
     <button
-      className={cx(actionStyle, className)}
+      className={cx(actionStyle, pillStyle)}
       onClick={() => {
         // The action bar renders inside the <article>, which is the element the
         // stored position is measured against.
@@ -187,11 +162,11 @@ export function JumpToReadingPosition({
         }
       }}
       ref={ref}
-      title='Zur Leseposition springen'
+      title='Weiterlesen'
       type='button'
     >
-      <CircleDashed size={ACTION_ICON_SIZE} />
-      {percent}%
+      <ReadingPositionIcon percent={percent} />
+      Weiterlesen
     </button>
   )
 }

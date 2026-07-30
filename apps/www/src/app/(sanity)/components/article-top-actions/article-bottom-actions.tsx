@@ -5,10 +5,6 @@ import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-actio
 import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
 import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
 import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
-import {
-  JumpToReadingPosition,
-  MarkAsRead,
-} from '@/app/(sanity)/components/actions/reading-position-action'
 import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -107,7 +103,6 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
     >
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
-      <JumpToReadingPosition documentId={documentId} />
       <DiscussionAction path={path} longLabel />
 
       <DropdownMenu.Root modal={false}>
@@ -130,15 +125,6 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
                 version={article._updatedAt}
                 className={menuItemStyle}
               />
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <JumpToReadingPosition
-                documentId={documentId}
-                className={menuItemStyle}
-              />
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <MarkAsRead documentId={documentId} className={menuItemStyle} />
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>

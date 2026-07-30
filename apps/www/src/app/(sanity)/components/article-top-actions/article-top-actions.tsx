@@ -5,10 +5,7 @@ import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-actio
 import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
 import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
 import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
-import {
-  JumpToReadingPosition,
-  MarkAsRead,
-} from '@/app/(sanity)/components/actions/reading-position-action'
+import { JumpToReadingPosition } from '@/app/(sanity)/components/actions/reading-position-action'
 import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -99,58 +96,58 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   return (
     <div
       className={css({
-        alignItems: 'center',
         display: 'flex',
-        flexWrap: 'wrap',
-        gap: '5',
+        flexDirection: 'column',
+        gap: '3',
       })}
     >
-      <PlayAction
-        documentId={audioDocumentId}
-        durationMs={article.audioDurationMs ?? undefined}
-        mp3={article.audioSourceMp3 ?? undefined}
-        path={path}
-        sanityId={article._id}
-        title={title}
-      />
-      <BookmarkAction documentId={documentId} />
-      <ShareAction title={title} path={path} />
-      <JumpToReadingPosition documentId={documentId} />
-      <DiscussionAction path={path} />
+      <div
+        className={css({
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '5',
+        })}
+      >
+        <PlayAction
+          documentId={audioDocumentId}
+          durationMs={article.audioDurationMs ?? undefined}
+          mp3={article.audioSourceMp3 ?? undefined}
+          path={path}
+          sanityId={article._id}
+          title={title}
+        />
+        <BookmarkAction documentId={documentId} />
+        <ShareAction title={title} path={path} />
+        <DiscussionAction path={path} />
 
-      <DropdownMenu.Root modal={false}>
-        <DropdownMenu.Trigger
-          aria-label='Weitere Aktionen'
-          className={menuTriggerStyle}
-        >
-          <EllipsisVertical size={ACTION_ICON_SIZE} />
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            align='end'
-            sideOffset={8}
-            collisionPadding={16}
-            className={menuPanelStyle}
+        <DropdownMenu.Root modal={false}>
+          <DropdownMenu.Trigger
+            aria-label='Weitere Aktionen'
+            className={menuTriggerStyle}
           >
-            <DropdownMenu.Item asChild>
-              <PdfDownloadAction
-                path={path}
-                version={article._updatedAt}
-                className={menuItemStyle}
-              />
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <JumpToReadingPosition
-                documentId={documentId}
-                className={menuItemStyle}
-              />
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <MarkAsRead documentId={documentId} className={menuItemStyle} />
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+            <EllipsisVertical size={ACTION_ICON_SIZE} />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              align='end'
+              sideOffset={8}
+              collisionPadding={16}
+              className={menuPanelStyle}
+            >
+              <DropdownMenu.Item asChild>
+                <PdfDownloadAction
+                  path={path}
+                  version={article._updatedAt}
+                  className={menuItemStyle}
+                />
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+      </div>
+
+      <JumpToReadingPosition documentId={documentId} />
     </div>
   )
 }
