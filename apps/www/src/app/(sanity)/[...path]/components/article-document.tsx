@@ -69,9 +69,11 @@ export default async function ArticleDocument({
           <EditLink documentId={article._id} documentType='article' />
         </div>
 
-        <ContentWall readingAccess={readingAccess}>
-          <ArticlePortableText value={article.content} />
-        </ContentWall>
+        <ContentWall
+          readingAccess={readingAccess}
+          excerpt={<ArticlePortableText value={article.content.slice(0, 5)} />}
+          fullContent={<ArticlePortableText value={article.content} />}
+        />
 
         <FollowArticle
           seriesId={seriesId}
