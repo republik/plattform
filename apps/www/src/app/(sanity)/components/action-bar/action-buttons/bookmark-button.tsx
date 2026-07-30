@@ -2,6 +2,7 @@
 
 import { Spinner } from '@/app/components/ui/spinner'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { useMe } from '@/lib/context/MeContext'
 import { useApolloClient, useMutation, useQuery } from '@apollo/client'
 import {
   AddArticleBookmarkDocument,
@@ -13,36 +14,28 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
 
-export function BookmarkButton({
-  canBookmark,
-  documentId,
-}: {
-  /** Resolved by the caller from server-seeded membership. */
-  canBookmark: boolean
-  documentId?: string
-}) {
+export function BookmarkButton({ documentId }: { documentId: string }) {
   const client = useApolloClient()
   const trackEvent = useTrackEvent()
   const [isPending, setIsPending] = useState(false)
   const [showSpinner, setShowSpinner] = useState(false)
   const [failed, setFailed] = useState(false)
 
+  // Inactive until membership is known or for non-members
+  const { isMember, hasActiveMembership } = useMe()
+  const canBookmark = isMember && hasActiveMembership
+
   const { data, loading } = useQuery(ArticleBookmarkDocument, {
     variables: { documentId },
-    skip: !documentId || !canBookmark,
+    skip: !canBookmark,
   })
   const [addBookmark] = useMutation(AddArticleBookmarkDocument)
   const [removeBookmark] = useMutation(RemoveArticleBookmarkDocument)
 
-  // No repoId means the collections API has nothing to attach a bookmark to.
-  if (!documentId || !canBookmark) {
-    return null
-  }
-
   const isBookmarked = !!data?.userCollectionItem
 
   async function toggleBookmark() {
-    if (isPending) return
+    if (isPending || !canBookmark) return
 
     setIsPending(true)
     setFailed(false)
@@ -102,17 +95,20 @@ export function BookmarkButton({
     }
   }
 
-  // Membership is known before this renders, so there is no wrapper and no
-  // CSS gate: non-members never receive the button in the HTML at all. The
-  // Pages Router used `data-show-if-active-membership` for this, which relies on
-  // a `next/head` script that does nothing in the App Router.
+  // Non-members and not-yet-resolved membership both render as a disabled
   return (
     <button
       className={actionButtonStyle}
       data-active={isBookmarked || undefined}
-      disabled={isPending || loading}
+      disabled={isPending || loading || !canBookmark}
       onClick={toggleBookmark}
-      title={isBookmarked ? 'Lesezeichen entfernen' : 'Lesezeichen hinzufügen'}
+      title={
+        !canBookmark
+          ? 'Nur für Mitglieder'
+          : isBookmarked
+            ? 'Lesezeichen entfernen'
+            : 'Lesezeichen hinzufügen'
+      }
       type='button'
     >
       {showSpinner ? (

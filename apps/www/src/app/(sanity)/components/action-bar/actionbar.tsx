@@ -1,60 +1,25 @@
 'use client'
 
-import { ActionMenu, ActionMenuItem } from '@/app/components/ui/action-menu'
-import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
-import { useMe } from '@/lib/context/MeContext'
+import { ActionMenu } from '@/app/components/ui/action-menu'
+import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import { css } from '@republik/theme/css'
-import { EllipsisVertical, FileDown } from 'lucide-react'
+import { EllipsisVertical } from 'lucide-react'
 import { ACTION_ICON_SIZE } from './action-buttons/action-button'
 import { BookmarkButton } from './action-buttons/bookmark-button'
+import { PdfDownloadItem } from './action-buttons/pdf-download-item'
 import { PlayButton } from './action-buttons/play-button'
 import { ShareButton } from './action-buttons/share-button'
+import { audioQueueDocumentId, collectionsDocumentId } from './document-id'
 
 export type ActionBarProps = {
-  sanityId: string
-  /** `sanity:<_id>` reference for bookmarks and reading position. */
-  documentId: string
-  /**
-   * Base64 `repoId` for the audio queue, which does not accept Sanity
-   * references yet; undefined without a `repoId`.
-   */
-  audioDocumentId?: string
-  path: string
-  title: string
-  /** Absolute public URL, built server-side. */
-  shareUrl: string
-  /** Screenshot-server PDF URL, built server-side. */
-  pdfHref: string
-  audio?: { mp3?: string; durationMs?: number }
-  /** Membership as known on the server, so first paint is already correct. */
-  initialIsMember: boolean
-  initialCanBookmark: boolean
+  article: ArticleDocumentType
 }
 
-export function ActionBar({
-  sanityId,
-  documentId,
-  audioDocumentId,
-  path,
-  title,
-  shareUrl,
-  pdfHref,
-  audio,
-  initialCanBookmark,
-}: ActionBarProps) {
-  const trackEvent = useTrackEvent()
-
-  // Seed from the server, then defer to the live context once it has loaded —
-  // a pure server value would leave these buttons stale after signing in
-  // without a router refresh.
-  const {
-    isMember: liveIsMember,
-    hasActiveMembership: liveHasMembership,
-    meLoading,
-  } = useMe()
-  const canBookmark = meLoading
-    ? initialCanBookmark
-    : liveIsMember && liveHasMembership
+export function ActionBar({ article }: ActionBarProps) {
+  const documentId = collectionsDocumentId(article)
+  const audioDocumentId = audioQueueDocumentId(article)
+  const path = article.slug
+  const title = article.plainTitle
 
   return (
     <div
@@ -67,27 +32,20 @@ export function ActionBar({
     >
       <PlayButton
         documentId={audioDocumentId}
-        durationMs={audio?.durationMs}
-        mp3={audio?.mp3}
+        durationMs={article.audioDurationMs ?? undefined}
+        mp3={article.audioSourceMp3 ?? undefined}
         path={path}
-        sanityId={sanityId}
+        sanityId={article._id}
         title={title}
       />
-      <BookmarkButton canBookmark={canBookmark} documentId={documentId} />
-      <ShareButton title={title} url={shareUrl} />
+      <BookmarkButton documentId={documentId} />
+      <ShareButton title={title} path={path} />
 
       <ActionMenu
         title='Weitere Aktionen'
         trigger={<EllipsisVertical size={ACTION_ICON_SIZE} />}
       >
-        <ActionMenuItem
-          href={pdfHref}
-          icon={<FileDown size={ACTION_ICON_SIZE} />}
-          onSelect={() => trackEvent({ action: 'pdfDownload', name: path })}
-          target='_blank'
-        >
-          PDF herunterladen
-        </ActionMenuItem>
+        <PdfDownloadItem path={path} version={article._updatedAt} />
       </ActionMenu>
     </div>
   )
