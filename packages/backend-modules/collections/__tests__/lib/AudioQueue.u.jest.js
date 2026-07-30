@@ -28,6 +28,7 @@ process.env.FRONTEND_BASE_URL =
 
 const {
   upsertItem,
+  removeItem,
   reorderItems,
   publikatorOnly,
   toRefs,
@@ -44,11 +45,13 @@ const makeContext = (items, { document } = {}) => {
   const inserts = []
   const updates = []
   const deletes = []
+  const cleared = []
 
   return {
     inserts,
     updates,
     deletes,
+    cleared,
     context: {
       user: { id: USER_ID },
       t: (key) => key,
@@ -58,6 +61,9 @@ const makeContext = (items, { document } = {}) => {
         },
         Document: {
           byRepoId: { load: async () => document ?? null },
+        },
+        AudioQueue: {
+          byUserId: { clear: (key) => cleared.push(key) },
         },
       },
       pgdb: {
@@ -171,13 +177,36 @@ describe('toRefs', () => {
 
     expect('progressOptOut' in items[0]).toBe(false)
   })
+})
 
-  test('clears the loader cache before reading', async () => {
-    // Callers are mutations returning the queue they just changed; a warm cache
-    // would return the pre-mutation state.
-    const { context, cleared } = makeRefContext({ items: [], optOut: false })
+describe('loader invalidation', () => {
+  // Every mutation returns the queue it just changed, so a warm per-request
+  // cache would reply with the pre-mutation state. Invalidating in the write
+  // functions rather than in one of the two read projections is what makes that
+  // hold for the deprecated `AudioQueueItem` resolvers too — they read the
+  // loader directly.
+  test('upsertItem clears the queue loader', async () => {
+    const { context, cleared } = makeContext([], {
+      document: sanityDoc(SANITY_ID),
+    })
 
-    await toRefs(USER_ID, context)
+    await upsertItem({ entityType: 'Document', entityId: SANITY_ID }, context)
+
+    expect(cleared).toEqual([USER_ID])
+  })
+
+  test('removeItem clears the queue loader', async () => {
+    const { context, cleared } = makeContext([])
+
+    await removeItem({ id: '0f1a3f1e-0e5f-4b1a-9f1e-0e5f4b1a9f1e' }, context)
+
+    expect(cleared).toEqual([USER_ID])
+  })
+
+  test('reorderItems clears the queue loader', async () => {
+    const { context, cleared } = makeContext([])
+
+    await reorderItems({ ids: [] }, context)
 
     expect(cleared).toEqual([USER_ID])
   })

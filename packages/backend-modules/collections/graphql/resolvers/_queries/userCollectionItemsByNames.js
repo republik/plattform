@@ -2,7 +2,11 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const Collection = require('../../../lib/Collection')
 const ProgressOptOut = require('../../../lib/ProgressOptOut')
-const { inputToColumns, matchesColumns } = require('../../../lib/documentRef')
+const {
+  inputToColumns,
+  matchesColumns,
+  canonicalKey,
+} = require('../../../lib/documentRef')
 
 // The Sanity-capable counterpart of `User.collectionItems`, which backs the
 // Leseliste. That field hard-filters to publikator rows because its `document`
@@ -12,10 +16,6 @@ const { inputToColumns, matchesColumns } = require('../../../lib/documentRef')
 // Rows carry "repoId" or "sanityId" (never both, see the
 // collectionDocumentItems check constraint), which is exactly the
 // CollectionItemRef shape — no field resolvers needed.
-
-// Rows for the same article can be keyed either way while content migrates, so
-// identity is "the document this row points at", not the column it used.
-const documentKey = ({ repoId, sanityId }) => sanityId || repoId
 
 module.exports = async (_, args, context) => {
   const { names, progress, excludeDocumentId, uniqueDocuments } = args
@@ -45,9 +45,11 @@ module.exports = async (_, args, context) => {
   )
 
   if (uniqueDocuments) {
+    // Keyed on the document, not on the column the row happened to use — the
+    // same article can be held both ways while content migrates.
     items = items.filter(
       (a, index, all) =>
-        index === all.findIndex((b) => documentKey(b) === documentKey(a)),
+        index === all.findIndex((b) => canonicalKey(b) === canonicalKey(a)),
     )
   }
 

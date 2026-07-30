@@ -28,12 +28,6 @@ const publikatorOnly = (items) => items.filter(({ repoId }) => repoId)
 // Copied onto new objects rather than mutated, so the dataloader's cached rows
 // stay clean.
 const toRefs = async (userId, context) => {
-  // Every caller is a mutation returning the queue it just changed, and
-  // createDataLoader leaves DataLoader's per-request cache on — so drop the key
-  // first. Without it, anything that happened to read the queue earlier in the
-  // same request would make this reply the pre-mutation state.
-  context.loaders.AudioQueue.byUserId.clear(userId)
-
   const [items, progressOptOut] = await Promise.all([
     context.loaders.AudioQueue.byUserId.load(userId),
     ProgressOptOut.status(userId, context),
@@ -41,6 +35,16 @@ const toRefs = async (userId, context) => {
 
   return items.map((item) => ({ ...item, progressOptOut }))
 }
+
+// createDataLoader leaves DataLoader's per-request cache on, so every write has
+// to drop the key. Without it, a mutation that reads the queue back — all of
+// them do, they return it — replies with the pre-mutation state whenever
+// something else in the same request happened to load it first.
+//
+// Takes the user explicitly, like toRefs — the loader is keyed by user, not by
+// "whoever is making the request".
+const invalidateQueueCache = (userId, context) =>
+  context.loaders.AudioQueue.byUserId.clear(userId)
 
 // A filter to omit an unwanted item
 const omitItem = (unwantedItem) => (item) => item.id !== unwantedItem?.id
@@ -199,6 +203,8 @@ const upsertItem = async (input, context) => {
       },
     })
   }
+
+  invalidateQueueCache(me.id, context)
 }
 
 const removeItem = async (input, context) => {
@@ -222,6 +228,8 @@ const removeItem = async (input, context) => {
     userId: me.id,
     id,
   })
+
+  invalidateQueueCache(me.id, context)
 }
 
 const reorderItems = async (input, context) => {
@@ -274,12 +282,15 @@ const reorderItems = async (input, context) => {
       )
     }),
   )
+
+  invalidateQueueCache(me.id, context)
 }
 
 module.exports = {
   getCollectionName,
   publikatorOnly,
   toRefs,
+  invalidateQueueCache,
 
   upsertItem,
   removeItem,
