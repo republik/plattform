@@ -3,9 +3,9 @@ import { EditorBlock } from '@/app/(sanity)/components/page-builder/editor-block
 import { Menu } from '@/app/(sanity)/components/page-builder/menu'
 import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
 import { TeaserList } from '@/app/(sanity)/components/page-builder/teaser-list'
-import { PageBuilderBlock } from '@/app/(sanity)/groq/page-query'
+import type { PageBuilderBlock } from '@/app/(sanity)/groq/document-query'
 
-export function Block({
+export function PageBlock({
   block,
   documentId,
 }: {

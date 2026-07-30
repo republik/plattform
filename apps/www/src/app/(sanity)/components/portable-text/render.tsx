@@ -16,6 +16,7 @@ const inlineComponents: Partial<PortableTextReactComponents> = {
 
   types: {
     variable: ({ value }) => <Variable value={value} />,
+    voiceTag: () => null,
   },
 
   block: {
@@ -41,6 +42,7 @@ const nestedComponents: Partial<PortableTextReactComponents> = {
 
   types: {
     variable: ({ value }) => <Variable value={value} />,
+    voiceTag: () => null,
   },
 
   block: {

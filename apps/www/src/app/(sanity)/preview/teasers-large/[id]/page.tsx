@@ -1,5 +1,5 @@
 import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
-import { ARTICLE_TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
+import { TEASER_LARGE_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -10,15 +10,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ArticleTeaserPage({
+export default async function TeaserLargePreviewPage({
   params,
-}: PageProps<'/teasers/[...path]'>) {
-  const { path } = await params
-  const slug = `/${path.join('/')}`
+}: PageProps<'/preview/teasers-large/[id]'>) {
+  const { id } = await params
 
   const { data: teaser } = await sanityFetch({
-    query: ARTICLE_TEASER_QUERY,
-    params: { slug },
+    query: TEASER_LARGE_QUERY,
+    params: { id },
   })
 
   if (!teaser) notFound()

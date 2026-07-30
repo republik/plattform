@@ -22,7 +22,6 @@ type LayoutProps = {
 export async function PageLayout({
   showHeader = true,
   showFooter = true,
-  showDraftModeIndicator = true,
   children,
 }: LayoutProps) {
   const { isNativeApp } = await getPlatformInformation()
@@ -51,7 +50,7 @@ export async function PageLayout({
       )}
 
       <CTABanner />
-      {showDraftModeIndicator && draftModeEnabled && <DraftModeIndicator />}
+      {draftModeEnabled && <DraftModeIndicator />}
       {isNativeApp ? (
         <PullToRefresh
           className={css({
