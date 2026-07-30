@@ -1,22 +1,12 @@
 const Promise = require('bluebird')
 const { v4: isUuid } = require('is-uuid')
+const {
+  getParsedDocumentId,
+} = require('@orbiting/backend-modules-search/lib/Documents')
+const { isCollectableType } = require('@orbiting/backend-modules-sanity')
+const { refToColumns } = require('./documentRef')
 
 const getCollectionName = () => 'audioqueue'
-
-const getRepoId = (entityId) => {
-  try {
-    if (entityId) {
-      const [org, repoName] = Buffer.from(entityId, 'base64')
-        .toString('utf-8')
-        .split('/')
-      return [org, repoName].join('/')
-    }
-  } catch (e) {
-    // swallow error
-  }
-
-  return undefined
-}
 
 // A filter to omit an unwanted item
 const omitItem = (unwantedItem) => (item) => item.id !== unwantedItem?.id
@@ -62,14 +52,33 @@ const upsertItem = async (input, context) => {
     throw new Error(t('api/collections/audioQueue/error/missingCollection'))
   }
 
-  const repoId = getRepoId(entityId)
+  // Resolve the client's id to a canonical document ref the same way
+  // addDocumentToCollection does, instead of the base64-only decode this used
+  // to do: the loader handles publikator repoIds, base64 documentIds and Sanity
+  // `_id`s alike, and returns the canonical ref on `meta.repoId` —
+  // `sanity:`-prefixed for Sanity-backed content. Never persist the raw input.
+  let documentRef
+  if (entityId) {
+    const { repoId: parsedId } = getParsedDocumentId(entityId)
+    if (!parsedId) {
+      throw new Error(t('api/collections/audioQueue/error/invalidEntityId'))
+    }
 
-  if (!!entityId && !repoId) {
-    throw new Error(t('api/collections/audioQueue/error/invalidEntityId'))
-  }
+    const doc = await loaders.Document.byRepoId.load(parsedId)
+    if (!doc) {
+      throw new Error(t('api/collections/audioQueue/error/missingDocument'))
+    }
 
-  if (repoId && !(await loaders.Document.byRepoId.load(repoId))) {
-    throw new Error(t('api/collections/audioQueue/error/missingDocument'))
+    // The publikator branch of that loader filters Elasticsearch to
+    // `type: 'Document'`, so a repoId is guaranteed to be an article. The Sanity
+    // branch resolves any `_type`, so a queue could otherwise be filled with
+    // authors or formats. Keyed on `sanityType` being present, not on the ref
+    // being prefixed — see addDocumentToCollection.js.
+    if (doc.sanityType && !isCollectableType(doc.sanityType)) {
+      throw new Error(t('api/collections/audioQueue/error/missingDocument'))
+    }
+
+    documentRef = doc.meta.repoId
   }
 
   const items = await pgdb.public.collectionDocumentItems.find({
@@ -77,8 +86,15 @@ const upsertItem = async (input, context) => {
     userId: me.id,
   })
 
+  // The `repoId &&` / `sanityId &&` guards are load-bearing: exactly one column
+  // is set per row, so without them a `null === null` comparison would match an
+  // unrelated row of the other kind.
+  const { repoId, sanityId } = refToColumns(documentRef)
   const existingItem = items.find(
-    (item) => item.id === id || item.repoId === repoId,
+    (item) =>
+      item.id === id ||
+      (repoId && item.repoId === repoId) ||
+      (sanityId && item.sanityId === sanityId),
   )
 
   if (id && !existingItem) {
@@ -156,7 +172,10 @@ const upsertItem = async (input, context) => {
     await pgdb.public.collectionDocumentItems.insert({
       collectionId: collection.id,
       userId: me.id,
-      repoId,
+      // Spread, not an explicit `repoId`/`sanityId` pair: the unused column has
+      // to be *absent* so it inserts NULL, satisfying the
+      // "collectionDocumentItems_one_document_ref" check constraint.
+      ...refToColumns(documentRef),
       data: {
         sequence: aimSequence,
       },
@@ -218,23 +237,35 @@ const reorderItems = async (input, context) => {
     })
     .filter(Boolean)
 
-  const deletable = items.filter(
-    (item) => !updatables.find((update) => update.id === item.id),
-  )
+  // Items the caller didn't mention are appended after the reordered ones,
+  // keeping their prior relative order — they are NOT deleted.
+  //
+  // This used to delete them, which is unsafe for any client that knows only
+  // part of the queue. The web player filters items it can't render (see
+  // useAudioQueue's `audioSource` filter) and then reorders what's left, so a
+  // single drag would silently wipe every Sanity-backed item. Deleting stays
+  // the job of removeAudioQueueItem / clearAudioQueue, which is what clients
+  // already use.
+  //
+  // Appending rather than leaving their sequence untouched keeps the column
+  // collision-free: nothing enforces uniqueness, and the queue's sort would
+  // otherwise fall back on Postgres row order for tied values.
+  const appendables = items
+    .filter((item) => !updatables.find((update) => update.id === item.id))
+    .sort((a, b) => (a.data?.sequence ?? 0) - (b.data?.sequence ?? 0))
+    .map((item, index) => ({
+      ...item,
+      data: {
+        ...item.data,
+        sequence: updatables.length + index + 1,
+      },
+    }))
 
-  await Promise.each(updatables, (item) =>
+  await Promise.each([...updatables, ...appendables], (item) =>
     pgdb.public.collectionDocumentItems.update(
       { collectionId: collection.id, userId: me.id, id: item.id },
       item,
     ),
-  )
-
-  await Promise.each(deletable, ({ id }) =>
-    pgdb.public.collectionDocumentItems.delete({
-      collectionId: collection.id,
-      userId: me.id,
-      id,
-    }),
   )
 }
 

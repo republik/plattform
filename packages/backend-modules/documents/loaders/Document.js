@@ -22,9 +22,14 @@ const {
 // in (see collections/lib/documentRef.js): a plain publikator repoId, or a
 // `sanity:`-prefixed Sanity id. It lands on `meta.repoId` because that is the
 // field callers already destructure -- the name is legacy, the value is a ref.
+// `sanityType` carries the document's Sanity `_type` through to callers that
+// need to reject the wrong kind of document (collections accept only articles,
+// while subscriptions legitimately target formats — so the loader itself stays
+// permissive). Not a GraphQL field; nothing exposes this stub as a `Document`.
 const toDocumentShape = (documentRef, doc) => ({
   id: documentRef,
   repoId: documentRef,
+  sanityType: doc._type,
   meta: { repoId: documentRef, title: doc.title, path: doc.slug?.current },
   __typename: 'Document',
 })

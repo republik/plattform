@@ -46,6 +46,55 @@ type CollectionItemRefConnection {
   nodes: [CollectionItemRef!]!
 }
 
+"""
+A user's reading progress for a document, without resolving the document
+itself. Exactly one of \`repoId\` / \`sanityId\` is set.
+"""
+type DocumentProgressRef {
+  id: ID!
+  percentage: Float!
+  nodeId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  "publikator repoId, when the item points at a publikator document"
+  repoId: ID
+
+  "Sanity \`_id\`, when the item points at Sanity-backed content"
+  sanityId: ID
+
+  "the entry with the highest percentage recorded for the same document"
+  max: DocumentProgressRef
+}
+
+"""
+An audio queue item, without resolving the document itself. Exactly one of
+\`repoId\` / \`sanityId\` is set.
+"""
+type AudioQueueItemRef {
+  id: ID!
+
+  """
+  Sequence number of this item
+  """
+  sequence: Int!
+
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  "publikator repoId, when the item points at a publikator document"
+  repoId: ID
+
+  "Sanity \`_id\`, when the item points at Sanity-backed content"
+  sanityId: ID
+
+  """
+  Key for \`mediaProgress\` / \`upsertMediaProgress\` — the playback position of
+  this item's audio. Set for both publikator and Sanity-backed items.
+  """
+  mediaId: ID
+}
+
 type CollectionItemConnection {
   totalCount: Int!
   pageInfo: CollectionItemPageInfo!
@@ -112,7 +161,19 @@ type DocumentProgress implements CollectionItemInterface {
   createdAt: DateTime!
   updatedAt: DateTime!
   collection: Collection!
+
+  """
+  Null for Sanity-backed items — they have no GraphQL \`Document\`. Read
+  \`sanityId\` and fetch preview data from Sanity instead.
+  """
   document: Document
+
+  "publikator repoId, when the item points at a publikator document"
+  repoId: ID
+
+  "Sanity \`_id\`, when the item points at Sanity-backed content"
+  sanityId: ID
+
   # get entity with max percentage for same doc
   max: DocumentProgress
 }

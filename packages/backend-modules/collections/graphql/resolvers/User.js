@@ -49,9 +49,15 @@ module.exports = {
     }
     return paginate(args, [])
   },
-  audioQueue(user, args, context) {
+  async audioQueue(user, args, context) {
     if (canAccess(user, context)) {
-      return context.loaders.AudioQueue.byUserId.load(user.id)
+      const items = await context.loaders.AudioQueue.byUserId.load(user.id)
+      // publikator items only, like `Collection.items`. A Sanity-backed item
+      // resolves `document` to null, and the web player treats an item without
+      // `document.meta.audioSource` as corrupt and calls removeAudioQueueItem on
+      // it — so surfacing them here would delete them. They are served by the
+      // `userAudioQueue` query instead.
+      return items.filter(({ repoId }) => repoId)
     }
 
     return null

@@ -37,6 +37,45 @@ type queries {
     documentIds: [ID!]!
     collectionName: String!
   ): [CollectionItemRef]!
+
+  """
+  The current user's items across several collections, as bare document refs —
+  the Sanity-capable counterpart of \`User.collectionItems\`, which is
+  publikator-only because its \`document\` field must resolve. Most recently
+  updated first.
+  """
+  userCollectionItemsByNames(
+    names: [String!]!
+    progress: ProgressState
+    "a publikator repoId or base64 documentId, or a Sanity \`_id\`, to omit"
+    excludeDocumentId: ID
+    lastDays: Int
+    uniqueDocuments: Boolean
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): CollectionItemRefConnection!
+
+  """
+  The current user's reading progress for one document, or null when there is
+  none. \`documentId\` accepts a publikator repoId or base64 documentId, or a
+  Sanity \`_id\`.
+  """
+  userDocumentProgress(documentId: ID!): DocumentProgressRef
+
+  """
+  Batch equivalent of \`userDocumentProgress\`: returns one entry per
+  \`documentIds\` entry, in the same order, null where there is no progress.
+  """
+  userDocumentProgressByIds(documentIds: [ID!]!): [DocumentProgressRef]!
+
+  """
+  The current user's audio queue as bare document refs, including
+  Sanity-backed items — \`User.audioQueue\` is publikator-only. Ordered by
+  \`sequence\`.
+  """
+  userAudioQueue: [AudioQueueItemRef!]!
 }
 
 type mutations {
@@ -112,7 +151,11 @@ type mutations {
   """
   Reorder existing items at once.
   A non-existant item ID will be ignored.
-  If an item exists in queue but its ID is not submitted, it will be deleted.
+  Items that exist in the queue but whose ID is not submitted are kept and
+  appended after the reordered ones — use \`removeAudioQueueItem\` or
+  \`clearAudioQueue\` to delete. (This used to delete them, which silently
+  destroyed items a partially-informed client could not see, e.g. Sanity-backed
+  ones absent from \`User.audioQueue\`.)
   """
   reorderAudioQueue(ids: [ID!]!): [AudioQueueItem!]!
 }

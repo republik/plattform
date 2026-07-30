@@ -83,8 +83,12 @@ const findDocumentItemsByInputIds = async (
   })
 }
 
+// `includeSanity` defaults to false: the long-standing caller is
+// `User.collectionItems`, whose `document` field must resolve to a GraphQL
+// Document, which Sanity-backed rows cannot do. The `userCollectionItemsByNames`
+// query passes true — it returns bare refs, so it has no such constraint.
 const findDocumentItemsByCollectionNames = (
-  { names, progress, userId, lastDays },
+  { names, progress, userId, lastDays, includeSanity = false },
   context,
 ) => {
   const { pgdb } = context
@@ -111,10 +115,14 @@ const findDocumentItemsByCollectionNames = (
     WHERE
       document_item."userId" = :userId
       AND c.name = ANY(:names)
-      -- publikator items only: this feeds \`User.collectionItems\`, whose
+      ${
+        includeSanity
+          ? ''
+          : `-- publikator items only: this feeds \`User.collectionItems\`, whose
       -- \`document\` field needs a resolvable GraphQL Document. Sanity-backed
-      -- items are served by the \`userCollectionItems\` query instead.
-      AND document_item."repoId" IS NOT NULL
+      -- items are served by the \`userCollectionItemsByNames\` query instead.
+      AND document_item."repoId" IS NOT NULL`
+      }
       ${lastDays ? `AND document_item."updatedAt" >= :afterDate` : ''}
       ${
         progress === 'FINISHED'

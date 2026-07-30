@@ -1,7 +1,12 @@
 import { logger } from '@orbiting/backend-modules-logger'
 import { createSanityClient } from './client'
 
-const sanityClient = createSanityClient()
+// Built on first use, not at import time: the SANITY_* env vars this needs
+// aren't necessarily loaded when this module is imported (a script's ES imports
+// are hoisted above its `env.config()` call), and requiring this module must not
+// hard-fail for consumers that only want its pure helpers. Mirrors lib/document.ts.
+let client: ReturnType<typeof createSanityClient> | undefined
+const sanityClient = () => (client ??= createSanityClient())
 
 // Portable text: a heterogeneous array of block/object nodes. The exact
 // per-node shape is defined by studio's schema (a separate repo, no shared
@@ -28,7 +33,7 @@ export const fetchArticle = (documentId: string) =>
   // The client's default query perspective excludes drafts entirely — a plain
   // fetch by _id silently returns null for one. `raw` matches the literal
   // document regardless of its publish state.
-  sanityClient.fetch<ArticleDoc | null>(
+  sanityClient().fetch<ArticleDoc | null>(
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
       syntheticVoice, suppressSyntheticReadAloud
@@ -61,7 +66,7 @@ export const recordAudioVersion = (
   currentFields: Record<string, unknown>,
   version: AudioVersion,
 ) =>
-  sanityClient
+  sanityClient()
     .patch(documentId)
     .set(currentFields)
     .setIfMissing({ audioVersions: [] })
@@ -69,7 +74,7 @@ export const recordAudioVersion = (
     .commit({ autoGenerateArrayKeys: true })
 
 export const uploadAudioAsset = (buffer: Buffer, filename: string) =>
-  sanityClient.assets.upload('file', buffer, {
+  sanityClient().assets.upload('file', buffer, {
     filename,
     contentType: 'audio/mpeg',
   })
@@ -86,7 +91,7 @@ export const reportAudioGenerationError = async (
 ) => {
   logger.error({ error }, `audio generation failed for ${documentId}`)
   try {
-    await sanityClient
+    await sanityClient()
       .patch(documentId)
       .set({
         audioGenerationResult: {
@@ -105,7 +110,7 @@ export const reportAudioGenerationError = async (
 }
 
 export const reportAudioGenerationSuccess = (documentId: string) =>
-  sanityClient
+  sanityClient()
     .patch(documentId)
     .set({
       audioGenerationResult: {

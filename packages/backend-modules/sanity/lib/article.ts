@@ -1,7 +1,12 @@
 import { createSanityClient } from './client'
 import type { PortableTextBlocks } from './audio'
 
-const sanityClient = createSanityClient()
+// Built on first use, not at import time: the SANITY_* env vars this needs
+// aren't necessarily loaded when this module is imported (a script's ES imports
+// are hoisted above its `env.config()` call), and requiring this module must not
+// hard-fail for consumers that only want its pure helpers. Mirrors lib/document.ts.
+let client: ReturnType<typeof createSanityClient> | undefined
+const sanityClient = () => (client ??= createSanityClient())
 
 export interface ArticleForNotification {
   _id: string
@@ -24,7 +29,7 @@ export interface ArticleForNotification {
 }
 
 export const fetchArticleForNotification = (documentId: string) =>
-  sanityClient.fetch<ArticleForNotification | null>(
+  sanityClient().fetch<ArticleForNotification | null>(
     `*[_id == $id][0]{
       _id, title, notificationTitle, description, byline, slug,
       "format": heading->{ "title": pt::text(title), "path": slug.current },
