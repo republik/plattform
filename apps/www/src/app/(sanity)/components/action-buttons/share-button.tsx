@@ -5,17 +5,10 @@ import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {
-  IconLink,
-  IconLogoFacebook,
-  IconLogoTelegram,
-  IconLogoThreema,
-  IconLogoWhatsApp,
-  IconMail,
-} from '@republik/icons'
+import { IconLogoTelegram, IconLogoThreema, IconLogoWhatsApp } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
-import { Share as ShareIcon } from 'lucide-react'
+import { Facebook, Link, Mail, Share as ShareIcon } from 'lucide-react'
 import { useState } from 'react'
 import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
 
@@ -85,7 +78,7 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
     {
       name: 'facebook',
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      icon: IconLogoFacebook,
+      icon: Facebook,
       label: 'Facebook',
     },
     {
@@ -109,7 +102,7 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
     {
       name: 'mail',
       href: `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(url)}`,
-      icon: IconMail,
+      icon: Mail,
       label: 'E-Mail',
     },
   ]
@@ -153,7 +146,7 @@ export function ShareButton({ title, path }: { title: string; path: string }) {
                 copyToClipboard(url).then(() => setLinkCopied(true))
               }}
             >
-              <IconLink size={ACTION_ICON_SIZE} />
+              <Link size={ACTION_ICON_SIZE} />
               {linkCopied ? 'Link kopiert' : 'Link kopieren'}
             </a>
           </DropdownMenu.Item>
