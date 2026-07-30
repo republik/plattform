@@ -8,6 +8,14 @@ const { refToColumns } = require('./documentRef')
 
 const getCollectionName = () => 'audioqueue'
 
+// Anything typed as `AudioQueueItem` in the schema has to hide Sanity-backed
+// rows: that type exposes no `sanityId`, and its `document` resolves to null for
+// them — and the web player treats an item without `document.meta.audioSource`
+// as corrupt and calls removeAudioQueueItem on it. That applies to
+// `User.audioQueue` *and* to every mutation's return value, since they all hand
+// back the whole queue. The `userAudioQueue` query serves the full queue as refs.
+const publikatorOnly = (items) => items.filter(({ repoId }) => repoId)
+
 // A filter to omit an unwanted item
 const omitItem = (unwantedItem) => (item) => item.id !== unwantedItem?.id
 
@@ -271,6 +279,7 @@ const reorderItems = async (input, context) => {
 
 module.exports = {
   getCollectionName,
+  publikatorOnly,
 
   upsertItem,
   removeItem,

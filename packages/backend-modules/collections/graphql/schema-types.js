@@ -93,6 +93,14 @@ type AudioQueueItemRef {
   this item's audio. Set for both publikator and Sanity-backed items.
   """
   mediaId: ID
+
+  """
+  The user's playback position for this item's audio, so a whole queue can be
+  rendered with progress in one request. Batched across the queue — reading it
+  for every item costs one query, not one per item. Null when the user has
+  opted out of progress tracking.
+  """
+  userProgress: MediaProgress
 }
 
 type CollectionItemConnection {

@@ -16,7 +16,11 @@ jest.mock('@orbiting/backend-modules-auth', () => ({
 process.env.FRONTEND_BASE_URL =
   process.env.FRONTEND_BASE_URL || 'http://localhost:3010'
 
-const { upsertItem, reorderItems } = require('../../lib/AudioQueue')
+const {
+  upsertItem,
+  reorderItems,
+  publikatorOnly,
+} = require('../../lib/AudioQueue')
 
 const COLLECTION_ID = 'collection-audioqueue'
 const USER_ID = 'user-1'
@@ -67,6 +71,21 @@ const publikatorDoc = (repoId) => ({
 const sanityDoc = (id, sanityType = 'article') => ({
   sanityType,
   meta: { repoId: `sanity:${id}` },
+})
+
+describe('publikatorOnly', () => {
+  // Every `AudioQueueItem`-typed field and mutation return has to go through
+  // this. That type has no sanityId and its `document` is null for Sanity rows,
+  // and the web player deletes items it cannot render — so leaking one into a
+  // mutation response is enough to have it deleted from the client's cache pass.
+  test('drops Sanity-backed rows and keeps publikator ones', () => {
+    const items = [
+      { id: 'p1', repoId: 'republik/one', sanityId: null },
+      { id: 's1', repoId: null, sanityId: SANITY_ID },
+    ]
+
+    expect(publikatorOnly(items).map(({ id }) => id)).toEqual(['p1'])
+  })
 })
 
 describe('upsertItem', () => {

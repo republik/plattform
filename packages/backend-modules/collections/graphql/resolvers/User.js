@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../lib/Collection')
+const { publikatorOnly } = require('../../lib/AudioQueue')
 const { paginate } = require('@orbiting/backend-modules-utils')
 
 const accessRoles = ['member']
@@ -51,13 +52,11 @@ module.exports = {
   },
   async audioQueue(user, args, context) {
     if (canAccess(user, context)) {
-      const items = await context.loaders.AudioQueue.byUserId.load(user.id)
-      // publikator items only, like `Collection.items`. A Sanity-backed item
-      // resolves `document` to null, and the web player treats an item without
-      // `document.meta.audioSource` as corrupt and calls removeAudioQueueItem on
-      // it — so surfacing them here would delete them. They are served by the
-      // `userAudioQueue` query instead.
-      return items.filter(({ repoId }) => repoId)
+      // publikator items only — see AudioQueue.publikatorOnly. Sanity-backed
+      // items are served by the `userAudioQueue` query instead.
+      return publikatorOnly(
+        await context.loaders.AudioQueue.byUserId.load(user.id),
+      )
     }
 
     return null
