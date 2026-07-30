@@ -65,7 +65,8 @@ function isPaynoteOverlayHidden(
     pathname === '/probelesen' ||
     pathname === '/community' ||
     searchParams.has('extract') ||
-    searchParams.has('extractId')
+    searchParams.has('extractId') ||
+    pathname.startsWith('/preview')
   )
 }
 
