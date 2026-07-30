@@ -110,3 +110,48 @@ describe('root query resolvers exist for every declared query', () => {
     expect(typeof resolver).toBe('function')
   })
 })
+
+describe('ref-returning audio queue mutations', () => {
+  const REF_MUTATIONS = [
+    'addAudioQueueItemRef',
+    'moveAudioQueueItemRef',
+    'removeAudioQueueItemRef',
+    'reorderAudioQueueRefs',
+    'clearAudioQueueRefs',
+  ]
+
+  test.each(REF_MUTATIONS)('%s is declared', (name) => {
+    expect(fieldsByType().get('mutations').has(name)).toBe(true)
+  })
+
+  test.each(REF_MUTATIONS)('%s has a resolver', (name) => {
+    const resolver = require(path.join(RESOLVERS_DIR, '_mutations', `${name}.js`))
+    expect(typeof resolver).toBe('function')
+  })
+
+  test.each(REF_MUTATIONS)('%s returns AudioQueueItemRef', (name) => {
+    const field = parse(schema + schemaTypes)
+      .definitions.find((def) => def.name?.value === 'mutations')
+      .fields.find((f) => f.name.value === name)
+
+    // Unwrap [AudioQueueItemRef!]!
+    expect(JSON.stringify(field.type)).toContain('AudioQueueItemRef')
+  })
+
+  test.each([
+    'addAudioQueueItem',
+    'moveAudioQueueItem',
+    'removeAudioQueueItem',
+    'reorderAudioQueue',
+    'clearAudioQueue',
+  ])('%s is deprecated in favour of its ref counterpart', (name) => {
+    const field = parse(schema + schemaTypes)
+      .definitions.find((def) => def.name?.value === 'mutations')
+      .fields.find((f) => f.name.value === name)
+
+    const deprecated = field.directives.find(
+      (d) => d.name.value === 'deprecated',
+    )
+    expect(deprecated).toBeDefined()
+  })
+})

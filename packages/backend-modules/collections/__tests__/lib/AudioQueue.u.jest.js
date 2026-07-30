@@ -11,6 +11,12 @@ jest.mock('@orbiting/backend-modules-auth', () => ({
     userIsMe: () => false,
     ensureUserHasRole: () => {},
   },
+  // ProgressOptOut.status goes through this; the tests below drive it with a
+  // stub `pgdb.public.consents`.
+  Consents: {
+    lastRecordForPolicyForUser: ({ userId, policy, pgdb }) =>
+      pgdb.public.consents.findFirst({ userId, policy }),
+  },
 }))
 
 process.env.FRONTEND_BASE_URL =
@@ -20,6 +26,7 @@ const {
   upsertItem,
   reorderItems,
   publikatorOnly,
+  toRefs,
 } = require('../../lib/AudioQueue')
 
 const COLLECTION_ID = 'collection-audioqueue'
@@ -85,6 +92,93 @@ describe('publikatorOnly', () => {
     ]
 
     expect(publikatorOnly(items).map(({ id }) => id)).toEqual(['p1'])
+  })
+})
+
+describe('toRefs', () => {
+  const publikatorRow = () => ({
+    id: 'item-publikator',
+    repoId: 'republik/one',
+    sanityId: null,
+    data: { sequence: 1 },
+  })
+  const sanityRow = () => ({
+    id: 'item-sanity',
+    repoId: null,
+    sanityId: SANITY_ID,
+    data: { sequence: 2 },
+  })
+
+  // Builds the context toRefs needs: the AudioQueue loader plus a consent row.
+  const makeRefContext = ({ items, optOut }) => {
+    const cleared = []
+    return {
+      cleared,
+      context: {
+        loaders: {
+          AudioQueue: {
+            byUserId: {
+              clear: (key) => cleared.push(key),
+              load: async () => items,
+            },
+          },
+        },
+        pgdb: {
+          public: {
+            consents: {
+              findFirst: async () => (optOut ? { record: 'GRANT' } : null),
+            },
+          },
+        },
+      },
+    }
+  }
+
+  test('keeps Sanity-backed items, unlike publikatorOnly', async () => {
+    const { context } = makeRefContext({
+      items: [publikatorRow(), sanityRow()],
+      optOut: false,
+    })
+
+    const refs = await toRefs(USER_ID, context)
+
+    expect(refs.map(({ id }) => id)).toEqual([
+      'item-publikator',
+      'item-sanity',
+    ])
+  })
+
+  test('attaches progressOptOut to every row', async () => {
+    // A row missing this flag reads as "not opted out" in
+    // AudioQueueItemRef.userProgress, which would serve progress to someone who
+    // opted out — so every ref-returning resolver must come through here.
+    const { context } = makeRefContext({
+      items: [publikatorRow(), sanityRow()],
+      optOut: true,
+    })
+
+    const refs = await toRefs(USER_ID, context)
+
+    expect(refs.every((ref) => ref.progressOptOut === true)).toBe(true)
+  })
+
+  test('does not mutate the loader rows', async () => {
+    const items = [sanityRow()]
+    const { context } = makeRefContext({ items, optOut: true })
+
+    await toRefs(USER_ID, context)
+
+    expect('progressOptOut' in items[0]).toBe(false)
+  })
+
+  test('clears the loader cache before reading', async () => {
+    // Callers are mutations returning the queue they just changed; a warm cache
+    // would return the pre-mutation state.
+    const { context, cleared } = makeRefContext({ items: [], optOut: false })
+
+    await toRefs(USER_ID, context)
+
+    expect(cleared).toEqual([USER_ID])
   })
 })
 

@@ -125,7 +125,7 @@ type mutations {
   addAudioQueueItem(
     entity: AudioQueueEntityInput!
     sequence: Int
-  ): [AudioQueueItem!]!
+  ): [AudioQueueItem!]! @deprecated(reason: "publikator-only — returns the queue as AudioQueueItem, which cannot represent a Sanity-backed item. Use 'addAudioQueueItemRef'.")
 
   """
   Move an existing item within \`User.audioQueue\`.
@@ -134,19 +134,19 @@ type mutations {
   moveAudioQueueItem(
     id: ID!
     sequence: Int!
-  ): [AudioQueueItem!]!
+  ): [AudioQueueItem!]! @deprecated(reason: "publikator-only — returns the queue as AudioQueueItem, which cannot represent a Sanity-backed item. Use 'moveAudioQueueItemRef'.")
 
   """
   Move an existing item from \`User.audioQueue\`.
   """ 
   removeAudioQueueItem(
     id: ID!
-  ): [AudioQueueItem!]!
+  ): [AudioQueueItem!]! @deprecated(reason: "publikator-only — returns the queue as AudioQueueItem, which cannot represent a Sanity-backed item. Use 'removeAudioQueueItemRef'.")
 
   """
   Clear all items in \`User.audioQueue\`.
   """ 
-  clearAudioQueue: [AudioQueueItem!]!
+  clearAudioQueue: [AudioQueueItem!]! @deprecated(reason: "publikator-only — returns the queue as AudioQueueItem, which cannot represent a Sanity-backed item. Use 'clearAudioQueueRefs'.")
 
   """
   Reorder existing items at once.
@@ -157,6 +157,30 @@ type mutations {
   destroyed items a partially-informed client could not see, e.g. Sanity-backed
   ones absent from \`User.audioQueue\`.)
   """
-  reorderAudioQueue(ids: [ID!]!): [AudioQueueItem!]!
-}
-`
+  reorderAudioQueue(ids: [ID!]!): [AudioQueueItem!]! @deprecated(reason: "publikator-only — returns the queue as AudioQueueItem, which cannot represent a Sanity-backed item. Use 'reorderAudioQueueRefs'.")
+
+  """
+  Sanity-capable counterparts of the \`*AudioQueue*\` mutations above. Identical
+  behaviour and arguments; they return the queue as \`AudioQueueItemRef\`, so
+  Sanity-backed items are included and carry \`sanityId\` / \`mediaId\`. The
+  originals cannot represent those, so they return publikator items only —
+  which notably means the item you just added may be missing from their reply.
+  """
+  addAudioQueueItemRef(
+    entity: AudioQueueEntityInput!
+    sequence: Int
+  ): [AudioQueueItemRef!]!
+
+  moveAudioQueueItemRef(
+    id: ID!
+    sequence: Int!
+  ): [AudioQueueItemRef!]!
+
+  removeAudioQueueItemRef(
+    id: ID!
+  ): [AudioQueueItemRef!]!
+
+  reorderAudioQueueRefs(ids: [ID!]!): [AudioQueueItemRef!]!
+
+  clearAudioQueueRefs: [AudioQueueItemRef!]!
+}`

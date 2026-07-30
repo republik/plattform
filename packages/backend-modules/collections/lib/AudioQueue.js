@@ -5,6 +5,7 @@ const {
 } = require('@orbiting/backend-modules-search/lib/Documents')
 const { isCollectableType } = require('@orbiting/backend-modules-sanity')
 const { refToColumns } = require('./documentRef')
+const ProgressOptOut = require('./ProgressOptOut')
 
 const getCollectionName = () => 'audioqueue'
 
@@ -15,6 +16,32 @@ const getCollectionName = () => 'audioqueue'
 // `User.audioQueue` *and* to every mutation's return value, since they all hand
 // back the whole queue. The `userAudioQueue` query serves the full queue as refs.
 const publikatorOnly = (items) => items.filter(({ repoId }) => repoId)
+
+// The whole queue as `AudioQueueItemRef` rows, Sanity-backed items included.
+//
+// Every resolver returning that type must go through this, not the loader
+// directly: `AudioQueueItemRef.userProgress` reads `progressOptOut` off the row
+// (the consent lookup is a plain query, so it can't live in a per-item field
+// resolver without costing one query per item), and a row *missing* the flag
+// reads as "not opted out" — which would serve progress to someone who opted
+// out. Attaching it here makes that unforgettable.
+//
+// Copied onto new objects rather than mutated, so the dataloader's cached rows
+// stay clean.
+const toRefs = async (userId, context) => {
+  // Every caller is a mutation returning the queue it just changed, and
+  // createDataLoader leaves DataLoader's per-request cache on — so drop the key
+  // first. Without it, anything that happened to read the queue earlier in the
+  // same request would make this reply the pre-mutation state.
+  context.loaders.AudioQueue.byUserId.clear(userId)
+
+  const [items, progressOptOut] = await Promise.all([
+    context.loaders.AudioQueue.byUserId.load(userId),
+    ProgressOptOut.status(userId, context),
+  ])
+
+  return items.map((item) => ({ ...item, progressOptOut }))
+}
 
 // A filter to omit an unwanted item
 const omitItem = (unwantedItem) => (item) => item.id !== unwantedItem?.id
@@ -280,6 +307,7 @@ const reorderItems = async (input, context) => {
 module.exports = {
   getCollectionName,
   publikatorOnly,
+  toRefs,
 
   upsertItem,
   removeItem,
