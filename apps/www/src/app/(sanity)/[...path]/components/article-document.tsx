@@ -1,4 +1,4 @@
-import { ContentWall } from '@/app/(sanity)/articles/[...path]/content-wall'
+import { ContentWall } from '@/app/(sanity)/[...path]/components/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'

@@ -49,6 +49,7 @@ export const DOCUMENT_QUERY = defineQuery(
     },
 
     _type == "article" => {
+      readingAccess,
       ${BYLINE_FRAGMENT},
       newsletter->{
         title,
