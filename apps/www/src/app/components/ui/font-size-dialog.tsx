@@ -9,8 +9,8 @@ import {
 } from '@/app/lib/font-size'
 import { useFontSize } from '@/lib/fontSize'
 import * as Dialog from '@radix-ui/react-dialog'
-import { IconAdd, IconClose, IconRemove } from '@republik/icons'
 import { css } from '@republik/theme/css'
+import { CircleMinus, CirclePlus, X } from 'lucide-react'
 import { useEffect } from 'react'
 
 const stepButtonStyle = css({
@@ -53,8 +53,6 @@ export function FontSizeDialog({
             overflowY: 'auto',
             placeItems: 'center',
             position: 'fixed',
-            // Same stacking plane as `ui/overlay.tsx`. Anything lower is covered
-            // by the campaign paynote, which is fixed to the bottom at 9998.
             zIndex: 99998,
             _stateOpen: { animation: 'fadeIn' },
           })}
@@ -66,8 +64,7 @@ export function FontSizeDialog({
               boxShadow: 'md',
               color: 'text',
               margin: '8',
-              maxWidth: 375,
-              width: 'full',
+              maxWidth: 320,
               zIndex: 99999,
             })}
           >
@@ -75,7 +72,7 @@ export function FontSizeDialog({
               className={css({
                 alignItems: 'center',
                 borderBottom: '1px solid',
-                borderColor: 'divider',
+                borderColor: 'text-muted',
                 display: 'flex',
                 justifyContent: 'space-between',
                 padding: '4',
@@ -88,11 +85,11 @@ export function FontSizeDialog({
                 aria-label='Schliessen'
                 className={css({ cursor: 'pointer' })}
               >
-                <IconClose size={24} />
+                <X size={24} />
               </Dialog.Close>
             </div>
 
-            <div className={css({ padding: '6', textAlign: 'center' })}>
+            <div className={css({ padding: '4', textAlign: 'center' })}>
               <div
                 className={css({
                   alignItems: 'center',
@@ -112,9 +109,16 @@ export function FontSizeDialog({
                   title='Schrift verkleinern'
                   type='button'
                 >
-                  <IconRemove size={24} />
+                  <CircleMinus size={24} />
                 </button>
-                <span className={css({ minWidth: '4rem', textStyle: 'sans' })}>
+                <span
+                  className={css({
+                    minWidth: '4rem',
+                    textStyle: 'sans',
+                    fontSize: 'l',
+                    fontWeight: 'medium',
+                  })}
+                >
                   {percentage}
                 </span>
                 <button
@@ -128,23 +132,9 @@ export function FontSizeDialog({
                   title='Schrift vergrössern'
                   type='button'
                 >
-                  <IconAdd size={24} />
+                  <CirclePlus size={24} />
                 </button>
               </div>
-
-              <button
-                className={css({
-                  cursor: 'pointer',
-                  color: 'textSoft',
-                  fontSize: 's',
-                  marginTop: '2',
-                  textDecoration: 'underline',
-                })}
-                onClick={() => setFontSize(DEFAULT_FONT_SIZE)}
-                type='button'
-              >
-                Zurücksetzen
-              </button>
             </div>
           </Dialog.Content>
         </Dialog.Overlay>
