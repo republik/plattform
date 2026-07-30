@@ -1,24 +1,7 @@
-import { TypesenseUserDocument } from '../collections'
+import { PgDb } from '@orbiting/backend-modules-types'
 
-/**
- * Mirrors @orbiting/backend-modules-republik/lib/portrait's resize/bw URL
- * building (duplicated rather than depended on, to avoid a cross-package
- * import into a package that otherwise has no dependency on `republik`).
- */
-const getPortraitUrl = (portraitUrl: string | null): string | undefined => {
-  if (!portraitUrl) {
-    return undefined
-  }
-  try {
-    const url = new URL(portraitUrl)
-    url.searchParams.set('resize', '384x384')
-    url.searchParams.set('bw', '1')
-    url.searchParams.set('format', 'auto')
-    return url.toString()
-  } catch {
-    return undefined
-  }
-}
+import { TypesenseUserDocument } from '../collections'
+import { getPortraitUrl, toUnixMs } from './fields'
 
 /**
  * Minimal shape of a public.users row needed to build a Typesense user
@@ -46,9 +29,6 @@ export interface UserTransformDeps {
   getListedCredential: (userId: string) => Promise<ListedCredential | null>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PgDb = any
-
 /**
  * Builds `UserTransformDeps` backed by live Postgres reads. Shared between
  * lib/listener.ts (real-time) and script/reindex.ts (bulk backfill) so both
@@ -62,20 +42,27 @@ export const makeUserDeps = (pgdb: PgDb): UserTransformDeps => ({
     ),
 })
 
-const toUnixMs = (value: Date | string | number): number =>
-  new Date(value).getTime()
-
 /**
- * Transforms a public.users row into a flat Typesense user document.
+ * Transforms a public.users row into a flat Typesense user document, or
+ * `null` if the user must not be indexed at all.
  *
- * Unlike comments, ALL users are transformed/written here -- including
- * users with hasPublicProfile: false. Privacy enforcement for search
- * results happens at query time elsewhere (scoped API keys), not here.
+ * Only public profiles are indexed. This is the *only* thing keeping
+ * non-public profiles out of search results: the scoped search key handed to
+ * browsers carries no document filter, just a collection restriction (see
+ * lib/scopedKey.ts). A profile that flips to non-public returns `null` here
+ * and is then deleted from the index by lib/listener.ts, the same way an
+ * unpublished comment is.
  */
 export const transformUser = async (
   row: UserRow,
   deps: UserTransformDeps,
-): Promise<TypesenseUserDocument> => {
+): Promise<TypesenseUserDocument | null> => {
+  // Checked before touching Postgres: on a full reindex most rows are
+  // non-public, and this saves a credential lookup for each of them.
+  if (!row.hasPublicProfile) {
+    return null
+  }
+
   const listedCredential = await deps.getListedCredential(row.id)
   const credential = listedCredential?.description?.trim() || undefined
   const portraitUrl = getPortraitUrl(row.portraitUrl)
@@ -85,8 +72,6 @@ export const transformUser = async (
   const doc: TypesenseUserDocument = {
     id: row.id,
     name,
-    hasPublicProfile: !!row.hasPublicProfile,
-    searchScope: row.hasPublicProfile ? 'public' : 'admin',
     createdAt: toUnixMs(row.createdAt),
   }
 

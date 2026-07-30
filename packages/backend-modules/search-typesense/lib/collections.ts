@@ -65,34 +65,29 @@ export interface TypesenseCommentDocument {
   tag?: string
   /** unix ms */
   createdAt: number
-  /**
-   * Always "public" -- comments that shouldn't be searchable (hidden
-   * discussion, adminUnpublished, unpublished) are never written at all, so
-   * anything present here already is public. The field exists so a single
-   * Typesense scoped key's filter_by (see lib/scopedKey.ts) can apply
-   * uniformly across comments/users/articles without erroring on a missing
-   * field.
-   */
-  searchScope: 'public'
 }
 
 /**
  * User document as stored in Typesense.
  *
- * Unlike comments, ALL users are written here, including users with
- * hasPublicProfile: false. Privacy enforcement happens at query time via
- * searchScope (see lib/scopedKey.ts), not at write time.
+ * ONLY public profiles are written here -- see lib/transform/user.ts, which
+ * returns null for a non-public profile, and lib/listener.ts, which deletes
+ * the existing document when it does. Privacy is enforced at write time
+ * because the scoped search key handed to browsers carries no document
+ * filter, only a collection restriction (see lib/scopedKey.ts).
  *
- * Carries NO email. Scoped search keys can constrain which *documents* a
- * caller sees (filter_by) and which fields come back (exclude_fields), but
- * they cannot constrain `query_by` -- and the key is handed to the browser,
- * so `query_by` is caller-controlled. An indexed `email` here would let any
- * public-tier key probe `query_by=email&q=<address>` and read the answer off
- * the hit/no-hit plus the `highlights` array, even with the value excluded
- * from the returned document. Collection access is a property of the *parent*
- * key (see lib/scopedKey.ts), so keeping email out of this collection
- * entirely is the only boundary a caller-supplied query_by cannot reach
- * around. Admin email search lives in Postgres (adminUsers resolver in
+ * Carries NO email, for the same reason that non-public profiles are absent
+ * entirely. A scoped key can constrain which fields come back
+ * (exclude_fields) but cannot constrain `query_by` -- and the key is handed
+ * to the browser, so `query_by` is caller-controlled. An indexed `email` here
+ * would let any key probe `query_by=email&q=<address>` and read the answer
+ * off the hit/no-hit plus the `highlights` array, even with the value
+ * excluded from the returned document. Collection access is a property of the
+ * *parent* key (see lib/scopedKey.ts), so keeping a sensitive value out of
+ * the collection entirely is the only boundary a caller-supplied query_by
+ * cannot reach around. That is also why the future admin-only profile search
+ * belongs in its own collection rather than behind a filter here. Admin email
+ * search lives in Postgres (adminUsers resolver in
  * @orbiting/backend-modules-republik-crowdfundings).
  */
 export interface TypesenseUserDocument {
@@ -107,17 +102,6 @@ export interface TypesenseUserDocument {
   credentialVerified?: boolean
   /** Resized/bw display URL, see @orbiting/backend-modules-republik/lib/portrait. */
   portrait?: string
-  /** Kept for completeness/debugging; searchScope is what filters actually use. */
-  hasPublicProfile: boolean
-  /**
-   * "public" if hasPublicProfile, else "admin" -- a non-public profile is
-   * only findable via search by admin/support callers, not by other
-   * logged-in members. Note this is intentionally stricter than
-   * @orbiting/backend-modules-auth's userIsMeOrProfileVisible (which lets
-   * members view a non-public profile directly, just not discover it via
-   * search) -- searchability is a narrower gate than direct-link visibility.
-   */
-  searchScope: 'public' | 'admin'
   /** unix ms */
   createdAt: number
 }
@@ -172,7 +156,15 @@ export interface TypesenseArticleDocument {
   /** The article's `theme.accentColor` (hex) -- Spitzmarke/border accent
    * color, mirroring the old format.meta.color. */
   accentColor?: string
-  /** Always "public" -- articles carry no privacy dimension today. */
+  /**
+   * Always "public" -- articles carry no privacy dimension today.
+   *
+   * Written by republik/studio (shared/search/toSearchDocument.ts there) and
+   * consumed by no filter in this module: search keys carry no document
+   * filter at all (see lib/scopedKey.ts). Retained only so the cross-repo
+   * schema contract stays accurate -- drop it here only in lockstep with a
+   * studio change, or studio's writes will fail against the schema.
+   */
   searchScope: 'public'
 }
 
@@ -189,7 +181,6 @@ const commentsFields: CollectionCreateSchema['fields'] = [
   { name: 'articlePath', type: 'string', optional: true, index: false },
   { name: 'tag', type: 'string', optional: true, index: false },
   { name: 'createdAt', type: 'int64' },
-  { name: 'searchScope', type: 'string', facet: true },
 ]
 
 const usersFields: CollectionCreateSchema['fields'] = [
@@ -201,8 +192,6 @@ const usersFields: CollectionCreateSchema['fields'] = [
   { name: 'credential', type: 'string', optional: true, index: false },
   { name: 'credentialVerified', type: 'bool', optional: true, index: false },
   { name: 'portrait', type: 'string', optional: true, index: false },
-  { name: 'hasPublicProfile', type: 'bool', index: false },
-  { name: 'searchScope', type: 'string', facet: true },
   { name: 'createdAt', type: 'int64' },
 ]
 
@@ -253,31 +242,8 @@ export const getCollectionSchema = (
   default_sorting_field: defaultSortingField[kind],
 })
 
-const isNotFound = (error: unknown): boolean =>
+export const isNotFound = (error: unknown): boolean =>
   error instanceof Errors.ObjectNotFound
-
-/**
- * Creates a new, dated, physical collection for the given kind.
- */
-export const createCollection = async (
-  client: Client,
-  kind: CollectionKind,
-  name: string,
-): Promise<void> => {
-  await client.collections().create(getCollectionSchema(kind, name))
-}
-
-/**
- * Idempotently points an alias at a collection, atomically switching it if
- * the alias already exists (Typesense's upsert on an alias is atomic).
- */
-export const swapAlias = async (
-  client: Client,
-  aliasName: string,
-  collectionName: string,
-): Promise<void> => {
-  await client.aliases().upsert(aliasName, { collection_name: collectionName })
-}
 
 /**
  * Resolves the physical collection name an alias currently points at, or
@@ -315,8 +281,8 @@ export const ensureBootstrapped = async (
   }
 
   const collectionName = getDatedCollectionName(kind)
-  await createCollection(client, kind, collectionName)
-  await swapAlias(client, aliasName, collectionName)
+  await client.collections().create(getCollectionSchema(kind, collectionName))
+  await client.aliases().upsert(aliasName, { collection_name: collectionName })
 
   return { aliasName, collectionName, created: true }
 }

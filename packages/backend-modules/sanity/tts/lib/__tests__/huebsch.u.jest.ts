@@ -1,7 +1,7 @@
 // See textToSpeech.u.jest.ts for this suite's testing policy.
 //
 // Covers describeHuebschError's formatting in isolation (pure function, no
-// mocking needed), plus uploadToHuebsch/getFromHuebsch's HTTP behavior with
+// mocking needed), plus uploadToHuebsch/parseHuebschResult's HTTP behavior with
 // `fetch` stubbed — real network calls have no place in a unit test suite.
 // fetchWithRetry's retry-with-delay loop isn't separately exercised here
 // (it'd need fake-timer choreography that outweighs the value versus just
@@ -11,7 +11,7 @@
 import {
   HuebschError,
   describeHuebschError,
-  getFromHuebsch,
+  parseHuebschResult,
   uploadToHuebsch,
 } from '../huebsch'
 
@@ -59,7 +59,7 @@ describe('describeHuebschError', () => {
   })
 })
 
-describe('uploadToHuebsch / getFromHuebsch (fetch stubbed)', () => {
+describe('uploadToHuebsch / parseHuebschResult (fetch stubbed)', () => {
   it('uploadToHuebsch sends description/source in article attrs and resolves on success', async () => {
     const fetchMock = jest
       .fn()
@@ -107,29 +107,29 @@ describe('uploadToHuebsch / getFromHuebsch (fetch stubbed)', () => {
     await expect(call()).rejects.toThrow(/\[422\.2\] Schema validation failed/)
   })
 
-  it('getFromHuebsch throws with the parsed error when the webhook reports a failed generation', async () => {
+  it('parseHuebschResult throws with the parsed error when the webhook reports a failed generation', async () => {
     await expect(
-      getFromHuebsch({
+      parseHuebschResult({
         ok: false,
         val: { error: 'voice "Unknown" not found', code: '422.x' },
       }),
     ).rejects.toThrow(/voice "Unknown" not found/)
   })
 
-  it('getFromHuebsch throws a generic message when there is no asset url at all', async () => {
-    await expect(getFromHuebsch({ ok: true, val: {} })).rejects.toThrow(
+  it('parseHuebschResult throws a generic message when there is no asset url at all', async () => {
+    await expect(parseHuebschResult({ ok: true, val: {} })).rejects.toThrow(
       /no asset url|had no asset url/,
     )
   })
 
-  it('getFromHuebsch downloads the asset and surfaces chapters when present', async () => {
+  it('parseHuebschResult downloads the asset and surfaces chapters when present', async () => {
     const audioBytes = new Uint8Array([1, 2, 3]).buffer
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       arrayBuffer: () => Promise.resolve(audioBytes),
     }) as unknown as typeof fetch
 
-    const result = await getFromHuebsch({
+    const result = await parseHuebschResult({
       ok: true,
       val: {
         asset: 'https://cdn.example.com/audio.mp3',
@@ -141,13 +141,13 @@ describe('uploadToHuebsch / getFromHuebsch (fetch stubbed)', () => {
     expect(result.chapters).toEqual([{ name: 'Intro', at: 0 }])
   })
 
-  it("getFromHuebsch converts Huebsch's duration (seconds) to rounded milliseconds", async () => {
+  it("parseHuebschResult converts Huebsch's duration (seconds) to rounded milliseconds", async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
     }) as unknown as typeof fetch
 
-    const result = await getFromHuebsch({
+    const result = await parseHuebschResult({
       ok: true,
       val: { asset: 'https://cdn.example.com/audio.mp3', duration: 245.5 },
     })
@@ -155,13 +155,13 @@ describe('uploadToHuebsch / getFromHuebsch (fetch stubbed)', () => {
     expect(result.durationMs).toBe(245500)
   })
 
-  it('getFromHuebsch leaves durationMs undefined when Huebsch reports no duration', async () => {
+  it('parseHuebschResult leaves durationMs undefined when Huebsch reports no duration', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
     }) as unknown as typeof fetch
 
-    const result = await getFromHuebsch({
+    const result = await parseHuebschResult({
       ok: true,
       val: { asset: 'https://cdn.example.com/audio.mp3' },
     })

@@ -17,10 +17,15 @@ const {
 // Nothing exposes this through the `Document` type — clients read Sanity-backed
 // collection items via the `userCollectionItems` query and fetch their preview
 // data from Sanity.
-const toDocumentShape = (repoId, doc) => ({
-  id: repoId,
-  repoId,
-  meta: { repoId, title: doc.title, path: doc.slug?.current },
+//
+// `documentRef` is the opaque document reference the rest of this chain deals
+// in (see collections/lib/documentRef.js): a plain publikator repoId, or a
+// `sanity:`-prefixed Sanity id. It lands on `meta.repoId` because that is the
+// field callers already destructure -- the name is legacy, the value is a ref.
+const toDocumentShape = (documentRef, doc) => ({
+  id: documentRef,
+  repoId: documentRef,
+  meta: { repoId: documentRef, title: doc.title, path: doc.slug?.current },
   __typename: 'Document',
 })
 

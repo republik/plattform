@@ -11,7 +11,7 @@ import {
 import {
   compactTimestamp,
   titleSlugFrom,
-  getFromHuebsch,
+  parseHuebschResult,
   verifyWebhookSignature,
   mirrorToS3,
 } from '../tts'
@@ -55,8 +55,8 @@ export const huebschWebhookHandler = async (req: Request, res: Response) => {
   // res.sendStatus(204) + await publish() split, so Huebsch doesn't have to
   // wait on our Sanity/S3 round trips.
   processResult(req, documentId, titleSlug, contentHash, body).catch(
-    (e: unknown) => {
-      reportAudioGenerationError(documentId, e)
+    async (e: unknown) => {
+      await reportAudioGenerationError(documentId, e)
     },
   )
 
@@ -70,7 +70,7 @@ const processResult = async (
   contentHash: string,
   body: unknown,
 ) => {
-  const { audioFile, chapters, durationMs } = await getFromHuebsch(body)
+  const { audioFile, chapters, durationMs } = await parseHuebschResult(body)
   const buffer = Buffer.from(audioFile)
   const generatedAt = new Date().toISOString()
   const filename = `${titleSlug}-${compactTimestamp(generatedAt)}.mp3`

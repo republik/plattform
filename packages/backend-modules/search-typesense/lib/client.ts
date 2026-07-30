@@ -48,12 +48,4 @@ const getClient = (): Client => {
   return client
 }
 
-/**
- * Mainly useful for tests: resets the memoized singleton so a fresh client
- * (e.g. pointed at a different host) can be built on next getClient() call.
- */
-const resetClient = (): void => {
-  client = undefined
-}
-
-export { getClient, resetClient }
+export { getClient }

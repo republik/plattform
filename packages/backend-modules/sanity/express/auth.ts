@@ -1,33 +1,31 @@
 import { Request, Response, NextFunction } from 'express'
-import { timingSafeEqual } from 'crypto'
+// Brings in the `req.log` augmentation on express's Request.
+import type {} from '@orbiting/backend-modules-logger'
 
-const safeCompare = (a: string, b: string): boolean => {
-  const bufferA = Buffer.from(a)
-  const bufferB = Buffer.from(b)
-  if (bufferA.length !== bufferB.length) {
-    return false
+import { safeCompare } from '../lib/safeCompare'
+
+/**
+ * Middleware asserting the request carries `Authorization: Bearer <secret>`
+ * matching the named env var. 500s (not 401s) when the var is unset: that is
+ * a deployment fault, not a caller fault.
+ */
+const verifyBearerToken =
+  (envVarName: string) => (req: Request, res: Response, next: NextFunction) => {
+    const secret = process.env[envVarName]
+    if (!secret) {
+      req.log.error(`${envVarName} is not set`)
+      return res.status(500).end()
+    }
+
+    const token = req.headers.authorization?.replace(/^Bearer /, '')
+    if (!token || !safeCompare(token, secret)) {
+      return res.status(401).end()
+    }
+
+    next()
   }
-  return timingSafeEqual(bufferA, bufferB)
-}
 
-export const verifySanityToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const secret = process.env.SANITY_WEBHOOK_TOKEN
-  if (!secret) {
-    req.log.error('SANITY_WEBHOOK_TOKEN is not set')
-    return res.status(500).end()
-  }
-
-  const token = req.headers.authorization?.replace(/^Bearer /, '')
-  if (!token || !safeCompare(token, secret)) {
-    return res.status(401).end()
-  }
-
-  next()
-}
+export const verifySanityToken = verifyBearerToken('SANITY_WEBHOOK_TOKEN')
 
 // Deliberately a distinct secret from SANITY_WEBHOOK_TOKEN: this one is
 // shipped into studio's public browser bundle (Sanity inlines every
@@ -35,21 +33,4 @@ export const verifySanityToken = (
 // rotatable and scoped to read-only access if it ever leaks. Generic (not
 // named after any one endpoint) so future read-only routes can share it
 // rather than minting a new token each time.
-export const verifyReadToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const secret = process.env.SANITY_STUDIO_READ_TOKEN
-  if (!secret) {
-    req.log.error('SANITY_STUDIO_READ_TOKEN is not set')
-    return res.status(500).end()
-  }
-
-  const token = req.headers.authorization?.replace(/^Bearer /, '')
-  if (!token || !safeCompare(token, secret)) {
-    return res.status(401).end()
-  }
-
-  next()
-}
+export const verifyReadToken = verifyBearerToken('SANITY_STUDIO_READ_TOKEN')

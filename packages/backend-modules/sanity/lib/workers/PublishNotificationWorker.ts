@@ -1,4 +1,6 @@
 import { BaseWorker, Job } from '@orbiting/backend-modules-job-queue'
+import { GraphqlContext } from '@orbiting/backend-modules-types'
+import { SendOptions } from 'pg-boss'
 import { fetchArticleForNotification } from '../article'
 import { plainText } from '../../tts'
 
@@ -7,7 +9,8 @@ const {
   sendNotification,
 } = require('@orbiting/backend-modules-subscriptions')
 
-interface PublishNotificationPayload {
+export interface PublishNotificationPayload {
+  $version: 'v1'
   documentId: string
 }
 
@@ -38,16 +41,24 @@ const groupSubscribersByObjectId = (subscribers: any[], key: string) =>
 // subscribers shouldn't block a web request.
 export class PublishNotificationWorker extends BaseWorker<PublishNotificationPayload> {
   readonly queue = 'sanity:publish-notification'
-  readonly options = { retryLimit: 0 }
+  readonly options: SendOptions = { retryLimit: 0 }
 
   async perform(jobs: Job<PublishNotificationPayload>[]) {
     for (const job of jobs) {
+      if (job.data.$version !== 'v1') {
+        throw Error('unable to perform this job version. Expected v1')
+      }
       await this.notifyPublish(job.data.documentId)
     }
   }
 
   private async notifyPublish(documentId: string) {
-    const context = this.context as any
+    // BaseWorker types `context` as ConnectionContext, but workers only ever
+    // *perform* in the scheduler process, and that is where the queue is
+    // registered with a full GraphqlContext (apps/api/server.js calls
+    // queue.startWorkers() only on the scheduler path) -- so loaders/t are
+    // present at run time.
+    const context = this.context as GraphqlContext
     const { loaders, t } = context
 
     const article = await fetchArticleForNotification(documentId)

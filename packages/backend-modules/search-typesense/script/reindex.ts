@@ -17,20 +17,21 @@
 require('@orbiting/backend-modules-env').config()
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+// Aliased: `PgDb` itself is the row-handle *type*, imported below.
+const PgDbConnector = require('@orbiting/backend-modules-base/lib/PgDb')
 /* eslint-enable @typescript-eslint/no-var-requires */
 
 import { Client } from 'typesense'
+import { PgDb } from '@orbiting/backend-modules-types'
 
 import { getClient } from '../lib/client'
 import {
   ALL_KINDS,
   CollectionKind,
-  createCollection,
   getAliasName,
+  getCollectionSchema,
   getDatedCollectionName,
   resolveAlias,
-  swapAlias,
   TypesenseCommentDocument,
   TypesenseUserDocument,
 } from '../lib/collections'
@@ -39,11 +40,8 @@ import { transformUser, makeUserDeps, UserRow } from '../lib/transform/user'
 
 const BATCH_SIZE = 1000
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PgDbInstance = any
-
 const reindexComments = async (
-  pgdb: PgDbInstance,
+  pgdb: PgDb,
   client: Client,
   collectionName: string,
 ): Promise<{ indexed: number; skipped: number }> => {
@@ -103,7 +101,7 @@ const reindexComments = async (
 }
 
 const reindexUsers = async (
-  pgdb: PgDbInstance,
+  pgdb: PgDb,
   client: Client,
   collectionName: string,
 ): Promise<{ indexed: number; skipped: number }> => {
@@ -134,10 +132,17 @@ const reindexUsers = async (
       },
     )
 
-    // ALL users are indexed, including hasPublicProfile: false ones.
-    const docs: TypesenseUserDocument[] = await Promise.all(
+    // Only public profiles are indexed -- transformUser returns null for the
+    // rest. No delete pass is needed here (unlike lib/listener.ts): this
+    // builds a *fresh* collection and only swaps the alias at the end, so a
+    // non-public profile is excluded simply by never being written.
+    const transformed = await Promise.all(
       rows.map((row) => transformUser(row, deps)),
     )
+    const docs = transformed.filter(
+      (doc): doc is TypesenseUserDocument => doc !== null,
+    )
+    stats.skipped += transformed.length - docs.length
 
     if (docs.length > 0) {
       const results = await client
@@ -161,7 +166,7 @@ const reindexUsers = async (
 const POSTGRES_BACKED_KINDS: CollectionKind[] = ['comments', 'users']
 
 const reindexKind = async (
-  pgdb: PgDbInstance,
+  pgdb: PgDb,
   client: Client,
   kind: CollectionKind,
 ) => {
@@ -177,7 +182,7 @@ const reindexKind = async (
   const previousCollectionName = await resolveAlias(client, aliasName)
 
   console.log(`creating fresh collection "${collectionName}" for "${kind}"`)
-  await createCollection(client, kind, collectionName)
+  await client.collections().create(getCollectionSchema(kind, collectionName))
 
   const stats =
     kind === 'comments'
@@ -185,7 +190,8 @@ const reindexKind = async (
       : await reindexUsers(pgdb, client, collectionName)
 
   console.log(`swapping alias "${aliasName}" -> "${collectionName}"`, stats)
-  await swapAlias(client, aliasName, collectionName)
+  // Atomic on Typesense's side: an alias upsert switches the pointer.
+  await client.aliases().upsert(aliasName, { collection_name: collectionName })
 
   if (previousCollectionName && previousCollectionName !== collectionName) {
     console.log(`deleting previous collection "${previousCollectionName}"`)
@@ -215,7 +221,7 @@ const parseOnly = (): CollectionKind[] => {
 }
 
 const main = async () => {
-  const pgdb = await PgDb.connect({
+  const pgdb = await PgDbConnector.connect({
     applicationName: 'backends search-typesense reindex',
   })
   const client = getClient()
@@ -227,7 +233,7 @@ const main = async () => {
       await reindexKind(pgdb, client, kind)
     }
   } finally {
-    await PgDb.disconnect(pgdb)
+    await PgDbConnector.disconnect(pgdb)
   }
 }
 

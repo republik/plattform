@@ -2,7 +2,8 @@
   "name": "@orbiting/backend-modules-sanity",
   "version": "0.0.1",
   "description": "Sanity Studio integration (webhooks for Sanity Functions)",
-  "main": "index.js",
+  "main": "build/index.js",
+  "types": "build/@types",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/republik/plattform.git"
@@ -18,11 +19,14 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "migrate-legacy-references": "ts-node script/migrate-legacy-references.ts"
   },
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
+    "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-discussions": "*",
+    "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-job-queue": "*",
     "@orbiting/backend-modules-logger": "*",
     "@orbiting/backend-modules-subscriptions": "*",
@@ -36,6 +40,7 @@
     "@types/express": "4.17.21",
     "@types/jest": "^29.5.12",
     "@types/uuid": "^8.3.4",
-    "ts-jest": "^29.1.2"
+    "ts-jest": "^29.1.2",
+    "ts-node": "*"
   }
 }

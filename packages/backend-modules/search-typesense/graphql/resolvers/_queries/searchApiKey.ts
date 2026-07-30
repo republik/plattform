@@ -1,13 +1,17 @@
-const {
-  Roles: { userHasRole },
-} = require('@orbiting/backend-modules-auth')
+import { GraphqlContext } from '@orbiting/backend-modules-types'
 
 import {
   generateScopedSearchKey,
   SearchCallerTier,
+  ScopedSearchKey,
 } from '../../../lib/scopedKey'
 
-const getCallerTier = (user: any): SearchCallerTier => {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const {
+  Roles: { userHasRole },
+} = require('@orbiting/backend-modules-auth')
+
+const getCallerTier = (user: GraphqlContext['user']): SearchCallerTier => {
   if (userHasRole(user, 'admin') || userHasRole(user, 'supporter')) {
     return 'admin'
   }
@@ -17,10 +21,10 @@ const getCallerTier = (user: any): SearchCallerTier => {
   return 'public'
 }
 
-module.exports = async (_: unknown, __: unknown, context: any) => {
-  const { user } = context
-
-  const { key, expiresAt } = generateScopedSearchKey(getCallerTier(user))
-
-  return { key, expiresAt }
+export = function searchApiKey(
+  _root: never,
+  _args: never,
+  ctx: GraphqlContext,
+): ScopedSearchKey {
+  return generateScopedSearchKey(getCallerTier(ctx.user))
 }

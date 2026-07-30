@@ -1,5 +1,7 @@
 const { isSanityRef, fromSanityRef } = require('@orbiting/backend-modules-sanity')
-const { getParsedDocumentId } = require('../../search/lib/Documents')
+const {
+  getParsedDocumentId,
+} = require('@orbiting/backend-modules-search/lib/Documents')
 
 // `collectionDocumentItems` stores publikator documents in "repoId" — a FK to
 // publikator.repos, so a Sanity `_id` can never go there — and Sanity

@@ -74,7 +74,7 @@ const addFullStop = (text: string) =>
 
 // Most fields here are portable text arrays, but a few (pullQuote.text/
 // source, infoBox.title) are plain strings — handle both.
-const plain = (value: unknown): string => {
+export const plainText = (value: unknown): string => {
   if (!value) return ''
   if (typeof value === 'string') return value.trim()
   try {
@@ -171,7 +171,7 @@ const splitBlockByVoiceTag = (
 
   const flush = () => {
     if (!currentChildren.length) return
-    const text = plain([{ ...block, children: currentChildren }])
+    const text = plainText([{ ...block, children: currentChildren }])
     if (text) segments.push({ voice: currentVoice, text })
     currentChildren = []
   }
@@ -249,7 +249,7 @@ const blockQuoteTransform: NodeTransform = (node, ctx) => {
   const nested = ctx.flatten(node.body ?? [], ctx.voice, 'quote')
   if (!nested.length) return []
   const attribution =
-    plain(node.caption?.legend) || plain(node.caption?.credit)
+    plainText(node.caption?.legend) || plainText(node.caption?.credit)
   return withPauseBoundary([
     ...nested,
     ...(attribution
@@ -259,7 +259,7 @@ const blockQuoteTransform: NodeTransform = (node, ctx) => {
 }
 
 const infoBoxTransform: NodeTransform = (node, ctx) => {
-  const title = plain(node.title)
+  const title = plainText(node.title)
   const nested = ctx.flatten(node.body ?? [], ctx.voice, 'infobox')
   if (!title && !nested.length) return []
   return withPauseBoundary([
@@ -269,9 +269,9 @@ const infoBoxTransform: NodeTransform = (node, ctx) => {
 }
 
 const pullQuoteTransform: NodeTransform = (node, ctx) => {
-  const text = plain(node.text)
+  const text = plainText(node.text)
   if (!text) return []
-  const source = plain(node.source)
+  const source = plainText(node.source)
   return withPauseBoundary([
     textItem('pullquote', ctx.voice, text),
     ...(source ? [textItem('pullquote-source', ctx.voice, source)] : []),
@@ -336,18 +336,18 @@ export const buildSpeakableContent = (
 ) => {
   const blocks: unknown[] = [jingle]
 
-  const title = plain(source.title)
+  const title = plainText(source.title)
   if (title) {
     blocks.push(paragraph(voice, title, 'title'), pause(1.4))
   }
 
-  const lead = plain(source.description)
+  const lead = plainText(source.description)
   if (lead) {
     blocks.push(paragraph(voice, lead, 'lead'), pause(1.4))
   }
 
   blocks.push(
-    paragraph(voice, creditsText(plain(source.byline)), 'credits'),
+    paragraph(voice, creditsText(plainText(source.byline)), 'credits'),
     pause(1.4),
   )
 
@@ -390,7 +390,5 @@ export const buildSpeakableContent = (
   blocks.push(stinger)
   return blocks
 }
-
-export const plainText = (value: unknown) => plain(value)
 
 export const plainTitle = (title: unknown) => plainText(title) || 'Ohne Titel'

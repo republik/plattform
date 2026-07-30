@@ -1,5 +1,7 @@
 import crypto from 'crypto'
 
+import { safeCompare } from '../../lib/safeCompare'
+
 // Signs the Huebsch callback URL per-document (and per-titleSlug — see below)
 // with an expiry, instead of reusing one static secret for every callback
 // forever. If a URL leaks (logs, referrers, Huebsch's own request logs), only
@@ -63,13 +65,8 @@ export const verifyWebhookSignature = (
     return false
   }
 
-  const expected = Buffer.from(
+  return safeCompare(
     sign(documentId, expiresAt, titleSlug, contentHash),
-  )
-  const actual = Buffer.from(signature)
-
-  return (
-    expected.length === actual.length &&
-    crypto.timingSafeEqual(expected, actual)
+    signature,
   )
 }

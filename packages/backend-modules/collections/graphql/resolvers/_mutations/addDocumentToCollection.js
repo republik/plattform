@@ -1,5 +1,7 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { getParsedDocumentId } = require('../../../../search/lib/Documents')
+const {
+  getParsedDocumentId,
+} = require('@orbiting/backend-modules-search/lib/Documents')
 const Collection = require('../../../lib/Collection')
 
 module.exports = async (_, { documentId, collectionName, data }, context) => {

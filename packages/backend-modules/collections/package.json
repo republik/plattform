@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@orbiting/backend-modules-sanity": "*",
+    "@orbiting/backend-modules-search": "*",
     "dataloader": "^2.0.0"
   }
 }

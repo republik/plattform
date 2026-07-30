@@ -107,7 +107,7 @@ export interface HuebschResult {
   [key: string]: unknown
 }
 
-export const getFromHuebsch = async (
+export const parseHuebschResult = async (
   body: unknown,
 ): Promise<HuebschResult> => {
   const parsed = body as

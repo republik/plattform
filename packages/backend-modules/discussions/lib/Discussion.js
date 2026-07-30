@@ -1,5 +1,7 @@
 const isUUID = require('is-uuid')
 
+const { DiscussionNotFoundError } = require('./errors')
+
 // id can be uuid or repoId
 // on insert, specified id is not honoured
 const upsert = async (
@@ -81,7 +83,7 @@ const update = async (
 ) => {
   const discussion = await pgdb.public.discussions.findOne({ id })
   if (!discussion) {
-    throw new Error(t('api/discussion/404'))
+    throw new DiscussionNotFoundError(t('api/discussion/404'))
   }
 
   if (tagRequired && !(tags ?? discussion.tags)?.length) {

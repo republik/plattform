@@ -1,7 +1,12 @@
 import { createSanityClient } from './client'
 import { repoIdToSanityId } from './legacyId'
 
-const sanityClient = createSanityClient()
+// Built on first use, not at import time: the SANITY_* env vars this needs
+// aren't necessarily loaded when this module is imported. A script's ES
+// imports are hoisted above its `env.config()` call, so building the client
+// eagerly would read an empty environment (see script/migrate-legacy-references.ts).
+let client: ReturnType<typeof createSanityClient> | undefined
+const sanityClient = () => (client ??= createSanityClient())
 
 // Explicit marker for a Sanity-backed reference stored in a plain, FK-less
 // text column (subscriptions.objectDocumentId / collectionDocumentItems.repoId)
@@ -27,7 +32,7 @@ export interface GenericDocument {
 // draft. Used both by the Document loader's Sanity branch and by callers
 // that already know they're holding a Sanity id.
 export const fetchDocumentById = (id: string) =>
-  sanityClient.fetch<GenericDocument | null>(
+  sanityClient().fetch<GenericDocument | null>(
     `*[_id in [$id, $draftId]][0]{ _id, _type, title, slug }`,
     { id, draftId: `drafts.${id.replace(/^drafts\./, '')}` },
     { perspective: 'raw' },

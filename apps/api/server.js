@@ -248,7 +248,7 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-invoices/express'),
     // needed for the gender sheet import
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
-    require('@orbiting/backend-modules-sanity/express'),
+    require('@orbiting/backend-modules-sanity/build/express'),
   ]
 
   if (MAIL_EXPRESS_RENDER) {

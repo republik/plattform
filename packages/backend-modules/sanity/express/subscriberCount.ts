@@ -1,4 +1,7 @@
 import { Request, Response } from 'express'
+// Brings in the `req.log` augmentation on express's Request.
+import type {} from '@orbiting/backend-modules-logger'
+
 import { getSubscriberCountForArticle } from '../lib/article'
 
 // Sanity ids: plain ids, `drafts.<id>`, or `versions.<releaseName>.<id>` —

@@ -6,9 +6,9 @@ schema {
 type queries {
   # Mints a short-lived Typesense scoped search key for the calling client to
   # query Typesense directly (no data returned through this API itself).
-  # Unauthenticated callers only see searchScope:"public" documents,
-  # authenticated members also see "member"-scope profiles, and admin/support
-  # callers see everything unfiltered.
+  # The key restricts WHICH COLLECTIONS the caller may search and carries no
+  # document filter. All callers currently receive the same collection set
+  # (articles, comments, users); only public user profiles are indexed at all.
   searchApiKey: SearchApiKey!
 }
 `

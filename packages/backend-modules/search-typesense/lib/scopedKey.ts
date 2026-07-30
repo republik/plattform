@@ -12,16 +12,22 @@ import { getClient } from './client'
  * only lets you *tighten* query-time params (filter_by, expires_at, ...) on
  * top of whatever collection(s) the parent key already allows.
  *
- * Every collection (articles, comments, users) carries a shared `searchScope`
- * field (see lib/collections.ts), so a SINGLE parent key restricted to all
- * three collections can be used regardless of caller tier -- only the
- * embedded `filter_by` on `searchScope` changes per tier. This supersedes an
- * earlier two-parent-key design (one scoped to `users`, one to `comments`)
- * that was needed only because privacy was originally going to be gated by a
- * `users`-only field (`hasPublicProfile`).
+ * A scoped key therefore embeds NO document filter at all: the parent key's
+ * `collections` restriction is the entire boundary. The caller tier selects
+ * *which parent key* is used -- see PARENT_KEY_ENV_BY_TIER below -- and thus
+ * which collections the caller may search. An earlier design gated privacy
+ * per tier with an embedded `filter_by` on a shared `searchScope` field; that
+ * is deprecated. Privacy for user profiles is now enforced at WRITE time
+ * instead: non-public profiles are never indexed (see lib/transform/user.ts).
  *
- * No collection here carries a field that must be hidden per tier, so no
- * `exclude_fields` is embedded. That is deliberate and worth preserving:
+ * All three tiers currently resolve to the same parent key, because there is
+ * currently only one set of collections. That is deliberate, not an
+ * oversight: minting several identical parent keys would be ops burden for no
+ * security difference. The tier -> parent-key indirection is the seam for the
+ * admin-only collection that is expected later.
+ *
+ * No `exclude_fields` is embedded either. That is deliberate and worth
+ * preserving:
  * `exclude_fields` only strips a field from the *returned document*, and a
  * scoped key cannot constrain `query_by` at all. Since the key is handed to
  * the browser, `query_by` is caller-controlled -- so an indexed-but-excluded
@@ -47,41 +53,38 @@ export interface ScopedSearchKey {
   expiresAt: Date
 }
 
-const getParentKey = (): string => {
-  const key = process.env.TYPESENSE_SEARCH_KEY
+/**
+ * Which parent key each caller tier derives from -- and therefore which
+ * collections that tier may search, since the collection restriction lives on
+ * the parent key.
+ *
+ * When an admin-only collection lands, script/create-search-keys.ts mints a
+ * second parent key over the wider collection list into
+ * TYPESENSE_SEARCH_KEY_ADMIN, and the `admin` entry here points at it. That is
+ * the only change needed; nothing else in this module has to move.
+ */
+const PARENT_KEY_ENV_BY_TIER: Record<SearchCallerTier, string> = {
+  public: 'TYPESENSE_SEARCH_KEY',
+  member: 'TYPESENSE_SEARCH_KEY',
+  admin: 'TYPESENSE_SEARCH_KEY',
+}
+
+const getParentKey = (tier: SearchCallerTier): string => {
+  const envVar = PARENT_KEY_ENV_BY_TIER[tier]
+  const key = process.env[envVar]
   if (!key) {
     throw new Error(
-      'TYPESENSE_SEARCH_KEY is not set -- required to mint scoped search keys (see script/create-search-keys.ts)',
+      `${envVar} is not set -- required to mint scoped search keys for the "${tier}" tier (see script/create-search-keys.ts)`,
     )
   }
   return key
 }
 
 /**
- * The searchScope filter_by for a given caller tier. `admin` gets no filter
- * at all (sees every document, including any future non-public tier).
- */
-const filterForTier = (tier: SearchCallerTier): string | undefined => {
-  switch (tier) {
-    // No document currently carries a "member" searchScope -- a non-public
-    // profile is "admin" scope only (findable via search by admin/support
-    // callers alone, not by other logged-in members). The "member" tier is
-    // kept distinct from "public" here so a future member-only searchScope
-    // value (e.g. on some other collection) can be introduced without
-    // touching this switch again.
-    // TODO: revisit once a real member-only searchScope value exists on any
-    // collection -- until then this branch is speculative and behaves
-    // identically to 'public'.
-    case 'public':
-    case 'member':
-      return 'searchScope:=public'
-    case 'admin':
-      return undefined
-  }
-}
-
-/**
  * Mints a scoped search key for the given caller tier.
+ *
+ * The key carries no document filter -- only an expiry. What it may search is
+ * decided entirely by the collections its parent key was created over.
  *
  * @param tier  'public' for unauthenticated callers, 'member' for
  *   authenticated callers with the `member` role, 'admin' for callers with
@@ -90,14 +93,12 @@ const filterForTier = (tier: SearchCallerTier): string | undefined => {
  */
 export const generateScopedSearchKey = (
   tier: SearchCallerTier,
-  ttlSeconds: number = DEFAULT_TTL_SECONDS,
 ): ScopedSearchKey => {
   const client = getClient()
-  const expiresAt = new Date(Date.now() + ttlSeconds * 1000)
+  const expiresAt = new Date(Date.now() + DEFAULT_TTL_SECONDS * 1000)
   const expiresAtUnix = Math.floor(expiresAt.getTime() / 1000)
 
-  const key = client.keys().generateScopedSearchKey(getParentKey(), {
-    filter_by: filterForTier(tier),
+  const key = client.keys().generateScopedSearchKey(getParentKey(tier), {
     expires_at: expiresAtUnix,
   })
 

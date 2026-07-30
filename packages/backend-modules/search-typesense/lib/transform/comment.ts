@@ -5,7 +5,10 @@ const {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { remark } = require('@orbiting/backend-modules-utils')
 
+import { PgDb } from '@orbiting/backend-modules-types'
+
 import { TypesenseCommentDocument } from '../collections'
+import { getPortraitUrl, toUnixMs } from './fields'
 
 /**
  * Minimal shape of a public.comments row needed to build a Typesense
@@ -36,7 +39,12 @@ export interface DiscussionPreferencesRow {
   credentialId: string | null
 }
 
-export interface UserRow {
+/**
+ * The slice of a public.users row a comment document needs for its author
+ * block -- narrower than lib/transform/user.ts's UserRow, which describes a
+ * whole indexable profile.
+ */
+export interface CommentAuthorRow {
   id: string
   firstName: string | null
   lastName: string | null
@@ -50,7 +58,7 @@ export interface CredentialRow {
 }
 
 export interface CommentTransformDeps {
-  getUser: (userId: string) => Promise<UserRow | null>
+  getUser: (userId: string) => Promise<CommentAuthorRow | null>
   getDiscussion: (discussionId: string) => Promise<DiscussionRow | null>
   getDiscussionPreferences: (
     userId: string,
@@ -58,9 +66,6 @@ export interface CommentTransformDeps {
   ) => Promise<DiscussionPreferencesRow | null>
   getCredential: (credentialId: string) => Promise<CredentialRow | null>
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PgDb = any
 
 /**
  * Builds `CommentTransformDeps` backed by live Postgres reads. Shared
@@ -89,29 +94,6 @@ export const makeCommentDeps = (pgdb: PgDb): CommentTransformDeps => ({
       { fields: ['description', 'verified'] },
     ),
 })
-
-const toUnixMs = (value: Date | string | number): number =>
-  new Date(value).getTime()
-
-/**
- * Mirrors @orbiting/backend-modules-republik/lib/portrait's resize/bw URL
- * building (duplicated rather than depended on, to avoid a cross-package
- * import into a package that otherwise has no dependency on `republik`).
- */
-const getPortraitUrl = (portraitUrl: string | null): string | undefined => {
-  if (!portraitUrl) {
-    return undefined
-  }
-  try {
-    const url = new URL(portraitUrl)
-    url.searchParams.set('resize', '384x384')
-    url.searchParams.set('bw', '1')
-    url.searchParams.set('format', 'auto')
-    return url.toString()
-  } catch {
-    return undefined
-  }
-}
 
 /**
  * A comment must never be present in the Typesense index if its discussion
@@ -162,7 +144,6 @@ export const transformComment = async (
     contentString: stringifyNode(remark.parse(row.content)),
     discussionId: row.discussionId,
     createdAt: toUnixMs(row.createdAt),
-    searchScope: 'public',
   }
 
   if (user && !isAnonymityEnforced && !isAnonymous) {

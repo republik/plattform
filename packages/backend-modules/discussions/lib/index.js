@@ -1,6 +1,7 @@
 module.exports = {
   Credential: require('./Credential'),
   Discussion: require('./Discussion'),
+  ...require('./errors'),
   hotness: require('./hotness'),
   Notifications: require('./Notifications'),
   ...require('./discussionPreferences'),

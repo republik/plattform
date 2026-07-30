@@ -37,11 +37,13 @@
  * on a periodic safety-net timer, in case a notification is ever missed
  * across a brief disconnect) it *peeks* (plain SELECT, no locking, no
  * delete) rows newer than a per-table, in-memory watermark
- * (`createdAt > lastSeenAt[table]`), advances the watermark, and uses the
- * returned ids to re-fetch fresh rows directly from the source tables
- * before transforming + upserting into Typesense. It never deletes or
- * locks queue rows, so it cannot race the existing ES listener's delete,
- * and the ES listener remains the sole owner of queue cleanup.
+ * (`createdAt > lastSeenAt[table]`) and uses the returned ids to re-fetch
+ * fresh rows directly from the source tables before transforming + upserting
+ * into Typesense. The watermark advances only once that work has succeeded,
+ * so a transient Typesense failure gets the batch retried rather than
+ * skipped. It never deletes or locks queue rows, so it cannot race the
+ * existing ES listener's delete, and the ES listener remains the sole owner
+ * of queue cleanup.
  *
  * Known trade-off (please read before relying on this in a new
  * environment): because we only ever peek, there is a narrow race window
@@ -64,10 +66,13 @@
  */
 import debugFn from 'debug'
 import get from 'lodash/get'
+import { logger } from '@orbiting/backend-modules-logger'
+import { PgDb } from '@orbiting/backend-modules-types'
 
 import { getClient } from './client'
 import {
   getAliasName,
+  isNotFound,
   TypesenseCommentDocument,
   TypesenseUserDocument,
 } from './collections'
@@ -76,8 +81,18 @@ import { transformUser, makeUserDeps, UserRow } from './transform/user'
 
 const debug = debugFn('search-typesense:lib:listener')
 
-const POLL_INTERVAL_MS = Number(
-  process.env.SEARCH_TYPESENSE_LISTENER_POLL_INTERVAL_MS || 60_000,
+const DEFAULT_POLL_INTERVAL_MS = 60_000
+
+const parsePollInterval = (raw: string | undefined): number => {
+  const parsed = Number(raw)
+  if (!raw || !Number.isFinite(parsed) || parsed <= 0) {
+    return DEFAULT_POLL_INTERVAL_MS
+  }
+  return parsed
+}
+
+const POLL_INTERVAL_MS = parsePollInterval(
+  process.env.SEARCH_TYPESENSE_LISTENER_POLL_INTERVAL_MS,
 )
 
 const QUEUE_BATCH_LIMIT = 10_000
@@ -149,9 +164,6 @@ interface QueueRow {
   createdAt: Date
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PgDb = any
-
 const peekQueue = async (
   pgdb: PgDb,
   table: string,
@@ -169,6 +181,40 @@ const peekQueue = async (
 
 const maxCreatedAt = (rows: QueueRow[], fallback: Date): Date =>
   rows.reduce((max, row) => (row.createdAt > max ? row.createdAt : max), fallback)
+
+interface DeletableCollection {
+  documents(documentId: string): { delete(): Promise<unknown> }
+}
+
+/**
+ * Removes a document from a collection.
+ *
+ * "Already absent" is the expected outcome whenever the source row was never
+ * indexable in the first place, so a not-found is swallowed. Any *other*
+ * failure is logged and rethrown: processTable only advances its watermark
+ * once the work succeeded, so rethrowing is what gets the row retried on the
+ * next notification or poll. Swallowing it instead would leave a stale
+ * document searchable indefinitely with nothing left to retry it.
+ */
+const deleteDocument = async (
+  collection: DeletableCollection,
+  documentId: string,
+  reason: string,
+): Promise<void> => {
+  try {
+    await collection.documents(documentId).delete()
+  } catch (error) {
+    if (isNotFound(error)) {
+      debug('delete skipped, document absent', { documentId, reason })
+      return
+    }
+    logger.error(
+      { error, documentId, reason },
+      'search-typesense failed to delete document',
+    )
+    throw error
+  }
+}
 
 // --- Comments ---------------------------------------------------------
 
@@ -196,20 +242,14 @@ const upsertOrDeleteComment = async (pgdb: PgDb, commentId: string) => {
     )
 
   if (!row) {
-    await collection
-      .documents(commentId)
-      .delete()
-      .catch(() => {})
+    await deleteDocument(collection, commentId, 'comment row gone')
     return
   }
 
   const doc = await transformComment(row, makeCommentDeps(pgdb))
 
   if (!doc) {
-    await collection
-      .documents(commentId)
-      .delete()
-      .catch(() => {})
+    await deleteDocument(collection, commentId, 'comment not indexable')
     return
   }
 
@@ -224,7 +264,9 @@ const reindexComments = async (pgdb: PgDb, commentIds: string[]) => {
 
 // --- Users --------------------------------------------------------------
 
-const upsertOrDeleteUser = async (pgdb: PgDb, userId: string) => {
+// Exported for tests: this is the one place that decides whether a user
+// document belongs in the index at all.
+export const upsertOrDeleteUser = async (pgdb: PgDb, userId: string) => {
   const client = getClient()
   const collection = client.collections<TypesenseUserDocument>(
     getAliasName('users'),
@@ -248,14 +290,19 @@ const upsertOrDeleteUser = async (pgdb: PgDb, userId: string) => {
   )
 
   if (!row) {
-    await collection
-      .documents(userId)
-      .delete()
-      .catch(() => {})
+    await deleteDocument(collection, userId, 'user row gone')
     return
   }
 
   const doc = await transformUser(row, makeUserDeps(pgdb))
+
+  // A profile that stops being public must leave the index -- there is no
+  // query-time filter behind it any more (see lib/scopedKey.ts).
+  if (!doc) {
+    await deleteDocument(collection, userId, 'profile not public')
+    return
+  }
+
   await collection.documents().upsert(doc)
 }
 
@@ -328,8 +375,6 @@ const processTable = async (
     return
   }
 
-  lastSeenAt[table] = maxCreatedAt(rows, since)
-
   debug('peeked queue rows', { table, count: rows.length })
 
   if (directTables.has(table)) {
@@ -338,6 +383,12 @@ const processTable = async (
   }
 
   await applyCascade(pgdb, table, rows)
+
+  // Advanced only after the indexing work above succeeded. If anything threw,
+  // the watermark stays put and the next notification or safety-net poll
+  // re-peeks the same rows -- the alternative (advancing first) permanently
+  // skipped every row in a batch that hit a transient Typesense failure.
+  lastSeenAt[table] = maxCreatedAt(rows, since)
 }
 
 let singleton: string | null = null
@@ -370,8 +421,11 @@ const start = async ({
       const table = workQueue.shift() as string
       try {
         await processTable(pgdb, table, lastSeenAt)
-      } catch (err) {
-        console.error('search-typesense listener processing error', err)
+      } catch (error) {
+        logger.error(
+          { error, table },
+          'search-typesense listener processing error',
+        )
       }
     }
   }
@@ -400,8 +454,11 @@ const start = async ({
       if (interestingTables.includes(table)) {
         schedule(table)
       }
-    } catch (err) {
-      console.error('search-typesense listener failed to parse payload', err)
+    } catch (error) {
+      logger.error(
+        { error },
+        'search-typesense listener failed to parse payload',
+      )
     }
   })
 
@@ -429,4 +486,4 @@ const start = async ({
   return { close }
 }
 
-export { start }
+export { start, parsePollInterval }

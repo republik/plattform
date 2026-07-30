@@ -9,7 +9,7 @@ export { titleSlugFrom, compactTimestamp } from './lib/filename'
 export { buildSignedWebhookPath, verifyWebhookSignature } from './lib/webhookSignature'
 export {
   uploadToHuebsch,
-  getFromHuebsch,
+  parseHuebschResult,
   describeHuebschError,
   HuebschError,
 } from './lib/huebsch'

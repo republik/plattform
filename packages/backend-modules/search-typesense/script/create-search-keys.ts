@@ -7,6 +7,17 @@
  * republik/studio, but sharing this same Typesense instance/alias naming).
  * Run script/bootstrap.ts first so all three aliases exist before this runs.
  *
+ * The `collections` list below is the ENTIRE privacy boundary for search.
+ * Derived scoped keys carry no document filter at all -- they only add an
+ * expiry (see lib/scopedKey.ts) -- so anything this key can reach, a browser
+ * holding a scoped key can search. Do not widen it casually.
+ *
+ * When an admin-only collection is introduced, this script mints a SECOND
+ * parent key over the wider collection list, stored as
+ * TYPESENSE_SEARCH_KEY_ADMIN, and PARENT_KEY_ENV_BY_TIER in lib/scopedKey.ts
+ * points the `admin` tier at it. That -- not a per-tier `filter_by` -- is how
+ * tiers get different visibility.
+ *
  * Typesense never returns a key's secret value again after creation, so this
  * is NOT idempotent/safe to re-run blindly -- running it again mints a brand
  * new key (invalidating nothing automatically; the old key keeps working
