@@ -4,11 +4,15 @@ import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/action-buttons/actio
 import { BookmarkButton } from '@/app/(sanity)/components/action-buttons/bookmark-button'
 import { PdfDownloadButton } from '@/app/(sanity)/components/action-buttons/pdf-download-button'
 import { PlayButton } from '@/app/(sanity)/components/action-buttons/play-button'
+import { ReadingPositionButton } from '@/app/(sanity)/components/action-buttons/reading-position-button'
 import { ShareButton } from '@/app/(sanity)/components/action-buttons/share-button'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { useTranslation } from '@/lib/withT'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
-import { EllipsisVertical } from 'lucide-react'
+import { CircleCheck, EllipsisVertical } from 'lucide-react'
+import { useReadingPosition } from './use-reading-position'
 
 const menuTriggerStyle = css({
   cursor: 'pointer',
@@ -90,6 +94,11 @@ export function ActionBar({ article }: ActionBarProps) {
   const audioDocumentId = audioQueueDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
+  const { t } = useTranslation()
+  const trackEvent = useTrackEvent()
+  const { percent, isRead, position, markAsRead } = useReadingPosition({
+    documentId,
+  })
 
   return (
     <div
@@ -110,6 +119,11 @@ export function ActionBar({ article }: ActionBarProps) {
       />
       <BookmarkButton documentId={documentId} />
       <ShareButton title={title} path={path} />
+      <ReadingPositionButton
+        isRead={isRead}
+        percent={percent}
+        position={position}
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
@@ -132,6 +146,19 @@ export function ActionBar({ article }: ActionBarProps) {
                 className={menuItemStyle}
               />
             </DropdownMenu.Item>
+            {/* Hidden once the article is read — there is nothing left to mark. */}
+            {markAsRead && !isRead && (
+              <DropdownMenu.Item
+                className={menuItemStyle}
+                onSelect={() => {
+                  markAsRead()
+                  trackEvent({ action: 'markAsRead', name: path })
+                }}
+              >
+                <CircleCheck size={ACTION_ICON_SIZE} />
+                {t('article/actionbar/progress/markasread')}
+              </DropdownMenu.Item>
+            )}
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
