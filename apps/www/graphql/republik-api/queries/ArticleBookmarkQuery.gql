@@ -1,0 +1,6 @@
+query ArticleBookmark($documentId: ID!) {
+  userCollectionItem(collectionName: "bookmarks", documentId: $documentId) {
+    id
+    createdAt
+  }
+}

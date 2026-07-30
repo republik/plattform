@@ -1,0 +1,16 @@
+import { Share } from '@/app/components/share/share'
+import { Share as ShareIcon } from 'lucide-react'
+import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
+
+export function ShareButton({ title, url }: { title: string; url: string }) {
+  return (
+    // `Share` renders its own <button> around the children, so this must stay
+    // a <span> — a nested button would be split apart by the HTML parser.
+    <Share title={title} url={url} emailSubject={`Republik: ${title}`}>
+      <span className={actionButtonStyle}>
+        <ShareIcon size={ACTION_ICON_SIZE} />
+        Teilen
+      </span>
+    </Share>
+  )
+}

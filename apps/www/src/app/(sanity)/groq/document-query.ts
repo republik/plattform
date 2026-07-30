@@ -34,6 +34,7 @@ export const DOCUMENT_QUERY = defineQuery(
     title,
     description,
     "slug": slug.current,
+    _updatedAt,
     cover {
       ...
     },
@@ -49,6 +50,10 @@ export const DOCUMENT_QUERY = defineQuery(
     },
 
     _type == "article" => {
+      repoId,
+      "plainTitle": pt::text(title),
+      audioSourceMp3,
+      audioDurationMs,
       ${BYLINE_FRAGMENT},
       newsletter->{
         title,
