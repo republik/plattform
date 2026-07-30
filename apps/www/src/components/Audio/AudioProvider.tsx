@@ -145,9 +145,16 @@ const AudioProvider = ({ children }) => {
     const mediaId = audioSource.mediaId
 
     if (isAudioQueueAvailable) {
-      AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
-        item: playerItem,
-        location: location || AudioPlayerLocations.AUDIO_PLAYER,
+      // AudioEventEmitter.emit doesn't wait for (or propagate errors from)
+      // listeners, so without this bridge the promise below would resolve
+      // immediately regardless of whether playback actually started — the
+      // caller's try/catch would never see a failure.
+      await new Promise<void>((resolve, reject) => {
+        AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
+          item: playerItem,
+          location: location || AudioPlayerLocations.AUDIO_PLAYER,
+          onSettled: (error?: unknown) => (error ? reject(error) : resolve()),
+        })
       })
     } else {
       if (inNativeApp) {

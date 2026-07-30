@@ -1,86 +1,101 @@
-fragment AudioQueueItem on AudioQueueItem {
+fragment AudioQueueItemRef on AudioQueueItemRef {
   id
   sequence
-  document {
+  mediaId
+  repoId
+  sanityId
+  userProgress {
     id
-    meta {
-      title
-      path
-      publishDate
-      image
-      audioCoverCrop {
-        x
-        y
-        width
-        height
-      }
-      coverForNativeApp: audioCover(properties: { width: 1024, height: 1024 })
-      coverMd: audioCover(properties: { width: 256, height: 256 })
-      coverSm: audioCover(properties: { width: 128, height: 128 })
-      audioSource {
-        mediaId
-        kind
-        mp3
-        aac
-        ogg
-        durationMs
-        userProgress {
-          id
-          secs
-        }
-      }
-      format {
-        id
-        meta {
-          title
-          color
-          shareLogo
-          shareBackgroundImage
-          shareBackgroundImageInverted
-        }
-      }
-    }
+    secs
   }
 }
 
 query AudioQueueQuery {
-  me {
-    id
-    audioQueue {
-      ...AudioQueueItem
-    }
+  userAudioQueue {
+    ...AudioQueueItemRef
   }
 }
 
 mutation AddAudioQueueItems($entity: AudioQueueEntityInput!, $sequence: Int) {
-  audioQueueItems: addAudioQueueItem(entity: $entity, sequence: $sequence) {
-    ...AudioQueueItem
+  audioQueueItems: addAudioQueueItemRef(entity: $entity, sequence: $sequence) {
+    ...AudioQueueItemRef
   }
 }
 
 mutation MoveAudioQueueItem($id: ID!, $sequence: Int!) {
-  audioQueueItems: moveAudioQueueItem(id: $id, sequence: $sequence) {
+  audioQueueItems: moveAudioQueueItemRef(id: $id, sequence: $sequence) {
     id
     sequence
   }
 }
 
 mutation RemoveAudioQueueItem($id: ID!) {
-  audioQueueItems: removeAudioQueueItem(id: $id) {
+  audioQueueItems: removeAudioQueueItemRef(id: $id) {
     id
   }
 }
 
 mutation ClearAudioQueue {
-  audioQueueItems: clearAudioQueue {
+  audioQueueItems: clearAudioQueueRefs {
     id
   }
 }
 
 mutation ReorderAudioQueue($ids: [ID!]!) {
-  audioQueueItems: reorderAudioQueue(ids: $ids) {
+  audioQueueItems: reorderAudioQueueRefs(ids: $ids) {
     id
     sequence
+  }
+}
+
+# Publikator-only — kept for TeaserAudioPlayButton, which renders inside the
+# legacy MDAST schema and only ever sees Publikator documents. It relies on
+# the mutation reply to hydrate title/cover/mp3 for an item it doesn't have
+# loaded locally, which the Ref-based reply (bare refs only) can't provide.
+mutation AddLegacyAudioQueueItem($entity: AudioQueueEntityInput!, $sequence: Int) {
+  audioQueueItems: addAudioQueueItem(entity: $entity, sequence: $sequence) {
+    id
+    sequence
+    document {
+      id
+      meta {
+        title
+        path
+        publishDate
+        image
+        audioCoverCrop {
+          x
+          y
+          width
+          height
+        }
+        coverForNativeApp: audioCover(properties: { width: 1024, height: 1024 })
+        coverMd: audioCover(properties: { width: 256, height: 256 })
+        coverSm: audioCover(properties: { width: 128, height: 128 })
+        audioSource {
+          mediaId
+          kind
+          mp3
+          aac
+          ogg
+          durationMs
+          userProgress {
+            id
+            secs
+          }
+        }
+        format {
+          id
+          meta {
+            title
+            color
+            shareLogo
+            shareBackgroundImage
+            shareBackgroundImageInverted
+          }
+        }
+      }
+    }
   }
 }
 
