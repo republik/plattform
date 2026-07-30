@@ -13,6 +13,8 @@ export {
   toSanityRef,
   isSanityRef,
   fromSanityRef,
+  publishedId,
+  legacySanityId,
   fetchDocumentById,
   fetchDocumentByLegacyRepoId,
   isCollectableType,

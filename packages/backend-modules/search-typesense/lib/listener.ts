@@ -76,8 +76,18 @@ import {
   TypesenseCommentDocument,
   TypesenseUserDocument,
 } from './collections'
-import { transformComment, makeCommentDeps, CommentRow } from './transform/comment'
-import { transformUser, makeUserDeps, UserRow } from './transform/user'
+import {
+  transformComment,
+  makeCommentDeps,
+  CommentRow,
+  COMMENT_ROW_FIELDS,
+} from './transform/comment'
+import {
+  transformUser,
+  makeUserDeps,
+  UserRow,
+  USER_ROW_FIELDS,
+} from './transform/user'
 
 const debug = debugFn('search-typesense:lib:listener')
 
@@ -180,7 +190,10 @@ const peekQueue = async (
 }
 
 const maxCreatedAt = (rows: QueueRow[], fallback: Date): Date =>
-  rows.reduce((max, row) => (row.createdAt > max ? row.createdAt : max), fallback)
+  rows.reduce(
+    (max, row) => (row.createdAt > max ? row.createdAt : max),
+    fallback,
+  )
 
 interface DeletableCollection {
   documents(documentId: string): { delete(): Promise<unknown> }
@@ -228,16 +241,7 @@ const upsertOrDeleteComment = async (pgdb: PgDb, commentId: string) => {
     await pgdb.public.comments.findOne(
       { id: commentId },
       {
-        fields: [
-          'id',
-          'content',
-          'userId',
-          'discussionId',
-          'published',
-          'adminUnpublished',
-          'createdAt',
-          'tags',
-        ],
+        fields: COMMENT_ROW_FIELDS,
       },
     )
 
@@ -275,17 +279,7 @@ export const upsertOrDeleteUser = async (pgdb: PgDb, userId: string) => {
   const row: UserRow | null = await pgdb.public.users.findOne(
     { id: userId },
     {
-      fields: [
-        'id',
-        'firstName',
-        'lastName',
-        'username',
-        'biography',
-        'statement',
-        'portraitUrl',
-        'hasPublicProfile',
-        'createdAt',
-      ],
+      fields: USER_ROW_FIELDS,
     },
   )
 
@@ -318,7 +312,10 @@ const reindexUsers = async (pgdb: PgDb, userIds: string[]) => {
 // cascadeUpdateConfig's `public.<table>` rule targets) and processTable
 // (keyed off the bare queue table name) -- avoids the same comments/users
 // branch existing twice.
-const reindexByTable: Record<string, (pgdb: PgDb, ids: string[]) => Promise<void>> = {
+const reindexByTable: Record<
+  string,
+  (pgdb: PgDb, ids: string[]) => Promise<void>
+> = {
   comments: reindexComments,
   users: reindexUsers,
 }

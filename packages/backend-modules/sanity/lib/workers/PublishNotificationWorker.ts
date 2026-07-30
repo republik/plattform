@@ -1,13 +1,13 @@
 import { BaseWorker, Job } from '@orbiting/backend-modules-job-queue'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { SendOptions } from 'pg-boss'
-import { fetchArticleForNotification } from '../article'
+import {
+  fetchArticleForNotification,
+  resolveNotificationRecipients,
+} from '../article'
 import { plainText } from '../../tts'
 
-const {
-  Subscriptions,
-  sendNotification,
-} = require('@orbiting/backend-modules-subscriptions')
+const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
 
 export interface PublishNotificationPayload {
   $version: 'v1'
@@ -67,31 +67,8 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
       return
     }
 
-    const articleCollectionIds = (article.articleCollections ?? [])
-      .map((entry) => entry.collection?._id)
-      .filter((id): id is string => Boolean(id))
-    const authorUserIds = (article.contributors ?? [])
-      .map((entry) => entry.contributor?.userId)
-      .filter((id): id is string => Boolean(id))
-
-    const [collectionSubs, authorSubs] = await Promise.all([
-      Subscriptions.getSubscriptionsForUserAndObjects(
-        null,
-        {
-          type: 'Document',
-          ids: articleCollectionIds,
-          filters: ['Document'],
-        },
-        context,
-        { onlyEligibles: true },
-      ),
-      Subscriptions.getSubscriptionsForUserAndObjects(
-        null,
-        { type: 'User', ids: authorUserIds, filters: ['Document'] },
-        context,
-        { onlyEligibles: true },
-      ),
-    ])
+    const { collectionSubscribers, authorSubscribers } =
+      await resolveNotificationRecipients(article, context)
 
     const eventInfo = { objectType: 'Document', objectId: article._id }
     const articleTitle = plainText(article.title)
@@ -115,10 +92,6 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     // One sendNotification call per articleCollection group, so followers
     // of different collections each see a notification branded with the
     // collection they actually follow — mirrors publikator's per-format loop.
-    const collectionSubscribers = await Subscriptions.getUsersWithSubscriptions(
-      collectionSubs,
-      context,
-    )
     const subscribersByCollectionId = groupSubscribersByObjectId(
       collectionSubscribers,
       'objectDocumentId',
@@ -173,10 +146,6 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     // One sendNotification call per author group — ported verbatim from
     // publikator/lib/Notifications.js (same Postgres User loader; a
     // contributor's `userId` field already is the Postgres user id).
-    const authorSubscribers = await Subscriptions.getUsersWithSubscriptions(
-      authorSubs,
-      context,
-    )
     const subscribersByAuthorId = groupSubscribersByObjectId(
       authorSubscribers,
       'objectUserId',

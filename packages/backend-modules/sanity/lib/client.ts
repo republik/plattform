@@ -11,3 +11,11 @@ export const createSanityClient = () =>
     token: process.env.SANITY_API_TOKEN,
     useCdn: false,
   })
+
+// The shared instance, built on first use rather than at import time: the
+// SANITY_* env vars it reads aren't necessarily loaded when a module importing
+// it is imported (a script's ES imports are hoisted above its `env.config()`
+// call, see script/migrate-legacy-references.ts), and requiring one of these
+// modules must not hard-fail for consumers that only want its pure helpers.
+let client: ReturnType<typeof createSanityClient> | undefined
+export const sanityClient = () => (client ??= createSanityClient())

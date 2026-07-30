@@ -1,12 +1,5 @@
 import { logger } from '@orbiting/backend-modules-logger'
-import { createSanityClient } from './client'
-
-// Built on first use, not at import time: the SANITY_* env vars this needs
-// aren't necessarily loaded when this module is imported (a script's ES imports
-// are hoisted above its `env.config()` call), and requiring this module must not
-// hard-fail for consumers that only want its pure helpers. Mirrors lib/document.ts.
-let client: ReturnType<typeof createSanityClient> | undefined
-const sanityClient = () => (client ??= createSanityClient())
+import { sanityClient } from './client'
 
 // Portable text: a heterogeneous array of block/object nodes. The exact
 // per-node shape is defined by studio's schema (a separate repo, no shared

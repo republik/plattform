@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- untyped JS package
+const { naming } = require('@orbiting/backend-modules-utils')
+
 import { PgDb } from '@orbiting/backend-modules-types'
 
 import { TypesenseUserDocument } from '../collections'
@@ -18,6 +21,23 @@ export interface UserRow {
   hasPublicProfile: boolean
   createdAt: Date | string | number
 }
+
+/**
+ * The `fields` every reader of a users row must select, so lib/listener.ts
+ * (real-time) and script/reindex.ts (bulk backfill) can't drift from `UserRow`
+ * or from each other.
+ */
+export const USER_ROW_FIELDS = [
+  'id',
+  'firstName',
+  'lastName',
+  'username',
+  'biography',
+  'statement',
+  'portraitUrl',
+  'hasPublicProfile',
+  'createdAt',
+]
 
 export interface ListedCredential {
   description: string | null
@@ -67,7 +87,9 @@ export const transformUser = async (
   const credential = listedCredential?.description?.trim() || undefined
   const portraitUrl = getPortraitUrl(row.portraitUrl)
 
-  const name = [row.firstName, row.lastName].filter(Boolean).join(' ').trim()
+  // `.trim()` because getName trims each part but not the join: a row with a
+  // blank firstName would otherwise index a leading space.
+  const name = naming.getName(row).trim()
 
   const doc: TypesenseUserDocument = {
     id: row.id,

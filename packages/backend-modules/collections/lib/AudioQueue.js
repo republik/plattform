@@ -1,10 +1,10 @@
 const Promise = require('bluebird')
 const { v4: isUuid } = require('is-uuid')
 const {
-  getParsedDocumentId,
-} = require('@orbiting/backend-modules-search/lib/Documents')
-const { isCollectableType } = require('@orbiting/backend-modules-sanity')
-const { refToColumns } = require('./documentRef')
+  refToColumns,
+  matchesColumns,
+  resolveInputRef,
+} = require('./documentRef')
 const ProgressOptOut = require('./ProgressOptOut')
 
 const getCollectionName = () => 'audioqueue'
@@ -87,33 +87,20 @@ const upsertItem = async (input, context) => {
     throw new Error(t('api/collections/audioQueue/error/missingCollection'))
   }
 
-  // Resolve the client's id to a canonical document ref the same way
-  // addDocumentToCollection does, instead of the base64-only decode this used
-  // to do: the loader handles publikator repoIds, base64 documentIds and Sanity
-  // `_id`s alike, and returns the canonical ref on `meta.repoId` —
-  // `sanity:`-prefixed for Sanity-backed content. Never persist the raw input.
+  // Resolve the client's id to a canonical document ref, instead of the
+  // base64-only decode this used to do — never persist the raw input. See
+  // lib/documentRef.js; a queue would otherwise accept authors or formats.
   let documentRef
   if (entityId) {
-    const { repoId: parsedId } = getParsedDocumentId(entityId)
-    if (!parsedId) {
+    const { parsedRepoId, ref } = await resolveInputRef(entityId, context)
+    if (!parsedRepoId) {
       throw new Error(t('api/collections/audioQueue/error/invalidEntityId'))
     }
-
-    const doc = await loaders.Document.byRepoId.load(parsedId)
-    if (!doc) {
+    if (!ref) {
       throw new Error(t('api/collections/audioQueue/error/missingDocument'))
     }
 
-    // The publikator branch of that loader filters Elasticsearch to
-    // `type: 'Document'`, so a repoId is guaranteed to be an article. The Sanity
-    // branch resolves any `_type`, so a queue could otherwise be filled with
-    // authors or formats. Keyed on `sanityType` being present, not on the ref
-    // being prefixed — see addDocumentToCollection.js.
-    if (doc.sanityType && !isCollectableType(doc.sanityType)) {
-      throw new Error(t('api/collections/audioQueue/error/missingDocument'))
-    }
-
-    documentRef = doc.meta.repoId
+    documentRef = ref
   }
 
   const items = await pgdb.public.collectionDocumentItems.find({
@@ -121,15 +108,9 @@ const upsertItem = async (input, context) => {
     userId: me.id,
   })
 
-  // The `repoId &&` / `sanityId &&` guards are load-bearing: exactly one column
-  // is set per row, so without them a `null === null` comparison would match an
-  // unrelated row of the other kind.
-  const { repoId, sanityId } = refToColumns(documentRef)
+  const columns = refToColumns(documentRef)
   const existingItem = items.find(
-    (item) =>
-      item.id === id ||
-      (repoId && item.repoId === repoId) ||
-      (sanityId && item.sanityId === sanityId),
+    (item) => item.id === id || matchesColumns(item, columns),
   )
 
   if (id && !existingItem) {
@@ -139,12 +120,14 @@ const upsertItem = async (input, context) => {
   const currentSequence = existingItem?.data?.sequence
 
   // Calculate sequence boundaries
-  const maxSequence = items.length > 0
-    ? Math.max(...items.map((item) => item.data?.sequence || 0))
-    : 0
-  const minSequence = items.length > 0
-    ? Math.min(...items.map((item) => item.data?.sequence || Infinity))
-    : 0
+  const maxSequence =
+    items.length > 0
+      ? Math.max(...items.map((item) => item.data?.sequence || 0))
+      : 0
+  const minSequence =
+    items.length > 0
+      ? Math.min(...items.map((item) => item.data?.sequence || Infinity))
+      : 0
 
   const nextSequence = maxSequence + 1
   const playNextSequence = minSequence + 1

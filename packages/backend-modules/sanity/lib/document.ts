@@ -1,12 +1,5 @@
-import { createSanityClient } from './client'
+import { sanityClient } from './client'
 import { repoIdToSanityId } from './legacyId'
-
-// Built on first use, not at import time: the SANITY_* env vars this needs
-// aren't necessarily loaded when this module is imported. A script's ES
-// imports are hoisted above its `env.config()` call, so building the client
-// eagerly would read an empty environment (see script/migrate-legacy-references.ts).
-let client: ReturnType<typeof createSanityClient> | undefined
-const sanityClient = () => (client ??= createSanityClient())
 
 // Explicit marker for a Sanity-backed reference stored in a plain, FK-less
 // text column (subscriptions.objectDocumentId / collectionDocumentItems.repoId)
@@ -14,12 +7,18 @@ const sanityClient = () => (client ??= createSanityClient())
 // instead of guessing from id shape, and makes stored values unambiguous.
 const SANITY_ID_PREFIX = 'sanity:'
 
+// `drafts.<id>` and `<id>` are the same document under the `published`
+// perspective, which is all the member-facing reads below use — so this is the
+// form ids are compared and looked up in.
+export const publishedId = (id: string) => id.replace(/^drafts\./, '')
+
 export const toSanityRef = (id: string) =>
-  `${SANITY_ID_PREFIX}${id.replace(/^drafts\./, '')}`
+  `${SANITY_ID_PREFIX}${publishedId(id)}`
 
 export const isSanityRef = (value: string) => value.startsWith(SANITY_ID_PREFIX)
 
-export const fromSanityRef = (value: string) => value.slice(SANITY_ID_PREFIX.length)
+export const fromSanityRef = (value: string) =>
+  value.slice(SANITY_ID_PREFIX.length)
 
 export interface GenericDocument {
   _id: string
@@ -57,24 +56,29 @@ export const fetchDocumentById = (id: string) =>
   sanityClient().fetch<GenericDocument | null>(
     // No `drafts.` companion lookup: under `published` such an id can never match.
     `*[_id == $id][0]{ _id, _type, title, slug }`,
-    { id: id.replace(/^drafts\./, '') },
+    { id: publishedId(id) },
     { perspective: 'published' },
   )
 
-// Reverse lookup: given a legacy publikator repoId, find the Sanity document
-// migrated from it. The one-time import (studio's
+// Reverse lookup: given a legacy publikator repoId, the `_id` of the Sanity
+// document migrated from it. The one-time import (studio's
 // import/publikator/src/generateUUID.ts) minted each migrated doc's `_id`
 // deterministically from its repoId (uuidv5, fixed namespace) — so this is
 // a computation, not a query. This is the join key for translating existing
 // subscriptions/bookmarks once their content moves to Sanity.
-export const fetchDocumentByLegacyRepoId = (repoId: string) => {
-  let sanityId: string
+//
+// `repoIdToSanityId` throws when the input isn't an "owner/repo"-shaped github
+// path, which for an untrusted id just means "not a legacy repoId" — hence
+// undefined rather than an error.
+export const legacySanityId = (repoId: string): string | undefined => {
   try {
-    sanityId = repoIdToSanityId(repoId)
+    return repoIdToSanityId(repoId)
   } catch {
-    // repoId wasn't a valid "owner/repo"-shaped github path — definitely
-    // not a legacy-migrated document.
-    return Promise.resolve(null)
+    return undefined
   }
-  return fetchDocumentById(sanityId)
+}
+
+export const fetchDocumentByLegacyRepoId = (repoId: string) => {
+  const sanityId = legacySanityId(repoId)
+  return sanityId ? fetchDocumentById(sanityId) : Promise.resolve(null)
 }

@@ -1,33 +1,12 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
-const Collection = require('../../../lib/Collection')
+const byIds = require('./userCollectionItemsByIds')
 
 // "Is this document in the collection?" for content that has no GraphQL
 // `Document` to hang `Document.userCollectionItem` off of. Null — not an
 // error — when it isn't.
-module.exports = async (_, { documentId, collectionName }, context) => {
-  const { user: me } = context
-
-  if (!Roles.userIsInRoles(me, ['member'])) {
-    return null
-  }
-
-  const collection = await Collection.byNameForUser(
-    collectionName,
-    me.id,
-    context,
+//
+// The batch resolver already answers this, and its role gate and positional
+// contract are the parts worth having in one place only.
+module.exports = async (_, { documentId, collectionName }, context) =>
+  byIds(_, { documentIds: [documentId], collectionName }, context).then(
+    ([item]) => item,
   )
-  if (!collection) {
-    return null
-  }
-
-  const [item] = await Collection.findDocumentItemsByInputIds(
-    {
-      collectionId: collection.id,
-      userId: me.id,
-      inputIds: [documentId],
-    },
-    context,
-  )
-
-  return item
-}

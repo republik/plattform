@@ -1,9 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-require-imports -- untyped JS packages */
 const {
   stringifyNode,
 } = require('@orbiting/backend-modules-documents/lib/resolve')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { remark } = require('@orbiting/backend-modules-utils')
+const { remark, naming } = require('@orbiting/backend-modules-utils')
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 import { PgDb } from '@orbiting/backend-modules-types'
 
@@ -25,6 +25,22 @@ export interface CommentRow {
   createdAt: Date | string | number
   tags: string[] | null
 }
+
+/**
+ * The `fields` every reader of a comments row must select, so lib/listener.ts
+ * (real-time) and script/reindex.ts (bulk backfill) can't drift from
+ * `CommentRow` or from each other.
+ */
+export const COMMENT_ROW_FIELDS = [
+  'id',
+  'content',
+  'userId',
+  'discussionId',
+  'published',
+  'adminUnpublished',
+  'createdAt',
+  'tags',
+]
 
 export interface DiscussionRow {
   id: string
@@ -147,10 +163,9 @@ export const transformComment = async (
   }
 
   if (user && !isAnonymityEnforced && !isAnonymous) {
-    const authorName = [user.firstName, user.lastName]
-      .filter(Boolean)
-      .join(' ')
-      .trim()
+    // `.trim()` because getName trims each part but not the join: a row with a
+    // blank firstName would otherwise index a leading space.
+    const authorName = naming.getName(user).trim()
 
     if (authorName) {
       doc.authorName = authorName

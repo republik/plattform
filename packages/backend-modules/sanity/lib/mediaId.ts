@@ -10,8 +10,8 @@
 // content systems mint mediaIds the same way. Derived, not stored — and stable
 // across audio regeneration, since it keys on the document, not the asset.
 //
-// Deliberately its own module rather than part of lib/audio.ts: that one builds
-// its Sanity client at import time, so requiring it from `collections` would
-// construct a client (and read SANITY_* env) as a side effect of a require.
+// Its own module rather than part of lib/audio.ts: a pure, env-free helper that
+// consumers like `collections` can pull in without dragging along that module's
+// Sanity write surface.
 export const sanityAudioMediaId = (sanityId: string) =>
   Buffer.from(`${sanityId}/audio`).toString('base64')

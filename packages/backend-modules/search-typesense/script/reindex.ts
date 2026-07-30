@@ -35,8 +35,18 @@ import {
   TypesenseCommentDocument,
   TypesenseUserDocument,
 } from '../lib/collections'
-import { transformComment, makeCommentDeps, CommentRow } from '../lib/transform/comment'
-import { transformUser, makeUserDeps, UserRow } from '../lib/transform/user'
+import {
+  transformComment,
+  makeCommentDeps,
+  CommentRow,
+  COMMENT_ROW_FIELDS,
+} from '../lib/transform/comment'
+import {
+  transformUser,
+  makeUserDeps,
+  UserRow,
+  USER_ROW_FIELDS,
+} from '../lib/transform/user'
 
 const BATCH_SIZE = 1000
 
@@ -55,16 +65,7 @@ const reindexComments = async (
     rows = await pgdb.public.comments.find(
       {},
       {
-        fields: [
-          'id',
-          'content',
-          'userId',
-          'discussionId',
-          'published',
-          'adminUnpublished',
-          'createdAt',
-          'tags',
-        ],
+        fields: COMMENT_ROW_FIELDS,
         orderBy: { id: 'asc' },
         limit: BATCH_SIZE,
         offset,
@@ -115,17 +116,7 @@ const reindexUsers = async (
     rows = await pgdb.public.users.find(
       {},
       {
-        fields: [
-          'id',
-          'firstName',
-          'lastName',
-          'username',
-          'biography',
-          'statement',
-          'portraitUrl',
-          'hasPublicProfile',
-          'createdAt',
-        ],
+        fields: USER_ROW_FIELDS,
         orderBy: { id: 'asc' },
         limit: BATCH_SIZE,
         offset,
@@ -173,7 +164,7 @@ const reindexKind = async (
   if (kind === 'articles') {
     throw new Error(
       '"articles" has no Postgres-backed source in this repo -- backfill it ' +
-        'via republik/studio\'s scripts/backfill-search.ts instead',
+        "via republik/studio's scripts/backfill-search.ts instead",
     )
   }
 

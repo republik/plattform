@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const { paginate } = require('@orbiting/backend-modules-utils')
 const Collection = require('../../../lib/Collection')
 const ProgressOptOut = require('../../../lib/ProgressOptOut')
-const { inputToColumns } = require('../../../lib/documentRef')
+const { inputToColumns, matchesColumns } = require('../../../lib/documentRef')
 
 // The Sanity-capable counterpart of `User.collectionItems`, which backs the
 // Leseliste. That field hard-filters to publikator rows because its `document`
@@ -54,14 +54,8 @@ module.exports = async (_, args, context) => {
   if (excludeDocumentId) {
     // A client-supplied id can't say which column it belongs to, so compare
     // against both candidates — a wrong-kind candidate simply matches nothing.
-    const { repoId, sanityId } = inputToColumns(excludeDocumentId)
-    items = items.filter(
-      (item) =>
-        !(
-          (repoId && item.repoId === repoId) ||
-          (sanityId && item.sanityId === sanityId)
-        ),
-    )
+    const columns = inputToColumns(excludeDocumentId)
+    items = items.filter((item) => !matchesColumns(item, columns))
   }
 
   return paginate(args, items)

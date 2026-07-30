@@ -1,22 +1,13 @@
 const {
   isSanityRef,
   fromSanityRef,
-  repoIdToSanityId,
+  publishedId,
+  legacySanityId,
+  isCollectableType,
 } = require('@orbiting/backend-modules-sanity')
 const {
   getParsedDocumentId,
 } = require('@orbiting/backend-modules-search/lib/Documents')
-
-// `repoIdToSanityId` throws when the input isn't an "owner/repo"-shaped github
-// path, which for an untrusted id just means "not a legacy repoId" — same
-// tolerance as fetchDocumentByLegacyRepoId.
-const derivedSanityId = (repoId) => {
-  try {
-    return repoIdToSanityId(repoId)
-  } catch {
-    return undefined
-  }
-}
 
 // `collectionDocumentItems` stores publikator documents in "repoId" — a FK to
 // publikator.repos, so a Sanity `_id` can never go there — and Sanity
@@ -65,8 +56,7 @@ const inputToColumns = (value) => {
   //    the moment migrate-legacy-references.ts rewrites that row to "sanityId",
   //    i.e. the bookmark or progress silently disappears.
   //  - `value` is already a bare Sanity `_id`, in which case it is the candidate.
-  const sanityId =
-    (repoId && derivedSanityId(repoId)) || value.replace(/^drafts\./, '')
+  const sanityId = (repoId && legacySanityId(repoId)) || publishedId(value)
 
   return {
     repoId: repoId || undefined,
@@ -74,7 +64,57 @@ const inputToColumns = (value) => {
   }
 }
 
+// Does this row point at the document `columns` describes? The `&&` guards are
+// load-bearing: exactly one column is set per row, so without them a
+// `null === null` comparison would match an unrelated row of the other kind.
+const matchesColumns = (row, { repoId, sanityId }) =>
+  (!!repoId && row.repoId === repoId) ||
+  (!!sanityId && row.sanityId === sanityId)
+
+// Identity of the *document* a row points at, not of the column it happens to
+// use. While content migrates, the same article can be held as a repoId-keyed
+// row and as a sanityId-keyed one, so both have to collapse onto one key — the
+// Sanity id, which is computable from a legacy repoId.
+const canonicalKey = ({ repoId, sanityId }) =>
+  sanityId || (repoId && legacySanityId(repoId)) || repoId
+
+// Resolves a *client-supplied* document id to the canonical ref to store:
+// `doc.meta.repoId` (not the parsed input), which for a publikator document is
+// the repoId itself and for a Sanity-backed one the loader's normalized
+// `sanity:`-prefixed ref.
+//
+// `ref` is only set for content that may live in a collection. The loader's
+// publikator branch filters Elasticsearch to `type: 'Document'`, so a repoId is
+// guaranteed to be an article; its Sanity branch resolves any `_type`, so
+// without the gate an author, a format or a settings singleton could be
+// bookmarked, progressed or queued. Keyed on `sanityType` being present rather
+// than on the ref being `sanity:`-prefixed: the loader's legacy-rescue path
+// deliberately keeps `meta.repoId` as the legacy repoId even though it resolved
+// the document out of Sanity, so a prefix check would skip exactly those.
+//
+// Callers own the error messages, so both "no such document" and "not
+// collectable" are reported as the absence of `ref`. `parsedRepoId` is handed
+// back for the delete path, which has to stay able to remove a row whose
+// document no longer resolves.
+const resolveInputRef = async (inputId, { loaders }) => {
+  const { repoId: parsedRepoId } = getParsedDocumentId(inputId)
+  const doc = parsedRepoId
+    ? await loaders.Document.byRepoId.load(parsedRepoId)
+    : null
+  const collectable =
+    !!doc && (!doc.sanityType || isCollectableType(doc.sanityType))
+
+  return {
+    parsedRepoId,
+    doc,
+    ref: collectable ? doc.meta.repoId : undefined,
+  }
+}
+
 module.exports = {
   refToColumns,
   inputToColumns,
+  matchesColumns,
+  canonicalKey,
+  resolveInputRef,
 }

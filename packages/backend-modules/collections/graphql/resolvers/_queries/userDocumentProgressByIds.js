@@ -12,8 +12,12 @@ module.exports = async (_, { documentIds }, context) => {
     return documentIds.map(() => null)
   }
 
-  // See userDocumentProgress.js — opting out does not clear stored rows, so the
-  // read path has to check the consent too.
+  // Progress is consent-gated personal data, and opting out does not delete
+  // existing rows: the client chains `submitConsent` with `clearProgress`
+  // (apps/www ProgressSettings), so a failure between the two leaves rows
+  // behind. Reads have to honour the same consent the write path enforces,
+  // otherwise those orphans stay readable. The singular `userDocumentProgress`
+  // delegates here so this gate exists once.
   if (await ProgressOptOut.status(me.id, context)) {
     return documentIds.map(() => null)
   }

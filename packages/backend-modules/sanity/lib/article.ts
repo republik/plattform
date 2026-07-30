@@ -1,12 +1,5 @@
-import { createSanityClient } from './client'
+import { sanityClient } from './client'
 import type { PortableTextBlocks } from './audio'
-
-// Built on first use, not at import time: the SANITY_* env vars this needs
-// aren't necessarily loaded when this module is imported (a script's ES imports
-// are hoisted above its `env.config()` call), and requiring this module must not
-// hard-fail for consumers that only want its pure helpers. Mirrors lib/document.ts.
-let client: ReturnType<typeof createSanityClient> | undefined
-const sanityClient = () => (client ??= createSanityClient())
 
 export interface ArticleForNotification {
   _id: string
@@ -42,20 +35,19 @@ export const fetchArticleForNotification = (documentId: string) =>
 
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
 
-// Read-only counterpart to PublishNotificationWorker#notifyPublish: resolves
-// the same recipient set (articleCollection subscribers ∪ contributor
-// subscribers, deduped by user) but only counts them, for the studio
-// subscriber-count endpoint (express/subscriberCount.ts) to show editors how
-// many people a publish-with-notifications decision would reach.
-export const getSubscriberCountForArticle = async (
-  documentId: string,
+// Who a publish notification for this article reaches: subscribers of its
+// articleCollections (topics/series — see that field's own description,
+// "Abonnenten dieser Sammlungen erhalten eine Benachrichtigung") plus
+// subscribers of its contributors (authors).
+//
+// The single definition of that rule. PublishNotificationWorker sends to these
+// lists and express/subscriberCount.ts counts them, and the count is only
+// worth showing an editor as long as it is the same resolution the send does —
+// two implementations would drift the first time the rule changes, silently.
+export const resolveNotificationRecipients = async (
+  article: ArticleForNotification,
   context: any,
-): Promise<{ totalCount: number } | null> => {
-  const article = await fetchArticleForNotification(documentId)
-  if (!article) {
-    return null
-  }
-
+): Promise<{ collectionSubscribers: any[]; authorSubscribers: any[] }> => {
   const articleCollectionIds = (article.articleCollections ?? [])
     .map((entry) => entry.collection?._id)
     .filter((id): id is string => Boolean(id))
@@ -78,13 +70,32 @@ export const getSubscriberCountForArticle = async (
     ),
   ])
 
-  const [collectionUsers, authorUsers] = await Promise.all([
+  const [collectionSubscribers, authorSubscribers] = await Promise.all([
     Subscriptions.getUsersWithSubscriptions(collectionSubs, context),
     Subscriptions.getUsersWithSubscriptions(authorSubs, context),
   ])
 
+  return { collectionSubscribers, authorSubscribers }
+}
+
+// Read-only counterpart to PublishNotificationWorker#notifyPublish: the same
+// recipient set, deduped by user and only counted, for the studio
+// subscriber-count endpoint (express/subscriberCount.ts) to show editors how
+// many people a publish-with-notifications decision would reach.
+export const getSubscriberCountForArticle = async (
+  documentId: string,
+  context: any,
+): Promise<{ totalCount: number } | null> => {
+  const article = await fetchArticleForNotification(documentId)
+  if (!article) {
+    return null
+  }
+
+  const { collectionSubscribers, authorSubscribers } =
+    await resolveNotificationRecipients(article, context)
+
   const uniqueUserIds = new Set<string>()
-  for (const user of [...collectionUsers, ...authorUsers]) {
+  for (const user of [...collectionSubscribers, ...authorSubscribers]) {
     uniqueUserIds.add(user.__subscription.userId)
   }
 

@@ -2,7 +2,11 @@ const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
 } = require('./ProgressOptOut')
-const { refToColumns, inputToColumns } = require('./documentRef')
+const {
+  refToColumns,
+  inputToColumns,
+  matchesColumns,
+} = require('./documentRef')
 
 const assignUserId = (collection, userId) =>
   collection && {
@@ -74,11 +78,8 @@ const findDocumentItemsByInputIds = async (
     or: branches.map((and) => ({ and })),
   })
 
-  return columns.map(({ repoId, sanityId }) => {
-    const row = rows.find(
-      (r) =>
-        (repoId && r.repoId === repoId) || (sanityId && r.sanityId === sanityId),
-    )
+  return columns.map((cols) => {
+    const row = rows.find((r) => matchesColumns(r, cols))
     return row ? spreadItemData(row) : null
   })
 }

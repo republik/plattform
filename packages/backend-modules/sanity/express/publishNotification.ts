@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 
-import { errorBody } from './generateAudio'
+import { errorBody } from './respond'
 
 // Handles the request sent by the studio repo's functions/sync-notifications
 // Blueprint Function: POST { documentId }. Just enqueues the work and

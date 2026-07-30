@@ -1,11 +1,9 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const {
-  getParsedDocumentId,
-} = require('@orbiting/backend-modules-search/lib/Documents')
 const Collection = require('../../../lib/Collection')
+const { resolveInputRef } = require('../../../lib/documentRef')
 
 module.exports = async (_, { documentId, collectionName }, context) => {
-  const { user: me, t, req, loaders } = context
+  const { user: me, t, req } = context
   ensureSignedIn(req)
 
   const collection = await Collection.byNameForUser(
@@ -17,10 +15,9 @@ module.exports = async (_, { documentId, collectionName }, context) => {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  const { repoId: parsedRepoId } = getParsedDocumentId(documentId)
-  const doc = await loaders.Document.byRepoId.load(parsedRepoId)
-  // Fall back to the raw input so a row whose document no longer resolves is
-  // still deletable.
+  // No collectable gate on the delete path, and a fall back to the parsed input
+  // so a row whose document no longer resolves is still deletable.
+  const { parsedRepoId, doc } = await resolveInputRef(documentId, context)
   const documentRef = doc ? doc.meta.repoId : parsedRepoId
 
   const item = await Collection.deleteDocumentItem(

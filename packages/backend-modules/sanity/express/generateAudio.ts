@@ -13,6 +13,7 @@ import {
   uploadToHuebsch,
   titleSlugFrom,
 } from '../tts'
+import { errorBody } from './respond'
 
 // Handles the request sent by the studio repo's functions/sync-audio
 // Blueprint Function: POST { documentId }.
@@ -22,11 +23,6 @@ import {
 // ./huebschWebhook). Any failure — here or later — is also written onto the
 // article's audioGenerationResult field so it's visible in Studio, not just
 // in server logs.
-
-export const errorBody = (message: string) => ({
-  success: false,
-  error: message,
-})
 
 export const generateAudioHandler = async (req: Request, res: Response) => {
   const documentId = req.body?.documentId
@@ -75,7 +71,11 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     await reportAudioGenerationError(documentId, message)
     return res.status(500).json(errorBody(message))
   }
-  const webhookUrl = `${publicUrl}${buildSignedWebhookPath(article._id, titleSlug, contentHash)}`
+  const webhookUrl = `${publicUrl}${buildSignedWebhookPath(
+    article._id,
+    titleSlug,
+    contentHash,
+  )}`
   const description = plainText(article.description)
   const source = article.slug?.current
     ? `https://www.republik.ch${article.slug.current}`
