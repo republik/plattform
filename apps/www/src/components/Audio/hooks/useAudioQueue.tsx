@@ -10,7 +10,7 @@ import { reportError } from '@/lib/errors/reportError'
 import { useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 import {
-  AddAudioQueueItemsDocument,
+  AddAudioQueueItemRefDocument,
   AudioQueueEntityType,
   AudioQueueItemRefFragment,
   AudioQueueItemRefFragmentDoc,
@@ -160,7 +160,7 @@ const useAudioQueue = (): {
     })
   }
 
-  const [addAudioQueueItemMutation] = useMutation(AddAudioQueueItemsDocument, {
+  const [addAudioQueueItemMutation] = useMutation(AddAudioQueueItemRefDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [removeAudioQueueItemMutation] = useMutation(

@@ -1,4 +1,4 @@
-import { AddLegacyAudioQueueItemMutation } from '#graphql/republik-api/__generated__/gql/graphql'
+import { AudioQueueItemFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 
 /**
  * Shape of a playable item: title/cover/mp3 etc. The audio queue API itself
@@ -7,9 +7,7 @@ import { AddLegacyAudioQueueItemMutation } from '#graphql/republik-api/__generat
  * loaded (an article page, a teaser list, …), never from the queue response
  * itself. See `helpers/audioItemCache.ts`.
  */
-export type AudioPlayerItem = NonNullable<
-  AddLegacyAudioQueueItemMutation['audioQueueItems'][number]['document']
->
+export type AudioPlayerItem = NonNullable<AudioQueueItemFragment['document']>
 
 /**
  * A queue slot. `document` is `null` when the item is a ref the client
