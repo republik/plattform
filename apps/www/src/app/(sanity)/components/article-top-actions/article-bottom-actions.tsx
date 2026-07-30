@@ -2,9 +2,9 @@
 
 import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/actions/action-style'
 import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-action'
+import { collectionsDocumentId } from '@/app/(sanity)/components/actions/document-id'
 import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
 import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
-import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
 import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -53,42 +53,12 @@ const menuItemStyle = css({
   },
 })
 
-/**
- * Reference for bookmarks and reading position.
- *
- * Preview renders draft documents, whose `_id` carries a `drafts.` prefix.
- * Collections must key off the published id, or a reader's bookmark would
- * depend on how they happened to open the article.
- */
-function collectionsDocumentId(article: { _id: string }): string {
-  return `sanity:${article._id.replace(/^drafts\./, '')}`
-}
-
-/**
- * Reference for the audio queue.
- *
- * Today the API derives the repo from a base64-encoded document id — see the
- * `addAudioQueueItem` resolver in `packages/backend-modules/collections`.
- * Returns undefined when the article has no `repoId`, which is the signal that
- * the audio queue cannot be offered for it.
- */
-function audioQueueDocumentId(article: {
-  repoId?: string | null
-}): string | undefined {
-  const { repoId } = article
-  if (!repoId) {
-    return undefined
-  }
-  return btoa(repoId)
-}
-
 export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
 }
 
 export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
   const documentId = collectionsDocumentId(article)
-  const audioDocumentId = audioQueueDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
 

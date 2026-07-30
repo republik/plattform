@@ -6,6 +6,7 @@ import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracki
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { CirclePlay, CirclePause } from 'lucide-react'
 import { css, cx } from '@republik/theme/css'
+import { useState } from 'react'
 import { actionStyle, ACTION_ICON_SIZE } from './action-style'
 
 const pillStyle = css({
@@ -24,15 +25,13 @@ export function PlayAction({
   durationMs,
   mp3,
   path,
-  sanityId,
   title,
 }: {
-  /** Collections-API id; undefined when the article has no `repoId`. */
-  documentId?: string
+  /** Same join key as `BookmarkAction` — see `document-id.ts`. */
+  documentId: string
   durationMs?: number
   mp3?: string
   path: string
-  sanityId: string
   title: string
 }) {
   const {
@@ -42,27 +41,23 @@ export function PlayAction({
     isPlaying,
   } = useAudioContext()
   const trackEvent = useTrackEvent()
+  const [failed, setFailed] = useState(false)
 
   if (!mp3) {
     return null
   }
 
-  const id = documentId ?? sanityId
-  const isActive = checkIfActivePlayerItem(id)
+  const isActive = checkIfActivePlayerItem(documentId)
   const minutes = durationMs ? Math.round(durationMs / 60_000) : undefined
 
-  // Shaped like the legacy Document the audio player expects. Playback for
-  // signed-in users goes through the audio queue, which resolves the item
-  // server-side and today requires a published legacy document — until the
-  // collections API accepts Sanity content, that call can reject, so failures
-  // are swallowed rather than surfaced.
+  // Shaped like the legacy Document the audio player expects.
   const playerItem = {
-    id,
+    id: documentId,
     meta: {
       title,
       path,
       audioSource: {
-        mediaId: id,
+        mediaId: documentId,
         mp3,
         durationMs: durationMs ?? 0,
       },
@@ -71,6 +66,7 @@ export function PlayAction({
 
   const onClick = async () => {
     trackEvent({ action: isActive ? 'audioToggle' : 'audioPlay', name: path })
+    setFailed(false)
     try {
       if (isActive) {
         await toggleAudioPlayback()
@@ -78,6 +74,7 @@ export function PlayAction({
         await toggleAudioPlayer(playerItem, AudioPlayerLocations.ACTION_BAR)
       }
     } catch (error) {
+      setFailed(true)
       console.warn('ActionBar: could not start audio playback', error)
     }
   }
@@ -87,13 +84,22 @@ export function PlayAction({
       className={cx(actionStyle, pillStyle)}
       data-active={isActive || undefined}
       onClick={onClick}
-      title={isActive && isPlaying ? 'Pausieren' : 'Anhören'}
+      title={
+        failed
+          ? 'Wiedergabe fehlgeschlagen'
+          : isActive && isPlaying
+            ? 'Pausieren'
+            : 'Anhören'
+      }
       type='button'
     >
       {isActive && isPlaying ? (
         <CirclePause size={ACTION_ICON_SIZE} />
       ) : (
-        <CirclePlay size={ACTION_ICON_SIZE} />
+        <CirclePlay
+          className={failed ? css({ color: 'error' }) : undefined}
+          size={ACTION_ICON_SIZE}
+        />
       )}
       {minutes ? `${minutes} Min.` : 'Anhören'}
     </button>
