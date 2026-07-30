@@ -158,7 +158,7 @@ export function ActionMenu({
           </Dialog.Portal>
         </Dialog.Root>
       ) : (
-        <DropdownMenu.Root open={isOpen} onOpenChange={setOpen}>
+        <DropdownMenu.Root open={isOpen} onOpenChange={setOpen} modal={false}>
           <DropdownMenu.Trigger aria-label={title} className={triggerStyle}>
             {trigger}
           </DropdownMenu.Trigger>
