@@ -1,4 +1,4 @@
-import { ActionBar } from '@/app/(sanity)/components/action-bar/actionbar'
+import { ArticleTopActions } from '@/app/(sanity)/components/article-top-actions/article-top-actions'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
@@ -13,6 +13,7 @@ import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-f
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { editorialContent } from '@republik/theme/recipes'
 import Link from 'next/link'
+import { ArticleBottomActions } from '../../components/article-top-actions/article-bottom-actions'
 
 export default function ArticleDocument({
   article,
@@ -64,13 +65,15 @@ export default function ArticleDocument({
           <InlinePortableText value={byline} />
         </p>
 
-        <ActionBar article={article} />
+        <ArticleTopActions article={article} />
 
         <div>
           <EditLink documentId={article._id} documentType='article' />
         </div>
 
         <ArticlePortableText value={article.content} />
+
+        <ArticleBottomActions article={article} />
 
         <FollowArticle
           seriesId={seriesId}

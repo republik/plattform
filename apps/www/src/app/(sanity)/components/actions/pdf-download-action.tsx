@@ -4,7 +4,7 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { PUBLIC_BASE_URL, SCREENSHOT_SERVER_BASE_URL } from '@/lib/constants'
 import { cx } from '@republik/theme/css'
 import { FileDown } from 'lucide-react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
+import { ACTION_ICON_SIZE, actionStyle } from './action-style'
 
 function getArticlePdfUrl({
   path,
@@ -23,7 +23,7 @@ function getArticlePdfUrl({
   return pdfUrl.toString()
 }
 
-export function PdfDownloadButton({
+export function PdfDownloadAction({
   path,
   version,
   className,
@@ -38,7 +38,7 @@ export function PdfDownloadButton({
 
   return (
     <a
-      className={cx(actionButtonStyle, className)}
+      className={cx(actionStyle, className)}
       href={pdfHref}
       onClick={() => trackEvent({ action: 'pdfDownload', name: path })}
       rel='noopener noreferrer'

@@ -1,10 +1,11 @@
 'use client'
 
-import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/action-buttons/action-button-style'
-import { BookmarkButton } from '@/app/(sanity)/components/action-buttons/bookmark-button'
-import { PdfDownloadButton } from '@/app/(sanity)/components/action-buttons/pdf-download-button'
-import { PlayButton } from '@/app/(sanity)/components/action-buttons/play-button'
-import { ShareButton } from '@/app/(sanity)/components/action-buttons/share-button'
+import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/actions/action-style'
+import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-action'
+import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
+import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
+import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
+import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import { FontSizeDialog } from '@/app/components/ui/font-size-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -83,11 +84,11 @@ function audioQueueDocumentId(article: {
   return btoa(repoId)
 }
 
-export type ActionBarProps = {
+export type ArticleTopActionsProps = {
   article: ArticleDocumentType
 }
 
-export function ActionBar({ article }: ActionBarProps) {
+export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const [fontSizeOpen, setFontSizeOpen] = useState(false)
   const documentId = collectionsDocumentId(article)
   const audioDocumentId = audioQueueDocumentId(article)
@@ -103,7 +104,7 @@ export function ActionBar({ article }: ActionBarProps) {
         gap: '5',
       })}
     >
-      <PlayButton
+      <PlayAction
         documentId={audioDocumentId}
         durationMs={article.audioDurationMs ?? undefined}
         mp3={article.audioSourceMp3 ?? undefined}
@@ -111,8 +112,9 @@ export function ActionBar({ article }: ActionBarProps) {
         sanityId={article._id}
         title={title}
       />
-      <BookmarkButton documentId={documentId} />
-      <ShareButton title={title} path={path} />
+      <BookmarkAction documentId={documentId} />
+      <ShareAction title={title} path={path} />
+      <DiscussionAction path={path} />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
@@ -129,7 +131,7 @@ export function ActionBar({ article }: ActionBarProps) {
             className={menuPanelStyle}
           >
             <DropdownMenu.Item asChild>
-              <PdfDownloadButton
+              <PdfDownloadAction
                 path={path}
                 version={article._updatedAt}
                 className={menuItemStyle}
