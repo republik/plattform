@@ -6,15 +6,6 @@ import { cx } from '@republik/theme/css'
 import { FileDown } from 'lucide-react'
 import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
 
-/**
- * The PDF is not a stored asset — a screenshot server renders it from the
- * public URL on demand.
- *
- * Deliberately not reusing `getPdfUrl` from the Pages-Router `PdfOverlay.js`:
- * that module drags `@project-r/styleguide` overlays into the bundle, and it
- * joins the path as `${PUBLIC_BASE_URL}/${path}`, which double-slashes for the
- * leading-slash paths this route uses.
- */
 function getArticlePdfUrl({
   path,
   version,
