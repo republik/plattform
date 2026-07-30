@@ -6,9 +6,11 @@ import { PdfDownloadButton } from '@/app/(sanity)/components/action-buttons/pdf-
 import { PlayButton } from '@/app/(sanity)/components/action-buttons/play-button'
 import { ShareButton } from '@/app/(sanity)/components/action-buttons/share-button'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
+import { FontSizeDialog } from '@/app/components/ui/font-size-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
-import { EllipsisVertical } from 'lucide-react'
+import { AArrowUp, EllipsisVertical } from 'lucide-react'
+import { useState } from 'react'
 
 const menuTriggerStyle = css({
   cursor: 'pointer',
@@ -86,6 +88,7 @@ export type ActionBarProps = {
 }
 
 export function ActionBar({ article }: ActionBarProps) {
+  const [fontSizeOpen, setFontSizeOpen] = useState(false)
   const documentId = collectionsDocumentId(article)
   const audioDocumentId = audioQueueDocumentId(article)
   const path = article.slug
@@ -132,9 +135,23 @@ export function ActionBar({ article }: ActionBarProps) {
                 className={menuItemStyle}
               />
             </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className={menuItemStyle}
+              onSelect={() => setFontSizeOpen(true)}
+            >
+              <AArrowUp size={ACTION_ICON_SIZE} />
+              Schriftgrösse
+            </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
+
+      {/*
+        Sibling of DropdownMenu.Root, never a child: opening a Radix Dialog
+        from inside a closing Dialog/DropdownMenu strands `pointer-events:
+        none` on <body>.
+      */}
+      <FontSizeDialog open={fontSizeOpen} onOpenChange={setFontSizeOpen} />
     </div>
   )
 }
