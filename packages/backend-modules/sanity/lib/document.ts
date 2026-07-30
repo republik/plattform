@@ -60,6 +60,19 @@ export const fetchDocumentById = (id: string) =>
     { perspective: 'published' },
   )
 
+// The batch form, for the Document dataloader: every id a batch could match is
+// computable up front (see legacySanityId), so a whole page's worth of
+// documents costs one round trip rather than one per key. Returns only the ids
+// that exist, in no particular order — callers index by `_id`.
+export const fetchDocumentsByIds = (ids: string[]) =>
+  ids.length
+    ? sanityClient().fetch<GenericDocument[]>(
+        `*[_id in $ids]{ _id, _type, title, slug }`,
+        { ids: ids.map(publishedId) },
+        { perspective: 'published' },
+      )
+    : Promise.resolve([])
+
 // Reverse lookup: given a legacy publikator repoId, the `_id` of the Sanity
 // document migrated from it. The one-time import (studio's
 // import/publikator/src/generateUUID.ts) minted each migrated doc's `_id`

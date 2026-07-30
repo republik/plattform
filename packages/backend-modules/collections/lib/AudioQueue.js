@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const { v4: isUuid } = require('is-uuid')
 const {
   refToColumns,
@@ -159,22 +158,23 @@ const upsertItem = async (input, context) => {
 
   const resequenceModifier = currentSequence < aimSequence ? -1 : 1
 
-  await Promise.each(resequenceItems, async (item) => {
-    const { sequence } = item.data
-    if (!sequence) {
-      return
-    }
-
-    await pgdb.public.collectionDocumentItems.update(
-      { id: item.id },
-      {
-        data: {
-          ...item.data,
-          sequence: sequence + resequenceModifier,
-        },
-      },
-    )
-  })
+  // Disjoint rows (`existingItem` is filtered out above), so the updates don't
+  // have to wait on each other.
+  await Promise.all(
+    resequenceItems
+      .filter((item) => item.data.sequence)
+      .map((item) =>
+        pgdb.public.collectionDocumentItems.update(
+          { id: item.id },
+          {
+            data: {
+              ...item.data,
+              sequence: item.data.sequence + resequenceModifier,
+            },
+          },
+        ),
+      ),
+  )
 
   if (existingItem) {
     await pgdb.public.collectionDocumentItems.update(
@@ -237,22 +237,8 @@ const reorderItems = async (input, context) => {
     userId: me.id,
   })
 
-  const updatables = [...new Set(ids)]
-    .map((id, index) => {
-      const item = items.find((item) => item.id === id)
-
-      if (!item) {
-        return false
-      }
-
-      return {
-        ...item,
-        data: {
-          ...item.data,
-          sequence: index + 1,
-        },
-      }
-    })
+  const reordered = [...new Set(ids)]
+    .map((id) => items.find((item) => item.id === id))
     .filter(Boolean)
 
   // Items the caller didn't mention are appended after the reordered ones,
@@ -268,22 +254,25 @@ const reorderItems = async (input, context) => {
   // Appending rather than leaving their sequence untouched keeps the column
   // collision-free: nothing enforces uniqueness, and the queue's sort would
   // otherwise fall back on Postgres row order for tied values.
-  const appendables = items
-    .filter((item) => !updatables.find((update) => update.id === item.id))
+  const appended = items
+    .filter((item) => !reordered.includes(item))
     .sort((a, b) => (a.data?.sequence ?? 0) - (b.data?.sequence ?? 0))
-    .map((item, index) => ({
-      ...item,
-      data: {
-        ...item.data,
-        sequence: updatables.length + index + 1,
-      },
-    }))
 
-  await Promise.each([...updatables, ...appendables], (item) =>
-    pgdb.public.collectionDocumentItems.update(
-      { collectionId: collection.id, userId: me.id, id: item.id },
-      item,
-    ),
+  // Only rows whose sequence actually moves are written — a client submitting
+  // the whole queue leaves the appended tail exactly where it already was — and
+  // only `data` is written, the rest of the row is unchanged by a reorder.
+  await Promise.all(
+    [...reordered, ...appended].map((item, index) => {
+      const sequence = index + 1
+      if (item.data?.sequence === sequence) {
+        return null
+      }
+
+      return pgdb.public.collectionDocumentItems.update(
+        { collectionId: collection.id, userId: me.id, id: item.id },
+        { data: { ...item.data, sequence } },
+      )
+    }),
   )
 }
 

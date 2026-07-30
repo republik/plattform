@@ -72,6 +72,11 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
 
     const eventInfo = { objectType: 'Document', objectId: article._id }
     const articleTitle = plainText(article.title)
+    // Flattened once for the whole job, not per recipient: `plainText` walks a
+    // portable-text tree, and these end up inside a per-user `mail` callback.
+    const descriptionText = plainText(article.description)
+    const bylineText = plainText(article.byline)
+    const notificationTitle = plainText(article.notificationTitle)
     const articleUrl = article.slug?.current
       ? `${process.env.FRONTEND_BASE_URL}${article.slug.current}`
       : process.env.FRONTEND_BASE_URL
@@ -100,7 +105,7 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
       const subscribers = subscribersByCollectionId[collectionId]
 
       const title =
-        plainText(article.notificationTitle) ||
+        notificationTitle ||
         (format?.title
           ? t('api/notifications/doc/title', {
               formatTitle: `«${format.title}»`,
@@ -129,11 +134,8 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
                 { name: 'FORMAT_TITLE', content: format?.title },
                 { name: 'FORMAT_URL', content: formatUrl },
                 { name: 'FORMAT_COLOR', content: DEFAULT_FORMAT_COLOR },
-                {
-                  name: 'DESCRIPTION',
-                  content: plainText(article.description),
-                },
-                { name: 'CREDITS', content: plainText(article.byline) },
+                { name: 'DESCRIPTION', content: descriptionText },
+                { name: 'CREDITS', content: bylineText },
                 { name: 'URL', content: articleUrl },
               ],
             }),
@@ -150,8 +152,16 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
       authorSubscribers,
       'objectUserId',
     )
-    for (const authorId of Object.keys(subscribersByAuthorId)) {
-      const author = await loaders.User.byId.load(authorId)
+    const authorIds = Object.keys(subscribersByAuthorId)
+    // Loaded up front so DataLoader gets to batch them into one query —
+    // awaiting inside the send loop would enqueue each key only after the
+    // previous author's notification had gone out.
+    const authors = await Promise.all(
+      authorIds.map((authorId) => loaders.User.byId.load(authorId)),
+    )
+
+    for (const [index, authorId] of authorIds.entries()) {
+      const author = authors[index]
       const subscribers = subscribersByAuthorId[authorId]
 
       let portraitUrl: string | undefined
@@ -188,11 +198,8 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
                 { name: 'AUTHOR_PROFILE_URL', content: profileUrl.toString() },
                 { name: 'AUTHOR_PORTRAIT_URL', content: portraitUrl },
                 { name: 'TITLE', content: articleTitle },
-                {
-                  name: 'DESCRIPTION',
-                  content: plainText(article.description),
-                },
-                { name: 'CREDITS', content: plainText(article.byline) },
+                { name: 'DESCRIPTION', content: descriptionText },
+                { name: 'CREDITS', content: bylineText },
                 { name: 'URL', content: articleUrl },
               ],
             }),

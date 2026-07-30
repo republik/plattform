@@ -16,6 +16,7 @@ export {
   publishedId,
   legacySanityId,
   fetchDocumentById,
+  fetchDocumentsByIds,
   fetchDocumentByLegacyRepoId,
   isCollectableType,
   COLLECTABLE_TYPES,

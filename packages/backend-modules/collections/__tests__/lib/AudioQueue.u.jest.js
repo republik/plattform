@@ -1,7 +1,11 @@
 // See documentRef.u.jest.js for why these two chains are cut.
 jest.mock('@orbiting/backend-modules-sanity', () => ({
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/document.js'),
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/legacyId.js'),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/document.js',
+  ),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/legacyId.js',
+  ),
 }))
 
 jest.mock('@orbiting/backend-modules-auth', () => ({
@@ -142,10 +146,7 @@ describe('toRefs', () => {
 
     const refs = await toRefs(USER_ID, context)
 
-    expect(refs.map(({ id }) => id)).toEqual([
-      'item-publikator',
-      'item-sanity',
-    ])
+    expect(refs.map(({ id }) => id)).toEqual(['item-publikator', 'item-sanity'])
   })
 
   test('attaches progressOptOut to every row', async () => {
@@ -294,50 +295,85 @@ describe('reorderItems', () => {
     },
   ]
 
+  // The queue as it stands after the writes: rows whose sequence doesn't move
+  // aren't written at all, so the assertions are on the resulting state rather
+  // than on the write log.
+  const finalSequences = (items, updates) => {
+    const byId = Object.fromEntries(
+      items.map((item) => [item.id, item.data.sequence]),
+    )
+    for (const { query, row } of updates) {
+      byId[query.id] = row.data.sequence
+    }
+    return byId
+  }
+
   test('keeps items the caller did not submit', async () => {
     // The regression this guards: the web player hides items it cannot render
     // and then reorders the rest, so deleting the unsubmitted ones would wipe
     // every Sanity-backed item on a single drag.
-    const { context, updates, deletes } = makeContext(queue())
+    const items = queue()
+    const { context, updates, deletes } = makeContext(items)
 
     await reorderItems({ ids: ['p2', 'p1'] }, context)
 
     expect(deletes).toHaveLength(0)
-
-    const sequenceById = Object.fromEntries(
-      updates.map(({ query, row }) => [query.id, row.data.sequence]),
-    )
-    expect(sequenceById).toEqual({ p2: 1, p1: 2, s1: 3, s2: 4 })
+    expect(finalSequences(items, updates)).toEqual({
+      p2: 1,
+      p1: 2,
+      s1: 3,
+      s2: 4,
+    })
   })
 
   test('assigns a gapless, collision-free sequence', async () => {
-    const { context, updates } = makeContext(queue())
+    const items = queue()
+    const { context, updates } = makeContext(items)
 
     await reorderItems({ ids: ['s2', 'p1'] }, context)
 
-    const sequences = updates.map(({ row }) => row.data.sequence).sort()
+    const sequences = Object.values(finalSequences(items, updates)).sort()
     expect(sequences).toEqual([1, 2, 3, 4])
     expect(new Set(sequences).size).toBe(sequences.length)
   })
 
   test('unsubmitted items keep their prior relative order', async () => {
-    const { context, updates } = makeContext(queue())
+    const items = queue()
+    const { context, updates } = makeContext(items)
 
     await reorderItems({ ids: ['p2'] }, context)
 
-    const sequenceById = Object.fromEntries(
-      updates.map(({ query, row }) => [query.id, row.data.sequence]),
-    )
     // p1 (was 1), s1 (was 2), s2 (was 4) follow the submitted p2, in that order.
-    expect(sequenceById).toEqual({ p2: 1, p1: 2, s1: 3, s2: 4 })
+    expect(finalSequences(items, updates)).toEqual({
+      p2: 1,
+      p1: 2,
+      s1: 3,
+      s2: 4,
+    })
   })
 
   test('ignores ids that are not in the queue', async () => {
-    const { context, updates } = makeContext(queue())
+    const items = queue()
+    const { context, updates } = makeContext(items)
 
     await reorderItems({ ids: ['nope', 'p1'] }, context)
 
     expect(updates.map(({ query }) => query.id)).not.toContain('nope')
-    expect(updates).toHaveLength(4)
+    expect(finalSequences(items, updates)).toEqual({
+      p1: 1,
+      s1: 2,
+      p2: 3,
+      s2: 4,
+    })
+  })
+
+  test('does not write rows whose sequence does not move', async () => {
+    // A client that submits the whole queue in its existing order should cost
+    // nothing — every row is already where it belongs.
+    const { context, updates } = makeContext(queue())
+
+    await reorderItems({ ids: ['p1', 's1', 'p2', 's2'] }, context)
+
+    expect(updates).toHaveLength(0)
   })
 })

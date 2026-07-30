@@ -4,8 +4,9 @@ const {
   isSanityRef,
   fromSanityRef,
   toSanityRef,
-  fetchDocumentById,
-  fetchDocumentByLegacyRepoId,
+  publishedId,
+  legacySanityId,
+  fetchDocumentsByIds,
 } = require('@orbiting/backend-modules-sanity')
 
 // Wraps a generic Sanity document into the minimal shape callers of this
@@ -72,42 +73,51 @@ module.exports = (context) => ({
           ).then((connection) => connection.nodes.map((node) => node.entity))
         : []
 
-      // Explicitly-prefixed keys are already known to be Sanity-backed —
-      // resolve directly by _id, no ES call.
-      const directSanityRows = await Promise.all(
-        sanityRefKeys.map(async (key) => {
-          const doc = await fetchDocumentById(fromSanityRef(key))
-          return doc && toDocumentShape(key, doc)
-        }),
-      )
-
       // A plain key ES didn't match might be a brand-new Sanity id (the
       // frontend doesn't know about the `sanity:` prefix yet) or a legacy
       // repoId whose content has since moved to Sanity (its Sanity `_id` is
       // deterministically derived from the repoId by the one-time import —
-      // see sanity/lib/legacyId.ts). Try both rescue paths before giving up.
+      // see sanity/lib/legacyId.ts).
       const unmatchedPlainKeys = plainKeys.filter(
         (id) => !esRows.some((row) => row.meta.repoId === id),
       )
-      const rescuedRows = await Promise.all(
-        unmatchedPlainKeys.map(async (key) => {
-          // Case 1: `key` is itself a raw Sanity _id (a brand-new
-          // sanity-native follow/bookmark — the frontend doesn't know about
-          // the `sanity:` prefix). Canonicalize to the prefixed form so a
-          // caller writing this back (e.g. a fresh `subscribe`) stores the
-          // form future reads will hit via the fast, ES-skipping path above.
-          const directDoc = await fetchDocumentById(key)
-          if (directDoc) return toDocumentShape(toSanityRef(key), directDoc)
 
-          // Case 2: `key` is a legacy repoId whose content has since moved
-          // to Sanity. Keep `meta.repoId` as the legacy value — this only
-          // needs to keep an *existing* stored row resolvable; rewriting it
-          // to the new canonical form is the migration script's job, not a
-          // side effect of a read.
-          const legacyDoc = await fetchDocumentByLegacyRepoId(key)
-          return legacyDoc && toDocumentShape(key, legacyDoc)
-        }),
-      )
+      // Every id this batch could possibly match is *computed*, never resolved,
+      // so all of them — the explicitly-prefixed keys plus both rescue
+      // candidates per unmatched plain key — go into a single Sanity query.
+      // This is a dataloader; asking per key would make its Sanity path N+1 by
+      // construction, on the branch that grows as content migrates.
+      const sanityDocs = await fetchDocumentsByIds([
+        ...sanityRefKeys.map(fromSanityRef),
+        ...unmatchedPlainKeys,
+        ...unmatchedPlainKeys.map(legacySanityId).filter(Boolean),
+      ])
+      const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
+      const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
+
+      // Explicitly-prefixed keys are already known to be Sanity-backed.
+      const directSanityRows = sanityRefKeys.map((key) => {
+        const doc = sanityDocFor(fromSanityRef(key))
+        return doc && toDocumentShape(key, doc)
+      })
+
+      const rescuedRows = unmatchedPlainKeys.map((key) => {
+        // Case 1: `key` is itself a raw Sanity _id (a brand-new sanity-native
+        // follow/bookmark — the frontend doesn't know about the `sanity:`
+        // prefix). Canonicalize to the prefixed form so a caller writing this
+        // back (e.g. a fresh `subscribe`) stores the form future reads will hit
+        // via the fast, ES-skipping path above.
+        const directDoc = sanityDocFor(key)
+        if (directDoc) return toDocumentShape(toSanityRef(key), directDoc)
+
+        // Case 2: `key` is a legacy repoId whose content has since moved
+        // to Sanity. Keep `meta.repoId` as the legacy value — this only
+        // needs to keep an *existing* stored row resolvable; rewriting it
+        // to the new canonical form is the migration script's job, not a
+        // side effect of a read.
+        const legacyDoc = sanityDocFor(legacySanityId(key))
+        return legacyDoc && toDocumentShape(key, legacyDoc)
+      })
 
       return [
         ...esRows,
