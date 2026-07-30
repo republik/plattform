@@ -1,0 +1,8 @@
+query UserDocumentProgress($documentId: ID!) {
+  userDocumentProgress(documentId: $documentId) {
+    id
+    percentage
+    nodeId
+    updatedAt
+  }
+}

@@ -1,5 +1,8 @@
 'use client'
 
+import { useMe } from '@/lib/context/MeContext'
+import { useQuery } from '@apollo/client'
+import { UserDocumentProgressDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
 import {
   useEffect,
@@ -158,29 +161,33 @@ function scrollToReadingPosition({
 
 /**
  * Reading position of the current article, keyed by `sanity:<_id>` — the same
- * reference bookmarks use (see `collectionsDocumentId`).
+ * reference bookmarks use (see `collectionsDocumentId`). `userDocumentProgress`
+ * accepts that id directly and returns the stored `percentage`/`nodeId`
+ * without resolving a (Sanity-backed articles have none) GraphQL `Document`.
  *
- * READING does not exist yet. `userCollectionItem(collectionName: "progress")`
- * returns a `CollectionItemRef` — `{ id, createdAt, repoId, sanityId }` — which
- * says *that* a position is stored but not what it is; `percentage`, `nodeId` and
- * `max` are not selectable on it, and there is no root `documentProgress` field.
- * `Document.userProgress` is no help either: Sanity-backed items resolve to a
- * null `Document` by design.
- *
- * So the position indicator cannot render and scroll restore has nothing to
- * restore to. Both come back as soon as the API exposes the values by document
- * id — at which point this hook regains its query and `percent`/`position` stop
- * being undefined.
+ * Only members have anything to resume — logged-out readers hit the paywall
+ * before scrolling far enough to generate a position, and the query would
+ * just come back null for them.
  */
 function useReadingPosition({ documentId }: { documentId?: string }) {
+  const { isMember, hasActiveMembership } = useMe()
+  const canTrack = isMember && hasActiveMembership
+
+  const { data } = useQuery(UserDocumentProgressDocument, {
+    variables: { documentId },
+    skip: !documentId || !canTrack,
+  })
+
+  const progress = data?.userDocumentProgress
+
   return {
-    /** Rounded percentage — always undefined until the API exposes it. */
-    percent: undefined as number | undefined,
+    /** Rounded percentage, undefined while there's no stored position. */
+    percent: progress ? Math.round(progress.percentage * 100) : undefined,
     isRead: false,
-    /** Stored position to scroll back to — unavailable for the same reason. */
-    position: undefined as
-      | { nodeId?: string | null; percentage?: number | null }
-      | undefined,
+    /** Stored position to scroll back to. */
+    position: progress
+      ? { nodeId: progress.nodeId, percentage: progress.percentage }
+      : undefined,
   }
 }
 
