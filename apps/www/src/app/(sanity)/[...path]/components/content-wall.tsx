@@ -48,7 +48,7 @@ export function ContentWall({
           />
         </>
       ) : (
-        { fullContent }
+        <>{fullContent}</>
       )}
 
       <div className={css({ gridColumn: 'full' })}>
