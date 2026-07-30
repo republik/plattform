@@ -1,4 +1,10 @@
+'use client'
+
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { PUBLIC_BASE_URL, SCREENSHOT_SERVER_BASE_URL } from '@/lib/constants'
+import { cx } from '@republik/theme/css'
+import { FileDown } from 'lucide-react'
+import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
 
 /**
  * The PDF is not a stored asset — a screenshot server renders it from the
@@ -9,7 +15,7 @@ import { PUBLIC_BASE_URL, SCREENSHOT_SERVER_BASE_URL } from '@/lib/constants'
  * joins the path as `${PUBLIC_BASE_URL}/${path}`, which double-slashes for the
  * leading-slash paths this route uses.
  */
-export function getArticlePdfUrl({
+function getArticlePdfUrl({
   path,
   version,
 }: {
@@ -24,4 +30,31 @@ export function getArticlePdfUrl({
   pdfUrl.searchParams.set('images', 'true')
   pdfUrl.searchParams.set('format', 'A4')
   return pdfUrl.toString()
+}
+
+export function PdfDownloadButton({
+  path,
+  version,
+  className,
+}: {
+  path: string
+  version?: string
+  /** Overrides the standalone look, e.g. when embedded in a menu. */
+  className?: string
+}) {
+  const trackEvent = useTrackEvent()
+  const pdfHref = getArticlePdfUrl({ path, version })
+
+  return (
+    <a
+      className={cx(actionButtonStyle, className)}
+      href={pdfHref}
+      onClick={() => trackEvent({ action: 'pdfDownload', name: path })}
+      rel='noopener noreferrer'
+      target='_blank'
+    >
+      <FileDown size={ACTION_ICON_SIZE} />
+      PDF herunterladen
+    </a>
+  )
 }
