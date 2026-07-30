@@ -34,9 +34,6 @@ export interface GenericDocument {
 // author, a `page`/Spitzmarke, an `articleCollection`, a settings singleton —
 // be bookmarked, progressed or queued.
 //
-// TODO confirm against the studio schema: this repo does not contain it, so
-// the literal is inferred from lib/article.ts's references to `page` and
-// `articleCollection` as separate types.
 // Note this is deliberately about *collections* (bookmarks, progress, audio
 // queue), not about what may be referenced in general: subscriptions/follows
 // legitimately target a format or an articleCollection, so the Document loader
