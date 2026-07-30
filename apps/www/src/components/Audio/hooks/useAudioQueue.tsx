@@ -5,7 +5,6 @@ import { useMe } from '@/lib/context/MeContext'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
 import { rememberAudioItem, getKnownAudioItem } from '../helpers/audioItemCache'
-import { getAudioQueueItemsByIds } from '@/app/(sanity)/groq/audio-queue-items-server'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
 import { reportError } from '@/lib/errors/reportError'
@@ -40,6 +39,29 @@ function refDocumentId(ref: AudioQueueItemRefFragment): string | null {
   if (ref.repoId) return btoa(ref.repoId)
   if (ref.sanityId) return `sanity:${ref.sanityId}`
   return null
+}
+
+/**
+ * Fetches queue-item content from Sanity via a plain API route rather than
+ * importing a server action: `useAudioQueue` is reachable from both the App
+ * Router and the legacy Pages Router, and only App Router pages get the RSC
+ * compilation that strips a server action's real implementation out of the
+ * client bundle. A Pages Router page importing the `sanityFetch`-based
+ * action directly would bundle `defineLive` itself into client JS, which
+ * throws at runtime ("defineLive can't be imported by a client component").
+ */
+async function getAudioQueueItemsByIds(
+  ids: string[],
+): Promise<AudioQueueItemContent[]> {
+  const response = await fetch('/api/audio-queue-items', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids }),
+  })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch audio queue items: ${response.status}`)
+  }
+  return response.json()
 }
 
 /**
