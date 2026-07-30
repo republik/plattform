@@ -2,7 +2,7 @@ import { css } from '@republik/theme/css'
 
 export const ACTION_ICON_SIZE = 18
 
-export const actionButtonStyle = css({
+export const actionStyle = css({
   alignItems: 'center',
   color: 'text',
   cursor: 'pointer',
@@ -22,4 +22,10 @@ export const actionButtonStyle = css({
     cursor: 'default',
   },
   '& > svg': { flexShrink: 0 },
+})
+
+// Icon-only on mobile; the label only renders from the `md` breakpoint up.
+export const actionLabelStyle = css({
+  display: 'none',
+  md: { display: 'inline' },
 })
