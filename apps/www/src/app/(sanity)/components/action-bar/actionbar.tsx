@@ -1,6 +1,6 @@
 'use client'
 
-import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/action-buttons/action-button'
+import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/action-buttons/action-button-style'
 import { BookmarkButton } from '@/app/(sanity)/components/action-buttons/bookmark-button'
 import { PdfDownloadButton } from '@/app/(sanity)/components/action-buttons/pdf-download-button'
 import { PlayButton } from '@/app/(sanity)/components/action-buttons/play-button'

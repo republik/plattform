@@ -6,7 +6,7 @@ import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracki
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { CirclePlay, CirclePause } from 'lucide-react'
 import { css, cx } from '@republik/theme/css'
-import { actionButtonStyle, ACTION_ICON_SIZE } from './action-button'
+import { actionButtonStyle, ACTION_ICON_SIZE } from './action-button-style'
 
 const pillStyle = css({
   alignItems: 'center',

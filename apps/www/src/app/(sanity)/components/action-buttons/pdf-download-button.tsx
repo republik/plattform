@@ -4,7 +4,7 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { PUBLIC_BASE_URL, SCREENSHOT_SERVER_BASE_URL } from '@/lib/constants'
 import { cx } from '@republik/theme/css'
 import { FileDown } from 'lucide-react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
+import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
 
 function getArticlePdfUrl({
   path,

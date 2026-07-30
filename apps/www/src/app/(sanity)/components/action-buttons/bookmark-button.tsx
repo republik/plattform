@@ -12,7 +12,7 @@ import {
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
+import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
 
 export function BookmarkButton({ documentId }: { documentId: string }) {
   const client = useApolloClient()

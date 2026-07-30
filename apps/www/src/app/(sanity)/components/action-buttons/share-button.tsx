@@ -10,7 +10,7 @@ import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { Facebook, Link, Mail, Share as ShareIcon } from 'lucide-react'
 import { useState } from 'react'
-import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button'
+import { ACTION_ICON_SIZE, actionButtonStyle } from './action-button-style'
 
 const menuPanelStyle = css({
   backgroundColor: 'background.overlay',
