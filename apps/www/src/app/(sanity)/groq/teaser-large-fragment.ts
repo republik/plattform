@@ -12,6 +12,7 @@ export const TEASER_LARGE_FRAGMENT = /* groq */ `
   "targetType": target[0]->_type,
   // link can either be a plain link OR a referenced doc
   "target": coalesce(target[0]->slug.current, target[0].href),
+  "targetId": target[0]->_id,
   "publishDate": target[0]->publishDate,
   "theme": {
     "name": target[0]->theme.name,
@@ -38,6 +39,11 @@ export const TEASER_LARGE_FRAGMENT = /* groq */ `
     textSize,
     color,
     backgroundColor,
+    // Audio always comes from the target article itself — a teaserLarge
+    // override doc has no audio of its own.
+    "audioTitle": pt::text(target[0]->title),
+    "audioSourceMp3": target[0]->audioSourceMp3,
+    "audioDurationMs": target[0]->audioDurationMs,
   }
 `
 

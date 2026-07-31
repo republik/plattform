@@ -4,8 +4,13 @@ import useAudioQueue from '../hooks/useAudioQueue'
 import { useAudioContext } from '../AudioProvider'
 import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
+import { useMutation } from '@apollo/client'
 import { getFragmentData } from '#graphql/cms/__generated__/gql'
-import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  AddAudioQueueItemsDocument,
+  AudioQueueEntityType,
+  AudioQueueItemFragmentDoc,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMe } from '@/lib/context/MeContext'
 
 type FrontAudioPlayButtonProps = {
@@ -24,8 +29,15 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
     toggleAudioPlayer,
     checkIfActivePlayerItem,
   } = useAudioContext()
-  const { isAudioQueueAvailable, addAudioQueueItem } = useAudioQueue()
+  const { isAudioQueueAvailable } = useAudioQueue()
   const { isMember } = useMe()
+  // This button renders inside the legacy MDAST schema (front page / article
+  // teasers), which only ever sees publikator documents and doesn't have the
+  // item's meta loaded locally — it needs the mutation reply itself to
+  // hydrate title/cover/mp3, which the Sanity-capable queue (bare refs, no
+  // document) can no longer provide. Goes straight to the publikator-only
+  // mutation instead of through `useAudioQueue`.
+  const [addAudioQueueItem] = useMutation(AddAudioQueueItemsDocument)
 
   if (!documentId) {
     return null
@@ -47,10 +59,15 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
         if (isActivePlayerItem) {
           toggleAudioPlayback()
         } else {
-          addAudioQueueItem({ id: documentId } as never, 1).then(({ data }) => {
+          addAudioQueueItem({
+            variables: {
+              entity: { id: documentId, type: AudioQueueEntityType.Document },
+              sequence: 1,
+            },
+          }).then(({ data }) => {
             const audioQueueItems = getFragmentData(
               AudioQueueItemFragmentDoc,
-              data.audioQueueItems,
+              data?.audioQueueItems || [],
             )
             const item = audioQueueItems.find(
               (i) => i.document?.id === documentId,

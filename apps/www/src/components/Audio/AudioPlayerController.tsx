@@ -32,8 +32,6 @@ import {
 } from './types/AudioActionTracking'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
 import { useGlobalAudioState } from './globalAudioState'
-import { getFragmentData } from '#graphql/cms/__generated__/gql'
-import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -579,11 +577,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         if (isHeadOfQueue && audioQueue?.length > 0) {
           nextUp = audioQueue?.[0]
         } else {
-          const { data } = await addAudioQueueItem(item, 1)
-          const queue = getFragmentData(
-            AudioQueueItemFragmentDoc,
-            data.audioQueueItems,
-          )
+          const queue = await addAudioQueueItem(item, 1)
           if (!queue || queue.length === 0) {
             return
           }
@@ -607,6 +601,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         ])
       } catch (error) {
         handleError(error)
+        // Rethrow so `AudioProvider.toggleAudioPlayer` — which awaits this via
+        // the TOGGLE_PLAYER event — can reject its promise. Without this, a
+        // failed play silently succeeds from the caller's point of view.
+        throw error
       }
     },
     [inNativeApp, setupNextAudioItem, setOptimisticTimeUI, audioQueue],
@@ -681,9 +679,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   useAudioContextEvent<{
     item: AudioPlayerItem
     location?: AudioPlayerLocations
-  }>(AudioContextEvent.TOGGLE_PLAYER, ({ item, location }) =>
-    togglePlayer(item, location),
-  )
+    onSettled?: (error?: unknown) => void
+  }>(AudioContextEvent.TOGGLE_PLAYER, async ({ item, location, onSettled }) => {
+    try {
+      await togglePlayer(item, location)
+      onSettled?.()
+    } catch (error) {
+      onSettled?.(error)
+    }
+  })
   useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYBACK, togglePlayback)
   useAudioContextEvent<{
     item: AudioPlayerItem

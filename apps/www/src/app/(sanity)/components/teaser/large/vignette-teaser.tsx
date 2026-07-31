@@ -1,4 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import {
   Heading,
   TeaserLargeImage,
@@ -111,6 +112,8 @@ export function VignetteTeaser({
   _id,
   _type,
   target,
+  targetId,
+  publishDate,
   theme,
   heading,
   teaser,
@@ -181,6 +184,17 @@ export function VignetteTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
+        {teaser.audioSourceMp3 && (
+          <TeaserAudioPlayButton
+            targetId={targetId}
+            title={teaser.audioTitle}
+            path={target}
+            publishDate={publishDate}
+            mp3={teaser.audioSourceMp3}
+            durationMs={teaser.audioDurationMs}
+            align='center'
+          />
+        )}
       </div>
     </div>
   )
