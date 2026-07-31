@@ -5,8 +5,12 @@
 // in the subscriptions module and its whole GraphQL resolver tree. Deep-require
 // the leaf modules that hold the real helpers instead.
 jest.mock('@orbiting/backend-modules-sanity', () => ({
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/document.js'),
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/legacyId.js'),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/document.js',
+  ),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/legacyId.js',
+  ),
 }))
 
 // `getParsedDocumentId` comes from the search module, which imports auth at load
@@ -26,7 +30,11 @@ jest.mock('@orbiting/backend-modules-auth', () => ({
 process.env.FRONTEND_BASE_URL =
   process.env.FRONTEND_BASE_URL || 'http://localhost:3010'
 
-const { inputToColumns, refToColumns } = require('../../lib/documentRef')
+const {
+  inputToColumns,
+  refToColumns,
+  refToFilterColumns,
+} = require('../../lib/documentRef')
 const { repoIdToSanityId } = require('@orbiting/backend-modules-sanity')
 
 const LEGACY_REPO_ID = 'republik/article-test'
@@ -43,9 +51,29 @@ describe('refToColumns', () => {
     expect(refToColumns(`sanity:${SANITY_ID}`)).toEqual({ sanityId: SANITY_ID })
   })
 
+  test('a falsy ref throws rather than matching everything', () => {
+    // These columns identify one document. Returning {} here would silently
+    // widen a single-item operation to the whole collection — for
+    // deleteDocumentItem that is the user's entire bookmarks or progress.
+    expect(() => refToColumns(undefined)).toThrow('documentRef is required')
+    expect(() => refToColumns('')).toThrow('documentRef is required')
+  })
+})
+
+describe('refToFilterColumns', () => {
   test('a falsy ref contributes no predicate at all', () => {
-    // "not filtering by document", e.g. listing a whole collection.
-    expect(refToColumns(undefined)).toEqual({})
+    // "not filtering by document", e.g. listing a whole collection — the one
+    // case that has to opt into the wide behaviour by name.
+    expect(refToFilterColumns(undefined)).toEqual({})
+  })
+
+  test('a present ref maps exactly like refToColumns', () => {
+    expect(refToFilterColumns(LEGACY_REPO_ID)).toEqual({
+      repoId: LEGACY_REPO_ID,
+    })
+    expect(refToFilterColumns(`sanity:${SANITY_ID}`)).toEqual({
+      sanityId: SANITY_ID,
+    })
   })
 })
 
@@ -63,9 +91,9 @@ describe('inputToColumns', () => {
   })
 
   test('derives the Sanity id from a base64 documentId too', () => {
-    const documentId = Buffer.from(
-      `${LEGACY_REPO_ID}/commit123/v1`,
-    ).toString('base64')
+    const documentId = Buffer.from(`${LEGACY_REPO_ID}/commit123/v1`).toString(
+      'base64',
+    )
 
     expect(inputToColumns(documentId)).toEqual({
       repoId: LEGACY_REPO_ID,

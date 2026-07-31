@@ -1,6 +1,7 @@
 const { v4: isUuid } = require('is-uuid')
 const {
   refToColumns,
+  refToFilterColumns,
   matchesColumns,
   resolveInputRef,
 } = require('./documentRef')
@@ -111,7 +112,9 @@ const upsertItem = async (input, context) => {
     userId: me.id,
   })
 
-  const columns = refToColumns(documentRef)
+  // The filter variant: moveAudioQueueItem passes only an item id, so there is
+  // no documentRef to match on and the id alone decides.
+  const columns = refToFilterColumns(documentRef)
   const existingItem = items.find(
     (item) => item.id === id || matchesColumns(item, columns),
   )

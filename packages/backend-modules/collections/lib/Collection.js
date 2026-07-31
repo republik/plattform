@@ -4,6 +4,7 @@ const {
 } = require('./ProgressOptOut')
 const {
   refToColumns,
+  refToFilterColumns,
   inputToColumns,
   matchesColumns,
 } = require('./documentRef')
@@ -37,12 +38,13 @@ const byNameForUser = (name, userId, { loaders }) =>
 const byIdForUser = (id, userId, { loaders }) =>
   loaders.Collection.byKeyObj.load({ id }).then((c) => assignUserId(c, userId))
 
+// A falsy documentRef lists the whole collection, hence the filter variant.
 const findDocumentItems = ({ documentRef, ...args }, { pgdb }) =>
   pgdb.public.collectionDocumentItems
     .find(
       {
         ...args,
-        ...refToColumns(documentRef),
+        ...refToFilterColumns(documentRef),
       },
       { orderBy: ['updatedAt desc'] },
     )
@@ -252,7 +254,15 @@ const upsertDocumentItem = async (
     context,
   )
 
-const deleteDocumentItem = (userId, collectionId, documentRef, { pgdb }) =>
+// `async` so an absent documentRef rejects rather than throwing synchronously,
+// matching upsertDocumentItem — the two are each other's mirror and a caller
+// shouldn't have to know which one needs a try/catch around the call itself.
+const deleteDocumentItem = async (
+  userId,
+  collectionId,
+  documentRef,
+  { pgdb },
+) =>
   pgdb.public.collectionDocumentItems
     .deleteAndGetOne({
       userId,

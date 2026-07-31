@@ -20,14 +20,26 @@ const {
 // plain equality predicate either way (and inserts leave the other column
 // NULL, satisfying the "collectionDocumentItems_one_document_ref" check).
 //
-// A falsy ref means "not filtering by document at all" (e.g. listing a whole
-// collection), so it must contribute no predicate.
+// Throws on a falsy ref, and that is the whole point: these columns identify
+// *one* document, and an operation scoped to a single item that silently
+// contributes no predicate is scoped to the entire collection instead. That is
+// harmless for a read and catastrophic for a delete — a `deleteAndGetOne` with
+// only (userId, collectionId) empties the user's bookmarks or progress, and
+// pgdb runs the DELETE before it notices it matched more than one row.
+//
+// Callers that genuinely mean "every document" must say so via
+// refToFilterColumns below.
 const refToColumns = (ref) => {
   if (!ref) {
-    return {}
+    throw new Error('documentRef is required')
   }
   return isSanityRef(ref) ? { sanityId: fromSanityRef(ref) } : { repoId: ref }
 }
+
+// The same mapping for *filtering*, where a falsy ref legitimately means "not
+// filtering by document at all" — listing a whole collection, or matching an
+// audio queue item by its own id rather than by the document it points at.
+const refToFilterColumns = (ref) => (ref ? refToColumns(ref) : {})
 
 // A *client-supplied* id, by contrast, can't be trusted to say which kind it
 // is: it may be a publikator repoId or base64 documentId, a bare Sanity `_id`
@@ -113,6 +125,7 @@ const resolveInputRef = async (inputId, { loaders }) => {
 
 module.exports = {
   refToColumns,
+  refToFilterColumns,
   inputToColumns,
   matchesColumns,
   canonicalKey,
