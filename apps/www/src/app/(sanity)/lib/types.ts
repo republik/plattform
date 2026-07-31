@@ -1,6 +1,6 @@
-import type { ARTICLE_QUERY_RESULT } from '@/sanity.types'
+import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 
-export type Article = NonNullable<ARTICLE_QUERY_RESULT>
+export type Article = ArticleDocumentType
 
 export type ArticleNewsletter = NonNullable<Article['newsletter']>
 

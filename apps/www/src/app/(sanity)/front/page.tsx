@@ -1,8 +1,7 @@
 import { EditLink } from '@/app/(sanity)/components/edit-link'
-import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { Block } from '@/app/(sanity)/front/components/block'
+import { FrontBlock } from '@/app/(sanity)/front/components/front-block'
 import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
-import { FRONT_QUERY } from '@/app/(sanity)/groq/front-query'
+import { FRONT_LATEST_QUERY } from '@/app/(sanity)/groq/front-latest-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
@@ -27,7 +26,7 @@ export const metadata: Metadata = {
 }
 
 export default async function FrontPage() {
-  const { data: front } = await sanityFetch({ query: FRONT_QUERY })
+  const { data: front } = await sanityFetch({ query: FRONT_LATEST_QUERY })
 
   if (!front) notFound()
 
@@ -64,7 +63,7 @@ export default async function FrontPage() {
               path: `pageBuilder[_key=="${block._key}"]`,
             })}
           >
-            <Block block={block} documentId={_id} />
+            <FrontBlock block={block} documentId={_id} />
           </div>
         ))}
       </div>

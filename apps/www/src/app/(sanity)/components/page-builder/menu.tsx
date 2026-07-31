@@ -21,7 +21,7 @@ function MenuItem({ href, title }) {
 export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
   const { pages, heading, hasSeparator } = menu
 
-  const headingHref = heading && `/pages${heading?.page?.slug}`
+  const headingHref = heading && heading?.page?.slug
   const headingLabel = heading?.title ?? heading?.page?.title
 
   if (!pages.length && !headingLabel) {
@@ -70,7 +70,7 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
         {pages?.map((item) => (
           <MenuItem
             key={item._key}
-            href={item._type === 'link' ? item.href : `/pages${item.page.slug}`}
+            href={item._type === 'link' ? item.href : item.page.slug}
             title={
               item._type === 'link' ? item.title ?? item.href : item.page.title
             }

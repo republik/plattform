@@ -8,10 +8,22 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
       ...,
       _type == "internalLink" => {
         "slug": select(
-          reference->_type == "article" => "/articles" + reference->slug.current,
-          reference->_type == "page" => "/pages" + reference->slug.current,
-          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)
+          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
+          reference->slug.current
         )
+      }
+    },
+
+    body[] {
+      ...,
+      markDefs[]{
+        ...,
+        _type == "internalLink" => {
+          "slug": select(
+            reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
+            reference->slug.current
+          )
+        }
       }
     }
   }
