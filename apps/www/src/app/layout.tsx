@@ -17,7 +17,7 @@ import MediaProgressContext from '@/components/Audio/MediaProgress'
 
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
-import { ReactNode, Suspense } from 'react'
+import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -67,15 +67,13 @@ export default async function RootLayout({
                 <UserAgentProvider>
                   <MediaProgressContext>
                     <AudioProvider>
-                      <Suspense>
-                        <PaynotesProvider>
-                          {children}
-                          <NativeAppMessageSync />
-                          <AudioPlayerOrchestrator />
-                          <SyncUTMToSessionStorage />
-                          {/* <PaynoteOverlay /> */}
-                        </PaynotesProvider>
-                      </Suspense>
+                      <PaynotesProvider>
+                        {children}
+                        <NativeAppMessageSync />
+                        <AudioPlayerOrchestrator />
+                        <SyncUTMToSessionStorage />
+                        {/* <PaynoteOverlay /> */}
+                      </PaynotesProvider>
                     </AudioProvider>
                   </MediaProgressContext>
                 </UserAgentProvider>

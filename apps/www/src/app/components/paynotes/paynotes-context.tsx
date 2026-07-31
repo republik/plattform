@@ -5,8 +5,12 @@ import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
 import { useMe } from '@/lib/context/MeContext'
 import { useUserAgent } from '@/lib/context/UserAgentContext'
 
-import { usePathname, useSearchParams } from 'next/navigation'
-import { createContext, useContext, useEffect, useState } from 'react'
+import {
+  usePathname,
+  useSearchParams,
+  type ReadonlyURLSearchParams,
+} from 'next/navigation'
+import { createContext, Suspense, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'
 
 export type PaynoteKindType =
@@ -88,15 +92,28 @@ function isDialogPage(pathname: string): boolean {
   return pathname.startsWith('/dialog/')
 }
 
+// Extra component for reading searchParams that must be wrapped in <Suspense> (see below)
+function PaynotesSearchParams({
+  setSearchParams,
+}: {
+  setSearchParams: (params: ReadonlyURLSearchParams | null) => void
+}) {
+  const searchParams = useSearchParams()
+  useEffect(() => {
+    setSearchParams(searchParams)
+  }, [searchParams])
+  return null
+}
+
 export const PaynotesProvider = ({ children }) => {
   const { meLoading, trialStatus, hasAllowlistAccess } = useMe()
   const { campaign } = useCampaign()
 
   const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   const { isSearchBot } = useUserAgent()
 
+  const [searchParams, setSearchParams] = useState(null)
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
   const [paynoteInlineHeight, setPaynoteInlineHeight] = useState<number>(0)
 
@@ -107,12 +124,10 @@ export const PaynotesProvider = ({ children }) => {
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
   const [isPaynoteExcluded, setIsPaynoteExcluded] = useState<boolean>(false)
 
-  useEffect(() => {})
-
   const isCampaignActive = campaign?.isActive
 
   useEffect(() => {
-    if (meLoading) {
+    if (meLoading || !searchParams || !pathname) {
       return
     }
 
@@ -250,6 +265,9 @@ export const PaynotesProvider = ({ children }) => {
         setPaynoteInlineHeight,
       }}
     >
+      <Suspense>
+        <PaynotesSearchParams setSearchParams={setSearchParams} />
+      </Suspense>
       {children}
     </PaynotesContext.Provider>
   )

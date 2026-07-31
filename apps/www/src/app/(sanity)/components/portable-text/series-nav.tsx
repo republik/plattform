@@ -1,4 +1,5 @@
 import { getSeriesLabels } from '@/app/(sanity)/components/series-labels'
+import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { InlineTeaser } from '@/app/(sanity)/components/teaser/inline'
 import { SERIES_NAV_QUERY } from '@/app/(sanity)/groq/series-nav-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
@@ -23,7 +24,8 @@ export async function SeriesNav({
     return null
   }
 
-  const labels = getSeriesLabels(series.episodes)
+  const teasers = getNotExpiredTeasers(series.episodes)
+  const labels = getSeriesLabels(teasers)
 
   return (
     <>
@@ -55,7 +57,7 @@ export async function SeriesNav({
             mx: 'auto',
           })}
         >
-          {series.episodes?.map((episode, i) => (
+          {teasers.map((episode, i) => (
             <InlineTeaser key={i} teaser={episode} label={labels[i]} />
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
 
 import { Center, slug, Breakout } from '@project-r/styleguide'
@@ -110,15 +110,14 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
   extract,
   overviewData,
 }) => {
-  const router = useRouter()
-  const { query } = router
-  const answerId = query.share
+  const searchParams = useSearchParams()
+  const answerId = searchParams.get('share')
   const answers: QuestionAnswer[] = useMemo(
     () => groupNodes(mdast).map(extractData).filter(Boolean),
     [mdast],
   )
 
-  if (extract && query.extract) {
+  if (extract && searchParams.get('extract')) {
     const answer = answers.find((d) => slug(d.author.name) === answerId)
     const personColorIndex =
       answer.author.name.length % Object.keys(localColors.light).length
