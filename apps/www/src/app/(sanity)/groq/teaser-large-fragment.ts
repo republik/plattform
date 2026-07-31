@@ -8,7 +8,8 @@ import { defineQuery } from 'next-sanity'
 // large-teaser components keep working unchanged.
 export const TEASER_LARGE_FRAGMENT = /* groq */ `
   _id,
-  "_type": target[0]->_type,
+  _type,
+  "targetType": target[0]->_type,
   // link can either be a plain link OR a referenced doc
   "target": coalesce(target[0]->slug.current, target[0].href),
   "publishDate": target[0]->publishDate,

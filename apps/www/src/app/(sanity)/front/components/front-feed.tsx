@@ -20,8 +20,6 @@ export async function FrontFeed() {
 
   const initialTeasers = await fetchPage(0)
 
-  console.log(initialTeasers)
-
   if (!initialTeasers.length) return null
 
   return (

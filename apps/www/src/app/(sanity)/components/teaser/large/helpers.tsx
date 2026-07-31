@@ -8,14 +8,6 @@ import type {
 import { stegaClean } from 'next-sanity'
 import { Image, type ImageProps } from 'next-sanity/image'
 
-export function getHref(target: string, _type: string) {
-  return _type === 'article'
-    ? `/articles${target}`
-    : _type === 'page'
-    ? `/pages${target}`
-    : target
-}
-
 function ImagePlaceholder(props: { 'data-sanity'?: string }) {
   return (
     <div

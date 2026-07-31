@@ -15,8 +15,8 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   "description": teaserSmallConfig.description,
   "byline": teaserSmallConfig.${BYLINE_FRAGMENT},
   "href": select(
-    target[0]->_type == "article" => "/articles" + target[0]->slug.current,
-    target[0]->_type == "page" => "/pages" + target[0]->slug.current,
+    target[0]->_type == "article" => target[0]->slug.current,
+    target[0]->_type == "page" => target[0]->slug.current,
     defined(target[0].href) => target[0].href
   ),
   "image": teaserSmallConfig.image,

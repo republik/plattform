@@ -1,40 +1,31 @@
 import { Caption } from '@/app/(sanity)/components/portable-text/caption'
+import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
 import { css } from '@republik/theme/css'
-import { PortableText, PortableTextReactComponents } from 'next-sanity'
-import { ReactNode } from 'react'
 
 const containerStyle = css({
   backgroundColor: 'hover',
-  padding: '12px 15px',
+  py: '3',
+  px: '4',
   md: {
-    padding: '20px 25px',
+    py: '5',
+    px: '6',
   },
-})
 
-const quoteParagraph = css({
-  fontFamily: 'gtAmericaStandard',
-  fontSize: '0.9375rem',
-  lineHeight: 1.4,
-  pb: '12px',
-  md: {
-    fontSize: '1.125rem',
-    lineHeight: 1.5,
-    pb: '20px',
-  },
-  _last: {
-    pb: 0,
-  },
-})
-
-const ptComponents: Partial<PortableTextReactComponents> = {
-  block: {
-    normal({ children }: { children?: ReactNode }) {
-      return <p className={quoteParagraph}>{children}</p>
+  '& > *': {
+    fontFamily: 'gtAmericaStandard',
+    fontSize: '0.9375rem',
+    lineHeight: 1.4,
+    pt: '3',
+    md: {
+      fontSize: '1.125rem',
+      lineHeight: 1.5,
+      pt: '4',
+    },
+    _first: {
+      pt: 0,
     },
   },
-}
-
-// TODO: quid list support??
+})
 
 export function BlockQuote({ value }) {
   const { body, caption } = value
@@ -42,7 +33,7 @@ export function BlockQuote({ value }) {
   return (
     <div className={css({})}>
       <div className={containerStyle}>
-        <PortableText value={body} components={ptComponents} />
+        <NestedPortableText value={body} />
       </div>
       {caption && <Caption caption={caption} />}
     </div>
