@@ -7,18 +7,7 @@ import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { CirclePlay, CirclePause } from 'lucide-react'
 import { css, cx } from '@republik/theme/css'
 import { useState } from 'react'
-import { actionStyle, ACTION_ICON_SIZE } from './action-style'
-
-const pillStyle = css({
-  alignItems: 'center',
-  backgroundColor: 'hover',
-  borderRadius: '9999px',
-  display: 'inline-flex',
-  gap: '2',
-  paddingLeft: '2',
-  paddingRight: '3',
-  paddingY: '2',
-})
+import { actionStyle, ACTION_ICON_SIZE, pillStyle } from './action-style'
 
 export function PlayAction({
   documentId,

@@ -29,3 +29,15 @@ export const actionLabelStyle = css({
   display: 'none',
   md: { display: 'inline' },
 })
+
+// For actions that always carry their label: play and continue-reading.
+export const pillStyle = css({
+  alignItems: 'center',
+  backgroundColor: 'hover',
+  borderRadius: '9999px',
+  display: 'inline-flex',
+  gap: '2',
+  paddingLeft: '2',
+  paddingRight: '3',
+  paddingY: '2',
+})
