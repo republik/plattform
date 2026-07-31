@@ -1,3 +1,5 @@
+import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/article-bottom-actions'
+import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
 import { ContentWall } from '@/app/(sanity)/[...path]/components/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
@@ -14,7 +16,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { editorialContent } from '@republik/theme/recipes'
 import Link from 'next/link'
 
-export default async function ArticleDocument({
+export default function ArticleDocument({
   article,
 }: {
   article: ArticleDocumentType
@@ -65,6 +67,8 @@ export default async function ArticleDocument({
           <InlinePortableText value={byline} />
         </p>
 
+        <ArticleTopActions article={article} />
+
         <div>
           <EditLink documentId={article._id} documentType='article' />
         </div>
@@ -74,6 +78,8 @@ export default async function ArticleDocument({
           excerpt={<ArticlePortableText value={article.content?.slice(0, 5)} />}
           fullContent={<ArticlePortableText value={article.content} />}
         />
+
+        <ArticleBottomActions article={article} />
 
         <FollowArticle
           seriesId={seriesId}

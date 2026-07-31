@@ -83,6 +83,7 @@
     "@project-r/styleguide": "*",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-toggle-group": "^1.0.4",
