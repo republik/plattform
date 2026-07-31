@@ -2,6 +2,12 @@ const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
 } = require('./ProgressOptOut')
+const {
+  refToColumns,
+  refToFilterColumns,
+  inputToColumns,
+  matchesColumns,
+} = require('./documentRef')
 
 const assignUserId = (collection, userId) =>
   collection && {
@@ -32,13 +38,60 @@ const byNameForUser = (name, userId, { loaders }) =>
 const byIdForUser = (id, userId, { loaders }) =>
   loaders.Collection.byKeyObj.load({ id }).then((c) => assignUserId(c, userId))
 
-const findDocumentItems = (args, { pgdb }) =>
+// A falsy documentRef lists the whole collection, hence the filter variant.
+const findDocumentItems = ({ documentRef, ...args }, { pgdb }) =>
   pgdb.public.collectionDocumentItems
-    .find(args, { orderBy: ['updatedAt desc'] })
+    .find(
+      {
+        ...args,
+        ...refToFilterColumns(documentRef),
+      },
+      { orderBy: ['updatedAt desc'] },
+    )
     .then((items) => items.map(spreadItemData))
 
+// Looks up items for client-supplied document ids, without resolving the
+// documents themselves. Returns one entry per input id, in input order, null
+// where the document isn't in the collection — positional alignment is the
+// contract callers rely on, so duplicates and misses both keep their slot.
+const findDocumentItemsByInputIds = async (
+  { collectionId, userId, inputIds },
+  { pgdb },
+) => {
+  const columns = inputIds.map(inputToColumns)
+  const repoIds = [...new Set(columns.map((c) => c.repoId).filter(Boolean))]
+  const sanityIds = [...new Set(columns.map((c) => c.sanityId).filter(Boolean))]
+
+  // One branch per column, both scoped to the collection and user. Nesting the
+  // scope inside each branch (rather than pairing a top-level `or` with sibling
+  // keys) keeps the AND/OR precedence unambiguous.
+  const branches = []
+  if (repoIds.length) {
+    branches.push({ collectionId, userId, repoId: repoIds })
+  }
+  if (sanityIds.length) {
+    branches.push({ collectionId, userId, sanityId: sanityIds })
+  }
+  if (!branches.length) {
+    return inputIds.map(() => null)
+  }
+
+  const rows = await pgdb.public.collectionDocumentItems.find({
+    or: branches.map((and) => ({ and })),
+  })
+
+  return columns.map((cols) => {
+    const row = rows.find((r) => matchesColumns(r, cols))
+    return row ? spreadItemData(row) : null
+  })
+}
+
+// `includeSanity` defaults to false: the long-standing caller is
+// `User.collectionItems`, whose `document` field must resolve to a GraphQL
+// Document, which Sanity-backed rows cannot do. The `userCollectionItemsByNames`
+// query passes true — it returns bare refs, so it has no such constraint.
 const findDocumentItemsByCollectionNames = (
-  { names, progress, userId, lastDays },
+  { names, progress, userId, lastDays, includeSanity = false },
   context,
 ) => {
   const { pgdb } = context
@@ -53,7 +106,10 @@ const findDocumentItemsByCollectionNames = (
       progress
         ? `
     LEFT JOIN "collectionDocumentItems" progress_item ON
-      progress_item."repoId" = document_item."repoId" AND
+      -- IS NOT DISTINCT FROM, not =: exactly one of the two columns is set on
+      -- any given row, so the unused one is NULL on both sides.
+      progress_item."repoId" IS NOT DISTINCT FROM document_item."repoId" AND
+      progress_item."sanityId" IS NOT DISTINCT FROM document_item."sanityId" AND
       progress_item."userId" = document_item."userId" AND
       progress_item."collectionId" = (SELECT id FROM collections WHERE name = :progressCollectionName)
     `
@@ -62,6 +118,14 @@ const findDocumentItemsByCollectionNames = (
     WHERE
       document_item."userId" = :userId
       AND c.name = ANY(:names)
+      ${
+        includeSanity
+          ? ''
+          : `-- publikator items only: this feeds \`User.collectionItems\`, whose
+      -- \`document\` field needs a resolvable GraphQL Document. Sanity-backed
+      -- items are served by the \`userCollectionItemsByNames\` query instead.
+      AND document_item."repoId" IS NOT NULL`
+      }
       ${lastDays ? `AND document_item."updatedAt" >= :afterDate` : ''}
       ${
         progress === 'FINISHED'
@@ -162,13 +226,20 @@ const upsertItem = async (tableName, query, data, { pgdb, t }) => {
     .then(spreadItemData)
 }
 
-const getDocumentItem = async (args, context) =>
-  getItem('CollectionDocumentItem', args, context)
+const getDocumentItem = async ({ documentRef, ...args }, context) =>
+  getItem(
+    'CollectionDocumentItem',
+    {
+      ...args,
+      ...refToColumns(documentRef),
+    },
+    context,
+  )
 
 const upsertDocumentItem = async (
   userId,
   collectionId,
-  repoId,
+  documentRef,
   data,
   context,
 ) =>
@@ -177,18 +248,26 @@ const upsertDocumentItem = async (
     {
       userId,
       collectionId,
-      repoId,
+      ...refToColumns(documentRef),
     },
     data,
     context,
   )
 
-const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
+// `async` so an absent documentRef rejects rather than throwing synchronously,
+// matching upsertDocumentItem — the two are each other's mirror and a caller
+// shouldn't have to know which one needs a try/catch around the call itself.
+const deleteDocumentItem = async (
+  userId,
+  collectionId,
+  documentRef,
+  { pgdb },
+) =>
   pgdb.public.collectionDocumentItems
     .deleteAndGetOne({
       userId,
       collectionId,
-      repoId,
+      ...refToColumns(documentRef),
     })
     .then(spreadItemData)
 
@@ -262,6 +341,7 @@ module.exports = {
   byIdForUser,
 
   findDocumentItems,
+  findDocumentItemsByInputIds,
   findDocumentItemsByCollectionNames,
 
   getDocumentItem,

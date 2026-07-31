@@ -1,8 +1,9 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
+const { resolveInputRef } = require('../../../lib/documentRef')
 
 module.exports = async (_, { documentId, collectionName, data }, context) => {
-  const { req, user: me, t, loaders } = context
+  const { req, user: me, t } = context
   ensureSignedIn(req)
 
   const collection = await Collection.byNameForUser(
@@ -14,20 +15,17 @@ module.exports = async (_, { documentId, collectionName, data }, context) => {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  const repoId = Buffer.from(documentId, 'base64')
-    .toString('utf-8')
-    .split('/')
-    .slice(0, 2)
-    .join('/')
-  const doc = await loaders.Document.byRepoId.load(repoId)
-  if (!doc) {
+  // Unresolvable and not-collectable are both a 404 here: nothing but an
+  // article may be bookmarked or progressed. See lib/documentRef.js.
+  const { ref: documentRef } = await resolveInputRef(documentId, context)
+  if (!documentRef) {
     throw new Error(t(`api/collections/document/404`))
   }
 
   const item = await Collection.upsertDocumentItem(
     me.id,
     collection.id,
-    repoId,
+    documentRef,
     data,
     context,
   )

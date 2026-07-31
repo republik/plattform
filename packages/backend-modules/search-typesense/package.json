@@ -1,0 +1,39 @@
+{
+  "name": "@orbiting/backend-modules-search-typesense",
+  "description": "Typesense search integration for comments and users, running in parallel to the Elasticsearch based @orbiting/backend-modules-search",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --w",
+    "test": "jest",
+    "bootstrap": "ts-node script/bootstrap.ts",
+    "reindex": "ts-node script/reindex.ts",
+    "create-search-keys": "ts-node script/create-search-keys.ts"
+  },
+  "dependencies": {
+    "@orbiting/backend-modules-auth": "*",
+    "@orbiting/backend-modules-base": "*",
+    "@orbiting/backend-modules-documents": "*",
+    "@orbiting/backend-modules-env": "*",
+    "@orbiting/backend-modules-logger": "*",
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-utils": "*",
+    "apollo-modules-node": "*",
+    "debug": "^4.3.4",
+    "lodash": "^4.17.19",
+    "typesense": "^3.0.6"
+  },
+  "devDependencies": {
+    "@types/debug": "*",
+    "@types/jest": "^29.5.12",
+    "@types/lodash": "*",
+    "@types/node": "*",
+    "ts-jest": "^29.1.2",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}

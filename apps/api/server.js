@@ -7,6 +7,10 @@ const {
 const {
   NotifyListener: SearchNotifyListener,
 } = require('@orbiting/backend-modules-search')
+const {
+  Listener: SearchTypesenseListener,
+  graphql: searchTypesense,
+} = require('@orbiting/backend-modules-search-typesense')
 const { t } = require('@orbiting/backend-modules-translate')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
@@ -106,6 +110,9 @@ const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail'
 
 const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
 const { CockpitWorker } = require('./workers/cockpit')
+const {
+  PublishNotificationWorker,
+} = require('@orbiting/backend-modules-sanity')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -138,6 +145,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     // port of old schedulers
 
     StatsCacheWorker,
+    PublishNotificationWorker,
   ]
 
   if (
@@ -169,6 +177,7 @@ const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
+  SEARCH_TYPESENSE_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
@@ -211,6 +220,7 @@ const run = async (workerId, config) => {
     publikator,
     documents,
     search,
+    searchTypesense,
     redirections,
     discussions,
     notifications,
@@ -238,6 +248,7 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-invoices/express'),
     // needed for the gender sheet import
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
+    require('@orbiting/backend-modules-sanity/build/express'),
   ]
 
   if (MAIL_EXPRESS_RENDER) {
@@ -342,6 +353,11 @@ const runOnce = async () => {
   let searchNotifyListener
   if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
     searchNotifyListener = await SearchNotifyListener.start(context)
+  }
+
+  let searchTypesenseListener
+  if (SEARCH_TYPESENSE_LISTENER && SEARCH_TYPESENSE_LISTENER !== 'false') {
+    searchTypesenseListener = await SearchTypesenseListener.start(context)
   }
 
   let accessScheduler
@@ -449,6 +465,7 @@ const runOnce = async () => {
     await Promise.all(
       [
         searchNotifyListener && searchNotifyListener.close(),
+        searchTypesenseListener && searchTypesenseListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
         databroomScheduler && databroomScheduler.close(),

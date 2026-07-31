@@ -1,22 +1,51 @@
-const Promise = require('bluebird')
 const { v4: isUuid } = require('is-uuid')
+const {
+  refToColumns,
+  refToFilterColumns,
+  matchesColumns,
+  resolveInputRef,
+} = require('./documentRef')
+const ProgressOptOut = require('./ProgressOptOut')
 
 const getCollectionName = () => 'audioqueue'
 
-const getRepoId = (entityId) => {
-  try {
-    if (entityId) {
-      const [org, repoName] = Buffer.from(entityId, 'base64')
-        .toString('utf-8')
-        .split('/')
-      return [org, repoName].join('/')
-    }
-  } catch (e) {
-    // swallow error
-  }
+// Anything typed as `AudioQueueItem` in the schema has to hide Sanity-backed
+// rows: that type exposes no `sanityId`, and its `document` resolves to null for
+// them — and the web player treats an item without `document.meta.audioSource`
+// as corrupt and calls removeAudioQueueItem on it. That applies to
+// `User.audioQueue` *and* to every mutation's return value, since they all hand
+// back the whole queue. The `userAudioQueue` query serves the full queue as refs.
+const publikatorOnly = (items) => items.filter(({ repoId }) => repoId)
 
-  return undefined
+// The whole queue as `AudioQueueItemRef` rows, Sanity-backed items included.
+//
+// Every resolver returning that type must go through this, not the loader
+// directly: `AudioQueueItemRef.userProgress` reads `progressOptOut` off the row
+// (the consent lookup is a plain query, so it can't live in a per-item field
+// resolver without costing one query per item), and a row *missing* the flag
+// reads as "not opted out" — which would serve progress to someone who opted
+// out. Attaching it here makes that unforgettable.
+//
+// Copied onto new objects rather than mutated, so the dataloader's cached rows
+// stay clean.
+const toRefs = async (userId, context) => {
+  const [items, progressOptOut] = await Promise.all([
+    context.loaders.AudioQueue.byUserId.load(userId),
+    ProgressOptOut.status(userId, context),
+  ])
+
+  return items.map((item) => ({ ...item, progressOptOut }))
 }
+
+// createDataLoader leaves DataLoader's per-request cache on, so every write has
+// to drop the key. Without it, a mutation that reads the queue back — all of
+// them do, they return it — replies with the pre-mutation state whenever
+// something else in the same request happened to load it first.
+//
+// Takes the user explicitly, like toRefs — the loader is keyed by user, not by
+// "whoever is making the request".
+const invalidateQueueCache = (userId, context) =>
+  context.loaders.AudioQueue.byUserId.clear(userId)
 
 // A filter to omit an unwanted item
 const omitItem = (unwantedItem) => (item) => item.id !== unwantedItem?.id
@@ -62,14 +91,20 @@ const upsertItem = async (input, context) => {
     throw new Error(t('api/collections/audioQueue/error/missingCollection'))
   }
 
-  const repoId = getRepoId(entityId)
+  // Resolve the client's id to a canonical document ref, instead of the
+  // base64-only decode this used to do — never persist the raw input. See
+  // lib/documentRef.js; a queue would otherwise accept authors or formats.
+  let documentRef
+  if (entityId) {
+    const { parsedRepoId, ref } = await resolveInputRef(entityId, context)
+    if (!parsedRepoId) {
+      throw new Error(t('api/collections/audioQueue/error/invalidEntityId'))
+    }
+    if (!ref) {
+      throw new Error(t('api/collections/audioQueue/error/missingDocument'))
+    }
 
-  if (!!entityId && !repoId) {
-    throw new Error(t('api/collections/audioQueue/error/invalidEntityId'))
-  }
-
-  if (repoId && !(await loaders.Document.byRepoId.load(repoId))) {
-    throw new Error(t('api/collections/audioQueue/error/missingDocument'))
+    documentRef = ref
   }
 
   const items = await pgdb.public.collectionDocumentItems.find({
@@ -77,8 +112,11 @@ const upsertItem = async (input, context) => {
     userId: me.id,
   })
 
+  // The filter variant: moveAudioQueueItem passes only an item id, so there is
+  // no documentRef to match on and the id alone decides.
+  const columns = refToFilterColumns(documentRef)
   const existingItem = items.find(
-    (item) => item.id === id || item.repoId === repoId,
+    (item) => item.id === id || matchesColumns(item, columns),
   )
 
   if (id && !existingItem) {
@@ -88,12 +126,14 @@ const upsertItem = async (input, context) => {
   const currentSequence = existingItem?.data?.sequence
 
   // Calculate sequence boundaries
-  const maxSequence = items.length > 0
-    ? Math.max(...items.map((item) => item.data?.sequence || 0))
-    : 0
-  const minSequence = items.length > 0
-    ? Math.min(...items.map((item) => item.data?.sequence || Infinity))
-    : 0
+  const maxSequence =
+    items.length > 0
+      ? Math.max(...items.map((item) => item.data?.sequence || 0))
+      : 0
+  const minSequence =
+    items.length > 0
+      ? Math.min(...items.map((item) => item.data?.sequence || Infinity))
+      : 0
 
   const nextSequence = maxSequence + 1
   const playNextSequence = minSequence + 1
@@ -125,22 +165,23 @@ const upsertItem = async (input, context) => {
 
   const resequenceModifier = currentSequence < aimSequence ? -1 : 1
 
-  await Promise.each(resequenceItems, async (item) => {
-    const { sequence } = item.data
-    if (!sequence) {
-      return
-    }
-
-    await pgdb.public.collectionDocumentItems.update(
-      { id: item.id },
-      {
-        data: {
-          ...item.data,
-          sequence: sequence + resequenceModifier,
-        },
-      },
-    )
-  })
+  // Disjoint rows (`existingItem` is filtered out above), so the updates don't
+  // have to wait on each other.
+  await Promise.all(
+    resequenceItems
+      .filter((item) => item.data.sequence)
+      .map((item) =>
+        pgdb.public.collectionDocumentItems.update(
+          { id: item.id },
+          {
+            data: {
+              ...item.data,
+              sequence: item.data.sequence + resequenceModifier,
+            },
+          },
+        ),
+      ),
+  )
 
   if (existingItem) {
     await pgdb.public.collectionDocumentItems.update(
@@ -156,12 +197,17 @@ const upsertItem = async (input, context) => {
     await pgdb.public.collectionDocumentItems.insert({
       collectionId: collection.id,
       userId: me.id,
-      repoId,
+      // Spread, not an explicit `repoId`/`sanityId` pair: the unused column has
+      // to be *absent* so it inserts NULL, satisfying the
+      // "collectionDocumentItems_one_document_ref" check constraint.
+      ...refToColumns(documentRef),
       data: {
         sequence: aimSequence,
       },
     })
   }
+
+  invalidateQueueCache(me.id, context)
 }
 
 const removeItem = async (input, context) => {
@@ -185,6 +231,8 @@ const removeItem = async (input, context) => {
     userId: me.id,
     id,
   })
+
+  invalidateQueueCache(me.id, context)
 }
 
 const reorderItems = async (input, context) => {
@@ -200,46 +248,52 @@ const reorderItems = async (input, context) => {
     userId: me.id,
   })
 
-  const updatables = [...new Set(ids)]
-    .map((id, index) => {
-      const item = items.find((item) => item.id === id)
-
-      if (!item) {
-        return false
-      }
-
-      return {
-        ...item,
-        data: {
-          ...item.data,
-          sequence: index + 1,
-        },
-      }
-    })
+  const reordered = [...new Set(ids)]
+    .map((id) => items.find((item) => item.id === id))
     .filter(Boolean)
 
-  const deletable = items.filter(
-    (item) => !updatables.find((update) => update.id === item.id),
-  )
+  // Items the caller didn't mention are appended after the reordered ones,
+  // keeping their prior relative order — they are NOT deleted.
+  //
+  // This used to delete them, which is unsafe for any client that knows only
+  // part of the queue. The web player filters items it can't render (see
+  // useAudioQueue's `audioSource` filter) and then reorders what's left, so a
+  // single drag would silently wipe every Sanity-backed item. Deleting stays
+  // the job of removeAudioQueueItem / clearAudioQueue, which is what clients
+  // already use.
+  //
+  // Appending rather than leaving their sequence untouched keeps the column
+  // collision-free: nothing enforces uniqueness, and the queue's sort would
+  // otherwise fall back on Postgres row order for tied values.
+  const appended = items
+    .filter((item) => !reordered.includes(item))
+    .sort((a, b) => (a.data?.sequence ?? 0) - (b.data?.sequence ?? 0))
 
-  await Promise.each(updatables, (item) =>
-    pgdb.public.collectionDocumentItems.update(
-      { collectionId: collection.id, userId: me.id, id: item.id },
-      item,
-    ),
-  )
+  // Only rows whose sequence actually moves are written — a client submitting
+  // the whole queue leaves the appended tail exactly where it already was — and
+  // only `data` is written, the rest of the row is unchanged by a reorder.
+  await Promise.all(
+    [...reordered, ...appended].map((item, index) => {
+      const sequence = index + 1
+      if (item.data?.sequence === sequence) {
+        return null
+      }
 
-  await Promise.each(deletable, ({ id }) =>
-    pgdb.public.collectionDocumentItems.delete({
-      collectionId: collection.id,
-      userId: me.id,
-      id,
+      return pgdb.public.collectionDocumentItems.update(
+        { collectionId: collection.id, userId: me.id, id: item.id },
+        { data: { ...item.data, sequence } },
+      )
     }),
   )
+
+  invalidateQueueCache(me.id, context)
 }
 
 module.exports = {
   getCollectionName,
+  publikatorOnly,
+  toRefs,
+  invalidateQueueCache,
 
   upsertItem,
   removeItem,

@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
+    "@orbiting/backend-modules-sanity": "*",
     "@republik/mdast-mail-templates": "*",
     "@republik/mdast-react-render": "*",
     "apollo-modules-node": "*",

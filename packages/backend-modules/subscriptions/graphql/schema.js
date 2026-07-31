@@ -16,6 +16,13 @@ type queries {
     after: String
     lastDays: Int
   ): NotificationConnection
+
+  """
+  Root-level equivalent of \`Document.subscribedByMe\`/\`User.subscribedByMe\`,
+  for object types (e.g. a Sanity-backed articleCollection) that don't
+  resolve to a GraphQL Document/User type.
+  """
+  subscribedByMe(objectId: ID!, type: SubscriptionObjectType!): Subscription
 }
 
 type mutations {

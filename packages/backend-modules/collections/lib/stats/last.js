@@ -13,7 +13,7 @@ WITH "documentsMedias" AS (
   SELECT
     ${last ? '' : 'to_char(cdi."createdAt", \'YYYY-MM\') "key",'}
     cdi."collectionId",
-    cdi."repoId" "id",
+    COALESCE(cdi."repoId", cdi."sanityId") "id",
     cdi."userId",
     'document' "type"
 

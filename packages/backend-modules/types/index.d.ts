@@ -6,6 +6,9 @@ type Brand<B> = { [__brand]: B }
 
 export type Logger = Logger
 
+/** The pogi database handle carried on every context. */
+export type { PgDb }
+
 export type Branded<T, B> = T & Brand<B>
 
 export interface ConnectionContext {
