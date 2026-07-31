@@ -3,7 +3,6 @@
 import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/actions/action-style'
 import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-action'
 import { collectionsDocumentId } from '@/app/(sanity)/components/actions/document-id'
-import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
 import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
 import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
@@ -73,7 +72,6 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
     >
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
-      <DiscussionAction path={path} longLabel />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger

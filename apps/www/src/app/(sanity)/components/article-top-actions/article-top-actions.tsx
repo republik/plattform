@@ -2,7 +2,6 @@
 
 import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/actions/action-style'
 import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-action'
-import { DiscussionAction } from '@/app/(sanity)/components/actions/discussion-action'
 import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
 import { collectionsDocumentId } from '@/app/(sanity)/components/actions/document-id'
 import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
@@ -81,7 +80,6 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
-      <DiscussionAction path={path} />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
