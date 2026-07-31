@@ -1,6 +1,6 @@
 'use client'
 
-import { ArticleDiscussionDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { DiscussionByIdDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { IconDiscussion } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
@@ -14,23 +14,26 @@ const discussionActionStyle = css({
 
 export function DiscussionAction({
   path,
+  backendDiscussionId,
+  inlineDiscussion,
   longLabel,
 }: {
   path: string
+  backendDiscussionId?: string | null
+  inlineDiscussion?: boolean
   longLabel?: boolean
 }) {
-  const { data } = useQuery(ArticleDiscussionDocument, { variables: { path } })
+  const { data } = useQuery(DiscussionByIdDocument, {
+    variables: { id: backendDiscussionId! },
+    skip: !backendDiscussionId,
+  })
 
-  const meta = data?.document?.meta
-  const discussion = meta?.linkedDiscussion ?? meta?.ownDiscussion
+  const discussion = data?.discussion
   if (!discussion?.path) {
     return null
   }
 
-  const discussionPath =
-    meta?.template === 'discussion'
-      ? discussion.path
-      : `/dialog${discussion.path}`
+  const discussionPath = inlineDiscussion ? path : `/dialog${discussion.path}`
 
   return (
     <Link

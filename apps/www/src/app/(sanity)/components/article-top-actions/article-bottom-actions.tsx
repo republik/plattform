@@ -73,7 +73,12 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
     >
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
-      <DiscussionAction path={path} longLabel />
+      <DiscussionAction
+        path={path}
+        backendDiscussionId={article.discussion?.backendDiscussionId}
+        inlineDiscussion={article.inlineDiscussion ?? false}
+        longLabel
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger

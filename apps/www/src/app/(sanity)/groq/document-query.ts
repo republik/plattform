@@ -66,6 +66,10 @@ export const DOCUMENT_QUERY = defineQuery(
         useImageBuilder
       },
       readingAccess,
+      discussion->{
+        backendDiscussionId
+      },
+      inlineDiscussion,
       ${BYLINE_FRAGMENT},
       newsletter->{
         title,

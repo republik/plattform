@@ -81,7 +81,11 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
-      <DiscussionAction path={path} />
+      <DiscussionAction
+        path={path}
+        backendDiscussionId={article.discussion?.backendDiscussionId}
+        inlineDiscussion={article.inlineDiscussion ?? false}
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
