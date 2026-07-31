@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getClient } from '@/app/lib/apollo/client'
-import {
-  SitemapByYearDocument,
-  type SitemapByYearQuery,
-  type Document,
-} from '#graphql/republik-api/__generated__/gql/graphql'
+import { client } from '@/app/(sanity)/lib/client'
+import { SITEMAP_BY_YEAR_QUERY } from '@/app/(sanity)/groq/sitemap-query'
+import type { SITEMAP_BY_YEAR_QUERY_RESULT } from '@/sanity.types'
 import { parseJSONObject } from '@/lib/safeJSON'
 import { toXML } from 'jstoxml'
 
@@ -13,21 +10,21 @@ const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
-function generateNewsSiteMap(articles: Document[]) {
+function generateNewsSiteMap(articles: SITEMAP_BY_YEAR_QUERY_RESULT) {
   const sitemapData = {
     _name: 'urlset',
     _attrs: {
       xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
       'xmlns:news': 'http://www.google.com/schemas/sitemap-news/0.9',
     },
-    _content: articles.map(({ meta }) => ({
+    _content: articles.map((article) => ({
       _name: 'url',
       _content: [
-        { _name: 'loc', _content: `${BASE_URL}${meta.path}` },
+        { _name: 'loc', _content: `${BASE_URL}${article.path}` },
         {
           _name: 'lastmod',
           _content: new Date(
-            meta.lastPublishedAt || meta.publishDate!,
+            article._updatedAt || article.publishDate!,
           ).toISOString(),
         },
         {
@@ -40,8 +37,8 @@ function generateNewsSiteMap(articles: Document[]) {
                 { _name: 'news:language', _content: publisher.knowsLanguage },
               ],
             },
-            { _name: 'news:publication_date', _content: meta.publishDate },
-            { _name: 'news:title', _content: meta.title },
+            { _name: 'news:publication_date', _content: article.publishDate },
+            { _name: 'news:title', _content: article.title },
           ],
         },
       ],
@@ -68,46 +65,22 @@ export async function GET(
     )
   }
   const yearString = String(parseInt(year))
-  const client = await getClient()
 
   const fromDate = new Date(parseInt(year), 0, 1) // January 1st of the year
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    const allArticles: Document[] = []
-    let hasNextPage = true
-    let after: string | undefined = undefined
-    const pageSize = 500
+    const documents = await client.fetch(SITEMAP_BY_YEAR_QUERY, {
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
+    })
 
-    while (hasNextPage) {
-      const { data, errors } = await client.query<SitemapByYearQuery>({
-        query: SitemapByYearDocument,
-        variables: {
-          from: fromDate.toISOString(),
-          to: toDate.toISOString(),
-          first: pageSize,
-          after,
-        },
-      })
+    // News sitemaps should only include articles, not generic pages
+    const articles = documents.filter(
+      (document) => document._type === 'article',
+    )
 
-      if (errors) {
-        console.error(`[news-sitemap-${yearString}]`, errors)
-        return NextResponse.json({ error: 'GraphQL error' }, { status: 500 })
-      }
-
-      const {
-        search: { nodes, pageInfo },
-      } = data
-
-      const articles = nodes.map(({ entity }) => entity as Document)
-
-      allArticles.push(...articles)
-
-      hasNextPage = pageInfo.hasNextPage
-      after = pageInfo.endCursor || undefined
-    }
-
-    const sitemap = generateNewsSiteMap(allArticles)
+    const sitemap = generateNewsSiteMap(articles)
 
     return new NextResponse(sitemap, {
       headers: {
