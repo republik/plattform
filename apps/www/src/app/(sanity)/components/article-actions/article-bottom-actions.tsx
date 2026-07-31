@@ -2,6 +2,7 @@
 
 import { ACTION_ICON_SIZE } from './action-style'
 import { BookmarkAction } from './bookmark-action'
+import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
 import { PdfDownloadAction } from './pdf-download-action'
 import { ShareAction } from './share-action'
@@ -72,6 +73,7 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
     >
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
+      <DiscussionAction path={path} longLabel />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger

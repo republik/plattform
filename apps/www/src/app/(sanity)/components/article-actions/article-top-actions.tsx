@@ -2,9 +2,11 @@
 
 import { ACTION_ICON_SIZE } from './action-style'
 import { BookmarkAction } from './bookmark-action'
+import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
 import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
+import { JumpToReadingPosition } from './reading-position-action'
 import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -65,46 +67,57 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   return (
     <div
       className={css({
-        alignItems: 'center',
         display: 'flex',
-        flexWrap: 'wrap',
-        gap: '5',
+        flexDirection: 'column',
+        gap: '3',
       })}
     >
-      <PlayAction
-        documentId={documentId}
-        durationMs={article.audioDurationMs ?? undefined}
-        mp3={article.audioSourceMp3 ?? undefined}
-        path={path}
-        title={title}
-      />
-      <BookmarkAction documentId={documentId} />
-      <ShareAction title={title} path={path} />
+      <div
+        className={css({
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '5',
+        })}
+      >
+        <PlayAction
+          documentId={documentId}
+          durationMs={article.audioDurationMs ?? undefined}
+          mp3={article.audioSourceMp3 ?? undefined}
+          path={path}
+          title={title}
+        />
+        <BookmarkAction documentId={documentId} />
+        <ShareAction title={title} path={path} />
+        <DiscussionAction path={path} />
 
-      <DropdownMenu.Root modal={false}>
-        <DropdownMenu.Trigger
-          aria-label='Weitere Aktionen'
-          className={menuTriggerStyle}
-        >
-          <EllipsisVertical size={ACTION_ICON_SIZE} />
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            align='end'
-            sideOffset={8}
-            collisionPadding={16}
-            className={menuPanelStyle}
+        <DropdownMenu.Root modal={false}>
+          <DropdownMenu.Trigger
+            aria-label='Weitere Aktionen'
+            className={menuTriggerStyle}
           >
-            <DropdownMenu.Item asChild>
-              <PdfDownloadAction
-                path={path}
-                version={article._updatedAt}
-                className={menuItemStyle}
-              />
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+            <EllipsisVertical size={ACTION_ICON_SIZE} />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              align='end'
+              sideOffset={8}
+              collisionPadding={16}
+              className={menuPanelStyle}
+            >
+              <DropdownMenu.Item asChild>
+                <PdfDownloadAction
+                  path={path}
+                  version={article._updatedAt}
+                  className={menuItemStyle}
+                />
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+      </div>
+
+      <JumpToReadingPosition documentId={documentId} />
     </div>
   )
 }
