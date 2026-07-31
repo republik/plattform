@@ -1,6 +1,6 @@
 'use client'
 
-import { groupByDate } from '@/app/(sanity)/articles/feed/components/group-by-date'
+import { groupByDate } from '@/app/(sanity)/feed/components/group-by-date'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'

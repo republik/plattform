@@ -1,4 +1,4 @@
-import { ArticlesFeed } from '@/app/(sanity)/articles/feed/components/articles-feed'
+import { ArticlesFeed } from '@/app/(sanity)/feed/components/articles-feed'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'

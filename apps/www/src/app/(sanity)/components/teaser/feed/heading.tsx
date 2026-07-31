@@ -23,10 +23,7 @@ export function Heading({ teaser }: { teaser: TeaserListItemType }) {
     // matches the browser path directly (via rewrite) or under /pages.
     const headingPath = stegaClean(teaser.heading.slug)
 
-    if (
-      headingPath &&
-      (pathname === headingPath || pathname === `/pages${headingPath}`)
-    ) {
+    if (headingPath && pathname === headingPath) {
       return null
     }
 

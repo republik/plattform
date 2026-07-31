@@ -75,7 +75,6 @@ export function PageHeader({
   const navLinks = [
     { href: '/', label: 'Magazin' },
     { href: '/feed', label: 'Feed' },
-    { href: '/articles/feed', label: 'Feed (Sanity)' },
     { href: '/dialog', label: 'Dialog' },
     { href: '/suche', label: 'Suche', icon: <IconSearchMenu size={18} /> },
   ]
