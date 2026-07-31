@@ -6,7 +6,24 @@ import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+
+// Static SEO metadata: the Sanity front document has no metadata fields
+const title = 'Republik Magazin - Ohne Journalismus keine Demokratie'
+const description =
+  'Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur'
+
+export const metadata: Metadata = {
+  // `absolute` opts out of the root layout's `%s – Republik` template
+  title: { absolute: title },
+  description,
+  openGraph: {
+    title: title ,
+    description,
+    images: ['/static/social-media/teilen.png'],
+  },
+}
 
 export default async function FrontPage() {
   const { data: front } = await sanityFetch({ query: FRONT_LATEST_QUERY })
