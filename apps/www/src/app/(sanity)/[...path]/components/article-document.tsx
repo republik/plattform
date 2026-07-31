@@ -1,4 +1,5 @@
-import { ArticleTopActions } from '@/app/(sanity)/components/article-top-actions/article-top-actions'
+import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/article-bottom-actions'
+import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
 import { ContentWall } from '@/app/(sanity)/[...path]/components/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
@@ -14,7 +15,6 @@ import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-f
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { editorialContent } from '@republik/theme/recipes'
 import Link from 'next/link'
-import { ArticleBottomActions } from '../../components/article-top-actions/article-bottom-actions'
 
 export default function ArticleDocument({
   article,

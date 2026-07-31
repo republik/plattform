@@ -1,11 +1,10 @@
 'use client'
 
-import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/actions/action-style'
-import { BookmarkAction } from '@/app/(sanity)/components/actions/bookmark-action'
-import { PdfDownloadAction } from '@/app/(sanity)/components/actions/pdf-download-action'
-import { collectionsDocumentId } from '@/app/(sanity)/components/actions/document-id'
-import { PlayAction } from '@/app/(sanity)/components/actions/play-action'
-import { ShareAction } from '@/app/(sanity)/components/actions/share-action'
+import { ACTION_ICON_SIZE } from './action-style'
+import { BookmarkAction } from './bookmark-action'
+import { collectionsDocumentId } from './document-id'
+import { PdfDownloadAction } from './pdf-download-action'
+import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
@@ -53,11 +52,11 @@ const menuItemStyle = css({
   },
 })
 
-export type ArticleTopActionsProps = {
+export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
 }
 
-export function ArticleTopActions({ article }: ArticleTopActionsProps) {
+export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
@@ -71,13 +70,6 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         gap: '5',
       })}
     >
-      <PlayAction
-        documentId={documentId}
-        durationMs={article.audioDurationMs ?? undefined}
-        mp3={article.audioSourceMp3 ?? undefined}
-        path={path}
-        title={title}
-      />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
 
