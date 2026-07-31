@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ArticleTeaserPage({
+export default async function TeaserLargePreviewPage({
   params,
 }: PageProps<'/preview/teasers-large/[id]'>) {
   const { id } = await params

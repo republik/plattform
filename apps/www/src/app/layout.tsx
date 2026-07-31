@@ -2,6 +2,7 @@ import { NativeAppMessageSync } from '@/app/components/native-app'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 
+import { PaynotesProvider } from '@/app/components/paynotes/paynotes-context'
 import { ThemeProvider } from '@/app/components/theme-provider'
 import { AnalyticsProvider } from '@/app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@/app/lib/analytics/utm-session-storage'
@@ -66,11 +67,13 @@ export default async function RootLayout({
                 <UserAgentProvider>
                   <MediaProgressContext>
                     <AudioProvider>
-                      {children}
-                      <NativeAppMessageSync />
-                      <AudioPlayerOrchestrator />
-                      <SyncUTMToSessionStorage />
-                      {/* <PaynoteOverlay /> */}
+                      <PaynotesProvider>
+                        {children}
+                        <NativeAppMessageSync />
+                        <AudioPlayerOrchestrator />
+                        <SyncUTMToSessionStorage />
+                        {/* <PaynoteOverlay /> */}
+                      </PaynotesProvider>
                     </AudioProvider>
                   </MediaProgressContext>
                 </UserAgentProvider>
