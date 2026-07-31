@@ -1,4 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
@@ -79,6 +80,8 @@ const teaserByline = css({
 
 export function TextTeaser({
   target,
+  targetId,
+  publishDate,
   theme,
   teaser,
   heading,
@@ -135,6 +138,17 @@ export function TextTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
+        {teaser.audioSourceMp3 && (
+          <TeaserAudioPlayButton
+            targetId={targetId}
+            title={teaser.audioTitle}
+            path={target}
+            publishDate={publishDate}
+            mp3={teaser.audioSourceMp3}
+            durationMs={teaser.audioDurationMs}
+            align='center'
+          />
+        )}
       </div>
     </div>
   )

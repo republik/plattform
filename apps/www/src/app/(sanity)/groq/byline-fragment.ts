@@ -8,9 +8,8 @@ export const BYLINE_FRAGMENT = /* groq */ `
       ...,
       _type == "internalLink" => {
         "slug": select(
-          reference->_type == "article" => reference->slug.current,
-          reference->_type == "page" => reference->slug.current,
-          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)
+          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
+          reference->slug.current
         )
       }
     }

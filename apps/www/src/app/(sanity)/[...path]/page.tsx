@@ -2,8 +2,9 @@ import ArticleDocument from '@/app/(sanity)/[...path]/components/article-documen
 import PageDocument from '@/app/(sanity)/[...path]/components/page-document'
 import { DOCUMENT_QUERY } from '@/app/(sanity)/groq/document-query'
 import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
+import { getArticleJsonLd } from '@/app/(sanity)/lib/json-ld'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { getSocialImage } from '@/app/(sanity)/lib/social-image'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -24,31 +25,6 @@ export async function generateMetadata({
     return { title: 'Artikel nicht gefunden' }
   }
 
-  let images = null
-
-  try {
-    if (data.useImageBuilder) {
-      // Rendered "Share Image" (old style) generated on the fly by /api/og.
-      images = {
-        url: new URL(
-          `/api/og?slug=${encodeURIComponent(slug)}`,
-          process.env.NEXT_PUBLIC_BASE_URL,
-        ).toString(),
-        width: 1200,
-        height: 630,
-      }
-    } else if (data.image) {
-      // Static social image: point directly at the Sanity CDN crop.
-      images = {
-        url: urlFor(data.image).width(1200).height(630).url(),
-        width: 1200,
-        height: 630,
-      }
-    }
-  } catch (error) {
-    console.error('Error generating image URL:', error)
-  }
-
   return {
     title: data.title,
     description: data.description,
@@ -56,7 +32,7 @@ export async function generateMetadata({
       title: data.title,
       description: data?.description,
       url: new URL(slug, process.env.NEXT_PUBLIC_BASE_URL),
-      images,
+      images: getSocialImage(data, slug),
     },
   }
 }
@@ -77,7 +53,12 @@ export default async function DocumentPage({
   }
 
   return data._type === 'article' ? (
-    <ArticleDocument article={data} />
+    <>
+      <script type='application/ld+json'>
+        {JSON.stringify(getArticleJsonLd(data))}
+      </script>
+      <ArticleDocument article={data} />
+    </>
   ) : data._type === 'page' ? (
     <PageDocument page={data} />
   ) : null

@@ -1,6 +1,6 @@
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { type Caption } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
-import { PortableText, PortableTextReactComponents } from 'next-sanity'
 
 const legendStyle = css({
   fontFamily: 'gtAmericaStandard',
@@ -22,10 +22,6 @@ const creditStyle = css({
   },
 })
 
-const ptComponents: Partial<PortableTextReactComponents> = {
-  block: { normal: ({ children }) => <>{children}</> },
-}
-
 export function Caption({
   caption,
   id,
@@ -41,10 +37,10 @@ export function Caption({
   return (
     (legend || credit) && (
       <figcaption id={id} className={cx(legendStyle, className)}>
-        <PortableText components={ptComponents} value={legend} />
+        <InlinePortableText value={legend} />
         {credit && (
           <span className={creditStyle}>
-            <PortableText components={ptComponents} value={credit} />
+            <InlinePortableText value={credit} />
           </span>
         )}
       </figcaption>

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import scrollIntoView from 'scroll-into-view'
 
 import {
@@ -37,15 +37,14 @@ const Page = ({
   extract,
   share,
 }: SubmissionsOverviewProps) => {
-  const router = useRouter()
-  const { query } = router
-  const { questionIds, submissionId } = mapShareParam(query.share)
+  const searchParams = useSearchParams()
+  const { questionIds, submissionId } = mapShareParam(searchParams.get('share'))
   const questionColor = getOrdinalColors(questionnaireConfig.design.colors)
 
   const answersRef = useRef(null)
   useEffect(() => {
     if (extract) return
-    if (query?.focus === MAIN_VIEWPORT_FOCUS) {
+    if (searchParams.get('focus') === MAIN_VIEWPORT_FOCUS) {
       scrollIntoView(answersRef.current, {
         time: 0,
         align: { top: 0 },

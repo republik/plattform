@@ -1,9 +1,9 @@
 import { gql, useQuery } from '@apollo/client'
-import { useRouter } from 'next/router'
 import { max } from 'd3-array'
 import { css, merge } from 'glamor'
 import { Component, forwardRef, Fragment, useState } from 'react'
 
+import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/lib/withT'
 import Meta from '../Frame/Meta'
 import Loader from '../Loader'
@@ -622,9 +622,7 @@ const TestimonialList = ({
             setSeed(generateSeed())
             if (isPage && (id || clearedFocus)) {
               setClearedFocus(undefined)
-              router.replace('/community', undefined, {
-                shallow: router.pathname === '/community',
-              })
+              router.replace('/community')
             }
           }}
         >
@@ -640,9 +638,7 @@ const TestimonialList = ({
             return
           }
           setClearedFocus(id)
-          router.push('/community', undefined, {
-            shallow: router.pathname === '/community',
-          })
+          router.push('/community')
         }}
         search={searchQuery}
         seed={seed}
