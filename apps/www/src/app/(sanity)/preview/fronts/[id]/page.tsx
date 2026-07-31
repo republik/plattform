@@ -1,18 +1,18 @@
-import { Block } from '@/app/(sanity)/front/components/block'
+import { FrontBlock } from '@/app/(sanity)/front/components/front-block'
 import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
-import { FRONT_BY_ID_QUERY } from '@/app/(sanity)/groq/front-by-id-query'
+import { FRONT_QUERY } from '@/app/(sanity)/groq/front-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { notFound } from 'next/navigation'
 
-export default async function FrontPage({
+export default async function FrontPreviewPage({
   params,
 }: PageProps<'/preview/fronts/[id]'>) {
   const { id } = await params
   const { data: front } = await sanityFetch({
-    query: FRONT_BY_ID_QUERY,
+    query: FRONT_QUERY,
     params: { id },
   })
 
@@ -21,9 +21,7 @@ export default async function FrontPage({
   const { _id, pageBuilder = [] } = front
 
   return (
-    <EventTrackingContext category='Front'>
-      <h1 className={css({ srOnly: true })}>Republik Magazin</h1>
-
+    <>
       <div
         data-sanity={dataAttribute({
           id: _id,
@@ -40,12 +38,12 @@ export default async function FrontPage({
               path: `pageBuilder[_key=="${block._key}"]`,
             })}
           >
-            <Block block={block} documentId={_id} />
+            <FrontBlock block={block} documentId={_id} />
           </div>
         ))}
       </div>
 
       <FrontFeed />
-    </EventTrackingContext>
+    </>
   )
 }

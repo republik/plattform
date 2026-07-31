@@ -60,6 +60,7 @@ export const DOCUMENT_QUERY = defineQuery(
         image,
         useImageBuilder
       },
+      readingAccess,
       ${BYLINE_FRAGMENT},
       newsletter->{
         title,
