@@ -10,6 +10,7 @@ import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
+import { DiscussionAction } from './discussion-action'
 
 const menuTriggerStyle = css({
   cursor: 'pointer',
@@ -61,7 +62,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
-
+  console.log('article', article)
   return (
     <div
       className={css({
@@ -80,6 +81,11 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
+      <DiscussionAction
+        path={path}
+        backendDiscussionId={article.discussion?.backendDiscussionId}
+        inlineDiscussion={article.inlineDiscussion ?? false}
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
