@@ -27,7 +27,6 @@ export function DiscussionAction({
     variables: { id: backendDiscussionId! },
     skip: !backendDiscussionId,
   })
-  console.log(data?.discussion, 'discussion')
 
   const discussion = data?.discussion
   if (!discussion?.path) {
