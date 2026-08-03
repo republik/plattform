@@ -1,0 +1,8 @@
+query GetSubscription($objectId: ID!, $type: SubscriptionObjectType!) {
+  subscribedByMe(objectId: $objectId, type: $type) {
+    id
+    active
+    filters
+    isEligibleForNotifications
+  }
+}

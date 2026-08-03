@@ -84,6 +84,7 @@ export const DOCUMENT_QUERY = defineQuery(
         kind,
         // Same profile slug as the byline links
         "slug": coalesce(contributor->slug.current, contributor->userId),
+        "userId": contributor->userId,
         "name": contributor->title,
         "description": contributor->description,
         "portrait": contributor->portrait

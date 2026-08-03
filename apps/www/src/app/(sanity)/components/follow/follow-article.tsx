@@ -8,7 +8,6 @@ import type {
   ArticleNewsletter,
 } from '@/app/(sanity)/lib/types'
 
-// TODO: add follow option to series
 // order of priority:
 // series > subscribe to newsletter > follow collection > follow contributors
 function FollowArticle({
@@ -24,13 +23,16 @@ function FollowArticle({
 }) {
   if (seriesId) {
     return (
-      <SeriesNav
-        value={{
-          _type: 'seriesNav',
-          series: { _type: 'reference', _ref: seriesId },
-        }}
-        compact
-      />
+      <>
+        <SeriesNav
+          value={{
+            _type: 'seriesNav',
+            series: { _type: 'reference', _ref: seriesId },
+          }}
+          compact
+        />
+        {collection && <FollowCollectionCard collection={collection} />}
+      </>
     )
   }
 
@@ -43,7 +45,9 @@ function FollowArticle({
   }
 
   return (
-    <FollowContributors contributors={contributors?.filter((c) => c.slug)} />
+    <FollowContributors
+      contributors={contributors?.filter((c) => c.slug && c.kind === 'Text')}
+    />
   )
 }
 

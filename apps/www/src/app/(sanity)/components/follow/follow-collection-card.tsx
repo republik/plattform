@@ -1,11 +1,16 @@
 'use client'
 
-import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  GetSubscriptionDocument,
+  SubscriptionObjectType,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import FollowCollectionContainer from '@/app/(sanity)/components/follow/follow-collection-container'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { useMe } from '@/lib/context/MeContext'
 import type { ArticleCollection } from '@/sanity.types'
+import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 
 function FollowCollectionCard({
@@ -14,8 +19,18 @@ function FollowCollectionCard({
   collection: Partial<ArticleCollection>
 }) {
   const { me, meLoading } = useMe()
+  const objectId = collectionsDocumentId({ _id: collection._id })
+  const { data, loading } = useQuery(GetSubscriptionDocument, {
+    variables: { objectId, type: SubscriptionObjectType.Document },
+    skip: !me,
+  })
 
-  if (meLoading || !me) return null
+  if (meLoading || !me || loading) return null
+  if (!data?.subscribedByMe?.isEligibleForNotifications) return null
+
+  const subscriptionId = data.subscribedByMe.active
+    ? data.subscribedByMe.id
+    : undefined
 
   return (
     <FollowCollectionContainer>
@@ -33,7 +48,13 @@ function FollowCollectionCard({
         <p className={css({ pt: 1, pb: 4, textStyle: 'airy' })}>
           {collection.description}
         </p>
-        <FollowButton type={SubscriptionObjectType.Document} size='small' />
+        <FollowButton
+          type={SubscriptionObjectType.Document}
+          subscriptionId={subscriptionId}
+          objectId={objectId}
+          objectName={collection.title}
+          size='small'
+        />
       </div>
       {!!collection.image && (
         <TeaserImage

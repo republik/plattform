@@ -14,7 +14,6 @@ import { css } from '@republik/theme/css'
 import { ButtonVariantProps } from '@republik/theme/recipes'
 import { useState } from 'react'
 
-// TODO: figure out subscribes with sanity
 export function FollowButton({
   type,
   subscriptionId,

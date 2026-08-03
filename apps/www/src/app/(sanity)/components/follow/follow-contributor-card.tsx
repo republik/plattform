@@ -1,7 +1,11 @@
-import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  FollowableAuthorDocument,
+  SubscriptionObjectType,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -12,6 +16,17 @@ function FollowContributorCard({
 }: {
   contributor: ArticleContributor
 }) {
+  const { data } = useQuery(FollowableAuthorDocument, {
+    variables: { id: contributor.userId },
+    skip: !contributor.userId,
+  })
+  const author = data?.user
+
+  if (!author?.subscribedBy.nodes.find((n) => n.isEligibleForNotifications))
+    return null
+
+  const subscriptionId = author.subscribedBy.nodes.find((n) => n.active)?.id
+
   return (
     <div
       className={css({
@@ -64,7 +79,12 @@ function FollowContributorCard({
       <div
         className={css({ ml: 'auto', position: 'relative', zIndex: 10, pl: 2 })}
       >
-        <FollowButton type={SubscriptionObjectType.User} />
+        <FollowButton
+          type={SubscriptionObjectType.User}
+          subscriptionId={subscriptionId}
+          objectId={contributor.userId}
+          objectName={contributor.name}
+        />
       </div>
     </div>
   )
