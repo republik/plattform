@@ -1,4 +1,6 @@
+import { ArticleActionsProvider } from '@/app/(sanity)/components/article-actions/article-actions-context'
 import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/article-bottom-actions'
+import { ArticleFloatingActions } from '@/app/(sanity)/components/article-actions/article-floating-actions'
 import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
 import { ContentWall } from '@/app/(sanity)/[...path]/components/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
@@ -38,62 +40,70 @@ export default function ArticleDocument({
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
-      <article
-        // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
-        data-force-theme={theme?.darkMode ? 'dark' : undefined}
-        className={editorialContent({
-          theme: theme?.name,
-        })}
-      >
-        {/* TITLE BLOCK */}
-        {cover && <EditorialImage value={cover} />}
+      <ArticleActionsProvider>
+        <article
+          // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
+          data-force-theme={theme?.darkMode ? 'dark' : undefined}
+          className={editorialContent({
+            theme: theme?.name,
+          })}
+        >
+          {/* TITLE BLOCK */}
+          {cover && <EditorialImage value={cover} />}
 
-        {heading && (
-          <p className='page-heading'>
-            <Link href={heading.slug}>
-              <InlinePortableText value={heading.title} />
-            </Link>
+          {heading && (
+            <p className='page-heading'>
+              <Link href={heading.slug}>
+                <InlinePortableText value={heading.title} />
+              </Link>
+            </p>
+          )}
+          <h1 className='page-title'>
+            <InlinePortableText value={title} />
+          </h1>
+          {hasContent(description) && (
+            <p className='page-lead'>
+              <InlinePortableText value={description} />
+            </p>
+          )}
+          <p className='page-byline'>
+            <InlinePortableText value={byline} />
           </p>
-        )}
-        <h1 className='page-title'>
-          <InlinePortableText value={title} />
-        </h1>
-        {hasContent(description) && (
-          <p className='page-lead'>
-            <InlinePortableText value={description} />
-          </p>
-        )}
-        <p className='page-byline'>
-          <InlinePortableText value={byline} />
-        </p>
 
-        <ArticleTopActions article={article} />
+          <ArticleTopActions article={article} />
 
-        <div>
-          <EditLink documentId={article._id} documentType='article' />
-        </div>
+          <div>
+            <EditLink documentId={article._id} documentType='article' />
+          </div>
 
-        <ContentWall
-          readingAccess={readingAccess}
-          excerpt={<ArticlePortableText value={article.content?.slice(0, 5)} />}
-          fullContent={<ArticlePortableText value={article.content} />}
-        />
+          <ContentWall
+            readingAccess={readingAccess}
+            excerpt={
+              <ArticlePortableText value={article.content?.slice(0, 5)} />
+            }
+            fullContent={<ArticlePortableText value={article.content} />}
+          />
 
-        <ArticleBottomActions article={article} />
+          <ArticleBottomActions article={article} />
 
-        <FollowArticle
-          seriesId={seriesId}
-          contributors={article.contributors}
-          collection={article.articleCollection}
-          newsletter={article.newsletter}
-        />
+          <FollowArticle
+            seriesId={seriesId}
+            contributors={article.contributors}
+            collection={article.articleCollection}
+            newsletter={article.newsletter}
+          />
 
-        <ArticleRecommendations
-          recommendations={
-            article.articleRecommendations as TeaserSmallFragmentType[]
-          }
-        />
-      </article>
+          <ArticleRecommendations
+            recommendations={
+              article.articleRecommendations as TeaserSmallFragmentType[]
+            }
+          />
+        </article>
+
+        {/* Rendered outside the article: the `editorialContent` grid applies a
+            top margin to every direct child, fixed elements included. */}
+        <ArticleFloatingActions article={article} />
+      </ArticleActionsProvider>
     </EventTrackingContext>
   )
 }

@@ -1,57 +1,24 @@
 'use client'
 
 import { ACTION_ICON_SIZE } from './action-style'
+import { useArticleActions } from './article-actions-context'
 import { BookmarkAction } from './bookmark-action'
 import { collectionsDocumentId } from './document-id'
+import {
+  MENU_SIDE_OFFSET,
+  menuItemStyle,
+  menuPanelStyle,
+  menuTriggerStyle,
+} from './menu-style'
 import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
 import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
+import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
-
-const menuTriggerStyle = css({
-  cursor: 'pointer',
-  display: 'inline-flex',
-})
-
-const menuPanelStyle = css({
-  backgroundColor: 'background.overlay',
-  boxShadow: 'md',
-  color: 'text',
-  minWidth: '12rem',
-  paddingY: '2',
-  _stateOpen: { animation: 'fadeIn' },
-  _stateClosed: { animation: 'fadeOut' },
-})
-
-const menuItemStyle = css({
-  alignItems: 'center',
-  color: 'text',
-  cursor: 'pointer',
-  display: 'flex',
-  gap: '3',
-  fontSize: 's',
-  fontWeight: 'regular',
-  outline: 'none',
-  paddingX: '5',
-  paddingY: '3',
-  textAlign: 'left',
-  textDecoration: 'none',
-  textStyle: 'sans',
-  width: 'full',
-  '&[data-highlighted], &:hover': {
-    backgroundColor: 'hover',
-  },
-  '&[data-disabled], &:disabled': {
-    color: 'disabled',
-    cursor: 'not-allowed',
-  },
-  '& > svg': {
-    flexShrink: 0,
-  },
-})
+import { useRef } from 'react'
 
 export type ArticleTopActionsProps = {
   article: ArticleDocumentType
@@ -62,8 +29,14 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const path = article.slug
   const title = article.plainTitle
 
+  // The floating action bar stays hidden while this row is on screen.
+  const ref = useRef<HTMLDivElement>(null)
+  const { setTopActionsInView } = useArticleActions()
+  useIntersectionObserver(ref, { callback: setTopActionsInView })
+
   return (
     <div
+      ref={ref}
       className={css({
         alignItems: 'center',
         display: 'flex',
@@ -91,7 +64,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         <DropdownMenu.Portal>
           <DropdownMenu.Content
             align='end'
-            sideOffset={8}
+            sideOffset={MENU_SIDE_OFFSET}
             collisionPadding={16}
             className={menuPanelStyle}
           >
