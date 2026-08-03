@@ -19,6 +19,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
 import { useRef } from 'react'
+import { DiscussionAction } from './discussion-action'
 
 export type ArticleTopActionsProps = {
   article: ArticleDocumentType
@@ -53,6 +54,11 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
+      <DiscussionAction
+        path={path}
+        backendDiscussionId={article.discussion?.backendDiscussionId}
+        inlineDiscussion={article.inlineDiscussion ?? false}
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger

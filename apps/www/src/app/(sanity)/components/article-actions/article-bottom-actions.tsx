@@ -15,6 +15,7 @@ import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
+import { DiscussionAction } from './discussion-action'
 
 export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
@@ -36,6 +37,12 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
     >
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
+      <DiscussionAction
+        path={path}
+        backendDiscussionId={article.discussion?.backendDiscussionId}
+        inlineDiscussion={article.inlineDiscussion ?? false}
+        longLabel
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
