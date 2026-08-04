@@ -32,8 +32,10 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
 
   // The floating action bar stays hidden while this row is on screen.
   const ref = useRef<HTMLDivElement>(null)
-  const { setTopActionsInView } = useArticleActions()
-  useIntersectionObserver(ref, { callback: setTopActionsInView })
+  const { setTopActionsEntry } = useArticleActions()
+  useIntersectionObserver(ref, {
+    callback: (_isIntersecting, entry) => setTopActionsEntry(entry),
+  })
 
   return (
     <div

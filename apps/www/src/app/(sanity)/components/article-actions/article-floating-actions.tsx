@@ -83,7 +83,7 @@ export function ArticleFloatingActions({
   const { audioPlayerVisible } = useAudioContext()
   const { paynoteInlineHeight } = usePaynotes()
   const { isIOSApp } = usePlatformInformation()
-  const { topActionsInView } = useArticleActions()
+  const { topActionsCleared } = useArticleActions()
 
   const scrollDirection = useScrollDirection({
     upThreshold: 25,
@@ -146,7 +146,7 @@ export function ArticleFloatingActions({
 
   // `scrollDirection` is null until the first threshold crossing, so the bar
   // starts out hidden.
-  const visible = scrollDirection === 'up' && !topActionsInView
+  const visible = scrollDirection === 'up' && topActionsCleared
 
   return createPortal(
     <div
