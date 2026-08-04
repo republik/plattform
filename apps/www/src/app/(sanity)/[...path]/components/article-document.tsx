@@ -2,6 +2,9 @@ import { ArticleActionsProvider } from '@/app/(sanity)/components/article-action
 import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/article-bottom-actions'
 import { ArticleFloatingActions } from '@/app/(sanity)/components/article-actions/article-floating-actions'
 import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
+import { JumpToReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { ReadingPositionTracker } from '@/app/(sanity)/components/article-actions/reading-position-tracker'
 import { ContentWall } from '@/app/(sanity)/[...path]/components/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
@@ -35,6 +38,7 @@ export default function ArticleDocument({
     readingAccess,
   } = article
   const seriesId = articleCollection?.series && articleCollection?._id
+  const documentId = collectionsDocumentId(article)
 
   return (
     <EventTrackingContext category='Article'>
@@ -72,9 +76,13 @@ export default function ArticleDocument({
 
           <ArticleTopActions article={article} />
 
-          <div>
-            <EditLink documentId={article._id} documentType='article' />
-          </div>
+        {/* Floating, viewport-anchored — but inside the <article> it measures
+            against, and early in the tab order for an offer made on arrival. */}
+        <JumpToReadingPosition documentId={documentId} />
+
+        <div>
+          <EditLink documentId={article._id} documentType='article' />
+        </div>
 
           <ContentWall
             readingAccess={readingAccess}
@@ -84,7 +92,10 @@ export default function ArticleDocument({
             fullContent={<ArticlePortableText value={article.content} />}
           />
 
-          <ArticleBottomActions article={article} />
+        {/* End of the text: everything below is outside the measured region. */}
+        <ReadingPositionTracker documentId={documentId} />
+
+        <ArticleBottomActions article={article} />
 
           <FollowArticle
             seriesId={seriesId}

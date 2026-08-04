@@ -1,0 +1,22 @@
+# Deliberately narrower than `upsertDocumentProgress` in ProgressMutations.gql,
+# which selects through `document { userProgress { … } }`: Sanity-backed items
+# resolve to a null `Document` by design, so there is nothing to read back there.
+#
+# `nodeId` is `String!` in the schema and can't be omitted. Positions here are
+# percentage-only — the Sanity renderer emits no `[data-pos]` anchors to name —
+# so it goes out empty, the same way mark-as-read always has.
+mutation UpsertReadingPosition(
+  $documentId: ID!
+  $percentage: Float!
+  $nodeId: String!
+) {
+  upsertDocumentProgress(
+    documentId: $documentId
+    percentage: $percentage
+    nodeId: $nodeId
+  ) {
+    id
+    percentage
+    updatedAt
+  }
+}
