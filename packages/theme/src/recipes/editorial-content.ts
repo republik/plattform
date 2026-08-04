@@ -1,4 +1,5 @@
 import { defineParts, defineRecipe } from '@pandacss/dev'
+import { editorialFontSizes, readerScaledFontSize } from '../typography'
 
 const contentParts = defineParts({
   root: { selector: '&' },
@@ -23,12 +24,25 @@ const contentParts = defineParts({
   orderedListItems: { selector: '& > ol li' },
 })
 
+/**
+ * An editorial text style whose size follows the reader's font size setting.
+ * Size and text style come from the same key, so the two can't drift — see
+ * `editorialFontSizes`, which the preset's `textStyles` use as well.
+ */
+const readerScaledText = (textStyle: keyof typeof editorialFontSizes) => ({
+  textStyle,
+  ...readerScaledFontSize(editorialFontSizes[textStyle]),
+})
+
 export const editorialContentRecipe = defineRecipe({
   className: 'editorial-content',
   description: 'Styles for editorial content (like articles)',
 
   base: contentParts({
     root: {
+      // Confines the reader's font size setting to editorial content — see
+      // `READER_FONT_SCALE`.
+      '--article-font-scale': 'var(--reader-font-scale, 1)',
       display: 'grid',
       gridTemplateColumns: `
         [full-start]
@@ -114,30 +128,22 @@ export const editorialContentRecipe = defineRecipe({
       EDITORIAL: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'editorialTitle' },
-        lead: { textStyle: 'editorialLead' },
+        lead: readerScaledText('editorialLead'),
         byline: { textStyle: 'editorialByline' },
-        paragraphs: { textStyle: 'editorialParagraph' },
-        subheadings: { textStyle: 'editorialSubheading' },
-        unorderedListItems: {
-          textStyle: 'editorialParagraph',
-        },
-        orderedListItems: {
-          textStyle: 'editorialParagraph',
-        },
+        paragraphs: readerScaledText('editorialParagraph'),
+        subheadings: readerScaledText('editorialSubheading'),
+        unorderedListItems: readerScaledText('editorialParagraph'),
+        orderedListItems: readerScaledText('editorialParagraph'),
       }),
       META: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'metaTitle' },
-        lead: { textStyle: 'editorialLead' },
+        lead: readerScaledText('editorialLead'),
         byline: { textStyle: 'editorialByline' },
-        paragraphs: { textStyle: 'editorialParagraph' },
-        subheadings: { textStyle: 'editorialSubheading' },
-        unorderedListItems: {
-          textStyle: 'editorialParagraph',
-        },
-        orderedListItems: {
-          textStyle: 'editorialParagraph',
-        },
+        paragraphs: readerScaledText('editorialParagraph'),
+        subheadings: readerScaledText('editorialSubheading'),
+        unorderedListItems: readerScaledText('editorialParagraph'),
+        orderedListItems: readerScaledText('editorialParagraph'),
       }),
       PAGE: contentParts({
         heading: {
@@ -151,18 +157,14 @@ export const editorialContentRecipe = defineRecipe({
           gridColumn: 'breakout',
         },
         lead: {
-          textStyle: 'editorialLead',
+          ...readerScaledText('editorialLead'),
           textAlign: 'center',
           gridColumn: 'breakout',
         },
-        paragraphs: { textStyle: 'metaParagraph' },
-        subheadings: { textStyle: 'metaSubheading' },
-        unorderedListItems: {
-          textStyle: 'metaParagraph',
-        },
-        orderedListItems: {
-          textStyle: 'metaParagraph',
-        },
+        paragraphs: readerScaledText('metaParagraph'),
+        subheadings: readerScaledText('metaSubheading'),
+        unorderedListItems: readerScaledText('metaParagraph'),
+        orderedListItems: readerScaledText('metaParagraph'),
       }),
     },
   },

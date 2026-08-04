@@ -1,6 +1,7 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
 import { editorialContentRecipe } from '../src/recipes/editorial-content'
+import { editorialFontSizes } from '../src/typography'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -353,7 +354,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'republikSerif',
             fontWeight: 'black',
             fontStyle: 'normal',
-            fontSize: { base: '1.875rem', md: '3.625rem' },
+            fontSize: editorialFontSizes.editorialTitle,
             lineHeight: 1.1333,
           },
         },
@@ -362,7 +363,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: '400',
             fontStyle: 'normal',
-            fontSize: { base: '1.1875rem', md: '1.4375rem' },
+            fontSize: editorialFontSizes.editorialLead,
             lineHeight: 1.5,
           },
         },
@@ -371,7 +372,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: '400',
             fontStyle: 'normal',
-            fontSize: { base: '0.875rem', md: '0.9375rem' },
+            fontSize: editorialFontSizes.editorialByline,
             lineHeight: 1.25,
           },
         },
@@ -380,7 +381,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: '500',
             fontStyle: 'normal',
-            fontSize: { base: '1rem', md: '1.25rem' },
+            fontSize: editorialFontSizes.editorialHeading,
           },
         },
         editorialParagraph: {
@@ -388,7 +389,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: 400,
             fontStyle: 'normal',
-            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            fontSize: editorialFontSizes.editorialParagraph,
             lineHeight: 1.6,
           },
         },
@@ -397,7 +398,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: 700,
             fontStyle: 'normal',
-            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            fontSize: editorialFontSizes.editorialSubheading,
             lineHeight: 1.5,
           },
         },
@@ -406,7 +407,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
             fontStyle: 'normal',
-            fontSize: { base: '1.875rem', md: '3.625rem' },
+            fontSize: editorialFontSizes.metaTitle,
             lineHeight: 1.1333,
           },
         },
@@ -415,7 +416,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
             fontStyle: 'normal',
-            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            fontSize: editorialFontSizes.metaSubheading,
             lineHeight: 1.5,
           },
         },
@@ -424,7 +425,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: 400,
             fontStyle: 'normal',
-            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            fontSize: editorialFontSizes.metaParagraph,
             lineHeight: 1.6,
           },
         },

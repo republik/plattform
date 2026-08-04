@@ -2,14 +2,16 @@ import type { PullQuote } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
 import { AsideImage } from './aside-image'
 
+// Sizes follow the reader's font size setting — see `READER_FONT_SCALE` in the
+// theme package.
 const quoteStyle = css({
   textStyle: 'serifBold',
-  fontSize: '3xl',
+  fontSize: 'calc(token(fontSizes.3xl) * var(--article-font-scale, 1))',
 })
 
 const sourceStyle = css({
   textStyle: 'sans',
-  fontSize: 's',
+  fontSize: 'calc(token(fontSizes.s) * var(--article-font-scale, 1))',
 })
 
 export function PullQuote({ value }: { value: PullQuote }) {
