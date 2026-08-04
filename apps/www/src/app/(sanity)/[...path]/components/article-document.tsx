@@ -1,5 +1,8 @@
 import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/article-bottom-actions'
 import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
+import { JumpToReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { ReadingPositionTracker } from '@/app/(sanity)/components/article-actions/reading-position-tracker'
 import { ContentWall } from '@/app/(sanity)/[...path]/components/content-wall'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
@@ -33,6 +36,7 @@ export default function ArticleDocument({
     readingAccess,
   } = article
   const seriesId = articleCollection?.series && articleCollection?._id
+  const documentId = collectionsDocumentId(article)
 
   return (
     <EventTrackingContext category='Article'>
@@ -69,6 +73,10 @@ export default function ArticleDocument({
 
         <ArticleTopActions article={article} />
 
+        {/* Floating, viewport-anchored — but inside the <article> it measures
+            against, and early in the tab order for an offer made on arrival. */}
+        <JumpToReadingPosition documentId={documentId} />
+
         <div>
           <EditLink documentId={article._id} documentType='article' />
         </div>
@@ -78,6 +86,9 @@ export default function ArticleDocument({
           excerpt={<ArticlePortableText value={article.content?.slice(0, 5)} />}
           fullContent={<ArticlePortableText value={article.content} />}
         />
+
+        {/* End of the text: everything below is outside the measured region. */}
+        <ReadingPositionTracker documentId={documentId} />
 
         <ArticleBottomActions article={article} />
 
