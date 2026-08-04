@@ -11,13 +11,15 @@ const containerStyle = css({
     px: '6',
   },
 
+  // Sizes follow the reader's font size setting — see `READER_FONT_SCALE` in the
+  // theme package.
   '& > *': {
     fontFamily: 'gtAmericaStandard',
-    fontSize: '0.9375rem',
+    fontSize: 'calc(0.9375rem * var(--article-font-scale, 1))',
     lineHeight: 1.4,
     pt: '3',
     md: {
-      fontSize: '1.125rem',
+      fontSize: 'calc(1.125rem * var(--article-font-scale, 1))',
       lineHeight: 1.5,
       pt: '4',
     },

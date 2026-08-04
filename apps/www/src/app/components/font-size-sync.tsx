@@ -1,12 +1,19 @@
 'use client'
 
-import { DEFAULT_FONT_SIZE, isValidFontSize } from '@/app/lib/font-size'
+import {
+  DEFAULT_FONT_SIZE,
+  fontSizeScale,
+  isValidFontSize,
+} from '@/app/lib/font-size'
 import { useFontSize } from '@/lib/fontSize'
 import { writeFontSizeCookie } from '@/lib/fontSizeCookie'
 import { useEffect } from 'react'
 
 /**
- * Keeps the document root in sync with the reader's font size.
+ * Keeps `--reader-font-scale` on the document root in sync with the reader's
+ * font size — the client-side counterpart of `FontSizeStyle`. Only the
+ * `editorialContent` recipe consumes the property, so the setting scales
+ * article body text and nothing else.
  *
  * localStorage remains the source of truth — the Pages Router reads it directly
  * and `usePersistedState` broadcasts changes across instances and tabs, so the
@@ -24,13 +31,16 @@ export function FontSizeSync() {
       return
     }
 
-    document.documentElement.style.fontSize = `${fontSize}px`
+    document.documentElement.style.setProperty(
+      '--reader-font-scale',
+      `${fontSizeScale(fontSize)}`,
+    )
     writeFontSizeCookie(fontSize)
 
     return () => {
       // Scoped to the reading views, like the Pages Router's FontSize/Sync —
-      // leaving the root scaled would follow the reader onto every other page.
-      document.documentElement.style.fontSize = ''
+      // leaving the property set would follow the reader onto every other page.
+      document.documentElement.style.removeProperty('--reader-font-scale')
     }
   }, [fontSize])
 

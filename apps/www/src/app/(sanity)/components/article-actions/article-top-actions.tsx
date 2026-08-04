@@ -65,7 +65,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
-  console.log('article', article)
+
   return (
     <div
       className={css({

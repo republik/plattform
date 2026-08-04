@@ -22,3 +22,15 @@ export function isValidFontSize(value: number): boolean {
     Number.isFinite(value) && value >= MIN_FONT_SIZE && value <= MAX_FONT_SIZE
   )
 }
+
+/**
+ * The stored size as a unitless factor — what `--reader-font-scale` carries.
+ *
+ * The setting is stored in pixels (the Pages Router applies it as a root font
+ * size and reads the same key), but the App Router multiplies the editorial
+ * sizes with it, which keeps them in `rem` and so keeps the browser's own font
+ * size setting intact.
+ */
+export function fontSizeScale(fontSize: number): number {
+  return Math.round((fontSize / DEFAULT_FONT_SIZE) * 1e4) / 1e4
+}
