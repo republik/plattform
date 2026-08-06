@@ -1,6 +1,6 @@
 import ArticleDocument from '@/app/(sanity)/[...path]/components/article-document'
 import PageDocument from '@/app/(sanity)/[...path]/components/page-document'
-import { DOCUMENT_QUERY } from '@/app/(sanity)/groq/document-query'
+import { DOCUMENT_BY_SLUG_QUERY } from '@/app/(sanity)/groq/document-query'
 import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { getArticleJsonLd } from '@/app/(sanity)/lib/json-ld'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
@@ -44,7 +44,7 @@ export default async function DocumentPage({
   const slug = `/${path.join('/')}`
 
   const { data } = await sanityFetch({
-    query: DOCUMENT_QUERY,
+    query: DOCUMENT_BY_SLUG_QUERY,
     params: { slug },
   })
 
