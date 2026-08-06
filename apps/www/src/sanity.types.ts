@@ -291,12 +291,13 @@ export type PodcastReference = {
   [internalGroqTypeReferenceTo]?: 'podcast'
 }
 
-export type Vorlage = {
+export type ArticleTemplate = {
   _id: string
-  _type: 'vorlage'
+  _type: 'articleTemplate'
   _createdAt: string
   _updatedAt: string
   _rev: string
+  templateName?: string
   title: InlineEditor
   description?: InlineEditor
   byline?: InlineEditor
@@ -462,6 +463,9 @@ export type NestedEditor = Array<
     } & Divider)
   | ({
       _key: string
+    } & DividerStars)
+  | ({
+      _key: string
     } & Button)
 >
 
@@ -508,6 +512,9 @@ export type PageEditor = Array<
   | ({
       _key: string
     } & Divider)
+  | ({
+      _key: string
+    } & DividerStars)
   | ({
       _key: string
     } & EmbedVideo)
@@ -600,6 +607,9 @@ export type ArticleEditor = Array<
   | ({
       _key: string
     } & Divider)
+  | ({
+      _key: string
+    } & DividerStars)
   | ({
       _key: string
     } & EmbedVideo)
@@ -786,9 +796,14 @@ export type Discussion = {
   _updatedAt: string
   _rev: string
   title: string
+  path?: string
   discussionClosed?: boolean
+  discussionHidden?: boolean
+  allowedRoles?: Array<string>
   commentsMaxLength?: number
-  commentsMinInterval?: number
+  disableTopLevelComments?: boolean
+  commentsCollapsable?: boolean
+  commentsDefaultOrder?: string
   discussionAnonymity?: 'ALLOWED' | 'ENFORCED' | 'FORBIDDEN'
   tags?: Array<string>
   tagRequired?: boolean
@@ -885,8 +900,8 @@ export type BlockQuote = {
 export type InfoBox = {
   _type: 'infoBox'
   title?: string
-  image?: AsideImage
   body?: NestedEditor
+  image?: AsideImage
   size?: 'float' | 'breakout'
   figureSize?: 'S' | 'M' | 'L'
   figureFloat?: boolean
@@ -1013,6 +1028,11 @@ export type Chart = {
   chartConfig?: ChartConfig
   source?: InlineEditor
   size?: 'FLOAT_TINY' | 'NARROW' | 'NORMAL' | 'BREAKOUT'
+}
+
+export type DividerStars = {
+  _type: 'dividerStars'
+  style?: string
 }
 
 export type Divider = {
@@ -1396,7 +1416,7 @@ export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | NewsletterReference
   | PodcastReference
-  | Vorlage
+  | ArticleTemplate
   | Slug
   | AudioVersion
   | LogEntry
@@ -1438,6 +1458,7 @@ export type AllSanitySchemaTypes =
   | EmbedTwitter
   | EmbedVideo
   | Chart
+  | DividerStars
   | Divider
   | ImageGroup
   | GroupedEditorialImage
@@ -1890,6 +1911,12 @@ export type DOCUMENT_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
+                  style?: string
+                  markDefs: null
+                }
             > | null
             caption?: Caption
             markDefs: null
@@ -1916,6 +1943,13 @@ export type DOCUMENT_QUERY_RESULT =
         | {
             _key: string
             _type: 'divider'
+            style?: string
+            markDefs: null
+            body: null
+          }
+        | {
+            _key: string
+            _type: 'dividerStars'
             style?: string
             markDefs: null
             body: null
@@ -2028,6 +2062,12 @@ export type DOCUMENT_QUERY_RESULT =
               | {
                   _key: string
                   _type: 'divider'
+                  style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
                   style?: string
                   markDefs: null
                 }
@@ -2160,6 +2200,12 @@ export type DOCUMENT_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
+                  style?: string
+                  markDefs: null
+                }
             > | null
             markDefs: null
           }
@@ -2219,6 +2265,12 @@ export type DOCUMENT_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
+                  style?: string
+                  markDefs: null
+                }
             > | null
             markDefs: null
           }
@@ -2239,7 +2291,6 @@ export type DOCUMENT_QUERY_RESULT =
             _key: string
             _type: 'infoBox'
             title?: string
-            image?: AsideImage
             body: Array<
               | {
                   children?: Array<
@@ -2292,7 +2343,14 @@ export type DOCUMENT_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
+                  style?: string
+                  markDefs: null
+                }
             > | null
+            image?: AsideImage
             size?: 'breakout' | 'float'
             figureSize?: 'L' | 'M' | 'S'
             figureFloat?: boolean
@@ -2378,6 +2436,12 @@ export type DOCUMENT_QUERY_RESULT =
               | {
                   _key: string
                   _type: 'divider'
+                  style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
                   style?: string
                   markDefs: null
                 }
@@ -2691,6 +2755,12 @@ export type DOCUMENT_QUERY_RESULT =
                         style?: string
                         markDefs: null
                       }
+                    | {
+                        _key: string
+                        _type: 'dividerStars'
+                        style?: string
+                        markDefs: null
+                      }
                   > | null
                   caption?: Caption
                   markDefs: null
@@ -2717,6 +2787,13 @@ export type DOCUMENT_QUERY_RESULT =
               | {
                   _key: string
                   _type: 'divider'
+                  style?: string
+                  markDefs: null
+                  body: null
+                }
+              | {
+                  _key: string
+                  _type: 'dividerStars'
                   style?: string
                   markDefs: null
                   body: null
@@ -2864,7 +2941,6 @@ export type DOCUMENT_QUERY_RESULT =
                   _key: string
                   _type: 'infoBox'
                   title?: string
-                  image?: AsideImage
                   body: Array<
                     | {
                         children?: Array<
@@ -2917,7 +2993,14 @@ export type DOCUMENT_QUERY_RESULT =
                         style?: string
                         markDefs: null
                       }
+                    | {
+                        _key: string
+                        _type: 'dividerStars'
+                        style?: string
+                        markDefs: null
+                      }
                   > | null
+                  image?: AsideImage
                   size?: 'breakout' | 'float'
                   figureSize?: 'L' | 'M' | 'S'
                   figureFloat?: boolean
@@ -3295,6 +3378,12 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 style?: string
                 markDefs: null
               }
+            | {
+                _key: string
+                _type: 'dividerStars'
+                style?: string
+                markDefs: null
+              }
           > | null
           caption?: Caption
           markDefs: null
@@ -3321,6 +3410,13 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
       | {
           _key: string
           _type: 'divider'
+          style?: string
+          markDefs: null
+          body: null
+        }
+      | {
+          _key: string
+          _type: 'dividerStars'
           style?: string
           markDefs: null
           body: null
@@ -3468,7 +3564,6 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
           _key: string
           _type: 'infoBox'
           title?: string
-          image?: AsideImage
           body: Array<
             | {
                 children?: Array<
@@ -3521,7 +3616,14 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 style?: string
                 markDefs: null
               }
+            | {
+                _key: string
+                _type: 'dividerStars'
+                style?: string
+                markDefs: null
+              }
           > | null
+          image?: AsideImage
           size?: 'breakout' | 'float'
           figureSize?: 'L' | 'M' | 'S'
           figureFloat?: boolean
