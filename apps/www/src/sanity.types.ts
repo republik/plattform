@@ -333,7 +333,6 @@ export type ArticleTemplate = {
     _key: string
   }>
   slug?: Slug
-  slugAuto?: boolean
   articleCollections?: Array<{
     collection: ArticleCollectionReference
     featured?: boolean
@@ -741,8 +740,7 @@ export type Article = {
     _type: 'file'
     _key: string
   }>
-  slug?: Slug
-  slugAuto?: boolean
+  slug: Slug
   articleCollections?: Array<{
     collection: ArticleCollectionReference
     featured?: boolean
@@ -1180,9 +1178,6 @@ export type Page = {
   teaserSmall?: TeaserSmallConfig
   seo?: Seo
   theme?: Theme
-  slugSegment?: string
-  slugTemplate?:
-    '{{segment}}-{{title}}' | '{{title}}-{{segment}}' | '{{segment}}'
 }
 
 export type Code = {
@@ -1606,7 +1601,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
     _type: 'block'
     _key: string
   }> | null
-  slug: string | null
+  slug: string
   image: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -1636,7 +1631,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
 export type AUDIO_QUEUE_ITEMS_QUERY_RESULT = Array<{
   _id: string
   title: string
-  path: string | null
+  path: string
   publishDate: string | null
   audioSourceMp3: string | null
   audioDurationMs: number | null
@@ -1712,7 +1707,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
       _type: 'article'
       title: InlineEditor
       description: InlineEditor | null
-      slug: string | null
+      slug: string
       _updatedAt: string
       cover: {
         _type: 'editorialImage'
@@ -1836,13 +1831,17 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   content?: InlineEditor
                   href?: string
                   reference?:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                 }
               | {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -2498,7 +2497,9 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -2512,7 +2513,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
               _type: 'block'
               _key: string
             }> | null
-            slug: string | null
+            slug: string
             image: {
               asset?: SanityImageAssetReference
               media?: unknown
@@ -2554,7 +2555,9 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -3087,7 +3090,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
       _type: 'article'
       title: InlineEditor
       description: InlineEditor | null
-      slug: string | null
+      slug: string
       _updatedAt: string
       cover: {
         _type: 'editorialImage'
@@ -3211,13 +3214,17 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   content?: InlineEditor
                   href?: string
                   reference?:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                 }
               | {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -3873,7 +3880,9 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -3887,7 +3896,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
               _type: 'block'
               _key: string
             }> | null
-            slug: string | null
+            slug: string
             image: {
               asset?: SanityImageAssetReference
               media?: unknown
@@ -3929,7 +3938,9 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -4458,7 +4469,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
 // Query: *[    _type == "article" &&    defined(slug.current) &&    defined(publishDate) &&    coalesce(showInFeed, true)  ] | order(publishDate desc) [0...100] {    _id,    "path": slug.current,    "title": pt::text(title),    "description": pt::text(description),    publishDate  }
 export type FEED_QUERY_RESULT = Array<{
   _id: string
-  path: string | null
+  path: string
   title: string
   description: string
   publishDate: string | null
@@ -4670,13 +4681,17 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 content?: InlineEditor
                 href?: string
                 reference?:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
               }
             | {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -4717,7 +4732,9 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                       _key: string
                       _type: 'internalLink'
                       reference:
-                        ArticleReference | ContributorReference | PageReference
+                        | ArticleReference
+                        | ContributorReference
+                        | PageReference
                       slug: string | null
                     }
                   | {
@@ -4953,7 +4970,9 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                       _key: string
                       _type: 'internalLink'
                       reference:
-                        ArticleReference | ContributorReference | PageReference
+                        | ArticleReference
+                        | ContributorReference
+                        | PageReference
                       slug: string | null
                     }
                   | {
@@ -5133,7 +5152,9 @@ export type SERIES_MENU_QUERY_RESULT = {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -5147,7 +5168,7 @@ export type SERIES_MENU_QUERY_RESULT = {
             _type: 'block'
             _key: string
           }> | null
-          slug: string | null
+          slug: string
           image: {
             asset?: SanityImageAssetReference
             media?: unknown
@@ -5189,7 +5210,9 @@ export type SERIES_MENU_QUERY_RESULT = {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -5271,7 +5294,9 @@ export type SERIES_NAV_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -5285,7 +5310,7 @@ export type SERIES_NAV_QUERY_RESULT = {
           _type: 'block'
           _key: string
         }> | null
-        slug: string | null
+        slug: string
         image: {
           asset?: SanityImageAssetReference
           media?: unknown
@@ -5327,7 +5352,9 @@ export type SERIES_NAV_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -5372,7 +5399,7 @@ export type SERIES_NAV_QUERY_RESULT = {
 export type SITEMAP_BY_YEAR_QUERY_RESULT = Array<
   | {
       _type: 'article'
-      path: string | null
+      path: string
       title: string
       publishDate: string | null
       _updatedAt: string
@@ -5576,7 +5603,7 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
         _type: 'block'
         _key: string
       }> | null
-      slug: string | null
+      slug: string
       image: {
         asset?: SanityImageAssetReference
         media?: unknown
@@ -5692,7 +5719,7 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
         _type: 'block'
         _key: string
       }> | null
-      slug: string | null
+      slug: string
       image: {
         asset?: SanityImageAssetReference
         media?: unknown
@@ -5820,7 +5847,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                         _type: 'block'
                         _key: string
                       }> | null
-                      slug: string | null
+                      slug: string
                       image: {
                         asset?: SanityImageAssetReference
                         media?: unknown
@@ -5996,7 +6023,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                         _type: 'block'
                         _key: string
                       }> | null
-                      slug: string | null
+                      slug: string
                       image: {
                         asset?: SanityImageAssetReference
                         media?: unknown
@@ -6134,7 +6161,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                         _type: 'block'
                         _key: string
                       }> | null
-                      slug: string | null
+                      slug: string
                       image: {
                         asset?: SanityImageAssetReference
                         media?: unknown
@@ -6253,7 +6280,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                         _type: 'block'
                         _key: string
                       }> | null
-                      slug: string | null
+                      slug: string
                       image: {
                         asset?: SanityImageAssetReference
                         media?: unknown

@@ -106,11 +106,13 @@ export function PageHeader({
           className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
         >
           {isLoggedIn ? (
-            <Link href='/meine-republik'>
+            // TEMP: plain <a> instead of next/link to force a hard navigation
+            // and verify the App Router catch-all is shadowing this Pages Router route
+            <a href='/meine-republik'>
               <Avatar {...portrait} />
-            </Link>
+            </a>
           ) : (
-            <Link
+            <a
               href='/anmelden'
               className={css({
                 display: 'flex',
@@ -132,7 +134,7 @@ export function PageHeader({
               >
                 Anmelden
               </span>
-            </Link>
+            </a>
           )}
         </div>
         <div className={css({ m: 'header.logoMargin', md: { width: '100%' } })}>
