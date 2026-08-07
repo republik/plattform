@@ -73,8 +73,7 @@ export type MeObjectType = MeQuery['me']
 export type TrialStatusType =
   | 'MEMBER' // could also be null
   | 'TRIAL_ELIGIBLE'
-  | 'TRIAL_GROUP_A'
-  | 'TRIAL_GROUP_B'
+  | 'TRIAL_GROUP'
   | 'TRIAL_GROUP_TEILEN'
   | 'NOT_TRIAL_ELIGIBLE'
 
@@ -102,16 +101,8 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   // important: trial users have the member role, too, but they don't have a subscription
   if (me.activeMembership || me.activeMagazineSubscription) return 'MEMBER'
 
-  // In trial user:
-  // We use the first character of the user id to assign a trial group.
-  // The character is either a number [0-9] or a letter [a-f].
-  // [0-7] -> group A, [8-f] -> group B
-  if (me.regwallTrialStatus === 'Active') {
-    const firstChar = me.id[0]
-    return ['0', '1', '2', '3', '4', '5', '6', '7'].includes(firstChar)
-      ? 'TRIAL_GROUP_A' // in trial user, AB-test group A
-      : 'TRIAL_GROUP_B' // in trial user, AB-test group B
-  }
+  // logged-in user, currently in a "regwall" trial
+  if (me.regwallTrialStatus === 'Active') return 'TRIAL_GROUP'
 
   // abo teilen user: have the member role and should see the magazine
   if (me.roles?.includes('member')) return 'TRIAL_GROUP_TEILEN'

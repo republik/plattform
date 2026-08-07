@@ -173,13 +173,9 @@ export const PaynotesProvider = ({ children }) => {
       return setPaynoteKind('CAMPAIGN_PAYNOTE')
     }
 
-    // one trial group (group A) is shown an inline paynote
-    if (trialStatus === 'TRIAL_GROUP_A') {
+    // trial users are shown an inline paynote
+    if (trialStatus === 'TRIAL_GROUP') {
       return setPaynoteKind('PAYNOTE_INLINE')
-    }
-    // the other group (group B) is shown the more prominent overlay
-    if (trialStatus === 'TRIAL_GROUP_B') {
-      return setPaynoteKind('OVERLAY_OPEN')
     }
 
     // abo teilen users are shown the inline paynote
