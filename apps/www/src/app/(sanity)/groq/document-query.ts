@@ -8,15 +8,29 @@ import {
 } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { TEASER_LIST_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import { TEASER_SMALL_FRAGMENT } from '@/app/(sanity)/groq/teaser-small-fragment'
-import type { DOCUMENT_QUERY_RESULT } from '@/sanity.types'
+import type {
+  DOCUMENT_BY_ID_QUERY_RESULT,
+  DOCUMENT_BY_SLUG_QUERY_RESULT,
+} from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
-export type ArticleDocumentType = Extract<
-  DOCUMENT_QUERY_RESULT,
-  { _type: 'article' }
+type Equals<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
+
+type Assert<T extends true> = T
+
+// DOCUMENT_BY_SLUG_QUERY and DOCUMENT_BY_ID_QUERY select the same DOCUMENT_FIELDS,
+// so typegen emits two structurally identical result types. Fail the build if they
+// ever drift, which is what makes the DocumentType alias below safe.
+type _ResultsMatch = Assert<
+  Equals<DOCUMENT_BY_SLUG_QUERY_RESULT, DOCUMENT_BY_ID_QUERY_RESULT>
 >
 
-export type PageDocumentType = Extract<DOCUMENT_QUERY_RESULT, { _type: 'page' }>
+export type DocumentType = DOCUMENT_BY_SLUG_QUERY_RESULT
+
+export type ArticleDocumentType = Extract<DocumentType, { _type: 'article' }>
+
+export type PageDocumentType = Extract<DocumentType, { _type: 'page' }>
 
 export type PageBuilderBlock =
   | NonNullable<NonNullable<PageDocumentType>['pageBuilder']>[number]
@@ -27,8 +41,7 @@ export type PageBuilderBlock =
       reference: TeaserLargeFragmentType
     }
 
-export const DOCUMENT_QUERY = defineQuery(
-  `*[_type in ["article", "page"] && slug.current == $slug][0]{
+const DOCUMENT_FIELDS = /* groq */ `{
     _id,
     _type,
     title,
@@ -121,5 +134,13 @@ export const DOCUMENT_QUERY = defineQuery(
         },
       }
     }
-  }`,
+  }
+  `
+
+export const DOCUMENT_BY_SLUG_QUERY = defineQuery(
+  `*[_type in ["article", "page"] && slug.current == $slug][0]${DOCUMENT_FIELDS}`,
+)
+
+export const DOCUMENT_BY_ID_QUERY = defineQuery(
+  `*[_type in ["article", "page"] && _id == $id][0]${DOCUMENT_FIELDS}`,
 )

@@ -1,6 +1,7 @@
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { Conditional } from '@/app/(sanity)/components/portable-text/conditional'
+import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
@@ -37,6 +38,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     imageGroup: ImageGroup,
     infoBox: InfoBox,
     divider: () => <hr />,
+    dividerStars: DividerStars,
     webOnly: WebOnly,
     html: Html,
     embedVideo: LegacyEmbedVideo,
