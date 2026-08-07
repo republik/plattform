@@ -12,10 +12,12 @@ import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasC
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/renderArticle'
 import { SeriesMenu } from '@/app/(sanity)/components/series-menu'
+import { TeaserSmallPreviewLink } from '@/app/(sanity)/components/teaser-small-preview-link'
 import { Theme } from '@/app/(sanity)/components/theme'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
+import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import Link from 'next/link'
 
@@ -77,8 +79,9 @@ export default function ArticleDocument({
             against, and early in the tab order for an offer made on arrival. */}
         <JumpToReadingPosition documentId={documentId} />
 
-        <div>
+        <div className={css({ display: 'flex', gap: '2' })}>
           <EditLink documentId={article._id} documentType='article' />
+          <TeaserSmallPreviewLink documentId={article._id} />
         </div>
 
         <ContentWall
