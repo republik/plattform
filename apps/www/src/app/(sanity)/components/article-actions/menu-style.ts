@@ -1,3 +1,4 @@
+import { token } from '@republik/theme/tokens'
 import { css } from '@republik/theme/css'
 
 /**
@@ -13,8 +14,8 @@ export const menuTriggerStyle = css({
 
 export const menuPanelStyle = css({
   backgroundColor: 'background.overlay',
-  borderRadius: 'md',
-  boxShadow: 'sm',
+  borderRadius: 'lg',
+  boxShadow: token.var('shadows.overlay'),
   color: 'text',
   minWidth: '12rem',
   paddingY: '2',

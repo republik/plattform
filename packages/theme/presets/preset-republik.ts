@@ -46,7 +46,7 @@ export const presetRepublik = definePreset({
         shadows: {
           sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.3)' },
           md: { value: '0 0 15px 0 rgba(0, 0, 0, 0.3)' },
-          overlay: { value: 'rgba(0, 0, 0, 0.1) 0px -5px 15px -3px' },
+          overlay: { value: 'rgba(0, 0, 0, 0.12) 0px -2px 15px -3px' },
         },
         sizes: {
           full: { value: '100%' },

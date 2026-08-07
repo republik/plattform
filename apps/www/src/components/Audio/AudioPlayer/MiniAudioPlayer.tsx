@@ -34,7 +34,7 @@ const styles = {
     justifyContent: 'flex-start',
     gap: 8,
     alignItems: 'center',
-    padding: '0 16px 0 8px',
+    padding: '0 16px 0 16px',
   }),
   metaDataWrapper: css({
     display: 'flex',
@@ -155,16 +155,6 @@ const MiniAudioPlayer = ({
         ) : (
           <AudioError />
         )}
-      </div>
-      <div>
-        <Scrubber
-          currentTime={currentTime}
-          duration={duration}
-          buffered={buffered}
-          onSeek={handleSeek}
-          disabled={!isDesktop || isLoading || hasError}
-          showScrubber={false}
-        />
       </div>
     </div>
   )
