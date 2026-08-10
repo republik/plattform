@@ -2,6 +2,8 @@ import { Company } from './types'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { CustomerInfoService } from './services/CustomerInfoService'
 import auth from '@orbiting/backend-modules-auth'
+import { ProjectRStripe, RepublikAGStripe } from './providers/stripe'
+import type Stripe from 'stripe'
 
 export const Companies: readonly Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
@@ -24,3 +26,10 @@ export function setupPaymentUserEventHooks(context: ConnectionContext) {
     },
   )
 }
+
+export const stripeProviders: Record<Company, Stripe> = {
+  PROJECT_R: ProjectRStripe,
+  REPUBLIK: RepublikAGStripe,
+}
+
+export type { Company }

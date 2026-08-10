@@ -70,6 +70,80 @@ const middleware = async (
   )
 
   server.get(
+    '/invoices/subscriptions/:hrid.pdf',
+    async function reqHandler(req: Request, res: Response, next: NextFunction) {
+      try {
+        // const { token } = req.query
+
+        // if (!token) {
+        //   return next()
+        // }
+
+        // const user = await AccessToken.getUserByAccessToken(token, context)
+
+        // if (!AccessToken.isReqPathAllowed(user, req)) {
+        //   return next()
+        // }
+
+        const { hrid } = req.params
+
+        const invoice = await invoices.subscriptions.findInvoice(
+          { hrid },
+          context,
+        )
+
+        if (!invoice) {
+          return next()
+        }
+
+        if (invoice.status !== 'paid') {
+          return next()
+        }
+
+        const pdf = await invoices.subscriptions.generate(invoice, context)
+
+        res
+          .writeHead(200, {
+            'Content-Length': Buffer.byteLength(pdf),
+            'Content-Type': 'application/pdf',
+          })
+          .end(pdf)
+      } catch (error) {
+        console.error('error while generating invoice or payment slip', {
+          error,
+        })
+        res.status(500).end()
+      }
+    },
+  )
+
+  // TODO: REMOVE THIS ENDPOINT
+  server.get(
+    '/invoices/subscriptions/:hrid.json',
+    async function reqHandler(req: Request, res: Response, next: NextFunction) {
+      try {
+        const { hrid } = req.params
+
+        const invoice = await invoices.subscriptions.findInvoice(
+          { hrid },
+          context,
+        )
+
+        if (!invoice) {
+          return next()
+        }
+
+        return res.json(invoice)
+      } catch (error) {
+        console.error('error while generating invoice or payment slip', {
+          error,
+        })
+        res.status(500).end()
+      }
+    },
+  )
+
+  server.get(
     '/invoices/paymentslip/:hrid.pdf',
     getPdfReqHandler(
       invoices.paymentslip.isApplicable,
