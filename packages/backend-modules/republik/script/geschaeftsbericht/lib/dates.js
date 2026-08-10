@@ -1,0 +1,5 @@
+module.exports = {
+  DEFAULT_AS_OF: '2026-06-30',
+  DEFAULT_FY_FROM: '2025-07-01',
+  DEFAULT_FY_TO: '2026-07-01',
+}
