@@ -48,6 +48,20 @@ scripts (`republik/script/finance/calculateKpis.js`,
   counts, not specifically the `YEARLY_REDUCED` offer's discount. Cross-check
   against `payments/lib/config.ts`'s `PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS`
   if the numbers look off.
+  **Known side-effect in `membershipEvolutionByFiscalYear.js`**: because this
+  is recomputed per invoice at each snapshot date (not fixed at signup), a
+  `YEARLY_REDUCED` subscriber shows as "reduziert" while their discounted
+  first-year invoice is active, then flips to plain "Jahresmitgliedschaft"
+  once their non-discounted second-year invoice starts — the same continuous
+  subscription registers as one category "losing" a member and the other
+  "gaining" one in that month. Confirmed via cross-check against a raw
+  new/lost export: **the combined net across Jahresmitgliedschaft +
+  reduziert + Geschenk stays accurate every month** (checked within ~2%),
+  but the *gross* `new`/`lost` split specifically between Jahresmitgliedschaft
+  and reduziert can be inflated 50%+ in months with many first-year discounts
+  expiring (e.g. ~12 months after a `YEARLY_SUBSCRIPTION` signup wave).
+  Trust the combined total and `net`; don't read `new`/`lost` for these two
+  categories individually as real acquisition/churn figures.
 - **Gift detection (new payments system)**: matched by finding a
   `payments."giftVouchers"` row `redeemedBy` the subscription's user within
   ±14 days of `currentPeriodStart`. There's no FK between vouchers and
@@ -90,6 +104,12 @@ referenced in the original task list, but using this repo's validated
 categories instead of raw `membershipTypes.name` values. Runs 13 queries per
 invocation (parallelized, `--concurrency`, default 4); run it once per
 fiscal year you need (e.g. `--asOf 2025-06-30`, `--asOf 2026-06-30`).
+
+**Caveat**: `new`/`lost` for Jahresmitgliedschaft and reduziert specifically
+can be inflated by reduced-price reclassification — see the reduced-price
+bullet above. The combined total and `net` are reliable every month; the
+per-category gross churn split between those two isn't, in months where many
+first-year discounts expire.
 
 ## Year-over-year comparison
 
