@@ -50,15 +50,16 @@ WITH old_rows AS (
     m."userId",
     mt.name AS type_name,
     m."reducedPrice",
-    -- ABO_GIVE is the package purchased to gift a yearly membership; the
-    -- resulting membership itself still has the normal 'ABO' type, so gift
-    -- status can only be told apart by looking at the pledge's package name
-    -- (packages."group" was a one-time 2018 backfill and isn't reliably set
-    -- for packages created in later campaigns — don't use it).
+    -- A membership is a gift iff the person who paid for the pledge is not
+    -- the person currently holding the membership. Package name
+    -- (packages."name" = 'ABO_GIVE') is NOT a reliable signal on its own —
+    -- it only marks how the membership originated, not whether it's still
+    -- a gift today (e.g. after the recipient takes over paying, the pledge
+    -- linkage doesn't change). Same purchaser/holder-mismatch signal is
+    -- already used in RevenueStats/segments.js.
     EXISTS (
       SELECT 1 FROM pledges p
-      JOIN packages pkg ON pkg.id = p."packageId"
-      WHERE p.id = m."pledgeId" AND pkg."name" = 'ABO_GIVE'
+      WHERE p.id = m."pledgeId" AND p."userId" != m."userId"
     ) AS is_gift,
     mp."beginDate",
     mp."endDate"
