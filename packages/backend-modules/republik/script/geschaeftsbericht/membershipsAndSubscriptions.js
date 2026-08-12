@@ -50,10 +50,15 @@ WITH old_rows AS (
     m."userId",
     mt.name AS type_name,
     m."reducedPrice",
+    -- ABO_GIVE is the package purchased to gift a yearly membership; the
+    -- resulting membership itself still has the normal 'ABO' type, so gift
+    -- status can only be told apart by looking at the pledge's package name
+    -- (packages."group" was a one-time 2018 backfill and isn't reliably set
+    -- for packages created in later campaigns — don't use it).
     EXISTS (
       SELECT 1 FROM pledges p
       JOIN packages pkg ON pkg.id = p."packageId"
-      WHERE p.id = m."pledgeId" AND pkg."group" = 'GIVE'
+      WHERE p.id = m."pledgeId" AND pkg."name" = 'ABO_GIVE'
     ) AS is_gift,
     mp."beginDate",
     mp."endDate"
