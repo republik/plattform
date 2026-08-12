@@ -22,13 +22,14 @@ const argv = yargs
   .help()
   .version().argv
 
-// Adapts the snapshot pattern from the `cockpit_membership_evolution`
-// materialized view (republik/migrations/sqls/20250604102839-cockpit-materialized-view-up.sql):
-// a membership/subscription counts as active on :asOf if its earliest period
-// began before :asOf and its latest period ends on/after :asOf. Unions the
-// legacy pledge-based `memberships` tables with the new Stripe-based
-// `payments.subscriptions` tables and classifies both into the same
-// German report categories.
+// A membership/subscription counts as active on :asOf if it has a period
+// (membershipPeriods row / invoice) that covers :asOf directly — not merely
+// between the membership's earliest-ever and latest-ever period, since real
+// gaps exist between periods (failed payment, later resubscribe) and
+// aggregating across them would silently span those gaps. Unions the legacy
+// pledge-based `memberships` tables with the new Stripe-based
+// `payments.subscriptions` tables and classifies both into the same German
+// report categories.
 const QUERY = `
 WITH old_rows AS (
   SELECT
@@ -55,6 +56,13 @@ WITH old_rows AS (
   FROM "memberships" m
   JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
   JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+  -- asOf must fall inside THIS SPECIFIC period, not just between the
+  -- membership's earliest-ever and latest-ever period. Memberships can have
+  -- real gaps between periods (failed payment, later resubscribe) — monthly
+  -- memberships renew far more often than yearly ones, so gaps are far more
+  -- common there; aggregating min/max across all periods silently spans
+  -- those gaps and overcounts monthly memberships by ~11% in practice.
+  WHERE mp."beginDate" < $1 AND mp."endDate" >= $1
 ),
 new_rows AS (
   SELECT
@@ -80,6 +88,9 @@ new_rows AS (
     i."periodEnd" AS "endDate"
   FROM payments.subscriptions s
   JOIN payments.invoices i ON i."subscriptionId" = s.id
+  -- same reasoning as old_rows above: asOf must fall inside this specific
+  -- invoice period, not spanning across all of a subscription's invoices.
+  WHERE i."periodStart" < $1 AND i."periodEnd" >= $1
 ),
 categorized AS (
   SELECT id, "userId",
@@ -92,8 +103,7 @@ categorized AS (
       WHEN type_name = 'MONTHLY_ABO' THEN 'Monatsabonnement'
       WHEN type_name = 'ABO_GIVE_MONTHS' THEN 'Monatsabonnement als Geschenk'
       ELSE 'Sonstige (alt): ' || type_name
-    END AS category,
-    "beginDate", "endDate"
+    END AS category
   FROM old_rows
   UNION ALL
   SELECT id, "userId",
@@ -105,20 +115,13 @@ categorized AS (
       WHEN type_name = 'MONTHLY_SUBSCRIPTION' AND is_gift THEN 'Monatsabonnement als Geschenk'
       WHEN type_name = 'MONTHLY_SUBSCRIPTION' THEN 'Monatsabonnement'
       ELSE 'Sonstige (neu): ' || type_name
-    END AS category,
-    "beginDate", "endDate"
+    END AS category
   FROM new_rows
-),
-minmax AS (
-  SELECT id, "userId", category,
-         min("beginDate") AS "minBeginDate",
-         max("endDate") AS "maxEndDate"
-  FROM categorized
-  GROUP BY id, "userId", category
 )
-SELECT category, COUNT(*)::int AS count
-FROM minmax
-WHERE "maxEndDate" >= $1 AND "minBeginDate" < $1
+-- DISTINCT id guards against the (should-be-rare) case of overlapping
+-- periods for the same membership both covering asOf.
+SELECT category, COUNT(DISTINCT id)::int AS count
+FROM categorized
 GROUP BY category
 ORDER BY category
 `

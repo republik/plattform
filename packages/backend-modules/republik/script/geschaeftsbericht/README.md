@@ -54,7 +54,7 @@ scripts (`republik/script/finance/calculateKpis.js`,
 - **Gender distribution**: reflects *currently* active members (as of
   whenever the script is run), not a true point-in-time snapshot as of the
   fiscal year-end. Making it point-in-time would require reusing the
-  min/max begin/end-date logic from `membershipsAndSubscriptions.js`.
+  per-period `asOf` filter from `membershipsAndSubscriptions.js`.
 - **Interactive stories**: the script only outputs *candidate* URLs (any
   document containing a `DYNAMIC_COMPONENT` zone). Last year's report
   hand-picked ~12 URLs from a larger candidate set — expect to do the same
