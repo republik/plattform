@@ -148,10 +148,18 @@ query (it's always current-state, see below) but still takes a
   row, all simultaneously "active" by period dates alone — this was the
   single biggest driver of the total Mitgliedschaften/Abonnemente overcount
   vs. the original report, ~190-200 memberships as of 30.06.2025). Fixed by
-  requiring `status IN ('active', 'past_due', 'unpaid', 'paused')` — the
-  same status set already used as the authoritative "counts as active"
-  definition in the `cockpit_membership_evolution` materialized view
-  (`republik/migrations/sqls/20250604102839-cockpit-materialized-view-up.sql`).
+  excluding `status IN ('incomplete', 'incomplete_expired')` — **not** a
+  broader allowlist like `('active', 'past_due', 'unpaid', 'paused')`
+  (which is what the `cockpit_membership_evolution` materialized view uses
+  for its always-current dashboard count). That allowlist was tried first
+  and undercounted Monatsabonnement by ~59%: `status` is a CURRENT, mutable
+  field, so a subscription genuinely active on the snapshot date but since
+  cancelled shows `status = 'canceled'` *today* — a broad allowlist wrongly
+  excludes it, treating "cancelled since" the same as "payment never
+  completed". `incomplete`/`incomplete_expired` is the narrow, historically
+  stable signal: it means no payment ever succeeded, so the invoice's
+  period never represented real paid access in the first place, which is
+  true regardless of when you ask — unlike `canceled`.
 
 ## Monthly evolution within a fiscal year (new/lost/net)
 

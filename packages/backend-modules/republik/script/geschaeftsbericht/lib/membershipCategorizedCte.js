@@ -95,10 +95,21 @@ new_rows AS (
     -- their invoice's period nominally covers the date, hugely inflating
     -- counts for anyone who had payment trouble (found via diagnostic: one
     -- user had 5 'incomplete_expired' rows plus 1 real 'active' row, all
-    -- simultaneously "active" by period dates alone). Same status set
-    -- already used as the authoritative "counts as active" definition in
-    -- the cockpit_membership_evolution materialized view.
-    AND s.status IN ('active', 'past_due', 'unpaid', 'paused')
+    -- simultaneously "active" by period dates alone).
+    --
+    -- IMPORTANT: exclude only 'incomplete'/'incomplete_expired' here, NOT
+    -- a broader allowlist like ('active','past_due','unpaid','paused') —
+    -- status is a CURRENT, mutable field, not a historical one. A
+    -- subscription genuinely paid and active on the snapshot date but
+    -- since cancelled shows status='canceled' TODAY (very common for
+    -- monthly subscriptions, which churn a lot) — excluding 'canceled'
+    -- wrongly treats "cancelled since" the same as "payment never
+    -- completed", which undercounted Monatsabonnement by ~59% when tried
+    -- (confirmed via diagnostic). 'incomplete'/'incomplete_expired' is the
+    -- correct, narrow signal: it means no payment ever succeeded, so the
+    -- invoice's period never represented real paid access in the first
+    -- place — that's true regardless of when you ask, unlike 'canceled'.
+    AND s.status NOT IN ('incomplete', 'incomplete_expired')
 ),
 categorized AS (
   SELECT id, "userId", type_name, 'old' AS source,
