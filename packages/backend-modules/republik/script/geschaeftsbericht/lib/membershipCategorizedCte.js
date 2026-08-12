@@ -89,6 +89,16 @@ new_rows AS (
   JOIN payments.invoices i ON i."subscriptionId" = s.id
   WHERE i."periodStart" < $1 AND i."periodEnd" >= $1
     AND s."userId" != ALL($2::uuid[])
+    -- Without this, failed/abandoned payment attempts (status
+    -- 'incomplete'/'incomplete_expired' — e.g. a declined card retried
+    -- several times) get counted as active subscriptions just because
+    -- their invoice's period nominally covers the date, hugely inflating
+    -- counts for anyone who had payment trouble (found via diagnostic: one
+    -- user had 5 'incomplete_expired' rows plus 1 real 'active' row, all
+    -- simultaneously "active" by period dates alone). Same status set
+    -- already used as the authoritative "counts as active" definition in
+    -- the cockpit_membership_evolution materialized view.
+    AND s.status IN ('active', 'past_due', 'unpaid', 'paused')
 ),
 categorized AS (
   SELECT id, "userId", type_name, 'old' AS source,

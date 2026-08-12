@@ -138,6 +138,20 @@ query (it's always current-state, see below) but still takes a
   category → ABO row + YEARLY_SUB row → summed total), so a mismatch against
   that table can be traced to a specific system instead of only comparing
   already-combined totals.
+- **Failed-payment-attempt inflation (new payments system, fixed)**: the
+  query used to count ANY `payments.subscriptions` row whose invoice period
+  covered the snapshot date — with no `status` filter at all. A declined
+  card retried several times creates a new `subscriptions`+`invoices` row
+  per attempt, each landing in `status = 'incomplete_expired'`, and every
+  one of those was being counted as a separate active member (found via
+  diagnostic: one user had 5 `incomplete_expired` rows plus 1 real `active`
+  row, all simultaneously "active" by period dates alone — this was the
+  single biggest driver of the total Mitgliedschaften/Abonnemente overcount
+  vs. the original report, ~190-200 memberships as of 30.06.2025). Fixed by
+  requiring `status IN ('active', 'past_due', 'unpaid', 'paused')` — the
+  same status set already used as the authoritative "counts as active"
+  definition in the `cockpit_membership_evolution` materialized view
+  (`republik/migrations/sqls/20250604102839-cockpit-materialized-view-up.sql`).
 
 ## Monthly evolution within a fiscal year (new/lost/net)
 
