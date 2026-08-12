@@ -53,6 +53,15 @@ WITH old_rows AS (
   JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
   WHERE mp."beginDate" < $1 AND mp."endDate" >= $1
     AND m."userId" != ALL($2::uuid[])
+    -- exclude memberships whose pledge was PURCHASED by an excluded/test
+    -- account too, not just ones HELD by one (found via diagnostic: the
+    -- "Dummy users" account shows up as purchaser, not holder, for 10
+    -- memberships otherwise held by real accounts — these are internal
+    -- test data, not real gifts)
+    AND NOT EXISTS (
+      SELECT 1 FROM pledges pex
+      WHERE pex.id = m."pledgeId" AND pex."userId" = ANY($2::uuid[])
+    )
 ),
 new_rows AS (
   SELECT
