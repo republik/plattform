@@ -7,6 +7,11 @@ const yargs = require('yargs')
 
 const { writeCsv, writeJson } = require('./lib/output')
 const { DEFAULT_AS_OF } = require('./lib/dates')
+const { CATEGORIZED_CTE } = require('./lib/membershipCategorizedCte')
+const {
+  MITGLIEDSCHAFTEN_CATEGORIES,
+  ABONNEMENTE_CATEGORIES,
+} = require('./lib/membershipCategories')
 
 const argv = yargs
   .option('asOf', {
@@ -22,122 +27,16 @@ const argv = yargs
   .help()
   .version().argv
 
-// A membership/subscription counts as active on :asOf if it has a period
-// (membershipPeriods row / invoice) that covers :asOf directly — not merely
-// between the membership's earliest-ever and latest-ever period, since real
-// gaps exist between periods (failed payment, later resubscribe) and
-// aggregating across them would silently span those gaps. Unions the legacy
-// pledge-based `memberships` tables with the new Stripe-based
-// `payments.subscriptions` tables and classifies both into the same German
-// report categories.
-const QUERY = `
-WITH old_rows AS (
-  SELECT
-    m.id::text AS id,
-    m."userId",
-    mt.name AS type_name,
-    m."reducedPrice",
-    -- A membership is a gift if either:
-    --  1) it was bought via the dedicated ABO_GIVE package (always a gift,
-    --     regardless of who currently holds it), or
-    --  2) the pledge's payer differs from the person currently holding the
-    --     membership (a regular ABO directly gifted to someone else) — same
-    --     signal already used in RevenueStats/segments.js.
-    -- (packages."group" was a one-time 2018 backfill, not reliably set for
-    -- packages created in later campaigns — use packages."name" instead.)
-    EXISTS (
-      SELECT 1 FROM pledges p
-      JOIN packages pkg ON pkg.id = p."packageId"
-      WHERE p.id = m."pledgeId"
-        AND (pkg."name" = 'ABO_GIVE' OR p."userId" != m."userId")
-    ) AS is_gift,
-    mp."beginDate",
-    mp."endDate"
-  FROM "memberships" m
-  JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
-  JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
-  -- asOf must fall inside THIS SPECIFIC period, not just between the
-  -- membership's earliest-ever and latest-ever period. Memberships can have
-  -- real gaps between periods (failed payment, later resubscribe) — monthly
-  -- memberships renew far more often than yearly ones, so gaps are far more
-  -- common there; aggregating min/max across all periods silently spans
-  -- those gaps and overcounts monthly memberships by ~11% in practice.
-  WHERE mp."beginDate" < $1 AND mp."endDate" >= $1
-),
-new_rows AS (
-  SELECT
-    s.id::text AS id,
-    s."userId",
-    s.type::text AS type_name,
-    -- best-effort: any positive invoice discount is treated as "reduced"
-    EXISTS (
-      SELECT 1 FROM payments.invoices di
-      WHERE di."subscriptionId" = s.id
-        AND di."totalDiscountAmount" > 0
-        AND $1 BETWEEN di."periodStart" AND di."periodEnd"
-    ) AS is_reduced,
-    -- best-effort: gift voucher redeemed by this user within +/-14 days of
-    -- subscription start (no FK exists between giftVouchers and subscriptions)
-    EXISTS (
-      SELECT 1 FROM payments."giftVouchers" gv
-      WHERE gv."redeemedBy" = s."userId"
-        AND gv."redeemedAt" BETWEEN s."currentPeriodStart" - interval '14 days'
-                                 AND s."currentPeriodStart" + interval '14 days'
-    ) AS is_gift,
-    i."periodStart" AS "beginDate",
-    i."periodEnd" AS "endDate"
-  FROM payments.subscriptions s
-  JOIN payments.invoices i ON i."subscriptionId" = s.id
-  -- same reasoning as old_rows above: asOf must fall inside this specific
-  -- invoice period, not spanning across all of a subscription's invoices.
-  WHERE i."periodStart" < $1 AND i."periodEnd" >= $1
-),
-categorized AS (
-  SELECT id, "userId",
-    CASE
-      WHEN type_name = 'ABO' AND is_gift THEN 'Mitgliedschaft als Geschenk'
-      WHEN type_name = 'ABO' AND "reducedPrice" THEN 'Jahresmitgliedschaft, reduziert'
-      WHEN type_name = 'ABO' THEN 'Jahresmitgliedschaft'
-      WHEN type_name = 'BENEFACTOR_ABO' THEN 'Gönnermitgliedschaft'
-      WHEN type_name = 'YEARLY_ABO' THEN 'Jahresabo (Mitgliederkampagne)'
-      WHEN type_name = 'MONTHLY_ABO' THEN 'Monatsabonnement'
-      WHEN type_name = 'ABO_GIVE_MONTHS' THEN 'Monatsabonnement als Geschenk'
-      ELSE 'Sonstige (alt): ' || type_name
-    END AS category
-  FROM old_rows
-  UNION ALL
-  SELECT id, "userId",
-    CASE
-      WHEN type_name = 'YEARLY_SUBSCRIPTION' AND is_gift THEN 'Mitgliedschaft als Geschenk'
-      WHEN type_name = 'YEARLY_SUBSCRIPTION' AND is_reduced THEN 'Jahresmitgliedschaft, reduziert'
-      WHEN type_name = 'YEARLY_SUBSCRIPTION' THEN 'Jahresmitgliedschaft'
-      WHEN type_name = 'BENEFACTOR_SUBSCRIPTION' THEN 'Gönnermitgliedschaft'
-      WHEN type_name = 'MONTHLY_SUBSCRIPTION' AND is_gift THEN 'Monatsabonnement als Geschenk'
-      WHEN type_name = 'MONTHLY_SUBSCRIPTION' THEN 'Monatsabonnement'
-      ELSE 'Sonstige (neu): ' || type_name
-    END AS category
-  FROM new_rows
-)
--- DISTINCT id guards against the (should-be-rare) case of overlapping
--- periods for the same membership both covering asOf.
+// DISTINCT id guards against the (should-be-rare) case of overlapping
+// periods for the same membership both covering asOf.
+const QUERY =
+  CATEGORIZED_CTE +
+  `
 SELECT category, COUNT(DISTINCT id)::int AS count
 FROM categorized
 GROUP BY category
 ORDER BY category
 `
-
-const MITGLIEDSCHAFTEN_CATEGORIES = [
-  'Jahresmitgliedschaft',
-  'Jahresmitgliedschaft, reduziert',
-  'Gönnermitgliedschaft',
-  'Mitgliedschaft als Geschenk',
-]
-
-const ABONNEMENTE_CATEGORIES = [
-  'Monatsabonnement',
-  'Monatsabonnement als Geschenk',
-  'Jahresabo (Mitgliederkampagne)',
-]
 
 const fetchCounts = async (pgdb, asOf) => {
   const result = await pgdb.query(QUERY, [asOf])
