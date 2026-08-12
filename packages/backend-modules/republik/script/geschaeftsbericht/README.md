@@ -16,7 +16,7 @@ Override via CLI flags for future years.
 | --- | --- | --- |
 | A: Mitgliedschaften per Stichtag | `membershipsAndSubscriptions.js` | Postgres |
 | B: Abonnemente per Stichtag | `membershipsAndSubscriptions.js` | Postgres |
-| A+B evolution: Mitgliedschaften/Abonnemente zum Monatsende (with new/lost/net) | `membershipEvolutionByMonth.js` | Postgres — one query per month, slow for long ranges |
+| A+B evolution: Mitgliedschaften/Abonnemente zum Monatsende (with new/lost/net), one fiscal year at a time | `membershipEvolutionByFiscalYear.js` | Postgres — 13 queries per run |
 | C: Community (Debattenbeiträge) | `community.js` | Postgres |
 | D: Geschlechterverteilung | `gender.js` | Postgres |
 | E: Publizistische Arbeit | `../../documents/script/geschaeftsbericht.js` | Elasticsearch — GraphQL `search` aggregations + a scroll pass (slow — full year) |
@@ -72,21 +72,24 @@ scripts (`republik/script/finance/calculateKpis.js`,
   investigate and extend the `CASE` mapping in
   `membershipsAndSubscriptions.js` before trusting totals.
 
-## Monthly evolution (new/lost/net)
+## Monthly evolution within a fiscal year (new/lost/net)
 
-`membershipEvolutionByMonth.js` reuses the exact same `categorized` CTE as
-`membershipsAndSubscriptions.js` (factored out into
+`membershipEvolutionByFiscalYear.js` takes a single `--asOf` (the fiscal
+year end, 30.06.) and computes all 12 month-ends of that fiscal year itself
+(01.07.–30.06.) — no need to pass a date range. It reuses the exact same
+`categorized` CTE as `membershipsAndSubscriptions.js` (factored out into
 `lib/membershipCategorizedCte.js` so the two scripts can't drift apart), but
-returns raw (id, category) rows per month-end instead of aggregate counts.
-It then diffs each month's id set against the previous month's to compute
-real `new`/`lost`/`net` per category — not just the count difference, which
-would miss someone who joined and left within the same month. Output
-mirrors the shape of the "Mitgliedschaften zum Monatsende" /
-"Neue/Verlorene Mitgliedschaften zum Monatsende" Google Sheets referenced in
-the original task list, but using this repo's validated categories instead
-of raw `membershipTypes.name` values. Runs one query per month-end
-(parallelized, `--concurrency`, default 4) — a full 2018–2026 range is ~100
-months and will take a while.
+returns raw (id, category) rows per month-end instead of aggregate counts,
+then diffs each month's id set against the previous month's (including one
+extra baseline snapshot at the prior fiscal year's end, just to compute
+July's new/lost correctly) to get real `new`/`lost`/`net` per category — not
+just the count difference, which would miss someone who joined and left
+within the same month. Output mirrors the shape of the "Mitgliedschaften zum
+Monatsende" / "Neue/Verlorene Mitgliedschaften zum Monatsende" Google Sheets
+referenced in the original task list, but using this repo's validated
+categories instead of raw `membershipTypes.name` values. Runs 13 queries per
+invocation (parallelized, `--concurrency`, default 4); run it once per
+fiscal year you need (e.g. `--asOf 2025-06-30`, `--asOf 2026-06-30`).
 
 ## Year-over-year comparison
 

@@ -6,6 +6,7 @@ const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeCsv, writeJson } = require('./lib/output')
+const { DEFAULT_AS_OF } = require('./lib/dates')
 const { CATEGORIZED_CTE } = require('./lib/membershipCategorizedCte')
 const {
   MITGLIEDSCHAFTEN_CATEGORIES,
@@ -15,15 +16,11 @@ const {
 const ALL_CATEGORIES = [...MITGLIEDSCHAFTEN_CATEGORIES, ...ABONNEMENTE_CATEGORIES]
 
 const argv = yargs
-  .option('from', {
-    describe: 'first month-end to include, e.g. 2018-01-31',
+  .option('asOf', {
+    describe:
+      'fiscal year end (30.06.), e.g. 2026-06-30 — the fiscal year always runs 01.07.-30.06.',
     coerce: dayjs,
-    default: dayjs('2018-01-31'),
-  })
-  .option('to', {
-    describe: 'last month-end to include, e.g. 2026-06-30',
-    coerce: dayjs,
-    default: dayjs('2026-06-30'),
+    default: dayjs(DEFAULT_AS_OF),
   })
   .option('concurrency', {
     describe: 'how many month-end queries to run in parallel',
@@ -63,12 +60,16 @@ const fetchIdsByCategory = async (pgdb, asOf) => {
   return idsByCategory
 }
 
-const buildMonthEnds = (from, to) => {
-  const months = []
-  let month = from.endOf('month')
-  while (month.isBefore(to) || month.isSame(to, 'day')) {
-    months.push(month)
+// Fiscal year always runs 01.07.–30.06. Returns 13 month-end snapshots:
+// the prior fiscal year's end (30.06., used only as the baseline to diff
+// July's new/lost against) followed by the 12 month-ends of the fiscal
+// year itself (31.07. … 30.06.).
+const buildFiscalYearMonthEnds = (fiscalYearEnd) => {
+  const months = [fiscalYearEnd.subtract(1, 'year')]
+  let month = months[0]
+  for (let i = 0; i < 12; i++) {
     month = month.add(1, 'month').endOf('month')
+    months.push(month)
   }
   return months
 }
@@ -89,9 +90,11 @@ const mapWithConcurrency = async (items, limit, fn) => {
 }
 
 const run = async () => {
-  const months = buildMonthEnds(argv.from, argv.to)
+  // months[0] is the prior fiscal year's end (30.06.) — only used as the
+  // baseline to diff July's new/lost against, not included in the output.
+  const months = buildFiscalYearMonthEnds(argv.asOf)
   console.log(
-    `calculating monthly membership evolution for ${months.length} month-ends, from ${months[0].format('YYYY-MM-DD')} to ${months[months.length - 1].format('YYYY-MM-DD')} (concurrency ${argv.concurrency}) …`,
+    `calculating fiscal-year membership evolution for 01.07.${months[1].format('YYYY')}-30.06.${months[12].format('YYYY')} (concurrency ${argv.concurrency}) …`,
   )
 
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
@@ -110,13 +113,14 @@ const run = async () => {
 
     const rows = []
     months.forEach((month, i) => {
+      if (i === 0) return // baseline only, not a fiscal-year month
       const asOf = month.format('YYYY-MM-DD')
       const current = idsByMonth[i]
-      const previous = i > 0 ? idsByMonth[i - 1] : null
+      const previous = idsByMonth[i - 1]
 
       ALL_CATEGORIES.forEach((category) => {
         const currentIds = current[category] || new Set()
-        const previousIds = previous ? previous[category] || new Set() : new Set()
+        const previousIds = previous[category] || new Set()
 
         let newCount = 0
         currentIds.forEach((id) => {
@@ -131,16 +135,16 @@ const run = async () => {
           month: asOf,
           category,
           count: currentIds.size,
-          new: previous ? newCount : currentIds.size,
-          lost: previous ? lostCount : 0,
-          net: previous ? newCount - lostCount : currentIds.size,
+          new: newCount,
+          lost: lostCount,
+          net: newCount - lostCount,
         })
       })
     })
 
     console.log(`\ncomputed ${rows.length} month/category rows`)
-    writeCsv(rows, argv.out, 'F-mitgliedschaften-zum-monatsende')
-    writeJson(rows, argv.out, 'F-mitgliedschaften-zum-monatsende')
+    writeCsv(rows, argv.out, 'F-mitgliedschaften-pro-geschaeftsjahr')
+    writeJson(rows, argv.out, 'F-mitgliedschaften-pro-geschaeftsjahr')
   } finally {
     await pgdb.close()
   }
