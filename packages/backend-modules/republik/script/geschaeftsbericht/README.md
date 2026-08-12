@@ -35,10 +35,14 @@ committed to source control) — required, every script here throws
 immediately if it's unset. Table E (publishing stats) doesn't need this
 since it counts documents, not users.
 
-All output files are timestamped with the run date/time (e.g.
-`A-mitgliedschaften_2026-08-12_1556.csv`) — every file from one script
-invocation shares the same timestamp, so re-running never overwrites a
-previous run's output.
+All output filenames include the fiscal year they're for plus the run
+date/time, e.g. `A-mitgliedschaften_FY2025-2026_2026-08-12_1556.csv` — every
+file from one script invocation shares the same timestamp, so re-running
+never overwrites a previous run's output, and files for different fiscal
+years never collide either. The fiscal year label is derived from `--asOf`
+(or `--from`/`--to` for `community.js`); `gender.js` has no fiscal-year-scoped
+query (it's always current-state, see below) but still takes a
+`--forFiscalYear` flag purely to label which report the file is for.
 
 ## Known approximations — do not treat blindly as final numbers
 

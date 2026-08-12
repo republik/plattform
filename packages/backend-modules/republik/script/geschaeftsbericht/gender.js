@@ -2,12 +2,20 @@
 require('@orbiting/backend-modules-env').config()
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeCsv } = require('./lib/output')
+const { DEFAULT_AS_OF, fiscalYearLabelFromAsOf } = require('./lib/dates')
 const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const argv = yargs
+  .option('forFiscalYear', {
+    describe:
+      'fiscal year end (30.06.) this run is for, e.g. 2026-06-30 — labeling only, the query itself is always current-state',
+    coerce: dayjs,
+    default: dayjs(DEFAULT_AS_OF),
+  })
   .option('out', {
     describe: 'output directory',
     string: true,
@@ -43,7 +51,8 @@ const run = async () => {
   try {
     const result = await pgdb.query(QUERY, [EXCLUDED_USER_IDS])
     console.table(result)
-    writeCsv(result, argv.out, 'D-geschlechterverteilung')
+    const fyLabel = fiscalYearLabelFromAsOf(argv.forFiscalYear)
+    writeCsv(result, argv.out, `D-geschlechterverteilung_FY${fyLabel}`)
   } finally {
     await pgdb.close()
   }

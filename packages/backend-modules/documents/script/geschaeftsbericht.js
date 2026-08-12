@@ -148,6 +148,10 @@ const scrollForCharCountAndCandidates = async (from, to) => {
 }
 
 const run = async () => {
+  // fiscal year label from the [from, to) range, where `to` is the
+  // exclusive upper bound (e.g. 01.07. of the following year)
+  const fyLabel = `${argv.from.year()}-${argv.to.clone().subtract(1, 'day').year()}`
+
   console.log('calculating publishing stats (might take a while) …', {
     from: argv.from.toISOString(),
     to: argv.to.toISOString(),
@@ -186,14 +190,14 @@ const run = async () => {
   fs.mkdirSync(argv.out, { recursive: true })
   const jsonPath = path.join(
     argv.out,
-    `E-publizistische-arbeit_${RUN_TIMESTAMP}.json`,
+    `E-publizistische-arbeit_FY${fyLabel}_${RUN_TIMESTAMP}.json`,
   )
   fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2))
   console.log(`wrote ${jsonPath}`)
 
   const candidatesPath = path.join(
     argv.out,
-    `E-interactive-story-candidates_${RUN_TIMESTAMP}.csv`,
+    `E-interactive-story-candidates_FY${fyLabel}_${RUN_TIMESTAMP}.csv`,
   )
   fs.writeFileSync(
     candidatesPath,

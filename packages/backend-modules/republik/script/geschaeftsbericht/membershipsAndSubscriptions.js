@@ -6,7 +6,7 @@ const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeCsv, writeJson } = require('./lib/output')
-const { DEFAULT_AS_OF } = require('./lib/dates')
+const { DEFAULT_AS_OF, fiscalYearLabelFromAsOf } = require('./lib/dates')
 const { CATEGORIZED_CTE } = require('./lib/membershipCategorizedCte')
 const {
   MITGLIEDSCHAFTEN_CATEGORIES,
@@ -62,6 +62,7 @@ const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
 
 const run = async () => {
   const asOf = argv.asOf.format('YYYY-MM-DD')
+  const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
   // Comparison column is always "the same query, one year earlier" — not a
   // hardcoded baseline — so this stays a real year-over-year comparison no
   // matter which --asOf is used in future years.
@@ -106,8 +107,8 @@ const run = async () => {
     console.log(`\nAbonnemente per ${asOf} (vs. ${lastYearAsOf})`)
     console.table(abonnemente)
 
-    writeCsv(mitgliedschaften, argv.out, 'A-mitgliedschaften')
-    writeCsv(abonnemente, argv.out, 'B-abonnemente')
+    writeCsv(mitgliedschaften, argv.out, `A-mitgliedschaften_FY${fyLabel}`)
+    writeCsv(abonnemente, argv.out, `B-abonnemente_FY${fyLabel}`)
     writeJson(
       {
         asOf,
@@ -118,7 +119,7 @@ const run = async () => {
         rawCountsLastYear: lastYearCounts,
       },
       argv.out,
-      'A-B-mitgliedschaften-abonnemente',
+      `A-B-mitgliedschaften-abonnemente_FY${fyLabel}`,
     )
   } finally {
     await pgdb.close()

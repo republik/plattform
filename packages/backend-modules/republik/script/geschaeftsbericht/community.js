@@ -6,7 +6,11 @@ const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeJson } = require('./lib/output')
-const { DEFAULT_FY_FROM, DEFAULT_FY_TO } = require('./lib/dates')
+const {
+  DEFAULT_FY_FROM,
+  DEFAULT_FY_TO,
+  fiscalYearLabelFromRange,
+} = require('./lib/dates')
 const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const argv = yargs
@@ -49,7 +53,8 @@ const run = async () => {
   try {
     const [result] = await pgdb.query(QUERY, [from, to, EXCLUDED_USER_IDS])
     console.log(result)
-    writeJson({ from, to, ...result }, argv.out, 'C-community')
+    const fyLabel = fiscalYearLabelFromRange(argv.from, argv.to)
+    writeJson({ from, to, ...result }, argv.out, `C-community_FY${fyLabel}`)
   } finally {
     await pgdb.close()
   }

@@ -6,7 +6,7 @@ const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeCsv, writeJson } = require('./lib/output')
-const { DEFAULT_AS_OF } = require('./lib/dates')
+const { DEFAULT_AS_OF, fiscalYearLabelFromAsOf } = require('./lib/dates')
 const { CATEGORIZED_CTE } = require('./lib/membershipCategorizedCte')
 const {
   MITGLIEDSCHAFTEN_CATEGORIES,
@@ -144,8 +144,9 @@ const run = async () => {
     })
 
     console.log(`\ncomputed ${rows.length} month/category rows`)
-    writeCsv(rows, argv.out, 'F-mitgliedschaften-pro-geschaeftsjahr')
-    writeJson(rows, argv.out, 'F-mitgliedschaften-pro-geschaeftsjahr')
+    const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
+    writeCsv(rows, argv.out, `F-mitgliedschaften-pro-geschaeftsjahr_FY${fyLabel}`)
+    writeJson(rows, argv.out, `F-mitgliedschaften-pro-geschaeftsjahr_FY${fyLabel}`)
   } finally {
     await pgdb.close()
   }
