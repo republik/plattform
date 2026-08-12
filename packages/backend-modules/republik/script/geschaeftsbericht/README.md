@@ -71,15 +71,18 @@ scripts (`republik/script/finance/calculateKpis.js`,
   investigate and extend the `CASE` mapping in
   `membershipsAndSubscriptions.js` before trusting totals.
 
-## Reconciliation baseline (30.06.2025, last year's report)
+## Year-over-year comparison
 
-Mitgliedschaften: Jahresmitgliedschaft 17505, reduziert 6816,
-Gönnermitgliedschaft 136, als Geschenk 655, Total 25112.
+`membershipsAndSubscriptions.js` runs the same snapshot query twice — once
+for `--asOf`, once for `--asOf` minus one year — and prints/writes both
+columns side by side. This is a real YoY comparison every time it's run, not
+a hardcoded baseline that goes stale.
 
-Abonnemente: Monatsabonnement 3225, als Geschenk 146, Jahresabo
-(Mitgliederkampagne) 185, Total 3556.
-
-`membershipsAndSubscriptions.js` prints these alongside this year's numbers
-as a sanity check. Before trusting a fresh year's run, it's worth first
-re-running with `--asOf 2025-06-30` and confirming the script reproduces
-these exact figures against the current data model.
+Validated once (2026-08) against the published FY24/25 report (30.06.2025:
+Jahresmitgliedschaft 17505, reduziert 6816, Gönnermitgliedschaft 136, als
+Geschenk 655, Total 25112; Monatsabonnement 3225, als Geschenk 146, Jahresabo
+Mitgliederkampagne 185, Total 3556) and independently against a monthly
+new/lost membership-evolution export — both checks matched within 0-3% per
+category (Gönnermitgliedschaft and Jahresabo Kampagne matched exactly). See
+git history on this file for that reconciliation if it needs redoing after a
+future schema change.

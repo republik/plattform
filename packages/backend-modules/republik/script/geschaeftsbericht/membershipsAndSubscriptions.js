@@ -22,20 +22,6 @@ const argv = yargs
   .help()
   .version().argv
 
-// Last year's (30.06.2025) known figures, printed alongside this year's
-// output as a sanity-check baseline. Update/remove in future runs.
-const LAST_YEAR = {
-  Jahresmitgliedschaft: 17505,
-  'Jahresmitgliedschaft, reduziert': 6816,
-  Gönnermitgliedschaft: 136,
-  'Mitgliedschaft als Geschenk': 655,
-  'Total Mitgliedschaften': 25112,
-  Monatsabonnement: 3225,
-  'Monatsabonnement als Geschenk': 146,
-  'Jahresabo (Mitgliederkampagne)': 185,
-  'Total Abonnemente': 3556,
-}
-
 // Adapts the snapshot pattern from the `cockpit_membership_evolution`
 // materialized view (republik/migrations/sqls/20250604102839-cockpit-materialized-view-up.sql):
 // a membership/subscription counts as active on :asOf if its earliest period
@@ -150,33 +136,44 @@ const ABONNEMENTE_CATEGORIES = [
   'Jahresabo (Mitgliederkampagne)',
 ]
 
-const buildTable = (counts, categories, totalLabel) => {
+const fetchCounts = async (pgdb, asOf) => {
+  const result = await pgdb.query(QUERY, [asOf])
+  const counts = {}
+  result.forEach((row) => {
+    counts[row.category] = row.count
+  })
+  return counts
+}
+
+const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
   const rows = categories.map((category) => ({
     category,
     count: counts[category] || 0,
-    lastYear: LAST_YEAR[category] ?? '',
+    lastYear: lastYearCounts[category] || 0,
   }))
   const total = rows.reduce((sum, r) => sum + r.count, 0)
-  rows.push({
-    category: totalLabel,
-    count: total,
-    lastYear: LAST_YEAR[totalLabel] ?? '',
-  })
+  const lastYearTotal = rows.reduce((sum, r) => sum + r.lastYear, 0)
+  rows.push({ category: totalLabel, count: total, lastYear: lastYearTotal })
   return rows
 }
 
 const run = async () => {
   const asOf = argv.asOf.format('YYYY-MM-DD')
-  console.log(`calculating membership/subscription snapshot as of ${asOf} …`)
+  // Comparison column is always "the same query, one year earlier" — not a
+  // hardcoded baseline — so this stays a real year-over-year comparison no
+  // matter which --asOf is used in future years.
+  const lastYearAsOf = argv.asOf.subtract(1, 'year').format('YYYY-MM-DD')
+  console.log(
+    `calculating membership/subscription snapshot as of ${asOf} (compared against ${lastYearAsOf}) …`,
+  )
 
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
-    const result = await pgdb.query(QUERY, [asOf])
-    const counts = {}
-    result.forEach((row) => {
-      counts[row.category] = row.count
-    })
+    const [counts, lastYearCounts] = await Promise.all([
+      fetchCounts(pgdb, asOf),
+      fetchCounts(pgdb, lastYearAsOf),
+    ])
 
     const unexpected = Object.keys(counts).filter((c) =>
       c.startsWith('Sonstige'),
@@ -190,24 +187,33 @@ const run = async () => {
 
     const mitgliedschaften = buildTable(
       counts,
+      lastYearCounts,
       MITGLIEDSCHAFTEN_CATEGORIES,
       'Total Mitgliedschaften',
     )
     const abonnemente = buildTable(
       counts,
+      lastYearCounts,
       ABONNEMENTE_CATEGORIES,
       'Total Abonnemente',
     )
 
-    console.log('\nMitgliedschaften per', asOf)
+    console.log(`\nMitgliedschaften per ${asOf} (vs. ${lastYearAsOf})`)
     console.table(mitgliedschaften)
-    console.log('\nAbonnemente per', asOf)
+    console.log(`\nAbonnemente per ${asOf} (vs. ${lastYearAsOf})`)
     console.table(abonnemente)
 
     writeCsv(mitgliedschaften, argv.out, 'A-mitgliedschaften')
     writeCsv(abonnemente, argv.out, 'B-abonnemente')
     writeJson(
-      { asOf, mitgliedschaften, abonnemente, rawCounts: counts },
+      {
+        asOf,
+        lastYearAsOf,
+        mitgliedschaften,
+        abonnemente,
+        rawCounts: counts,
+        rawCountsLastYear: lastYearCounts,
+      },
       argv.out,
       'A-B-mitgliedschaften-abonnemente',
     )
