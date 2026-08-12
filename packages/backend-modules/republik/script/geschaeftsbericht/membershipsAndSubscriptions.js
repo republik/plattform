@@ -71,6 +71,39 @@ const fetchBreakdown = async (pgdb, asOf) => {
   return pgdb.query(BREAKDOWN_QUERY, [asOf, EXCLUDED_USER_IDS])
 }
 
+// Splits new-system reduced YEARLY_SUBSCRIPTIONs by discount duration —
+// 'once' (first-year-only, e.g. the YEARLY_REDUCED offer) vs. 'repeating'/
+// 'forever' (a permanent discount applied every renewal, e.g. the STUDENT
+// offer's fixedDiscount). payments.invoices."discounts" stores Stripe's raw
+// discount objects verbatim (invoiceCreated.ts: `discounts: invoice.discounts`),
+// each with a nested coupon.duration — this has no equivalent on the old
+// system (memberships.reducedPrice is a plain boolean with no duration
+// concept), so this is reported separately rather than folded into the
+// main categorized CTE.
+const REDUCED_DURATION_QUERY = `
+SELECT
+  COALESCE(disc.duration, 'unknown') AS discount_duration,
+  COUNT(DISTINCT s.id)::int AS count
+FROM payments.subscriptions s
+JOIN payments.invoices i ON i."subscriptionId" = s.id
+LEFT JOIN LATERAL (
+  SELECT d->'coupon'->>'duration' AS duration
+  FROM jsonb_array_elements(i.discounts) d
+  LIMIT 1
+) disc ON true
+WHERE s.type = 'YEARLY_SUBSCRIPTION'
+  AND i."periodStart" < $1 AND i."periodEnd" >= $1
+  AND i."totalDiscountAmount" > 0
+  AND s."userId" != ALL($2::uuid[])
+  AND s.status NOT IN ('incomplete', 'incomplete_expired')
+GROUP BY 1
+ORDER BY 1
+`
+
+const fetchReducedDuration = async (pgdb, asOf) => {
+  return pgdb.query(REDUCED_DURATION_QUERY, [asOf, EXCLUDED_USER_IDS])
+}
+
 const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
   const rows = categories.map((category) => ({
     category,
@@ -104,11 +137,13 @@ const run = async () => {
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
-    const [counts, lastYearCounts, breakdown] = await Promise.all([
-      fetchCounts(pgdb, asOfInstant.toDate()),
-      fetchCounts(pgdb, lastYearAsOfInstant.toDate()),
-      fetchBreakdown(pgdb, asOfInstant.toDate()),
-    ])
+    const [counts, lastYearCounts, breakdown, reducedDuration] =
+      await Promise.all([
+        fetchCounts(pgdb, asOfInstant.toDate()),
+        fetchCounts(pgdb, lastYearAsOfInstant.toDate()),
+        fetchBreakdown(pgdb, asOfInstant.toDate()),
+        fetchReducedDuration(pgdb, asOfInstant.toDate()),
+      ])
 
     const unexpected = Object.keys(counts).filter((c) =>
       c.startsWith('Sonstige'),
@@ -139,10 +174,19 @@ const run = async () => {
     console.table(abonnemente)
     console.log(`\nBreakdown by source system per ${asOf}`)
     console.table(breakdown)
+    console.log(
+      `\nNew-system reduced YEARLY_SUBSCRIPTIONs by discount duration per ${asOf}`,
+    )
+    console.table(reducedDuration)
 
     writeCsv(mitgliedschaften, argv.out, `A-mitgliedschaften_FY${fyLabel}`)
     writeCsv(abonnemente, argv.out, `B-abonnemente_FY${fyLabel}`)
     writeCsv(breakdown, argv.out, `A-B-breakdown-by-source_FY${fyLabel}`)
+    writeCsv(
+      reducedDuration,
+      argv.out,
+      `A-reduced-by-discount-duration_FY${fyLabel}`,
+    )
     writeJson(
       {
         asOf,
@@ -150,6 +194,7 @@ const run = async () => {
         mitgliedschaften,
         abonnemente,
         breakdown,
+        reducedDuration,
         rawCounts: counts,
         rawCountsLastYear: lastYearCounts,
       },

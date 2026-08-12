@@ -67,6 +67,22 @@ years never collide either. The fiscal year label is derived from `--asOf`
 query (it's always current-state, see below) but still takes a
 `--forFiscalYear` flag purely to label which report the file is for.
 
+## Reduced subscriptions by discount duration
+
+`membershipsAndSubscriptions.js` also outputs
+`A-reduced-by-discount-duration_FY....csv`, splitting new-system reduced
+`YEARLY_SUBSCRIPTION`s into `once` (a first-year-only discount, e.g. the
+`YEARLY_REDUCED` offer in `payments/lib/shop/offers.ts`) vs.
+`repeating`/`forever` (a permanent discount applied every renewal, e.g. the
+`STUDENT` offer's `fixedDiscount`). This comes from Stripe's own coupon
+`duration` field, stored verbatim in `payments.invoices."discounts"` (a
+jsonb column populated directly from `invoice.discounts` in
+`payments/lib/handlers/stripe/invoiceCreated.ts` — see that file for the
+raw Stripe `Discount`/`Coupon` object shape). The old system has no
+equivalent — `memberships.reducedPrice` is a plain boolean with no duration
+concept — so this breakdown only covers the new-system side and isn't
+folded into the main categorized CTE.
+
 ## Known approximations — do not treat blindly as final numbers
 
 - **Gift-membership definition (old system)**: a membership counts as
