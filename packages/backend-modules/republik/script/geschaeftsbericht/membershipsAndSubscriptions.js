@@ -74,7 +74,9 @@ const fetchBreakdown = async (pgdb, asOf) => {
 // Splits new-system reduced YEARLY_SUBSCRIPTIONs by discount duration —
 // 'once' (first-year-only, e.g. the YEARLY_REDUCED offer, labeled "First
 // year subscriptions" in the output) vs. 'repeating'/'forever' (a permanent
-// discount applied every renewal, e.g. the STUDENT offer's fixedDiscount).
+// discount applied every renewal, e.g. the STUDENT offer's fixedDiscount —
+// labeled "Reduzierte Mitgliedschaften", merged into one row since both
+// mean "discounted for the life of the subscription").
 // payments.invoices."discounts" stores Stripe's raw
 // discount objects verbatim (invoiceCreated.ts: `discounts: invoice.discounts`),
 // each with a nested coupon.duration — this has no equivalent on the old
@@ -85,6 +87,8 @@ const REDUCED_DURATION_QUERY = `
 SELECT
   CASE disc.duration
     WHEN 'once' THEN 'First year subscriptions'
+    WHEN 'repeating' THEN 'Reduzierte Mitgliedschaften'
+    WHEN 'forever' THEN 'Reduzierte Mitgliedschaften'
     ELSE COALESCE(disc.duration, 'unknown')
   END AS discount_duration,
   COUNT(DISTINCT s.id)::int AS count

@@ -73,7 +73,8 @@ query (it's always current-state, see below) but still takes a
 `A-reduced-by-discount-duration_FY....csv`, splitting new-system reduced
 `YEARLY_SUBSCRIPTION`s into "First year subscriptions" (Stripe coupon
 duration `once` — a first-year-only discount, e.g. the `YEARLY_REDUCED`
-offer in `payments/lib/shop/offers.ts`) vs. `repeating`/`forever` (a
+offer in `payments/lib/shop/offers.ts`) vs. "Reduzierte Mitgliedschaften"
+(Stripe coupon duration `repeating`/`forever`, merged into one row — a
 permanent discount applied every renewal, e.g. the `STUDENT` offer's
 `fixedDiscount`). This comes from Stripe's own coupon
 `duration` field, stored verbatim in `payments.invoices."discounts"` (a
