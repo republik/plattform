@@ -26,6 +26,15 @@ Run each with `node <script>.js --help` for flags. All default to
 scripts (`republik/script/finance/calculateKpis.js`,
 `documents/script/count.js`).
 
+`membershipsAndSubscriptions.js`, `membershipEvolutionByFiscalYear.js`,
+`community.js`, and `gender.js` all exclude a fixed list of internal/test
+accounts (dummy users, media archive, national library account, Apple/Android
+test users, dialog user) via `lib/excludedUsers.js`, which reads the actual
+ids from `GESCHAEFTSBERICHT_EXCLUDED_USER_IDS` (comma-separated uuids, not
+committed to source control) — required, every script here throws
+immediately if it's unset. Table E (publishing stats) doesn't need this
+since it counts documents, not users.
+
 ## Known approximations — do not treat blindly as final numbers
 
 - **Gift-membership definition (old system)**: a membership counts as

@@ -12,6 +12,7 @@ const {
   MITGLIEDSCHAFTEN_CATEGORIES,
   ABONNEMENTE_CATEGORIES,
 } = require('./lib/membershipCategories')
+const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const ALL_CATEGORIES = [...MITGLIEDSCHAFTEN_CATEGORIES, ...ABONNEMENTE_CATEGORIES]
 
@@ -48,7 +49,7 @@ FROM categorized
 `
 
 const fetchIdsByCategory = async (pgdb, asOf) => {
-  const rows = await pgdb.query(IDS_QUERY, [asOf])
+  const rows = await pgdb.query(IDS_QUERY, [asOf, EXCLUDED_USER_IDS])
   const idsByCategory = {}
   ALL_CATEGORIES.forEach((c) => {
     idsByCategory[c] = new Set()

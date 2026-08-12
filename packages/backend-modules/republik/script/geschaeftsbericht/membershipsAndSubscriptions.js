@@ -12,6 +12,7 @@ const {
   MITGLIEDSCHAFTEN_CATEGORIES,
   ABONNEMENTE_CATEGORIES,
 } = require('./lib/membershipCategories')
+const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const argv = yargs
   .option('asOf', {
@@ -39,7 +40,7 @@ ORDER BY category
 `
 
 const fetchCounts = async (pgdb, asOf) => {
-  const result = await pgdb.query(QUERY, [asOf])
+  const result = await pgdb.query(QUERY, [asOf, EXCLUDED_USER_IDS])
   const counts = {}
   result.forEach((row) => {
     counts[row.category] = row.count

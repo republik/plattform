@@ -15,6 +15,9 @@
 // fix). Unions the legacy pledge-based `memberships` tables with the new
 // Stripe-based `payments.subscriptions` tables and classifies both into the
 // same German report categories.
+//
+// $2 is the excluded-user-ids array (lib/excludedUsers.js) — internal/test
+// accounts filtered out of both old and new rows.
 const CATEGORIZED_CTE = `
 WITH old_rows AS (
   SELECT
@@ -42,6 +45,7 @@ WITH old_rows AS (
   JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
   JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
   WHERE mp."beginDate" < $1 AND mp."endDate" >= $1
+    AND m."userId" != ALL($2::uuid[])
 ),
 new_rows AS (
   SELECT
@@ -68,6 +72,7 @@ new_rows AS (
   FROM payments.subscriptions s
   JOIN payments.invoices i ON i."subscriptionId" = s.id
   WHERE i."periodStart" < $1 AND i."periodEnd" >= $1
+    AND s."userId" != ALL($2::uuid[])
 ),
 categorized AS (
   SELECT id, "userId",

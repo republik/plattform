@@ -5,6 +5,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const yargs = require('yargs')
 
 const { writeCsv } = require('./lib/output')
+const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const argv = yargs
   .option('out', {
@@ -27,6 +28,7 @@ const QUERY = `
   JOIN memberships m ON m."userId" = u.id
   LEFT JOIN "statisticsNameSex" s ON SPLIT_PART(TRIM(u."firstName"), ' ', 1) = s."firstName"
   WHERE m.active = true
+    AND u.id != ALL($1::uuid[])
   GROUP BY 1, 2
   ORDER BY 3 DESC
 `
@@ -39,7 +41,7 @@ const run = async () => {
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
-    const result = await pgdb.query(QUERY)
+    const result = await pgdb.query(QUERY, [EXCLUDED_USER_IDS])
     console.table(result)
     writeCsv(result, argv.out, 'D-geschlechterverteilung')
   } finally {
