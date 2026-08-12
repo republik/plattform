@@ -2,11 +2,14 @@
 require('@orbiting/backend-modules-env').config()
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeCsv, writeJson } = require('./lib/output')
-const { DEFAULT_AS_OF, fiscalYearLabelFromAsOf } = require('./lib/dates')
+const {
+  DEFAULT_AS_OF,
+  endOfDayInZurich,
+  fiscalYearLabelFromAsOf,
+} = require('./lib/dates')
 const { CATEGORIZED_CTE } = require('./lib/membershipCategorizedCte')
 const {
   MITGLIEDSCHAFTEN_CATEGORIES,
@@ -16,9 +19,10 @@ const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const argv = yargs
   .option('asOf', {
-    describe: 'point-in-time snapshot date, e.g. 2026-06-30',
-    coerce: dayjs,
-    default: dayjs(DEFAULT_AS_OF),
+    describe:
+      'point-in-time snapshot date, e.g. 2026-06-30 — interpreted as end-of-day Europe/Zurich',
+    coerce: endOfDayInZurich,
+    default: endOfDayInZurich(DEFAULT_AS_OF),
   })
   .option('out', {
     describe: 'output directory',
@@ -61,22 +65,29 @@ const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
 }
 
 const run = async () => {
-  const asOf = argv.asOf.format('YYYY-MM-DD')
+  // argv.asOf is already the precise end-of-day-Zurich instant — pass it
+  // (via .toDate()) straight to Postgres. Never re-derive a query parameter
+  // by formatting it down to a bare 'YYYY-MM-DD' string and back — that
+  // throws away the timezone and lets Postgres reinterpret it using its own
+  // session timezone instead (see lib/dates.js for the ~22h bug this caused).
+  const asOfInstant = argv.asOf
+  const asOf = asOfInstant.format('YYYY-MM-DD') // display/output label only
   const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
   // Comparison column is always "the same query, one year earlier" — not a
   // hardcoded baseline — so this stays a real year-over-year comparison no
   // matter which --asOf is used in future years.
-  const lastYearAsOf = argv.asOf.subtract(1, 'year').format('YYYY-MM-DD')
+  const lastYearAsOfInstant = argv.asOf.subtract(1, 'year')
+  const lastYearAsOf = lastYearAsOfInstant.format('YYYY-MM-DD') // label only
   console.log(
-    `calculating membership/subscription snapshot as of ${asOf} (compared against ${lastYearAsOf}) …`,
+    `calculating membership/subscription snapshot as of ${asOf} 23:59:59 Europe/Zurich (compared against ${lastYearAsOf} 23:59:59 Europe/Zurich) …`,
   )
 
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
     const [counts, lastYearCounts] = await Promise.all([
-      fetchCounts(pgdb, asOf),
-      fetchCounts(pgdb, lastYearAsOf),
+      fetchCounts(pgdb, asOfInstant.toDate()),
+      fetchCounts(pgdb, lastYearAsOfInstant.toDate()),
     ])
 
     const unexpected = Object.keys(counts).filter((c) =>

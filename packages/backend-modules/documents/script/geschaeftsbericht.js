@@ -4,12 +4,22 @@ require('@orbiting/backend-modules-env').config()
 const fs = require('fs')
 const path = require('path')
 const yargs = require('yargs')
-const moment = require('moment')
 const dayjs = require('dayjs')
+dayjs.extend(require('dayjs/plugin/utc'))
+dayjs.extend(require('dayjs/plugin/timezone'))
 const visit = require('unist-util-visit')
 const { csvFormat } = require('d3-dsv')
 
 const RUN_TIMESTAMP = dayjs().format('YYYY-MM-DD_HHmm')
+
+// Parses a plain 'YYYY-MM-DD' date as a calendar date in Europe/Zurich,
+// independent of whatever timezone the process itself runs in (e.g. Heroku
+// defaults to UTC) — see republik/script/geschaeftsbericht/lib/dates.js for
+// the full rationale (a bare-date/host-timezone mismatch silently shifted a
+// membership snapshot by up to 22 hours; the same class of bug applies here
+// to the fiscal-year publishDate range, just with much smaller impact).
+const startOfDayInZurich = (dateStr) =>
+  dayjs.tz(dateStr, 'Europe/Zurich').startOf('day')
 
 const ConnectionContext = require('@orbiting/backend-modules-base/lib/ConnectionContext')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
@@ -22,13 +32,16 @@ const { getWordsPerMinute } = require('../lib/meta')
 const argv = yargs
   .option('from', {
     alias: 'f',
-    coerce: moment,
-    default: moment('2025-07-01'),
+    describe: 'fiscal year start, e.g. 2025-07-01 — start-of-day Europe/Zurich',
+    coerce: startOfDayInZurich,
+    default: startOfDayInZurich('2025-07-01'),
   })
   .option('to', {
     alias: 't',
-    coerce: moment,
-    default: moment('2026-07-01'),
+    describe:
+      'fiscal year end (exclusive), e.g. 2026-07-01 — start-of-day Europe/Zurich',
+    coerce: startOfDayInZurich,
+    default: startOfDayInZurich('2026-07-01'),
   })
   .option('out', {
     describe: 'output directory',
@@ -149,8 +162,9 @@ const scrollForCharCountAndCandidates = async (from, to) => {
 
 const run = async () => {
   // fiscal year label from the [from, to) range, where `to` is the
-  // exclusive upper bound (e.g. 01.07. of the following year)
-  const fyLabel = `${argv.from.year()}-${argv.to.clone().subtract(1, 'day').year()}`
+  // exclusive upper bound (e.g. 01.07. of the following year). dayjs is
+  // immutable, so .subtract() here doesn't affect argv.to used below.
+  const fyLabel = `${argv.from.year()}-${argv.to.subtract(1, 'day').year()}`
 
   console.log('calculating publishing stats (might take a while) …', {
     from: argv.from.toISOString(),

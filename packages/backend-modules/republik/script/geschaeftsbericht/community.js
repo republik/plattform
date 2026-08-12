@@ -2,27 +2,29 @@
 require('@orbiting/backend-modules-env').config()
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeJson } = require('./lib/output')
 const {
   DEFAULT_FY_FROM,
   DEFAULT_FY_TO,
+  startOfDayInZurich,
   fiscalYearLabelFromRange,
 } = require('./lib/dates')
 const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
 const argv = yargs
   .option('from', {
-    describe: 'fiscal year start, e.g. 2025-07-01',
-    coerce: dayjs,
-    default: dayjs(DEFAULT_FY_FROM),
+    describe:
+      'fiscal year start, e.g. 2025-07-01 — interpreted as start-of-day Europe/Zurich',
+    coerce: startOfDayInZurich,
+    default: startOfDayInZurich(DEFAULT_FY_FROM),
   })
   .option('to', {
-    describe: 'fiscal year end, e.g. 2026-07-01',
-    coerce: dayjs,
-    default: dayjs(DEFAULT_FY_TO),
+    describe:
+      'fiscal year end (exclusive), e.g. 2026-07-01 — interpreted as start-of-day Europe/Zurich',
+    coerce: startOfDayInZurich,
+    default: startOfDayInZurich(DEFAULT_FY_TO),
   })
   .option('out', {
     describe: 'output directory',
@@ -32,8 +34,9 @@ const argv = yargs
   .help()
   .version().argv
 
-// Matches exactly the query used for last year's report, plus excluding
-// internal/test accounts (lib/excludedUsers.js).
+// Matches exactly the query used for last year's report (BETWEEN, same
+// bounds), plus excluding internal/test accounts (lib/excludedUsers.js) and
+// anchoring the bounds to Europe/Zurich day boundaries (see lib/dates.js).
 const QUERY = `
   SELECT
     COUNT(*)::int AS "Debattenbeiträge",
@@ -44,14 +47,21 @@ const QUERY = `
 `
 
 const run = async () => {
-  const from = argv.from.format('YYYY-MM-DD')
-  const to = argv.to.format('YYYY-MM-DD')
-  console.log(`calculating community stats from ${from} to ${to} …`)
+  const from = argv.from.format('YYYY-MM-DD') // display/output label only
+  const to = argv.to.format('YYYY-MM-DD') // display/output label only
+  console.log(`calculating community stats from ${from} to ${to} (Europe/Zurich) …`)
 
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
-    const [result] = await pgdb.query(QUERY, [from, to, EXCLUDED_USER_IDS])
+    // Pass the precise instants, not the formatted labels above — see
+    // lib/dates.js for why re-parsing a bare 'YYYY-MM-DD' string breaks
+    // timezone correctness.
+    const [result] = await pgdb.query(QUERY, [
+      argv.from.toDate(),
+      argv.to.toDate(),
+      EXCLUDED_USER_IDS,
+    ])
     console.log(result)
     const fyLabel = fiscalYearLabelFromRange(argv.from, argv.to)
     writeJson({ from, to, ...result }, argv.out, `C-community_FY${fyLabel}`)

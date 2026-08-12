@@ -2,11 +2,14 @@
 require('@orbiting/backend-modules-env').config()
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const dayjs = require('dayjs')
 const yargs = require('yargs')
 
 const { writeCsv, writeJson } = require('./lib/output')
-const { DEFAULT_AS_OF, fiscalYearLabelFromAsOf } = require('./lib/dates')
+const {
+  DEFAULT_AS_OF,
+  endOfDayInZurich,
+  fiscalYearLabelFromAsOf,
+} = require('./lib/dates')
 const { CATEGORIZED_CTE } = require('./lib/membershipCategorizedCte')
 const {
   MITGLIEDSCHAFTEN_CATEGORIES,
@@ -19,9 +22,9 @@ const ALL_CATEGORIES = [...MITGLIEDSCHAFTEN_CATEGORIES, ...ABONNEMENTE_CATEGORIE
 const argv = yargs
   .option('asOf', {
     describe:
-      'fiscal year end (30.06.), e.g. 2026-06-30 — the fiscal year always runs 01.07.-30.06.',
-    coerce: dayjs,
-    default: dayjs(DEFAULT_AS_OF),
+      'fiscal year end (30.06.), e.g. 2026-06-30 — interpreted as end-of-day Europe/Zurich; the fiscal year always runs 01.07.-30.06.',
+    coerce: endOfDayInZurich,
+    default: endOfDayInZurich(DEFAULT_AS_OF),
   })
   .option('concurrency', {
     describe: 'how many month-end queries to run in parallel',
@@ -105,9 +108,11 @@ const run = async () => {
       months,
       argv.concurrency,
       async (month, i) => {
-        const asOf = month.format('YYYY-MM-DD')
-        const idsByCategory = await fetchIdsByCategory(pgdb, asOf)
-        console.log(`  ${i + 1}/${months.length} ${asOf} done`)
+        // month is already the precise end-of-day-Zurich instant — pass
+        // .toDate() straight to Postgres, never re-derive it from a
+        // formatted 'YYYY-MM-DD' string (see lib/dates.js for why).
+        const idsByCategory = await fetchIdsByCategory(pgdb, month.toDate())
+        console.log(`  ${i + 1}/${months.length} ${month.format('YYYY-MM-DD')} done`)
         return idsByCategory
       },
     )

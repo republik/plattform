@@ -10,6 +10,29 @@ way.
 Default dates target FY 2025-07-01–2026-07-01 / snapshot 2026-06-30.
 Override via CLI flags for future years.
 
+## Timezone handling
+
+All date CLI flags (`--asOf`, `--from`, `--to`, `--forFiscalYear`) are parsed
+as calendar dates in **Europe/Zurich**, not the host machine's timezone —
+`--asOf 2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time",
+and `--from`/`--to` mean "start of that day, Zurich time". This is handled
+by `lib/dates.js`'s `endOfDayInZurich`/`startOfDayInZurich`, which use
+dayjs's `utc`/`timezone` plugins so the result is identical no matter what
+timezone the process itself runs in (verified: same absolute instant
+whether run with `TZ=UTC`, `TZ=America/New_York`, or unset).
+
+This matters because of a real bug found and fixed here: naively parsing a
+bare `'2026-06-30'` string and then formatting it back down to
+`'YYYY-MM-DD'` before sending it to Postgres throws away all timezone
+info — Postgres then reinterprets the bare string using its own session
+timezone (commonly UTC on a Heroku Postgres instance), landing on
+`2026-06-30T00:00:00Z`. That's **~22 hours before** the intended
+`2026-06-30T21:59:59.999Z`, which silently excluded anyone who joined
+during the 30th and silently included anyone who left during the 30th.
+Every script now passes the full precise instant (`.toDate()`) as the query
+parameter — never a re-formatted date string — and only uses
+`.format('YYYY-MM-DD')` for display/output labels.
+
 ## Tables and scripts
 
 | Table | Script | What it needs |
@@ -144,3 +167,11 @@ new/lost membership-evolution export — both checks matched within 0-3% per
 category (Gönnermitgliedschaft and Jahresabo Kampagne matched exactly). See
 git history on this file for that reconciliation if it needs redoing after a
 future schema change.
+
+**Note**: that validation pass predates the timezone fix described above (the
+query was then using a ~22h-earlier-than-intended instant on any non-Zurich
+host). The affected population is small — only memberships that specifically
+started/ended late in the day on a snapshot date — which is consistent with
+why that validation already showed close (not wildly off) matches. Re-running
+the validation after this fix would be expected to tighten those matches
+slightly further, not change the overall picture.
