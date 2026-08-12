@@ -71,10 +71,11 @@ query (it's always current-state, see below) but still takes a
 
 `membershipsAndSubscriptions.js` also outputs
 `A-reduced-by-discount-duration_FY....csv`, splitting new-system reduced
-`YEARLY_SUBSCRIPTION`s into `once` (a first-year-only discount, e.g. the
-`YEARLY_REDUCED` offer in `payments/lib/shop/offers.ts`) vs.
-`repeating`/`forever` (a permanent discount applied every renewal, e.g. the
-`STUDENT` offer's `fixedDiscount`). This comes from Stripe's own coupon
+`YEARLY_SUBSCRIPTION`s into "First year subscriptions" (Stripe coupon
+duration `once` — a first-year-only discount, e.g. the `YEARLY_REDUCED`
+offer in `payments/lib/shop/offers.ts`) vs. `repeating`/`forever` (a
+permanent discount applied every renewal, e.g. the `STUDENT` offer's
+`fixedDiscount`). This comes from Stripe's own coupon
 `duration` field, stored verbatim in `payments.invoices."discounts"` (a
 jsonb column populated directly from `invoice.discounts` in
 `payments/lib/handlers/stripe/invoiceCreated.ts` — see that file for the
