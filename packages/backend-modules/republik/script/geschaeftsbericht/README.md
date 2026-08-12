@@ -35,6 +35,11 @@ committed to source control) — required, every script here throws
 immediately if it's unset. Table E (publishing stats) doesn't need this
 since it counts documents, not users.
 
+All output files are timestamped with the run date/time (e.g.
+`A-mitgliedschaften_2026-08-12_1556.csv`) — every file from one script
+invocation shares the same timestamp, so re-running never overwrites a
+previous run's output.
+
 ## Known approximations — do not treat blindly as final numbers
 
 - **Gift-membership definition (old system)**: a membership counts as

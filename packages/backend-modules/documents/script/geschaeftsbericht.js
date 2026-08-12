@@ -5,8 +5,11 @@ const fs = require('fs')
 const path = require('path')
 const yargs = require('yargs')
 const moment = require('moment')
+const dayjs = require('dayjs')
 const visit = require('unist-util-visit')
 const { csvFormat } = require('d3-dsv')
+
+const RUN_TIMESTAMP = dayjs().format('YYYY-MM-DD_HHmm')
 
 const ConnectionContext = require('@orbiting/backend-modules-base/lib/ConnectionContext')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
@@ -181,13 +184,16 @@ const run = async () => {
   console.log('result', result)
 
   fs.mkdirSync(argv.out, { recursive: true })
-  const jsonPath = path.join(argv.out, 'E-publizistische-arbeit.json')
+  const jsonPath = path.join(
+    argv.out,
+    `E-publizistische-arbeit_${RUN_TIMESTAMP}.json`,
+  )
   fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2))
   console.log(`wrote ${jsonPath}`)
 
   const candidatesPath = path.join(
     argv.out,
-    'E-interactive-story-candidates.csv',
+    `E-interactive-story-candidates_${RUN_TIMESTAMP}.csv`,
   )
   fs.writeFileSync(
     candidatesPath,
