@@ -18,6 +18,13 @@
 //
 // $2 is the excluded-user-ids array (lib/excludedUsers.js) — internal/test
 // accounts filtered out of both old and new rows.
+//
+// A user migrating from the old system to the new one during a transition
+// can have an active row in BOTH old_rows and new_rows on the same date
+// (confirmed via diagnostic: 22 users as of 30.06.2025) — deduped below by
+// dropping the old-system row whenever the same user also has a new-system
+// row, since the new system is the more current source of truth for anyone
+// who's migrated.
 const CATEGORIZED_CTE = `
 WITH old_rows AS (
   SELECT
@@ -75,7 +82,7 @@ new_rows AS (
     AND s."userId" != ALL($2::uuid[])
 ),
 categorized AS (
-  SELECT id, "userId",
+  SELECT id, "userId", type_name, 'old' AS source,
     CASE
       WHEN type_name = 'ABO' AND is_gift THEN 'Mitgliedschaft als Geschenk'
       WHEN type_name = 'ABO' AND "reducedPrice" THEN 'Jahresmitgliedschaft, reduziert'
@@ -87,8 +94,9 @@ categorized AS (
       ELSE 'Sonstige (alt): ' || type_name
     END AS category
   FROM old_rows
+  WHERE "userId" NOT IN (SELECT "userId" FROM new_rows)
   UNION ALL
-  SELECT id, "userId",
+  SELECT id, "userId", type_name, 'new' AS source,
     CASE
       WHEN type_name = 'YEARLY_SUBSCRIPTION' AND is_gift THEN 'Mitgliedschaft als Geschenk'
       WHEN type_name = 'YEARLY_SUBSCRIPTION' AND is_reduced THEN 'Jahresmitgliedschaft, reduziert'

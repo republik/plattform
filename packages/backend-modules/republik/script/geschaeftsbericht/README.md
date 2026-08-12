@@ -126,6 +126,18 @@ query (it's always current-state, see below) but still takes a
   `membershipTypes.name` / `payments.subscription_type` value showed up —
   investigate and extend the `CASE` mapping in
   `membershipsAndSubscriptions.js` before trusting totals.
+- **Cross-system double-counting**: a user migrating from the old system to
+  the new one can have an active row in both simultaneously (confirmed via
+  diagnostic: 22 users as of 30.06.2025). `lib/membershipCategorizedCte.js`
+  drops the old-system row for any user who also has a new-system row,
+  preferring the new system as the more current source of truth. If the
+  count still looks off, check `A-B-breakdown-by-source_FY....csv`
+  (`membershipsAndSubscriptions.js`) — it breaks every category down by
+  `source` (old/new) and raw `type_name`, matching the exact structure of
+  the original "Weitere Daten für Geschäftsbericht" source table (e.g.
+  category → ABO row + YEARLY_SUB row → summed total), so a mismatch against
+  that table can be traced to a specific system instead of only comparing
+  already-combined totals.
 
 ## Monthly evolution within a fiscal year (new/lost/net)
 

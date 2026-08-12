@@ -52,6 +52,25 @@ const fetchCounts = async (pgdb, asOf) => {
   return counts
 }
 
+// Breaks each category down by source system (old membershipTypes.name /
+// new payments.subscription_type) — matches the exact structure of the
+// original "Weitere Daten für Geschäftsbericht" source table (category →
+// ABO row + YEARLY_SUB row → summed total), so a mismatch against that
+// table can be traced to a specific system instead of only comparing
+// already-combined totals.
+const BREAKDOWN_QUERY =
+  CATEGORIZED_CTE +
+  `
+SELECT category, source, type_name, COUNT(DISTINCT id)::int AS count
+FROM categorized
+GROUP BY category, source, type_name
+ORDER BY category, source, type_name
+`
+
+const fetchBreakdown = async (pgdb, asOf) => {
+  return pgdb.query(BREAKDOWN_QUERY, [asOf, EXCLUDED_USER_IDS])
+}
+
 const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
   const rows = categories.map((category) => ({
     category,
@@ -85,9 +104,10 @@ const run = async () => {
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
-    const [counts, lastYearCounts] = await Promise.all([
+    const [counts, lastYearCounts, breakdown] = await Promise.all([
       fetchCounts(pgdb, asOfInstant.toDate()),
       fetchCounts(pgdb, lastYearAsOfInstant.toDate()),
+      fetchBreakdown(pgdb, asOfInstant.toDate()),
     ])
 
     const unexpected = Object.keys(counts).filter((c) =>
@@ -117,15 +137,19 @@ const run = async () => {
     console.table(mitgliedschaften)
     console.log(`\nAbonnemente per ${asOf} (vs. ${lastYearAsOf})`)
     console.table(abonnemente)
+    console.log(`\nBreakdown by source system per ${asOf}`)
+    console.table(breakdown)
 
     writeCsv(mitgliedschaften, argv.out, `A-mitgliedschaften_FY${fyLabel}`)
     writeCsv(abonnemente, argv.out, `B-abonnemente_FY${fyLabel}`)
+    writeCsv(breakdown, argv.out, `A-B-breakdown-by-source_FY${fyLabel}`)
     writeJson(
       {
         asOf,
         lastYearAsOf,
         mitgliedschaften,
         abonnemente,
+        breakdown,
         rawCounts: counts,
         rawCountsLastYear: lastYearCounts,
       },
