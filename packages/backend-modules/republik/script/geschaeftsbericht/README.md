@@ -27,6 +27,20 @@ scripts (`republik/script/finance/calculateKpis.js`,
 
 ## Known approximations — do not treat blindly as final numbers
 
+- **Gift-membership definition (old system)**: a membership counts as
+  "Mitgliedschaft als Geschenk" if it was bought via the `ABO_GIVE` package
+  (always a gift, even if purchaser and current holder are the same, e.g. an
+  unclaimed voucher), OR if the pledge's payer differs from the current
+  holder (a regular `ABO` directly gifted to someone else). Confirmed with
+  the team as the correct definition. Note this is a genuinely different
+  metric from a simple "gift memberships redeemed this fiscal year" count —
+  it accumulates across all years a gift-originated or purchaser-mismatched
+  membership stays active, so a growing gift-campaign base (e.g. yearly
+  Christmas pushes) will show up as steady growth here even without a
+  change in this year's campaign volume. If this number diverges
+  significantly from expectations, check whether last year's figure used
+  the same point-in-time-accumulation definition or a different
+  fiscal-year-scoped one.
 - **Reduced-price detection (new payments system)**: a subscription is
   flagged "reduziert" if its overlapping `payments.invoices` row has
   `totalDiscountAmount > 0`. This is best-effort — any positive discount
