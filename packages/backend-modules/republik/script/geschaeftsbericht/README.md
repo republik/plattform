@@ -182,20 +182,41 @@ folded into the main categorized CTE.
 
 `membershipEvolutionByFiscalYear.js` takes a single `--asOf` (the fiscal
 year end, 30.06.) and computes all 12 month-ends of that fiscal year itself
-(01.07.–30.06.) — no need to pass a date range. It reuses the exact same
-`categorized` CTE as `membershipsAndSubscriptions.js` (factored out into
-`lib/membershipCategorizedCte.js` so the two scripts can't drift apart), but
-returns raw (id, category) rows per month-end instead of aggregate counts,
-then diffs each month's id set against the previous month's (including one
-extra baseline snapshot at the prior fiscal year's end, just to compute
-July's new/lost correctly) to get real `new`/`lost`/`net` per category — not
-just the count difference, which would miss someone who joined and left
-within the same month. Output mirrors the shape of the "Mitgliedschaften zum
-Monatsende" / "Neue/Verlorene Mitgliedschaften zum Monatsende" Google Sheets
-referenced in the original task list, but using this repo's validated
-categories instead of raw `membershipTypes.name` values. Runs 13 queries per
-invocation (parallelized, `--concurrency`, default 4); run it once per
-fiscal year you need (e.g. `--asOf 2025-06-30`, `--asOf 2026-06-30`).
+(01.07.–30.06.) — no need to pass a date range. Output mirrors the shape of
+the "Mitgliedschaften zum Monatsende" / "Neue/Verlorene Mitgliedschaften zum
+Monatsende" Google Sheets referenced in the original task list, but using
+this repo's validated categories instead of raw `membershipTypes.name`
+values.
+
+`count` (point-in-time active count per month-end) and `new`/`lost`/`net`
+are computed by two genuinely **different methods**, on purpose:
+
+- `count` reuses the exact same `categorized` CTE as
+  `membershipsAndSubscriptions.js` (`lib/membershipCategorizedCte.js`,
+  period-coverage based) — the right tool for "how many are active on this
+  exact date."
+- `new`/`lost` come from `lib/membershipLifecycleCte.js`, a **lifecycle-event**
+  model (creation/cancellation dates), one single query for the whole fiscal
+  year instead of a query per month. This was originally implemented by
+  diffing consecutive `count` snapshots month-to-month, but a side-by-side
+  comparison against an existing Metabase reference dashboard (question
+  #1809, "abo-gain-loss-grouped-by-month-company-and-abo-type") showed that
+  approach measures something different: diffing snapshots treats ANY
+  invoice-period gap (a renewal invoice generated a few days late, a payment
+  retry cycle, proration) as a lost+new event pair, even when the person
+  never actually left — inflating gross `new`/`lost` by up to ~860/month in
+  high-volume acquisition months, while `net` was only off by 3-124/month.
+  `lib/membershipLifecycleCte.js` ports Metabase's own logic instead: for
+  the old system, it segments `membershipPeriods` by gaps (a gap crossing a
+  calendar-month boundary starts a new segment) and uses each segment's
+  min/max as its lifecycle start/end; for the new system, it uses the
+  subscription's own `createdAt` (gain) and `COALESCE(endedAt, cancelAt)`
+  (loss) directly, ignoring invoice periods entirely — matching Metabase.
+  Because of this, `count(M) - count(M-1)` and this month's `net` are **not
+  guaranteed to be equal** — they're two independently-computed, both valid,
+  measurements of different things (a snapshot count vs. lifecycle churn
+  events). Run this once per fiscal year you need (e.g. `--asOf 2025-06-30`,
+  `--asOf 2026-06-30`).
 
 Each month also gets two aggregate rows — `category: 'Total Mitgliedschaften'`
 and `category: 'Total Abonnemente'` — summing `count`/`new`/`lost`/`net`
@@ -220,19 +241,18 @@ Mitgliedschaften vs. Abonnemente:
 so a total-only chart/table for one report table doesn't need to filter out
 the category rows or the other table's data.
 
-**Caveat**: `new`/`lost` for Jahresmitgliedschaft and reduziert specifically
-can be inflated by reduced-price reclassification — see the reduced-price
-bullet above. The combined total and `net` are reliable every month; the
-per-category gross churn split between those two isn't, in months where many
-first-year discounts expire. Since `Total Mitgliedschaften`'s gross
-`new`/`lost` is a straight sum across all four categories, it **inherits
-this same inflation** — confirmed against a Metabase reference (PROJECT_R
-company gain/loss): gross `new`/`lost` were off by up to ~860/month in
-months with heavy reduced-price signup/expiry activity, while `net` was off
-by only 3-124/month (cumulative ~1.7% by fiscal year end, consistent with
-the residual variance seen against every other independent source in this
-project). Use `count` and `net` for `Total Mitgliedschaften` trend analysis;
-don't read its gross `new`/`lost` as precise acquisition/churn figures.
+**History**: `new`/`lost` used to be computed by diffing `count` snapshots
+month-to-month, which — for Jahresmitgliedschaft/reduziert specifically —
+was inflated by reduced-price reclassification (the point-in-time
+`is_reduced` check re-evaluates per invoice, so a subscriber's category
+flips as their first-year discount expires, registering as one category
+losing a member and the other gaining one even though nobody left). That
+symptom, and a side-by-side check against Metabase, is what led to the
+lifecycle-event rewrite described above — `new`/`lost` no longer have this
+issue, since gain/loss are now tied to actual creation/cancellation, not to
+which category a still-active person's invoice happens to fall into this
+month. Not independently re-validated against Metabase after the rewrite
+yet — do that before trusting the exact figures for a real report.
 
 ## Year-over-year comparison
 
