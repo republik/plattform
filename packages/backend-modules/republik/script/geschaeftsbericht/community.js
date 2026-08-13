@@ -4,7 +4,7 @@ require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const yargs = require('yargs')
 
-const { writeJson } = require('./lib/output')
+const { writeCsv, writeJson } = require('./lib/output')
 const {
   DEFAULT_AS_OF,
   endOfDayInZurich,
@@ -73,13 +73,15 @@ const run = async () => {
       EXCLUDED_USER_IDS,
     ])
 
+    const rows = Object.entries(result).map(([Kennzahl, count]) => ({
+      Kennzahl,
+      Wert: count,
+    }))
     console.table(
-      Object.entries(result).map(([Kennzahl, count]) => ({
-        Kennzahl,
-        Wert: numberFormat.format(count),
-      })),
+      rows.map((row) => ({ ...row, Wert: numberFormat.format(row.Wert) })),
     )
 
+    writeCsv(rows, argv.out, `C-community_FY${fyLabel}`)
     writeJson({ from, to, ...result }, argv.out, `C-community_FY${fyLabel}`)
   } finally {
     await pgdb.close()
