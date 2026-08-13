@@ -36,12 +36,19 @@ const fiscalYearLabelFromAsOf = (asOf) => {
   return `${endYear - 1}-${endYear}`
 }
 
+// Fiscal years always run 01.07.–30.06., so the start is always fully
+// derivable from the end date — every script in this folder takes a single
+// --asOf (the fiscal year end) rather than a separate --from, for
+// consistency (there's no scenario where the two would legitimately
+// diverge, so a second flag would only invite mismatched from/to pairs).
+const fiscalYearStartFromAsOf = (asOf) =>
+  asOf.subtract(1, 'year').add(1, 'day').startOf('day')
+
 module.exports = {
   DEFAULT_AS_OF: '2026-06-30',
-  DEFAULT_FY_FROM: '2025-07-01',
-  DEFAULT_FY_TO: '2026-06-30',
   REPORT_TIMEZONE,
   endOfDayInZurich,
   startOfDayInZurich,
   fiscalYearLabelFromAsOf,
+  fiscalYearStartFromAsOf,
 }

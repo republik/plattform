@@ -12,13 +12,14 @@ Override via CLI flags for future years.
 
 ## Timezone handling
 
-All date CLI flags (`--asOf`, `--from`, `--to`, `--forFiscalYear`) are parsed
-as calendar dates in **Europe/Zurich**, not the host machine's timezone —
-`--asOf 2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time".
-`--from` means "start of that day, Zurich time"; `--to` (`community.js`)
-means the fiscal year end date itself, e.g. `--to 2026-06-30`, interpreted
-as **end**-of-day so the whole last day is included — you don't pass the
-day after as an exclusive boundary. This is handled
+All date CLI flags (`--asOf`, `--forFiscalYear`) are parsed as calendar
+dates in **Europe/Zurich**, not the host machine's timezone — `--asOf
+2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time". Every
+script in this folder takes a single `--asOf` (the fiscal year end date)
+and derives whatever range it needs internally
+(`lib/dates.js`'s `fiscalYearStartFromAsOf`) — fiscal years always run
+01.07.–30.06., so there's no legitimate reason for a separate `--from`/`--to`
+pair that could end up mismatched. This is handled
 by `lib/dates.js`'s `endOfDayInZurich`/`startOfDayInZurich`, which use
 dayjs's `utc`/`timezone` plugins so the result is identical no matter what
 timezone the process itself runs in (verified: same absolute instant
@@ -65,9 +66,9 @@ All output filenames include the fiscal year they're for plus the run
 date/time, e.g. `A-mitgliedschaften_FY2025-2026_2026-08-12_1556.csv` — every
 file from one script invocation shares the same timestamp, so re-running
 never overwrites a previous run's output, and files for different fiscal
-years never collide either. The fiscal year label is derived from `--asOf`
-(or `--from`/`--to` for `community.js`); `gender.js` has no fiscal-year-scoped
-query (it's always current-state, see below) but still takes a
+years never collide either. The fiscal year label is derived from `--asOf`;
+`gender.js` has no fiscal-year-scoped query (it's always current-state, see
+below) but still takes a
 `--forFiscalYear` flag purely to label which report the file is for.
 
 ## Reduced subscriptions by discount duration
