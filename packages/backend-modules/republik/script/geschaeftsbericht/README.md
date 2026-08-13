@@ -99,19 +99,73 @@ folded into the main categorized CTE.
 ## Known approximations — do not treat blindly as final numbers
 
 - **Gift-membership definition (old system)**: a membership counts as
-  "Mitgliedschaft als Geschenk" if it was bought via the `ABO_GIVE` package
-  (always a gift, even if purchaser and current holder are the same, e.g. an
-  unclaimed voucher), OR if the pledge's payer differs from the current
-  holder (a regular `ABO` directly gifted to someone else). Confirmed with
-  the team as the correct definition. Note this is a genuinely different
-  metric from a simple "gift memberships redeemed this fiscal year" count —
-  it accumulates across all years a gift-originated or purchaser-mismatched
-  membership stays active, so a growing gift-campaign base (e.g. yearly
-  Christmas pushes) will show up as steady growth here even without a
-  change in this year's campaign volume. If this number diverges
-  significantly from expectations, check whether last year's figure used
-  the same point-in-time-accumulation definition or a different
-  fiscal-year-scoped one.
+  "Mitgliedschaft als Geschenk" if the pledge behind its CURRENT active
+  period was bought via the dedicated `ABO_GIVE` package (always a gift,
+  regardless of who currently holds it), OR if that pledge's payer differs
+  from the person currently holding the membership (a regular `ABO`
+  directly gifted to someone else) — same signal already used in
+  `RevenueStats/segments.js`.
+
+  **Root-caused (2026-08).** Originally diverged sharply from the published
+  FY24/25 report (1206 here vs. 655 published Mitgliedschaften-Geschenk, at
+  2025-06-30), even though the combined Mitgliedschaften total already
+  matched almost exactly. Ten prior hypotheses were tested and ruled out
+  (see git history on this file for the full list — flow-vs-stock framings,
+  renew flags, active flags, `updatedAt`, fiscal-year cutoffs, and a
+  periodCount-based "never renewed" check that was disproved by the user's
+  domain knowledge: when a gift's term ends, the ORIGINAL GIFTER — not the
+  recipient — gets an email asking whether to gift again, so a membership
+  can accumulate many periods purely from the same person repeatedly
+  re-gifting, with no self-pay conversion ever happening).
+
+  **The actual bug**: `is_gift` was evaluated against
+  `memberships."pledgeId"` — the membership's ORIGINAL pledge, fixed
+  forever at creation — instead of the CURRENT PERIOD's own pledge
+  (`membershipPeriods."pledgeId"`). A membership's own `pledgeId` never
+  changes after creation, but every renewal gets its own
+  `membershipPeriods` row with its own `pledgeId`: confirmed in
+  `republik-crowdfundings/lib/generateMemberships.js` (an explicit "prolong"
+  purchase) and `lib/AutoPay.js` (an autopay-driven renewal), both of which
+  insert new periods with `pledgeId` set to the NEW charge's pledge, never
+  touching `memberships."pledgeId"` itself. So once a gift recipient
+  enabled `autoPay` and started funding their own renewals, the membership
+  kept showing as "Mitgliedschaft als Geschenk" forever anyway, since the
+  check only ever looked at who paid for the *original* gift, never at who
+  is paying *now*. Checking the current period's own pledge instead
+  correctly reclassifies those into ordinary Jahresmitgliedschaft/reduziert
+  once the recipient takes over paying, while a membership still funded by
+  someone else (the original gifter re-gifting, or anyone else) correctly
+  keeps showing as a gift.
+
+  Fixed in `lib/membershipCategorizedCte.js` by joining the `is_gift` EXISTS
+  check against `mp."pledgeId"` instead of `m."pledgeId"`. Result: 1206 →
+  653 (published: 655, within 2 — 0.3%), with `Jahresmitgliedschaft`
+  correspondingly improving from 654-off to 102-off. **Deliberately not
+  applied to `ABO_GIVE_MONTHS`**, which is categorized unconditionally by
+  type (no `is_gift` check involved there at all) and already matched the
+  published Abonnemente-Geschenk (146) exactly before and after this fix —
+  confirmed unchanged via `diagnoseGiftCurrentPeriodPledge.js` before this
+  was committed, learning from the prior (reverted) attempt that broke that
+  exact match by not checking both sides.
+
+  Per the team's decision, this script also reports **redeemed gifts as
+  part of the normal category/total** (`memberships."voucherCode" IS NULL`)
+  and **unredeemed gifts as a separate row excluded from the total**
+  (`Mitgliedschaft als Geschenk, uneingelöst` /
+  `Monatsabonnement als Geschenk, uneingelöst`,
+  `lib/membershipCategorizedCte.js`'s `is_unredeemed`) — validated
+  separately against the actual `activateMembership.js` voucher mechanism.
+
+  The same fix was also applied to `lib/membershipLifecycleCte.js`'s
+  `old_lifecycle` (used for Table F's `new`/`lost` events), per-segment
+  using each segment's LATEST period's pledge rather than a correlated
+  subquery (which was correct but far too slow — rewritten with a window
+  function + `DISTINCT ON`, see that file). This gives a strong additional
+  cross-check: `membershipEvolutionByFiscalYear.js`'s independently-computed
+  lifecycle-based `Mitgliedschaft als Geschenk` count at 2025-06-30 is
+  **653** — exactly matching the point-in-time count from
+  `membershipsAndSubscriptions.js`. The two CTEs agree exactly after the
+  fix, which they would not have before it.
 - **Reduced-price detection (new payments system)**: a subscription is
   flagged "reduziert" if its overlapping `payments.invoices` row has
   `totalDiscountAmount > 0`. This is best-effort — any positive discount
@@ -348,3 +402,14 @@ pre-fix pass, as expected since the bug only ever inflated counts. This is
 now the strongest validation this script has against ground truth; treat any
 future divergence as a real regression worth investigating with
 `diagnoseReconciliation.js`, not as expected noise.
+
+**Re-validated again (2026-08) after fixing the gift current-period-pledge
+bug** (see "Gift-membership definition" above) — this time at the full
+category level, not just totals: `--asOf 2025-06-30` now gives
+Jahresmitgliedschaft 17403 vs. 17505 published (102 off, 0.6%),
+Mitgliedschaft als Geschenk 653 vs. 655 published (2 off, 0.3%), and
+Monatsabonnement als Geschenk unchanged at the already-exact 146 vs. 146.
+Every category is now within low single-digit percent of the published
+figures — a category-level check that would have caught the gift-definition
+bug immediately, had it existed before this investigation. Worth re-running
+after any future change to `lib/membershipCategorizedCte.js`.

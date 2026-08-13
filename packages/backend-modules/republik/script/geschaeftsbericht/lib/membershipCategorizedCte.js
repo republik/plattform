@@ -40,12 +40,44 @@ WITH old_rows AS (
     --     signal already used in RevenueStats/segments.js.
     -- (packages."group" was a one-time 2018 backfill, not reliably set for
     -- packages created in later campaigns — use packages."name" instead.)
+    --
+    -- IMPORTANT: evaluated against the CURRENT PERIOD's own pledge
+    -- (mp."pledgeId"), NOT the membership's fixed original pledge
+    -- (m."pledgeId"). A membership's own pledgeId never changes after
+    -- creation, but each renewal gets its own membershipPeriods row with
+    -- its own pledgeId — confirmed in
+    -- republik-crowdfundings/lib/generateMemberships.js (an explicit
+    -- "prolong" purchase) and lib/AutoPay.js (an autopay-driven renewal),
+    -- both of which insert new periods with pledgeId = the NEW charge's
+    -- pledge. Checking the ORIGINAL pledge only meant a gift stayed
+    -- "Mitgliedschaft als Geschenk" forever even once the recipient started
+    -- paying for their own renewals via autoPay — inflating the stock
+    -- indefinitely (1206 vs. the published 655). Checking the CURRENT
+    -- period's pledge instead correctly reclassifies those as ordinary
+    -- Jahresmitgliedschaft/reduziert once the recipient takes over, while a
+    -- membership still funded by someone else (the original gifter
+    -- re-gifting, or any other payer) keeps showing as a gift — confirmed
+    -- via diagnostic (diagnoseGiftCurrentPeriodPledge.js): 653 vs. the
+    -- published 655, down from 1206. Deliberately NOT applied to
+    -- ABO_GIVE_MONTHS below, which is categorized unconditionally by type
+    -- (no is_gift check involved there at all) and already matches the
+    -- published 146 exactly — this fix only affects the ABO branch.
     EXISTS (
       SELECT 1 FROM pledges p
       JOIN packages pkg ON pkg.id = p."packageId"
-      WHERE p.id = m."pledgeId"
+      WHERE p.id = mp."pledgeId"
         AND (pkg."name" = 'ABO_GIVE' OR p."userId" != m."userId")
     ) AS is_gift,
+    -- An unclaimed gift voucher (memberships.voucherCode still set) already
+    -- has an active membershipPeriods row from the moment it's purchased,
+    -- before anyone redeems it — confirmed against the actual query used
+    -- for last year's report (see README's "Gift-membership definition"
+    -- section): the published Geschenk figure counts redeemed and
+    -- unredeemed gifts as separate line items, not combined into one
+    -- point-in-time stock. Reported as its own category below, excluded
+    -- from MITGLIEDSCHAFTEN_CATEGORIES/ABONNEMENTE_CATEGORIES so it doesn't
+    -- inflate the main total.
+    m."voucherCode" IS NOT NULL AS is_unredeemed,
     mp."beginDate",
     mp."endDate"
   FROM "memberships" m
@@ -131,12 +163,14 @@ new_rows AS (
 categorized AS (
   SELECT id, "userId", type_name, 'old' AS source,
     CASE
+      WHEN type_name = 'ABO' AND is_unredeemed THEN 'Mitgliedschaft als Geschenk, uneingelöst'
       WHEN type_name = 'ABO' AND is_gift THEN 'Mitgliedschaft als Geschenk'
       WHEN type_name = 'ABO' AND "reducedPrice" THEN 'Jahresmitgliedschaft, reduziert'
       WHEN type_name = 'ABO' THEN 'Jahresmitgliedschaft'
       WHEN type_name = 'BENEFACTOR_ABO' THEN 'Gönnermitgliedschaft'
       WHEN type_name = 'YEARLY_ABO' THEN 'Jahresabo (Mitgliederkampagne)'
       WHEN type_name = 'MONTHLY_ABO' THEN 'Monatsabonnement'
+      WHEN type_name = 'ABO_GIVE_MONTHS' AND is_unredeemed THEN 'Monatsabonnement als Geschenk, uneingelöst'
       WHEN type_name = 'ABO_GIVE_MONTHS' THEN 'Monatsabonnement als Geschenk'
       ELSE 'Sonstige (alt): ' || type_name
     END AS category

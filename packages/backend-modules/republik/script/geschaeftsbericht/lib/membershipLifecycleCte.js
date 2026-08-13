@@ -42,6 +42,7 @@ WITH old_periods_with_gaps AS (
     mp."membershipId",
     mp."beginDate",
     mp."endDate",
+    mp."pledgeId",
     LAG(mp."endDate") OVER (
       PARTITION BY mp."membershipId" ORDER BY mp."beginDate"
     ) AS previous_end_date
@@ -52,6 +53,7 @@ old_segmented AS (
     "membershipId",
     "beginDate",
     "endDate",
+    "pledgeId",
     SUM(
       CASE
         WHEN previous_end_date IS NULL
@@ -62,17 +64,40 @@ old_segmented AS (
     ) OVER (PARTITION BY "membershipId" ORDER BY "beginDate") AS segment_num
   FROM old_periods_with_gaps
 ),
+-- One row per (membershipId, segment_num): the pledgeId of that segment's
+-- LATEST period (by beginDate). Computed via a window function + DISTINCT
+-- ON rather than a correlated subquery re-scanning old_segmented per output
+-- row of old_lifecycle below — the correlated-subquery version was
+-- correct but far too slow (effectively O(n²) over every
+-- membershipPeriods row).
+old_segment_latest_pledge AS (
+  SELECT DISTINCT ON ("membershipId", segment_num)
+    "membershipId",
+    segment_num,
+    "pledgeId" AS "latestPledgeId"
+  FROM old_segmented
+  ORDER BY "membershipId", segment_num, "beginDate" DESC
+),
 old_lifecycle AS (
   SELECT
     m.id::text || '-seq-' || s.segment_num::text AS id,
     m."userId",
     MIN(mt.name) AS type_name,
     bool_or(m."reducedPrice") AS "reducedPrice",
+    -- Evaluated against the LATEST period's pledge within this segment, not
+    -- the membership's fixed original pledge (m."pledgeId") — same fix as
+    -- lib/membershipCategorizedCte.js's point-in-time is_gift (see that
+    -- file's comment for the full mechanism: memberships."pledgeId" never
+    -- changes after creation, but each renewal gets its own
+    -- membershipPeriods row with its own pledgeId). Applied per-segment
+    -- here: a segment that started as a gift but ended with the recipient's
+    -- own autoPay-funded renewal should be classified by how it ended, not
+    -- how it started.
     bool_or(
       EXISTS (
         SELECT 1 FROM pledges p
         JOIN packages pkg ON pkg.id = p."packageId"
-        WHERE p.id = m."pledgeId"
+        WHERE p.id = lp."latestPledgeId"
           AND (pkg."name" = 'ABO_GIVE' OR p."userId" != m."userId")
       )
     ) AS is_gift,
@@ -82,6 +107,8 @@ old_lifecycle AS (
   FROM "memberships" m
   JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
   JOIN old_segmented s ON s."membershipId" = m.id
+  JOIN old_segment_latest_pledge lp
+    ON lp."membershipId" = m.id AND lp.segment_num = s.segment_num
   WHERE m."userId" != ALL($1::uuid[])
     AND NOT EXISTS (
       SELECT 1 FROM pledges pex

@@ -112,7 +112,13 @@ const fetchReducedDuration = async (pgdb, asOf) => {
   return pgdb.query(REDUCED_DURATION_QUERY, [asOf, EXCLUDED_USER_IDS])
 }
 
-const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
+const buildTable = (
+  counts,
+  lastYearCounts,
+  categories,
+  totalLabel,
+  unredeemedCategory,
+) => {
   const rows = categories.map((category) => ({
     category,
     count: counts[category] || 0,
@@ -121,6 +127,18 @@ const buildTable = (counts, lastYearCounts, categories, totalLabel) => {
   const total = rows.reduce((sum, r) => sum + r.count, 0)
   const lastYearTotal = rows.reduce((sum, r) => sum + r.lastYear, 0)
   rows.push({ category: totalLabel, count: total, lastYear: lastYearTotal })
+  // Unredeemed gift vouchers (memberships.voucherCode still set) are listed
+  // separately, after the total, and deliberately excluded from it — see
+  // README's "Gift-membership definition" section: the actual query behind
+  // last year's report counted redeemed and unredeemed gifts as distinct
+  // line items, not one combined point-in-time stock.
+  if (unredeemedCategory) {
+    rows.push({
+      category: unredeemedCategory,
+      count: counts[unredeemedCategory] || 0,
+      lastYear: lastYearCounts[unredeemedCategory] || 0,
+    })
+  }
   return rows
 }
 
@@ -168,12 +186,14 @@ const run = async () => {
       lastYearCounts,
       MITGLIEDSCHAFTEN_CATEGORIES,
       'Total Mitgliedschaften',
+      'Mitgliedschaft als Geschenk, uneingelöst',
     )
     const abonnemente = buildTable(
       counts,
       lastYearCounts,
       ABONNEMENTE_CATEGORIES,
       'Total Abonnemente',
+      'Monatsabonnement als Geschenk, uneingelöst',
     )
 
     console.log(`\nMitgliedschaften per ${asOf} (vs. ${lastYearAsOf})`)
