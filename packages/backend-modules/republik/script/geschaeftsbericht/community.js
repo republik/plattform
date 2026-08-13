@@ -9,7 +9,8 @@ const {
   DEFAULT_FY_FROM,
   DEFAULT_FY_TO,
   startOfDayInZurich,
-  fiscalYearLabelFromRange,
+  endOfDayInZurich,
+  fiscalYearLabelFromAsOf,
 } = require('./lib/dates')
 const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
@@ -22,9 +23,9 @@ const argv = yargs
   })
   .option('to', {
     describe:
-      'fiscal year end (exclusive), e.g. 2026-07-01 — interpreted as start-of-day Europe/Zurich',
-    coerce: startOfDayInZurich,
-    default: startOfDayInZurich(DEFAULT_FY_TO),
+      'fiscal year end (30.06.), e.g. 2026-06-30 — interpreted as end-of-day Europe/Zurich (the whole last day is included)',
+    coerce: endOfDayInZurich,
+    default: endOfDayInZurich(DEFAULT_FY_TO),
   })
   .option('out', {
     describe: 'output directory',
@@ -37,6 +38,9 @@ const argv = yargs
 // Matches exactly the query used for last year's report (BETWEEN, same
 // bounds), plus excluding internal/test accounts (lib/excludedUsers.js) and
 // anchoring the bounds to Europe/Zurich day boundaries (see lib/dates.js).
+// --to is end-of-day (23:59:59.999 Zurich) on the fiscal year end date
+// itself, so the whole last day (30.06.) is included — no need to pass the
+// day after as an exclusive boundary.
 const QUERY = `
   SELECT
     COUNT(*)::int AS "Debattenbeiträge",
@@ -63,7 +67,7 @@ const run = async () => {
       EXCLUDED_USER_IDS,
     ])
     console.log(result)
-    const fyLabel = fiscalYearLabelFromRange(argv.from, argv.to)
+    const fyLabel = fiscalYearLabelFromAsOf(argv.to)
     writeJson({ from, to, ...result }, argv.out, `C-community_FY${fyLabel}`)
   } finally {
     await pgdb.close()

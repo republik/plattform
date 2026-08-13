@@ -7,15 +7,18 @@ pulled ad hoc from several unrelated scripts and Ultradashboard/Metabase
 questions. These scripts replicate that report's tables in a repeatable
 way.
 
-Default dates target FY 2025-07-01–2026-07-01 / snapshot 2026-06-30.
+Default dates target FY 2025-07-01–2026-06-30 / snapshot 2026-06-30.
 Override via CLI flags for future years.
 
 ## Timezone handling
 
 All date CLI flags (`--asOf`, `--from`, `--to`, `--forFiscalYear`) are parsed
 as calendar dates in **Europe/Zurich**, not the host machine's timezone —
-`--asOf 2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time",
-and `--from`/`--to` mean "start of that day, Zurich time". This is handled
+`--asOf 2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time".
+`--from` means "start of that day, Zurich time"; `--to` (`community.js`)
+means the fiscal year end date itself, e.g. `--to 2026-06-30`, interpreted
+as **end**-of-day so the whole last day is included — you don't pass the
+day after as an exclusive boundary. This is handled
 by `lib/dates.js`'s `endOfDayInZurich`/`startOfDayInZurich`, which use
 dayjs's `utc`/`timezone` plugins so the result is identical no matter what
 timezone the process itself runs in (verified: same absolute instant
