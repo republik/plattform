@@ -124,7 +124,7 @@ const run = async () => {
       const current = idsByMonth[i]
       const previous = idsByMonth[i - 1]
 
-      ALL_CATEGORIES.forEach((category) => {
+      const monthRows = ALL_CATEGORIES.map((category) => {
         const currentIds = current[category] || new Set()
         const previousIds = previous[category] || new Set()
 
@@ -137,15 +137,34 @@ const run = async () => {
           if (!currentIds.has(id)) lostCount += 1
         })
 
-        rows.push({
+        return {
           month: asOf,
           category,
           count: currentIds.size,
           new: newCount,
           lost: lostCount,
           net: newCount - lostCount,
-        })
+        }
       })
+      rows.push(...monthRows)
+
+      // General grouping: aggregate totals per month, matching the
+      // Mitgliedschaften/Abonnemente split used elsewhere in this report,
+      // so a monthly total series (e.g. Juli 2024: 21326 … Juni 2025:
+      // 25112) can be directly compared against.
+      const sumRows = (categories, label) => {
+        const relevant = monthRows.filter((r) => categories.includes(r.category))
+        rows.push({
+          month: asOf,
+          category: label,
+          count: relevant.reduce((sum, r) => sum + r.count, 0),
+          new: relevant.reduce((sum, r) => sum + r.new, 0),
+          lost: relevant.reduce((sum, r) => sum + r.lost, 0),
+          net: relevant.reduce((sum, r) => sum + r.net, 0),
+        })
+      }
+      sumRows(MITGLIEDSCHAFTEN_CATEGORIES, 'Total Mitgliedschaften')
+      sumRows(ABONNEMENTE_CATEGORIES, 'Total Abonnemente')
     })
 
     console.log(`\ncomputed ${rows.length} month/category rows`)

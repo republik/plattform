@@ -198,6 +198,14 @@ categories instead of raw `membershipTypes.name` values. Runs 13 queries per
 invocation (parallelized, `--concurrency`, default 4); run it once per
 fiscal year you need (e.g. `--asOf 2025-06-30`, `--asOf 2026-06-30`).
 
+Each month also gets two aggregate rows — `category: 'Total Mitgliedschaften'`
+and `category: 'Total Abonnemente'` — summing `count`/`new`/`lost`/`net`
+across `MITGLIEDSCHAFTEN_CATEGORIES`/`ABONNEMENTE_CATEGORIES`
+(`lib/membershipCategories.js`), so the CSV's `Total Mitgliedschaften` rows
+give a directly comparable month-by-month total series (e.g. against a
+"Mitgliedschaften zum Monatsende" reference like Juli 2024: 21326 … Juni
+2025: 25112) without needing to sum the per-category rows yourself.
+
 **Caveat**: `new`/`lost` for Jahresmitgliedschaft and reduziert specifically
 can be inflated by reduced-price reclassification — see the reduced-price
 bullet above. The combined total and `net` are reliable every month; the
