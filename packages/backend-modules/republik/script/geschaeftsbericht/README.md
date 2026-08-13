@@ -50,6 +50,14 @@ parameter — never a re-formatted date string — and only uses
 Table D (Geschlechterverteilung) isn't covered by a script here — it needs a
 different data source than the rest of this folder.
 
+`diagnoseReconciliation.js` isn't a report table — it's a diagnostic that
+compares, id by id, whether the point-in-time `count` query and the
+lifecycle-event query agree about who's active on a given date, and prints
+the exact disagreeing ids with their raw underlying dates. Run it whenever
+`count` and a `new`/`lost`/`net` reconstruction (or an external reference
+number) seem to disagree — see "Known approximations" below for the bug it
+found and fixed.
+
 Run each with `node <script>.js --help` for flags. All default to
 `DATABASE_URL`/`ELASTIC_URL` etc. from the environment, same as sibling
 scripts (`republik/script/finance/calculateKpis.js`,
@@ -178,6 +186,38 @@ folded into the main categorized CTE.
   period never represented real paid access in the first place, which is
   true regardless of when you ask — unlike `canceled`.
 
+- **Stale invoice periods on mid-period cancellations/refunds (new payments
+  system, fixed)**: Stripe never retroactively shortens an invoice's
+  `periodStart`/`periodEnd` when a subscription is cancelled or refunded
+  partway through it — e.g. a `YEARLY_SUBSCRIPTION` created 2024-12-30,
+  actually ended (`endedAt`) 2025-12-31, still has its last invoice's period
+  running to 2026-12-30. Since the point-in-time query only ever checked
+  invoice-period coverage, this kept counting people as active for up to a
+  full year after they'd genuinely left. Root-caused (not just "residual
+  variance") by writing `diagnoseReconciliation.js`, which directly compares
+  every id between the point-in-time `count` query and the independently
+  computed lifecycle active-range and prints the *exact* disagreeing ids
+  with their raw dates — confirmed via diagnostic: 35 subscriptions wrongly
+  counted active this way as of 2025-06-30, grown to 599 by 2026-06-30 (out
+  of ~35000 total). Fixed by additionally requiring
+  `COALESCE(s."endedAt", s."cancelAt") IS NULL OR ... > $1` in `new_rows`
+  (`lib/membershipCategorizedCte.js`) — the same signal
+  `lib/membershipLifecycleCte.js` already treated as authoritative for its
+  own `last_end`, just never applied to the point-in-time query before. After
+  the fix, `diagnoseReconciliation.js` shows **zero** unexplained
+  disagreements between `count` and the lifecycle active-range at either
+  fiscal-year boundary — the only remaining disagreements are memberships
+  correctly dropped by the cross-system dedup (a migrated user's old-system
+  row, while their new-system row is the one actually counted), which the
+  script itself confirms per-row via `user_has_active_new_system_row`. This
+  also **tightened the match against the actual published FY24/25 report**
+  (see "Year-over-year comparison" below): Abonnemente went from off by a
+  few units to an exact match; Mitgliedschaften from several hundred off to
+  0.07% off. Run `node diagnoseReconciliation.js --asOf <date>` any time this
+  needs re-verifying (e.g. after a schema change, or a fresh "why don't
+  these numbers match" complaint) — it's the fastest way to get a concrete,
+  inspectable answer instead of another round of guessing.
+
 ## Monthly evolution within a fiscal year (new/lost/net)
 
 `membershipEvolutionByFiscalYear.js` takes a single `--asOf` (the fiscal
@@ -274,6 +314,14 @@ future schema change.
 query was then using a ~22h-earlier-than-intended instant on any non-Zurich
 host). The affected population is small — only memberships that specifically
 started/ended late in the day on a snapshot date — which is consistent with
-why that validation already showed close (not wildly off) matches. Re-running
-the validation after this fix would be expected to tighten those matches
-slightly further, not change the overall picture.
+why that validation already showed close (not wildly off) matches.
+
+**Re-validated (2026-08) after fixing the stale-invoice-period bug** (see
+"Known approximations" above): running `--asOf 2026-06-30` and reading its
+`lastYear` (30.06.2025) column against the same published figures gives
+Total Mitgliedschaften 25095 vs. 25112 published (17 off, 0.07%) and Total
+Abonnemente 3556 vs. 3556 published (**exact match**) — both tighter than the
+pre-fix pass, as expected since the bug only ever inflated counts. This is
+now the strongest validation this script has against ground truth; treat any
+future divergence as a real regression worth investigating with
+`diagnoseReconciliation.js`, not as expected noise.

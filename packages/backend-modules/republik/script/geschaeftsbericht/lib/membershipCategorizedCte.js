@@ -110,6 +110,23 @@ new_rows AS (
     -- invoice's period never represented real paid access in the first
     -- place — that's true regardless of when you ask, unlike 'canceled'.
     AND s.status NOT IN ('incomplete', 'incomplete_expired')
+    -- A cancelled/refunded-mid-period subscription's invoice keeps its
+    -- ORIGINAL nominal period (Stripe never retroactively shortens an
+    -- invoice's periodStart/periodEnd when a subscription is cancelled
+    -- partway through it) — e.g. created 2024-12-30, ended 2025-12-31, but
+    -- its last invoice's period still nominally runs to 2026-12-30.
+    -- Without this check, that person is counted as active for up to a
+    -- full year after they actually left. This is the same signal the
+    -- lifecycle CTE already treats as authoritative for its "last_end"
+    -- (lib/membershipLifecycleCte.js) — applied here too, since it's the
+    -- true end regardless of what the invoice period nominally says.
+    -- Confirmed via diagnostic (diagnoseReconciliation.js): 35 subscriptions
+    -- wrongly counted active this way as of 2025-06-30, grown to 599 as of
+    -- 2026-06-30.
+    AND (
+      COALESCE(s."endedAt", s."cancelAt") IS NULL
+      OR COALESCE(s."endedAt", s."cancelAt") > $1
+    )
 ),
 categorized AS (
   SELECT id, "userId", type_name, 'old' AS source,
