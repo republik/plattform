@@ -196,27 +196,57 @@ const run = async () => {
     await elastic.close()
   }
 
-  const result = {
-    from: argv.from.toISOString(),
-    to: argv.to.toISOString(),
-    totalCount: aggResult.totalCount,
-    byTemplate: aggResult.templateBuckets,
-    hasAudioCount: aggResult.hasAudioCount,
-    hasVideoCount: aggResult.hasVideoCount,
-    charCount: scrollResult.charCount,
-    readingMinutes: scrollResult.readingMinutes,
-    dynamicComponentCount: scrollResult.dynamicComponentCount,
-    dynamicComponents: scrollResult.dynamicComponents,
+  const { templateBuckets } = aggResult
+
+  // German, report-ready field names matching the "Publizistische Arbeit"
+  // table structure (see the original task notes: article.count +
+  // editorialNewsletter.count + discussion.count -> Anzahl Beiträge, etc.)
+  // — meant to be copy-pasted straight into the report, not a raw data dump.
+  const report = {
+    Zeitraum: `${argv.from.format('DD.MM.YYYY')} – ${argv.to.subtract(1, 'day').format('DD.MM.YYYY')}`,
+    'Anzahl Beiträge': aggResult.totalCount,
+    'Anzahl Artikel': templateBuckets.article || 0,
+    'Anzahl Newsletter': templateBuckets.editorialNewsletter || 0,
+    'Anzahl Debatten': templateBuckets.discussion || 0,
+    'Anzahl Videos': aggResult.hasVideoCount,
+    'Anzahl Audio': aggResult.hasAudioCount,
+    'Anzahl Zeichen': scrollResult.charCount,
+    'Lesezeit (Minuten)': scrollResult.readingMinutes,
+    'Anzahl interaktive Geschichten (Kandidaten, manuell prüfen)':
+      scrollResult.dynamicComponentCount,
   }
 
-  console.log('result', result)
+  const numberFormat = new Intl.NumberFormat('de-CH')
+  console.log(`\nPublizistische Arbeit ${report.Zeitraum}`)
+  console.table(
+    Object.entries(report)
+      .slice(1)
+      .map(([Kennzahl, Wert]) => ({
+        Kennzahl,
+        Wert: numberFormat.format(Wert),
+      })),
+  )
 
   fs.mkdirSync(argv.out, { recursive: true })
   const jsonPath = path.join(
     argv.out,
     `E-publizistische-arbeit_FY${fyLabel}_${RUN_TIMESTAMP}.json`,
   )
-  fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2))
+  fs.writeFileSync(
+    jsonPath,
+    JSON.stringify(
+      {
+        ...report,
+        _meta: {
+          from: argv.from.toISOString(),
+          to: argv.to.toISOString(),
+          dynamicComponents: scrollResult.dynamicComponents,
+        },
+      },
+      null,
+      2,
+    ),
+  )
   console.log(`wrote ${jsonPath}`)
 
   const candidatesPath = path.join(
