@@ -117,7 +117,8 @@ const run = async () => {
       },
     )
 
-    const rows = []
+    const categoryRows = []
+    const totalRows = []
     months.forEach((month, i) => {
       if (i === 0) return // baseline only, not a fiscal-year month
       const asOf = month.format('YYYY-MM-DD')
@@ -146,7 +147,7 @@ const run = async () => {
           net: newCount - lostCount,
         }
       })
-      rows.push(...monthRows)
+      categoryRows.push(...monthRows)
 
       // General grouping: aggregate totals per month, matching the
       // Mitgliedschaften/Abonnemente split used elsewhere in this report,
@@ -154,7 +155,7 @@ const run = async () => {
       // 25112) can be directly compared against.
       const sumRows = (categories, label) => {
         const relevant = monthRows.filter((r) => categories.includes(r.category))
-        rows.push({
+        totalRows.push({
           month: asOf,
           category: label,
           count: relevant.reduce((sum, r) => sum + r.count, 0),
@@ -167,10 +168,25 @@ const run = async () => {
       sumRows(ABONNEMENTE_CATEGORIES, 'Total Abonnemente')
     })
 
-    console.log(`\ncomputed ${rows.length} month/category rows`)
+    console.log(
+      `\ncomputed ${categoryRows.length} category rows, ${totalRows.length} total rows`,
+    )
     const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
-    writeCsv(rows, argv.out, `F-mitgliedschaften-pro-geschaeftsjahr_FY${fyLabel}`)
-    writeJson(rows, argv.out, `F-mitgliedschaften-pro-geschaeftsjahr_FY${fyLabel}`)
+    writeCsv(
+      totalRows,
+      argv.out,
+      `F-mitgliedschaften-pro-geschaeftsjahr-total_FY${fyLabel}`,
+    )
+    writeCsv(
+      categoryRows,
+      argv.out,
+      `F-mitgliedschaften-pro-geschaeftsjahr-breakdown_FY${fyLabel}`,
+    )
+    writeJson(
+      { totalRows, categoryRows },
+      argv.out,
+      `F-mitgliedschaften-pro-geschaeftsjahr_FY${fyLabel}`,
+    )
   } finally {
     await pgdb.close()
   }
