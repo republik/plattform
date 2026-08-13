@@ -197,56 +197,51 @@ const run = async () => {
   }
 
   const { templateBuckets } = aggResult
+  const zeitraum = `${argv.from.format('DD.MM.YYYY')} – ${argv.to.subtract(1, 'day').format('DD.MM.YYYY')}`
 
   // German, report-ready field names matching the "Publizistische Arbeit"
   // table structure (see the original task notes: article.count +
   // editorialNewsletter.count + discussion.count -> Anzahl Beiträge, etc.)
   // — meant to be copy-pasted straight into the report, not a raw data dump.
-  const report = {
-    Zeitraum: `${argv.from.format('DD.MM.YYYY')} – ${argv.to.subtract(1, 'day').format('DD.MM.YYYY')}`,
-    'Anzahl Beiträge': aggResult.totalCount,
-    'Anzahl Artikel': templateBuckets.article || 0,
-    'Anzahl Newsletter': templateBuckets.editorialNewsletter || 0,
-    'Anzahl Debatten': templateBuckets.discussion || 0,
-    'Anzahl Videos': aggResult.hasVideoCount,
-    'Anzahl Audio': aggResult.hasAudioCount,
-    'Anzahl Zeichen': scrollResult.charCount,
-    'Lesezeit (Minuten)': scrollResult.readingMinutes,
-    'Anzahl interaktive Geschichten (Kandidaten, manuell prüfen)':
-      scrollResult.dynamicComponentCount,
-  }
+  // Same Kennzahl/Wert row shape for both CSV and JSON, matching every
+  // other script in this report (e.g. community.js) — no separate nested
+  // structure for one format vs. the other.
+  const rows = [
+    { Kennzahl: 'Zeitraum', Wert: zeitraum },
+    { Kennzahl: 'Anzahl Beiträge', Wert: aggResult.totalCount },
+    { Kennzahl: 'Anzahl Artikel', Wert: templateBuckets.article || 0 },
+    {
+      Kennzahl: 'Anzahl Newsletter',
+      Wert: templateBuckets.editorialNewsletter || 0,
+    },
+    { Kennzahl: 'Anzahl Debatten', Wert: templateBuckets.discussion || 0 },
+    { Kennzahl: 'Anzahl Videos', Wert: aggResult.hasVideoCount },
+    { Kennzahl: 'Anzahl Audio', Wert: aggResult.hasAudioCount },
+    { Kennzahl: 'Anzahl Zeichen', Wert: scrollResult.charCount },
+    { Kennzahl: 'Lesezeit (Minuten)', Wert: scrollResult.readingMinutes },
+    {
+      Kennzahl: 'Anzahl interaktive Geschichten (Kandidaten, manuell prüfen)',
+      Wert: scrollResult.dynamicComponentCount,
+    },
+  ]
 
   const numberFormat = new Intl.NumberFormat('de-CH')
-  console.log(`\nPublizistische Arbeit ${report.Zeitraum}`)
+  console.log(`\nPublizistische Arbeit ${zeitraum}`)
   console.table(
-    Object.entries(report)
-      .slice(1)
-      .map(([Kennzahl, Wert]) => ({
-        Kennzahl,
-        Wert: numberFormat.format(Wert),
-      })),
+    rows.map((row) => ({
+      ...row,
+      Wert: typeof row.Wert === 'number' ? numberFormat.format(row.Wert) : row.Wert,
+    })),
   )
 
   fs.mkdirSync(argv.out, { recursive: true })
-  const jsonPath = path.join(
-    argv.out,
-    `E-publizistische-arbeit_FY${fyLabel}_${RUN_TIMESTAMP}.json`,
-  )
-  fs.writeFileSync(
-    jsonPath,
-    JSON.stringify(
-      {
-        ...report,
-        _meta: {
-          from: argv.from.toISOString(),
-          to: argv.to.toISOString(),
-          dynamicComponents: scrollResult.dynamicComponents,
-        },
-      },
-      null,
-      2,
-    ),
-  )
+  const basename = `E-publizistische-arbeit_FY${fyLabel}_${RUN_TIMESTAMP}`
+  const csvPath = path.join(argv.out, `${basename}.csv`)
+  fs.writeFileSync(csvPath, csvFormat(rows))
+  console.log(`wrote ${csvPath}`)
+
+  const jsonPath = path.join(argv.out, `${basename}.json`)
+  fs.writeFileSync(jsonPath, JSON.stringify(rows, null, 2))
   console.log(`wrote ${jsonPath}`)
 
   const candidatesPath = path.join(
