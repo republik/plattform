@@ -204,11 +204,21 @@ across `MITGLIEDSCHAFTEN_CATEGORIES`/`ABONNEMENTE_CATEGORIES`
 total series (e.g. against a "Mitgliedschaften zum Monatsende" reference
 like Juli 2024: 21326 … Juni 2025: 25112).
 
-Output is split into two CSVs (plus one combined JSON with both):
-`F-mitgliedschaften-pro-geschaeftsjahr-total_FY....csv` (just the two
-aggregate rows per month) and `F-mitgliedschaften-pro-geschaeftsjahr-breakdown_FY....csv`
-(every per-category row, no totals) — so a total-only chart/table doesn't
-need to filter out the category rows, and vice versa.
+Output is split into four CSVs (plus one combined JSON with all four
+arrays) — one axis is total vs. per-category breakdown, the other is
+Mitgliedschaften vs. Abonnemente:
+
+- `F-mitgliedschaften-total_FY....csv` — just the `Total Mitgliedschaften`
+  row per month
+- `F-mitgliedschaften-breakdown_FY....csv` — the four Mitgliedschaften
+  categories per month, no totals
+- `F-abonnemente-total_FY....csv` — just the `Total Abonnemente` row per
+  month
+- `F-abonnemente-breakdown_FY....csv` — the three Abonnemente categories
+  per month, no totals
+
+so a total-only chart/table for one report table doesn't need to filter out
+the category rows or the other table's data.
 
 **Caveat**: `new`/`lost` for Jahresmitgliedschaft and reduziert specifically
 can be inflated by reduced-price reclassification — see the reduced-price

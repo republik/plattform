@@ -117,8 +117,10 @@ const run = async () => {
       },
     )
 
-    const categoryRows = []
-    const totalRows = []
+    const mitgliedschaftenBreakdown = []
+    const abonnementeBreakdown = []
+    const mitgliedschaftenTotal = []
+    const abonnementeTotal = []
     months.forEach((month, i) => {
       if (i === 0) return // baseline only, not a fiscal-year month
       const asOf = month.format('YYYY-MM-DD')
@@ -147,43 +149,61 @@ const run = async () => {
           net: newCount - lostCount,
         }
       })
-      categoryRows.push(...monthRows)
+      mitgliedschaftenBreakdown.push(
+        ...monthRows.filter((r) => MITGLIEDSCHAFTEN_CATEGORIES.includes(r.category)),
+      )
+      abonnementeBreakdown.push(
+        ...monthRows.filter((r) => ABONNEMENTE_CATEGORIES.includes(r.category)),
+      )
 
       // General grouping: aggregate totals per month, matching the
       // Mitgliedschaften/Abonnemente split used elsewhere in this report,
       // so a monthly total series (e.g. Juli 2024: 21326 … Juni 2025:
       // 25112) can be directly compared against.
-      const sumRows = (categories, label) => {
+      const sumRow = (categories, label) => {
         const relevant = monthRows.filter((r) => categories.includes(r.category))
-        totalRows.push({
+        return {
           month: asOf,
           category: label,
           count: relevant.reduce((sum, r) => sum + r.count, 0),
           new: relevant.reduce((sum, r) => sum + r.new, 0),
           lost: relevant.reduce((sum, r) => sum + r.lost, 0),
           net: relevant.reduce((sum, r) => sum + r.net, 0),
-        })
+        }
       }
-      sumRows(MITGLIEDSCHAFTEN_CATEGORIES, 'Total Mitgliedschaften')
-      sumRows(ABONNEMENTE_CATEGORIES, 'Total Abonnemente')
+      mitgliedschaftenTotal.push(
+        sumRow(MITGLIEDSCHAFTEN_CATEGORIES, 'Total Mitgliedschaften'),
+      )
+      abonnementeTotal.push(sumRow(ABONNEMENTE_CATEGORIES, 'Total Abonnemente'))
     })
 
     console.log(
-      `\ncomputed ${categoryRows.length} category rows, ${totalRows.length} total rows`,
+      `\ncomputed ${mitgliedschaftenBreakdown.length + abonnementeBreakdown.length} category rows, ${mitgliedschaftenTotal.length + abonnementeTotal.length} total rows`,
     )
     const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
     writeCsv(
-      totalRows,
+      mitgliedschaftenTotal,
       argv.out,
-      `F-mitgliedschaften-pro-geschaeftsjahr-total_FY${fyLabel}`,
+      `F-mitgliedschaften-total_FY${fyLabel}`,
     )
     writeCsv(
-      categoryRows,
+      mitgliedschaftenBreakdown,
       argv.out,
-      `F-mitgliedschaften-pro-geschaeftsjahr-breakdown_FY${fyLabel}`,
+      `F-mitgliedschaften-breakdown_FY${fyLabel}`,
+    )
+    writeCsv(abonnementeTotal, argv.out, `F-abonnemente-total_FY${fyLabel}`)
+    writeCsv(
+      abonnementeBreakdown,
+      argv.out,
+      `F-abonnemente-breakdown_FY${fyLabel}`,
     )
     writeJson(
-      { totalRows, categoryRows },
+      {
+        mitgliedschaftenTotal,
+        mitgliedschaftenBreakdown,
+        abonnementeTotal,
+        abonnementeBreakdown,
+      },
       argv.out,
       `F-mitgliedschaften-pro-geschaeftsjahr_FY${fyLabel}`,
     )
