@@ -224,7 +224,15 @@ the category rows or the other table's data.
 can be inflated by reduced-price reclassification — see the reduced-price
 bullet above. The combined total and `net` are reliable every month; the
 per-category gross churn split between those two isn't, in months where many
-first-year discounts expire.
+first-year discounts expire. Since `Total Mitgliedschaften`'s gross
+`new`/`lost` is a straight sum across all four categories, it **inherits
+this same inflation** — confirmed against a Metabase reference (PROJECT_R
+company gain/loss): gross `new`/`lost` were off by up to ~860/month in
+months with heavy reduced-price signup/expiry activity, while `net` was off
+by only 3-124/month (cumulative ~1.7% by fiscal year end, consistent with
+the residual variance seen against every other independent source in this
+project). Use `count` and `net` for `Total Mitgliedschaften` trend analysis;
+don't read its gross `new`/`lost` as precise acquisition/churn figures.
 
 ## Year-over-year comparison
 
