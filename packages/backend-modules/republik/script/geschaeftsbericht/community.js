@@ -33,13 +33,21 @@ const argv = yargs
 // anchoring the bounds to Europe/Zurich day boundaries (see lib/dates.js).
 // The upper bound is end-of-day (23:59:59.999 Zurich) on the fiscal year
 // end date itself, so the whole last day (30.06.) is included.
+//
+// "userId" IS NULL OR ... : comments.userId can be NULL (anonymous/deleted
+// accounts); plain `"userId" != ALL($3::uuid[])` evaluates to NULL (i.e.
+// excluded by WHERE) for those rows, silently dropping every NULL-userId
+// comment from Debattenbeiträge — confirmed via diagnostic: this alone
+// explained a ~1950-comment gap against the original query, while "Personen,
+// die debattiert haben" (COUNT(DISTINCT "userId")) was unaffected either way
+// since DISTINCT already ignores NULLs on its own.
 const QUERY = `
   SELECT
     COUNT(*)::int AS "Debattenbeiträge",
     COUNT(DISTINCT "userId")::int AS "Personen, die debattiert haben"
   FROM comments
   WHERE "createdAt" BETWEEN $1 AND $2
-    AND "userId" != ALL($3::uuid[])
+    AND ("userId" IS NULL OR "userId" != ALL($3::uuid[]))
 `
 
 const run = async () => {
