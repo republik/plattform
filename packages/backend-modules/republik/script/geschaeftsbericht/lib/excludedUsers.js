@@ -9,17 +9,14 @@
 //   GESCHAEFTSBERICHT_EXCLUDED_USER_IDS=uuid1,uuid2,...
 //   GESCHAEFTSBERICHT_TOMBSTONE_USER_ID=uuid1
 //
-// GESCHAEFTSBERICHT_TOMBSTONE_USER_ID is the single "dummy users" account
-// diagnoseCockpitGap.js needs on its own, to replicate Cockpit's own
-// hardcoded tombstone exclusion (see that file) — it should be one of the
-// ids already listed in GESCHAEFTSBERICHT_EXCLUDED_USER_IDS.
+// GESCHAEFTSBERICHT_TOMBSTONE_USER_ID should be one of the ids already
+// listed in GESCHAEFTSBERICHT_EXCLUDED_USER_IDS — see diagnoseCockpitGap.js
+// for why it's needed separately.
 
 function requiredEnv(name) {
   const value = process.env[name]
   if (!value) {
-    throw new Error(
-      `${name} must be set to run Geschäftsbericht scripts (see lib/excludedUsers.js)`,
-    )
+    throw new Error(`${name} must be set to run Geschäftsbericht scripts`)
   }
   return value
 }

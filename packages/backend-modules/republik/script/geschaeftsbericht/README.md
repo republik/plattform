@@ -166,6 +166,27 @@ folded into the main categorized CTE.
   **653** — exactly matching the point-in-time count from
   `membershipsAndSubscriptions.js`. The two CTEs agree exactly after the
   fix, which they would not have before it.
+- **Gönnermitgliedschaft definition (old system)**: counted purely by
+  `membershipTypes.name = 'BENEFACTOR_ABO'`, no gift check. Diverges from
+  the published FY24/25 report (154 here vs. 136 published, at
+  2025-06-30) — investigated (2026-08) but **left as-is, not root-caused**;
+  the base is small enough (136-154) that this is a low-priority open item.
+  Two candidate mechanisms were tested and ruled out:
+  - **Gifted Gönner memberships** (payer ≠ holder, the same signal that
+    explained the `ABO` mismatch): zero found. Nobody has ever gifted a
+    Gönner-tier membership in this dataset — not the cause.
+  - **CHF 1000+ spend threshold** (per the team: "Gönner" sometimes means
+    anyone who paid ≥ CHF 1000 within the fiscal year, independent of
+    formal membership type): gives 119, off in the *opposite* direction
+    (published 136 sits between 119 and 154). The union of "holds
+    BENEFACTOR_ABO" OR "paid ≥ CHF 1000 this year" massively overshoots at
+    236 (only 37 users satisfy both conditions), ruling out a simple union
+    too.
+  Also confirmed no `EXCLUDED_USER_IDS` account currently holds a
+  BENEFACTOR_ABO membership, ruling out a test-account leak as the cause.
+  `diagnoseGoennerGiftSplit.js`, `diagnoseGoennerThreshold.js`, and
+  `diagnoseGoennerVenn.js` are kept for re-verifying this after a future
+  schema/business-rule change.
 - **Reduced-price detection (new payments system)**: a subscription is
   flagged "reduziert" if its overlapping `payments.invoices` row has
   `totalDiscountAmount > 0`. This is best-effort — any positive discount

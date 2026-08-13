@@ -83,7 +83,6 @@ const fetchLifecycleEvents = async (pgdb, fyStart, fyEnd) => {
   // event_month is DATE_TRUNC('month', ...) — the FIRST day of the month
   // (e.g. 2026-06-01), not the last — key by that, not by the month-end
   // dates used elsewhere in this script.
-  // eventsByMonth['2026-06-01']['Monatsabonnement'] = { gain, loss }
   const eventsByMonth = {}
   rows.forEach((row) => {
     const monthKey = row.event_month.toISOString().slice(0, 10)
@@ -113,8 +112,6 @@ const buildFiscalYearMonthEnds = (fiscalYearEnd) => {
   return months
 }
 
-// Simple concurrency-limited map, so we don't fire 12 count queries at
-// once against the DB.
 const mapWithConcurrency = async (items, limit, fn) => {
   const results = new Array(items.length)
   let next = 0
