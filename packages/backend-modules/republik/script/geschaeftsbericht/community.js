@@ -13,6 +13,8 @@ const {
 } = require('./lib/dates')
 const { EXCLUDED_USER_IDS } = require('./lib/excludedUsers')
 
+const numberFormat = new Intl.NumberFormat('de-CH')
+
 const argv = yargs
   .option('asOf', {
     describe:
@@ -55,7 +57,9 @@ const run = async () => {
   const toInstant = argv.asOf
   const from = fromInstant.format('YYYY-MM-DD') // display/output label only
   const to = toInstant.format('YYYY-MM-DD') // display/output label only
-  console.log(`calculating community stats from ${from} to ${to} (Europe/Zurich) …`)
+  const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
+
+  console.log(`Community FY${fyLabel} (${from} – ${to}, Europe/Zurich)`)
 
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
@@ -68,8 +72,14 @@ const run = async () => {
       toInstant.toDate(),
       EXCLUDED_USER_IDS,
     ])
-    console.log(result)
-    const fyLabel = fiscalYearLabelFromAsOf(argv.asOf)
+
+    console.table(
+      Object.entries(result).map(([Kennzahl, count]) => ({
+        Kennzahl,
+        Wert: numberFormat.format(count),
+      })),
+    )
+
     writeJson({ from, to, ...result }, argv.out, `C-community_FY${fyLabel}`)
   } finally {
     await pgdb.close()
