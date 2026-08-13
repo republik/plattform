@@ -3,10 +3,16 @@
 // members and would distort the numbers.
 //
 // The actual user ids are not committed — they identify specific accounts
-// and shouldn't live in source control. Set them via an environment
-// variable instead (comma-separated uuids), e.g. in your local `.env`:
+// and shouldn't live in source control. Set them via environment variables
+// instead, e.g. in your local `.env`:
 //
 //   GESCHAEFTSBERICHT_EXCLUDED_USER_IDS=uuid1,uuid2,...
+//   GESCHAEFTSBERICHT_TOMBSTONE_USER_ID=uuid1
+//
+// GESCHAEFTSBERICHT_TOMBSTONE_USER_ID is the single "dummy users" account
+// diagnoseCockpitGap.js needs on its own, to replicate Cockpit's own
+// hardcoded tombstone exclusion (see that file) — it should be one of the
+// ids already listed in GESCHAEFTSBERICHT_EXCLUDED_USER_IDS.
 
 function requiredEnv(name) {
   const value = process.env[name]
@@ -23,4 +29,6 @@ const EXCLUDED_USER_IDS = requiredEnv('GESCHAEFTSBERICHT_EXCLUDED_USER_IDS')
   .map((id) => id.trim())
   .filter(Boolean)
 
-module.exports = { EXCLUDED_USER_IDS }
+const TOMBSTONE_USER_ID = requiredEnv('GESCHAEFTSBERICHT_TOMBSTONE_USER_ID')
+
+module.exports = { EXCLUDED_USER_IDS, TOMBSTONE_USER_ID }

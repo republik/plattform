@@ -217,6 +217,29 @@ folded into the main categorized CTE.
   needs re-verifying (e.g. after a schema change, or a fresh "why don't
   these numbers match" complaint) — it's the fastest way to get a concrete,
   inspectable answer instead of another round of guessing.
+- **Why this script's totals don't match the `cockpit_membership_evolution`
+  materialized view's `activeEndOfMonth`, and never fully will (explained,
+  not residual variance)**: at 2026-06-30, Cockpit reports 35909 active;
+  this script's validated total is 35034 — a gap of 875, fully decomposed
+  with `diagnoseCockpitGap.js` (see
+  `migrations/sqls/20250604102839-cockpit-materialized-view-up.sql` for
+  Cockpit's own SQL):
+  - **599** — Cockpit's `minMaxDates` CTE aggregates raw invoice-period
+    min/max with no `endedAt`/`cancelAt` check, so it has the exact same
+    stale-invoice-period bug described above, just never fixed there.
+  - **240** — Cockpit's `activeEndOfMonth` filter applies no `status` check
+    at all (unlike its `active` column, which does filter on
+    `status IN ('active', 'past_due', 'unpaid', 'paused')`), so
+    `incomplete`/`incomplete_expired` subscriptions are counted as active.
+  - **5** — Cockpit excludes only one hardcoded "tombstone" user, not this
+    folder's full `EXCLUDED_USER_IDS` list.
+  - The remaining ~31 comes from two smaller mechanisms `diagnoseCockpitGap.js`
+    doesn't replicate (for simplicity): the cross-system dedup for migrated
+    users, and the pledge-purchaser exclusion — both already handled in
+    `lib/membershipCategorizedCte.js`.
+  In short: Cockpit's number is the one carrying uncorrected inflation, not
+  this script's. Don't use Cockpit's `activeEndOfMonth` as a reconciliation
+  target without accounting for this.
 
 ## Monthly evolution within a fiscal year (new/lost/net)
 
