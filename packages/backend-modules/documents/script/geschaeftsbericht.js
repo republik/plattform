@@ -21,11 +21,25 @@ const RUN_TIMESTAMP = dayjs().format('YYYY-MM-DD_HHmm')
 const startOfDayInZurich = (dateStr) =>
   dayjs.tz(dateStr, 'Europe/Zurich').startOf('day')
 
-const ConnectionContext = require('@orbiting/backend-modules-base/lib/ConnectionContext')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 const { t } = require('@orbiting/backend-modules-translate')
 const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
+
+// The `search` resolver only needs elastic/t/redis from its context (we
+// pass withoutRelatedDocs: true, so it never touches pgdb). Its redis usage
+// is entirely for an optional query-result cache (search/lib/cache.js) —
+// not needed for a one-off report script, and requiring a real Redis
+// connection just to satisfy an unused cache would be a needless local
+// setup burden. This stub matches the interface createCache() expects
+// (getAsync/setAsync/delAsync/scanMap) without any network I/O — every
+// call is just a cache miss, which is fine here.
+const noopRedis = {
+  getAsync: async () => undefined,
+  setAsync: async () => undefined,
+  delAsync: async () => undefined,
+  scanMap: async () => undefined,
+}
 
 const { getWordsPerMinute } = require('../lib/meta')
 
@@ -55,7 +69,7 @@ const argv = yargs
 // GraphQL `search` query's aggregations — this is how last year's report
 // numbers were actually produced. Calling the resolver directly (no HTTP),
 // same technique as voting/scripts/mainstreamscore/seed.js.
-const fetchSearchAggregations = async (connectionContext, from, to) => {
+const fetchSearchAggregations = async (elastic, from, to) => {
   const result = await search(
     null,
     {
@@ -67,7 +81,7 @@ const fetchSearchAggregations = async (connectionContext, from, to) => {
       withoutContent: true,
       withoutRelatedDocs: true,
     },
-    { ...connectionContext, t },
+    { elastic, redis: noopRedis, t },
     undefined,
   )
 
@@ -92,9 +106,7 @@ const fetchSearchAggregations = async (connectionContext, from, to) => {
 // charCount and interactive-story candidates have no equivalent aggregation
 // (no "sum" aggregation type exists), so these still need a raw ES scroll —
 // same query shape as the original documents/script/count.js.
-const scrollForCharCountAndCandidates = async (from, to) => {
-  const elastic = Elasticsearch.connect()
-
+const scrollForCharCountAndCandidates = async (elastic, from, to) => {
   const params = {
     index: utils.getIndexAlias('document', 'read'),
     scroll: '5s',
@@ -150,8 +162,6 @@ const scrollForCharCountAndCandidates = async (from, to) => {
     }
   }
 
-  await elastic.close()
-
   return {
     charCount,
     readingMinutes,
@@ -171,19 +181,19 @@ const run = async () => {
     to: argv.to.toISOString(),
   })
 
-  const connectionContext = await ConnectionContext.create('geschaeftsbericht')
+  const elastic = Elasticsearch.connect()
 
   let aggResult
   let scrollResult
   try {
-    aggResult = await fetchSearchAggregations(
-      connectionContext,
+    aggResult = await fetchSearchAggregations(elastic, argv.from, argv.to)
+    scrollResult = await scrollForCharCountAndCandidates(
+      elastic,
       argv.from,
       argv.to,
     )
-    scrollResult = await scrollForCharCountAndCandidates(argv.from, argv.to)
   } finally {
-    await ConnectionContext.close(connectionContext)
+    await elastic.close()
   }
 
   const result = {
