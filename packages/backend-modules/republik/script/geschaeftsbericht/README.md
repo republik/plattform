@@ -12,7 +12,7 @@ Override via CLI flags for future years.
 
 ## Timezone handling
 
-All date CLI flags (`--asOf`, `--forFiscalYear`) are parsed as calendar
+All date CLI flags (`--asOf`) are parsed as calendar
 dates in **Europe/Zurich**, not the host machine's timezone — `--asOf
 2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time". Every
 script in this folder takes a single `--asOf` (the fiscal year end date)
@@ -45,31 +45,30 @@ parameter — never a re-formatted date string — and only uses
 | B: Abonnemente per Stichtag | `membershipsAndSubscriptions.js` | Postgres |
 | A+B evolution: Mitgliedschaften/Abonnemente zum Monatsende (with new/lost/net), one fiscal year at a time | `membershipEvolutionByFiscalYear.js` | Postgres — 13 queries per run |
 | C: Community (Debattenbeiträge) | `community.js` | Postgres |
-| D: Geschlechterverteilung | `gender.js` | Postgres |
 | E: Publizistische Arbeit | `../../documents/script/geschaeftsbericht.js` | Elasticsearch — GraphQL `search` aggregations + a scroll pass (slow — full year) |
+
+Table D (Geschlechterverteilung) isn't covered by a script here — it needs a
+different data source than the rest of this folder.
 
 Run each with `node <script>.js --help` for flags. All default to
 `DATABASE_URL`/`ELASTIC_URL` etc. from the environment, same as sibling
 scripts (`republik/script/finance/calculateKpis.js`,
 `documents/script/count.js`).
 
-`membershipsAndSubscriptions.js`, `membershipEvolutionByFiscalYear.js`,
-`community.js`, and `gender.js` all exclude a fixed list of internal/test
-accounts (dummy users, media archive, national library account, Apple/Android
-test users, dialog user) via `lib/excludedUsers.js`, which reads the actual
-ids from `GESCHAEFTSBERICHT_EXCLUDED_USER_IDS` (comma-separated uuids, not
-committed to source control) — required, every script here throws
-immediately if it's unset. Table E (publishing stats) doesn't need this
-since it counts documents, not users.
+`membershipsAndSubscriptions.js`, `membershipEvolutionByFiscalYear.js`, and
+`community.js` all exclude a fixed list of internal/test accounts (dummy
+users, media archive, national library account, Apple/Android test users,
+dialog user) via `lib/excludedUsers.js`, which reads the actual ids from
+`GESCHAEFTSBERICHT_EXCLUDED_USER_IDS` (comma-separated uuids, not committed
+to source control) — required, every script here throws immediately if it's
+unset. Table E (publishing stats) doesn't need this since it counts
+documents, not users.
 
 All output filenames include the fiscal year they're for plus the run
 date/time, e.g. `A-mitgliedschaften_FY2025-2026_2026-08-12_1556.csv` — every
 file from one script invocation shares the same timestamp, so re-running
 never overwrites a previous run's output, and files for different fiscal
-years never collide either. The fiscal year label is derived from `--asOf`;
-`gender.js` has no fiscal-year-scoped query (it's always current-state, see
-below) but still takes a
-`--forFiscalYear` flag purely to label which report the file is for.
+years never collide either. The fiscal year label is derived from `--asOf`.
 
 ## Reduced subscriptions by discount duration
 
@@ -129,10 +128,6 @@ folded into the main categorized CTE.
   `payments."giftVouchers"` row `redeemedBy` the subscription's user within
   ±14 days of `currentPeriodStart`. There's no FK between vouchers and
   subscriptions, so this is a fuzzy heuristic, not exact.
-- **Gender distribution**: reflects *currently* active members (as of
-  whenever the script is run), not a true point-in-time snapshot as of the
-  fiscal year-end. Making it point-in-time would require reusing the
-  per-period `asOf` filter from `membershipsAndSubscriptions.js`.
 - **Interactive stories**: the script only outputs *candidate* URLs (any
   document containing a `DYNAMIC_COMPONENT` zone). Last year's report
   hand-picked ~12 URLs from a larger candidate set — expect to do the same
