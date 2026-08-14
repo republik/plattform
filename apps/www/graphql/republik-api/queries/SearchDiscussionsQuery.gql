@@ -1,0 +1,10 @@
+query SearchDiscussions($ids: [ID!]!) {
+  discussionsByIds(ids: $ids) {
+    id
+    path
+    closed
+    comments(first: 0) {
+      totalCount
+    }
+  }
+}

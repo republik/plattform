@@ -80,7 +80,7 @@ const ResultsFooter = compose(withT)(
             href='#'
             onClick={(e) => {
               e.preventDefault()
-              fetchMore({ after: pageInfo.endCursor })
+              fetchMore()
             }}
           >
             {t('search/pageInfo/loadMore')}

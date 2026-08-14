@@ -1,100 +1,13 @@
-import { parse } from 'graphql'
+import { TYPESENSE_COLLECTION_PREFIX } from '@/lib/constants'
 
-const PREFIX = process.env.NEXT_PUBLIC_TYPESENSE_COLLECTION_PREFIX || 'republik'
-const getCollectionAlias = (kind) => `${PREFIX}-${kind}`
+import { SUPPORTED_FILTERS } from './constants'
 
-const PER_PAGE = 25
+const getCollectionAlias = (collectionName) =>
+  `${TYPESENSE_COLLECTION_PREFIX}-${collectionName}`
 
-const QUERY_BY = {
-  articles: 'title,description,plainTextBody,authors,byline',
-  comments: 'contentString,authorName',
-  users: 'name,biography,statement',
-}
+export const PER_PAGE = 25
 
-// Typesense highlight field names -> the dotted paths findHighlight() in the
-// result components looks up (matching the old Elasticsearch resolver's
-// highlight paths, so DocumentResult/CommentResult/UserResult stay unchanged).
-const HIGHLIGHT_PATH = {
-  articles: {
-    title: 'meta.title',
-    description: 'meta.description',
-    authors: 'meta.authors',
-    plainTextBody: 'contentString',
-  },
-  comments: {
-    contentString: 'contentString',
-  },
-  users: {
-    name: 'name',
-    biography: 'biography',
-    statement: 'statement',
-  },
-}
-
-// Backend labels from packages/backend-modules/translate/translations.json
-// (api/search/aggs/type/*, api/search/aggs/audioSourceKind/readAloud) --
-// duplicated here since these were previously resolved server-side and the
-// frontend has no equivalent translation keys for them.
-const LABELS = {
-  Document: 'Artikel',
-  User: 'Profile',
-  Comment: 'Debattenbeiträge',
-  Audio: 'Vorgelesen',
-}
-
-// Document/Audio are both the `articles` collection under different
-// filters (Audio is the hasAudio:true subset) -- there's no "all types"
-// view, so every keystroke fires all four requests in one multi_search to
-// get tab counts, and returns hits/pageInfo only for the selected one.
-const FILTER_REQUESTS = [
-  { kind: 'Document', collection: 'articles', filterBy: undefined },
-  { kind: 'Audio', collection: 'articles', filterBy: 'hasAudio:true' },
-  { kind: 'User', collection: 'users', filterBy: undefined },
-  { kind: 'Comment', collection: 'comments', filterBy: undefined },
-]
-
-export const filterToKind = (filter) => {
-  if (filter?.key === 'type' && filter.value === 'User') return 'User'
-  if (filter?.key === 'type' && filter.value === 'Comment') return 'Comment'
-  if (filter?.key === 'audioSourceKind' && filter.value === 'readAloud')
-    return 'Audio'
-  return 'Document'
-}
-
-const sortByFor = (collection, sort) => {
-  if (!sort || sort.key === 'relevance' || !sort.direction) {
-    return '_text_match:desc'
-  }
-  const direction = sort.direction.toLowerCase()
-  const field = collection === 'articles' ? 'publishDate' : 'createdAt'
-  return `${field}:${direction}`
-}
-
-const buildRequest = (filterRequest, { searchQuery, sort, selectedKind, page }) => {
-  const isSelected = filterRequest.kind === selectedKind
-  return {
-    collection: getCollectionAlias(filterRequest.collection),
-    q: searchQuery || '*',
-    query_by: QUERY_BY[filterRequest.collection],
-    ...(filterRequest.filterBy ? { filter_by: filterRequest.filterBy } : {}),
-    highlight_fields: QUERY_BY[filterRequest.collection],
-    highlight_start_tag: '<em>',
-    highlight_end_tag: '</em>',
-    sort_by: sortByFor(filterRequest.collection, sort),
-    page: isSelected ? page : 1,
-    per_page: isSelected ? PER_PAGE : 0,
-  }
-}
-
-const buildHighlights = (hit, collectionKind) => {
-  const pathByField = HIGHLIGHT_PATH[collectionKind]
-  return (hit.highlights || []).map((highlight) => ({
-    path: pathByField[highlight.field] || highlight.field,
-    fragments: [highlight.snippet || highlight.value || ''],
-  }))
-}
-
-const buildPreview = (text, length = 240) => {
+export const buildPreview = (text, length = 240) => {
   if (!text) {
     return { string: '', more: false }
   }
@@ -114,10 +27,12 @@ const buildPreview = (text, length = 240) => {
 // from an Elasticsearch stored field) -- derived client-side here since
 // Typesense only carries the plain text itself.
 const WORDS_PER_MINUTE = 180
-const estimateReadingMinutes = (text) => {
+export const estimateReadingMinutes = (text) => {
   if (!text) return undefined
   const words = text.trim().split(/\s+/).filter(Boolean).length
-  return words > WORDS_PER_MINUTE ? Math.round(words / WORDS_PER_MINUTE) : undefined
+  return words > WORDS_PER_MINUTE
+    ? Math.round(words / WORDS_PER_MINUTE)
+    : undefined
 }
 
 // doc.credits is a JSON-encoded CreditsNode[] (see republik/studio's
@@ -140,13 +55,17 @@ const buildDocumentEntity = (hit) => {
     id: doc.id,
     repoId: doc.id,
     // Not part of the old Document contract -- an internal passthrough field
-    // enrichDocumentNodes() reads to batch-fetch ownDiscussion, then merges
+    // addOwnDiscussions() reads to batch-fetch ownDiscussion, then merges
     // the result into meta itself. Ignored by DocumentResult/TeaserFeed.
+    // This is the durable join key: repoIds disappear once documents live
+    // only in Sanity, discussionIds do not.
     discussionId: doc.discussionId,
     meta: {
       title: doc.title,
       description: doc.description,
-      publishDate: doc.publishDate ? new Date(doc.publishDate).toISOString() : null,
+      publishDate: doc.publishDate
+        ? new Date(doc.publishDate).toISOString()
+        : null,
       path: doc.slug || '',
       // All indexed documents are Sanity `article`s (see decision to only
       // index kind:article) -- ActionBar's reading-time/audio gating checks
@@ -228,123 +147,183 @@ const buildCommentEntity = (hit) => {
   }
 }
 
-const buildEntity = (collectionKind, hit) => {
-  if (collectionKind === 'users') return buildUserEntity(hit)
-  if (collectionKind === 'comments') return buildCommentEntity(hit)
-  return buildDocumentEntity(hit)
+/**
+ * What each Typesense collection carries, independent of which tab is asking.
+ *
+ * `highlightPaths` maps Typesense highlight field names onto the dotted paths
+ * findHighlight() in the result components looks up (matching the old
+ * Elasticsearch resolver's highlight paths, so DocumentResult/CommentResult/
+ * UserResult stay unchanged).
+ */
+const COLLECTIONS = {
+  articles: {
+    collectionName: 'articles',
+    queryBy: 'title,description,plainTextBody,authors,byline',
+    highlightPaths: {
+      title: 'meta.title',
+      description: 'meta.description',
+      authors: 'meta.authors',
+      plainTextBody: 'contentString',
+    },
+    toEntity: buildDocumentEntity,
+  },
+  users: {
+    collectionName: 'users',
+    queryBy: 'name,biography,statement',
+    highlightPaths: {
+      name: 'name',
+      biography: 'biography',
+      statement: 'statement',
+    },
+    toEntity: buildUserEntity,
+  },
+  comments: {
+    collectionName: 'comments',
+    queryBy: 'contentString,authorName',
+    highlightPaths: {
+      contentString: 'contentString',
+    },
+    toEntity: buildCommentEntity,
+  },
 }
 
-const buildAggregations = (foundByKind) => [
-  {
-    key: 'type',
-    count: foundByKind.Document + foundByKind.User + foundByKind.Comment,
-    label: 'Typ',
-    buckets: [
-      { value: 'Document', count: foundByKind.Document, label: LABELS.Document },
-      { value: 'User', count: foundByKind.User, label: LABELS.User },
-      { value: 'Comment', count: foundByKind.Comment, label: LABELS.Comment },
-    ],
-  },
-  {
-    key: 'audioSourceKind',
-    count: foundByKind.Audio,
-    label: 'Audio',
-    buckets: [{ value: 'readAloud', count: foundByKind.Audio, label: LABELS.Audio }],
-  },
-]
+// What distinguishes each kind from the collection it reads. Document and
+// Audio are both the `articles` collection, Audio being the hasAudio:true
+// subset -- there's no "all types" view, so every search fires all four
+// requests in one multi_search to get the tab counts, and returns
+// hits/pageInfo only for the selected one.
+const KIND_COLLECTIONS = {
+  Document: { ...COLLECTIONS.articles, filterBy: undefined },
+  Audio: { ...COLLECTIONS.articles, filterBy: 'hasAudio:true' },
+  User: { ...COLLECTIONS.users, filterBy: undefined },
+  Comment: { ...COLLECTIONS.comments, filterBy: undefined },
+}
 
 /**
- * Runs one multi_search across articles/articles(hasAudio)/users/comments and
- * reshapes the response into the SearchConnection-like contract the Search
- * components already consume (see enhancers.js's previous GraphQL query).
+ * The four searchable kinds, built from the tab list in constants.js so the
+ * tabs and the searches behind them cannot drift apart.
+ *
+ * Frozen because identity is load-bearing: buildRequest compares
+ * `descriptor === selected` and buildSearchResult uses KINDS.indexOf() to pick
+ * the matching multi_search result, so a reorder or mutation would silently
+ * return the wrong collection's hits.
  */
-export const runSearch = async (client, { searchQuery, filter, sort, page = 1 }) => {
-  const selectedKind = filterToKind(filter)
-  const searches = FILTER_REQUESTS.map((filterRequest) =>
-    buildRequest(filterRequest, { searchQuery, sort, selectedKind, page }),
-  )
-  const { results } = await client.multiSearch.perform({ searches })
+export const KINDS = Object.freeze(
+  SUPPORTED_FILTERS.map(({ kind, key, value }) =>
+    Object.freeze({
+      ...KIND_COLLECTIONS[kind],
+      kind,
+      filter: Object.freeze({ key, value }),
+    }),
+  ),
+)
 
-  const foundByKind = {}
-  FILTER_REQUESTS.forEach((filterRequest, index) => {
-    foundByKind[filterRequest.kind] = results[index]?.found ?? 0
+const DEFAULT_DESCRIPTOR = KINDS[0]
+
+/** The descriptor a url filter selects, defaulting to Document. */
+export const filterToDescriptor = (filter) =>
+  KINDS.find(
+    (d) => d.filter.key === filter?.key && d.filter.value === filter?.value,
+  ) || DEFAULT_DESCRIPTOR
+
+const sortByFor = (collectionName, sort) => {
+  if (!sort || sort.key === 'relevance' || !sort.direction) {
+    return '_text_match:desc'
+  }
+  const direction = sort.direction.toLowerCase()
+  const field = collectionName === 'articles' ? 'publishDate' : 'createdAt'
+  return `${field}:${direction}`
+}
+
+const buildRequest = (descriptor, { searchQuery, sort, selected, page }) => {
+  const isSelected = descriptor === selected
+  return {
+    collection: getCollectionAlias(descriptor.collectionName),
+    q: searchQuery || '*',
+    query_by: descriptor.queryBy,
+    ...(descriptor.filterBy ? { filter_by: descriptor.filterBy } : {}),
+    highlight_fields: descriptor.queryBy,
+    highlight_start_tag: '<em>',
+    highlight_end_tag: '</em>',
+    sort_by: sortByFor(descriptor.collectionName, sort),
+    page: isSelected ? page : 1,
+    per_page: isSelected ? PER_PAGE : 0,
+  }
+}
+
+const buildHighlights = (hit, descriptor) =>
+  (hit.highlights || []).map((highlight) => ({
+    path: descriptor.highlightPaths[highlight.field] || highlight.field,
+    fragments: [highlight.snippet || highlight.value || ''],
+  }))
+
+// Kinds sharing a filter key share an aggregation: type covers
+// Document/User/Comment, audioSourceKind covers Audio on its own.
+const buildAggregations = (foundByKind) => {
+  const byFilterKey = new Map()
+  KINDS.forEach((descriptor) => {
+    if (!byFilterKey.has(descriptor.filter.key)) {
+      byFilterKey.set(descriptor.filter.key, [])
+    }
+    byFilterKey.get(descriptor.filter.key).push(descriptor)
   })
 
-  const selectedIndex = FILTER_REQUESTS.findIndex(
-    (filterRequest) => filterRequest.kind === selectedKind,
-  )
-  const selectedResult = results[selectedIndex]
-  const selectedCollectionKind = FILTER_REQUESTS[selectedIndex].collection
+  return [...byFilterKey].map(([key, descriptors]) => ({
+    key,
+    count: descriptors.reduce(
+      (sum, descriptor) => sum + (foundByKind[descriptor.kind] || 0),
+      0,
+    ),
+    buckets: descriptors.map((descriptor) => ({
+      value: descriptor.filter.value,
+      count: foundByKind[descriptor.kind] || 0,
+    })),
+  }))
+}
+
+/**
+ * Reshapes a multi_search response (one result per KINDS entry, in order)
+ * into the { nodes, totalCount, aggregations, pageInfo } shape the Search
+ * components consume. Pure -- separated from runSearch so it can be unit
+ * tested.
+ */
+export const buildSearchResult = (results, { selected, page }) => {
+  const foundByKind = {}
+  KINDS.forEach((descriptor, index) => {
+    foundByKind[descriptor.kind] = results[index]?.found ?? 0
+  })
+
+  const selectedResult = results[KINDS.indexOf(selected)]
 
   const nodes = (selectedResult?.hits || []).map((hit) => ({
-    entity: buildEntity(selectedCollectionKind, hit),
-    highlights: buildHighlights(hit, selectedCollectionKind),
-    score: hit.text_match,
+    entity: selected.toEntity(hit),
+    highlights: buildHighlights(hit, selected),
   }))
 
   const found = selectedResult?.found ?? 0
-  const hasNextPage = page * PER_PAGE < found
 
   return {
     totalCount: found,
     aggregations: buildAggregations(foundByKind),
-    pageInfo: {
-      hasNextPage,
-      endCursor: hasNextPage ? String(page + 1) : null,
-      hasPreviousPage: page > 1,
-      startCursor: page > 1 ? String(page - 1) : null,
-    },
+    // Typesense paginates by 1-based page number, and the store knows which
+    // pages it holds -- so there's nothing for a cursor to carry.
+    pageInfo: { hasNextPage: page * PER_PAGE < found },
     nodes,
   }
 }
 
 /**
- * Comment counts are live Postgres data (discussions.comments.totalCount) --
- * Typesense only carries the static discussionId join key (see
- * TypesenseArticleDocument#discussionId). This batches one aliased
- * `discussion(id:)` per Document-tab hit into a single GraphQL request
- * (each resolves via the Discussion.byId DataLoader, so it's one query, not
- * N) and merges { ownDiscussion } into each node's meta.
+ * Runs one multi_search across articles/articles(hasAudio)/users/comments and
+ * reshapes the response (see buildSearchResult).
  */
-export const enrichDocumentNodes = async (apolloClient, nodes) => {
-  const withDiscussion = nodes
-    .map((node, index) => ({ node, index, discussionId: node.entity.discussionId }))
-    .filter((entry) => entry.discussionId)
-
-  if (withDiscussion.length === 0) {
-    return nodes
-  }
-
-  const query = parse(`
-    query getSearchDiscussionCounts {
-      ${withDiscussion
-        .map(
-          (entry, i) =>
-            `d${i}: discussion(id: ${JSON.stringify(entry.discussionId)}) {
-              id
-              path
-              closed
-              comments(first: 0) { totalCount }
-            }`,
-        )
-        .join('\n')}
-    }
-  `)
-
-  const { data } = await apolloClient.query({ query, fetchPolicy: 'network-only' })
-
-  const ownDiscussionByIndex = new Map(
-    withDiscussion.map((entry, i) => [entry.index, data[`d${i}`]]),
+export const runSearch = async (
+  client,
+  { searchQuery, filter, sort, page = 1 },
+) => {
+  const selected = filterToDescriptor(filter)
+  const searches = KINDS.map((descriptor) =>
+    buildRequest(descriptor, { searchQuery, sort, selected, page }),
   )
-
-  return nodes.map((node, index) => {
-    const ownDiscussion = ownDiscussionByIndex.get(index)
-    if (!ownDiscussion) {
-      return node
-    }
-    return {
-      ...node,
-      entity: { ...node.entity, meta: { ...node.entity.meta, ownDiscussion } },
-    }
-  })
+  const { results } = await client.multiSearch.perform({ searches })
+  return buildSearchResult(results, { selected, page })
 }

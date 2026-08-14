@@ -7,6 +7,7 @@ import {
   SUPPORTED_FILTERS,
   isSameFilter,
   findAggregation,
+  filterLabelKey,
 } from './constants'
 import { css } from 'glamor'
 import {
@@ -16,6 +17,7 @@ import {
 } from '@project-r/styleguide'
 
 import { countFormat } from '@/lib/utils/format'
+import withT from '@/lib/withT'
 import Link from 'next/link'
 
 const styles = {
@@ -44,7 +46,8 @@ const styles = {
 const Filters = compose(
   withSearchRouter,
   withAggregations,
-)(({ dataAggregations, urlFilter, getSearchParams, startState }) => {
+  withT,
+)(({ t, dataAggregations, urlFilter, getSearchParams, startState }) => {
   const { search, loading, error } = dataAggregations
   const [colorScheme] = useColorContext()
   const hoverRule = useMemo(() => {
@@ -71,7 +74,7 @@ const Filters = compose(
 
         const text = (
           <>
-            {agg.label} <small>{countFormat(agg.count)}</small>
+            {t(filterLabelKey(filter))} <small>{countFormat(agg.count)}</small>
           </>
         )
 

@@ -4253,6 +4253,22 @@
       "value": "Debatte {link}"
     },
     {
+      "key": "search/filter/type/Document",
+      "value": "Artikel"
+    },
+    {
+      "key": "search/filter/type/User",
+      "value": "Profile"
+    },
+    {
+      "key": "search/filter/type/Comment",
+      "value": "Debattenbeiträge"
+    },
+    {
+      "key": "search/filter/audioSourceKind/readAloud",
+      "value": "Vorgelesen"
+    },
+    {
       "key": "search/sort/relevance",
       "value": "Relevanz"
     },
