@@ -1,5 +1,6 @@
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
+import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
@@ -33,6 +34,7 @@ const pageComponents: Partial<PortableTextReactComponents> = {
     imageGroup: ImageGroup,
     infoBox: InfoBox,
     divider: () => <hr />,
+    dividerStars: DividerStars,
     html: Html,
     embedVideo: LegacyEmbedVideo,
     // Wrap function because renderNode can't be passed to a client component

@@ -7,9 +7,12 @@ import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
 import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
+import { FontSizeDialog } from '@/app/components/ui/font-size-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { css } from '@republik/theme/css'
-import { EllipsisVertical } from 'lucide-react'
+import { DiscussionAction } from './discussion-action'
+import { AArrowUp, EllipsisVertical } from 'lucide-react'
+import { useState } from 'react'
 
 const menuTriggerStyle = css({
   cursor: 'pointer',
@@ -58,6 +61,7 @@ export type ArticleTopActionsProps = {
 }
 
 export function ArticleTopActions({ article }: ArticleTopActionsProps) {
+  const [fontSizeOpen, setFontSizeOpen] = useState(false)
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
@@ -80,6 +84,11 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
+      <DiscussionAction
+        path={path}
+        backendDiscussionId={article.discussion?.backendDiscussionId}
+        inlineDiscussion={article.inlineDiscussion ?? false}
+      />
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
@@ -102,9 +111,23 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
                 className={menuItemStyle}
               />
             </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className={menuItemStyle}
+              onSelect={() => setFontSizeOpen(true)}
+            >
+              <AArrowUp size={ACTION_ICON_SIZE} />
+              Schriftgrösse
+            </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
+
+      {/*
+        Sibling of DropdownMenu.Root, never a child: opening a Radix Dialog
+        from inside a closing Dialog/DropdownMenu strands `pointer-events:
+        none` on <body>.
+      */}
+      <FontSizeDialog open={fontSizeOpen} onOpenChange={setFontSizeOpen} />
     </div>
   )
 }
