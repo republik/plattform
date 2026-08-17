@@ -74,7 +74,6 @@ const AudioPlayerToggle = () => {
 
 const styles = {
   menuToggle: css(plainButtonRule, {
-    ...plainButtonRule,
     zIndex: ZINDEX_FRAME_TOGGLE,
     position: 'relative',
   }),

@@ -19,8 +19,7 @@ import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 import { HEADER_HEIGHT, SUBHEADER_HEIGHT } from '../constants'
 
 const styles = {
-  seriesNavBarButton: css({
-    ...plainButtonRule,
+  seriesNavBarButton: css(plainButtonRule, {
     ...fontStyles.sansSerifRegular,
     padding: '5px 0',
     width: '100%',
