@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type Src = {
   mp4?: string
   hls?: string
@@ -631,6 +631,9 @@ export type ArticleEditor = Array<
     } & Button)
   | ({
       _key: string
+    } & AuthorBlock)
+  | ({
+      _key: string
     } & EmbedTwitter)
   | ({
       _key: string
@@ -670,28 +673,6 @@ export type ExpandableLink = {
   content?: InlineEditor
   href?: string
   reference?: ArticleReference | PageReference | ContributorReference
-}
-
-export type Contributor = {
-  _id: string
-  _type: 'contributor'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  portraitImage?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  title: string
-  shortBio?: string
-  gender?: 'm' | 'f' | 'd' | 'na'
-  prolitterisId?: string
-  prolitterisFirstname?: string
-  prolitterisLastname?: string
-  userId?: string
 }
 
 export type DiscussionReference = {
@@ -908,6 +889,36 @@ export type InfoBox = {
   figureSize?: 'S' | 'M' | 'L'
   figureFloat?: boolean
   collapsible?: boolean
+}
+
+export type AuthorBlock = {
+  _type: 'authorBlock'
+  contributor: ContributorReference
+  displayName?: string
+  credentialText?: string
+  large?: boolean
+}
+
+export type Contributor = {
+  _id: string
+  _type: 'contributor'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  portraitImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  title: string
+  shortBio?: string
+  gender?: 'm' | 'f' | 'd' | 'na'
+  prolitterisId?: string
+  prolitterisFirstname?: string
+  prolitterisLastname?: string
+  userId?: string
 }
 
 export type Button = {
@@ -1437,7 +1448,6 @@ export type AllSanitySchemaTypes =
   | VoiceTag
   | InternalLink
   | ExpandableLink
-  | Contributor
   | DiscussionReference
   | Article
   | Discussion
@@ -1453,6 +1463,8 @@ export type AllSanitySchemaTypes =
   | PullQuote
   | BlockQuote
   | InfoBox
+  | AuthorBlock
+  | Contributor
   | Button
   | SeriesNav
   | StoryComponent
@@ -1812,6 +1824,16 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         name: string
       } | null
       content: Array<
+        | {
+            _key: string
+            _type: 'authorBlock'
+            contributor: ContributorReference
+            displayName?: string
+            credentialText?: string
+            large?: boolean
+            markDefs: null
+            body: null
+          }
         | {
             children?: Array<
               | ({
@@ -3187,6 +3209,16 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         name: string
       } | null
       content: Array<
+        | {
+            _key: string
+            _type: 'authorBlock'
+            contributor: ContributorReference
+            displayName?: string
+            credentialText?: string
+            large?: boolean
+            markDefs: null
+            body: null
+          }
         | {
             children?: Array<
               | ({
