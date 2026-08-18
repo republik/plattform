@@ -1,15 +1,24 @@
-import { type StaticImageData } from 'next/image'
-import formatBinswanger from './assets/format-binswanger.png'
-import formatWieRedenWirEigentlich from './assets/format-format-wie-reden-wir-eigentlich.png'
-import formatGedankensplitter from './assets/format-gedankensplitter.png'
-import formatPfister from './assets/format-pfister.png'
-import formatRosenwasser from './assets/format-rosenwasser.png'
-import formatVahland from './assets/format-vahland.png'
+// Disabled static image imports because of sharp-related build errors on Vercel
+// import { type StaticImageData } from 'next/image'
+// import formatBinswanger from './assets/format-binswanger.png'
+// import formatWieRedenWirEigentlich from './assets/format-format-wie-reden-wir-eigentlich.png'
+// import formatGedankensplitter from './assets/format-gedankensplitter.png'
+// import formatPfister from './assets/format-pfister.png'
+// import formatRosenwasser from './assets/format-rosenwasser.png'
+// import formatVahland from './assets/format-vahland.png'
+const formatBinswanger = '/static/onboarding/format-binswanger.png'
+const formatWieRedenWirEigentlich =
+  '/static/onboarding/format-format-wie-reden-wir-eigentlich.png'
+const formatGedankensplitter = '/static/onboarding/format-gedankensplitter.png'
+const formatPfister = '/static/onboarding/format-pfister.png'
+const formatRosenwasser = '/static/onboarding/format-rosenwasser.png'
+const formatVahland = '/static/onboarding/format-vahland.png'
 
 type StyleType = {
   backgroundColor?: string
   color?: string
-  imageSrc?: StaticImageData
+  // imageSrc?: StaticImageData
+  imageSrc?: string
 }
 
 export const FORMATS_FEATURED: string[] = [
