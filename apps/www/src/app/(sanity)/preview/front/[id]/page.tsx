@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 
 export default async function FrontPreviewPage({
   params,
-}: PageProps<'/preview/fronts/[id]'>) {
+}: PageProps<'/preview/front/[id]'>) {
   const { id } = await params
   const { data: front } = await sanityFetch({
     query: FRONT_QUERY,
