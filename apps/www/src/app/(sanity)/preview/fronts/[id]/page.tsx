@@ -1,10 +1,7 @@
 import { FrontBlock } from '@/app/(sanity)/front/components/front-block'
-import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
 import { FRONT_QUERY } from '@/app/(sanity)/groq/front-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
 import { notFound } from 'next/navigation'
 
 export default async function FrontPreviewPage({
@@ -42,8 +39,6 @@ export default async function FrontPreviewPage({
           </div>
         ))}
       </div>
-
-      <FrontFeed />
     </>
   )
 }
