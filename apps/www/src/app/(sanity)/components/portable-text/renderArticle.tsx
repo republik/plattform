@@ -8,6 +8,7 @@ import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
+import { InterviewQuestion } from '@/app/(sanity)/components/portable-text/interview-question'
 import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
 import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { LegacyEmbedVideo } from '@/app/(sanity)/components/portable-text/legacy-embed-video'
@@ -62,6 +63,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
   block: {
     heading: Heading,
     note: Note,
+    interviewQuestion: InterviewQuestion,
   },
   marks: {
     strong: Strong,
