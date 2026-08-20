@@ -89,7 +89,16 @@ const MiniAudioPlayer = ({
 
   const {
     document: {
-      meta: { title, path, image, format, audioCoverCrop, coverSm, coverSmDark },
+      meta: {
+        title,
+        path,
+        image,
+        format,
+        audioCoverCrop,
+        coverSm,
+        cover,
+        coverDark,
+      },
     },
   } = activeItem
 
@@ -112,8 +121,8 @@ const MiniAudioPlayer = ({
           />
         )}
         <AudioCover
-          cover={coverSm}
-          coverDark={coverSmDark}
+          cover={coverSm ?? cover}
+          coverDark={coverDark}
           size={40}
           image={image}
           format={format?.meta}

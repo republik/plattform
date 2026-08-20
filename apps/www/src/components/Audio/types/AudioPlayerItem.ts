@@ -8,7 +8,13 @@ import { AudioQueueItemFragment } from '#graphql/republik-api/__generated__/gql/
  * itself. See `helpers/audioItemCache.ts`.
  */
 export type AudioPlayerItem = NonNullable<AudioQueueItemFragment['document']> & {
-  meta: { coverSmDark?: string; coverMdDark?: string }
+  /**
+   * `cover`/`coverDark` carry a single square crop used at every render size
+   * (40/62/90px) — unlike legacy's `coverSm`/`coverMd`, which are genuinely
+   * distinct pre-sized images from the old backend. Legacy content has no
+   * dark variant at all, so `coverDark` is only ever set here.
+   */
+  meta: { cover?: string; coverDark?: string }
 }
 
 /**

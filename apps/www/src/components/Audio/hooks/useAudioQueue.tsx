@@ -73,22 +73,19 @@ async function getAudioQueueItemsByIds(
  */
 function toAudioPlayerItem(content: AudioQueueItemContent): AudioPlayerItem {
   const id = `sanity:${content._id}`
-  const { coverSm, coverSmDark, coverMd, coverMdDark } =
-    getAudioCoverImages({
-      teaserSmallImage: content.teaserSmall?.image,
-      cover: content.cover,
-      collectionImage: content.collectionImage,
-    })
+  const { cover, coverDark } = getAudioCoverImages({
+    teaserSmallImage: content.teaserSmall?.image,
+    cover: content.cover,
+    collectionImage: content.collectionImage,
+  })
   return {
     id,
     meta: {
       title: content.title,
       path: content.path,
       publishDate: content.publishDate,
-      coverSm,
-      coverSmDark,
-      coverMd,
-      coverMdDark,
+      cover,
+      coverDark,
       audioSource: {
         mediaId: id,
         mp3: content.audioSourceMp3,

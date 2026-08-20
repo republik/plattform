@@ -113,8 +113,8 @@ const AudioListItem = ({
       >
         <div {...styles.itemWrapper}>
           <AudioCover
-            cover={meta.coverSm}
-            coverDark={meta.coverSmDark}
+            cover={meta.coverSm ?? meta.cover}
+            coverDark={meta.coverDark}
             size={62}
             image={meta.image}
             format={meta.format?.meta}
