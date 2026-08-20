@@ -20,7 +20,13 @@ export function LiveState({
   onClickSearchResults,
 }) {
   const { t } = useTranslation()
-  const totalCount = dataAggregations.search && dataAggregations.search.totalCount
+  // The overall count across all content, not just the currently selected
+  // tab: the "type" aggregation already sums Document+User+Comment without
+  // double-counting Audio, which is a hasAudio:true subset of Document
+  // rather than separate content (see constants.js's SUPPORTED_FILTERS).
+  const totalCount = dataAggregations.search?.aggregations?.find(
+    (aggregation) => aggregation.key === 'type',
+  )?.count
   const results = t.pluralize('search/pageInfo/total', {
     count: countFormat(totalCount),
   })
