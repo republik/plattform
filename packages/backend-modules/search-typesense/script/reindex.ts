@@ -1,18 +1,21 @@
 #!/usr/bin/env ts-node
 /**
- * Full bulk backfill of comments and users into fresh, dated Typesense
- * collections, followed by an atomic alias swap -- the blue/green pattern
- * mirroring (in behavior, not code) lib/pullElasticsearch.ts in
- * @orbiting/backend-modules-search.
+ * Full bulk backfill of comments, users, and (opt-in) articles into fresh,
+ * dated Typesense collections, followed by an atomic alias swap -- the
+ * blue/green pattern mirroring (in behavior, not code)
+ * lib/pullElasticsearch.ts in @orbiting/backend-modules-search.
  *
- * Does NOT handle "articles" -- that collection has no Postgres-backed
- * source in this repo. It's written by republik/studio's own Sanity
- * Blueprint functions (functions/sync-search/*) and backfilled by that
- * repo's scripts/backfill-search.ts. --only articles is rejected here with
- * a clear error rather than silently doing nothing useful.
+ * comments/users are Postgres-backed and always run by default. articles is
+ * Sanity-backed (see lib/sanity/fetchArticles.ts) and opt-in only, via
+ * `--only articles` -- republik/studio's functions/sync-search/index.ts
+ * remains the source of truth for *incremental* per-publish sync; this is
+ * only the bulk backfill path (formerly that repo's own
+ * scripts/backfill-search.ts, moved here since it's ops tooling for backend
+ * people, not editors).
  *
  * Usage: yarn workspace @orbiting/backend-modules-search-typesense run reindex
  *        -- --only comments,users
+ *        -- --only articles
  */
 require('@orbiting/backend-modules-env').config()
 
@@ -32,9 +35,11 @@ import {
   getCollectionSchema,
   getDatedCollectionName,
   resolveAlias,
+  TypesenseArticleDocument,
   TypesenseCommentDocument,
   TypesenseUserDocument,
 } from '../lib/collections'
+import { fetchSearchableArticles } from '../lib/sanity/fetchArticles'
 import {
   transformComment,
   makeCommentDeps,
@@ -154,20 +159,45 @@ const reindexUsers = async (
   return stats
 }
 
-const POSTGRES_BACKED_KINDS: CollectionKind[] = ['comments', 'users']
+const reindexArticles = async (
+  client: Client,
+  collectionName: string,
+): Promise<{ indexed: number; skipped: number }> => {
+  const stats = { indexed: 0, skipped: 0 }
+
+  const docs = await fetchSearchableArticles()
+
+  for (let offset = 0; offset < docs.length; offset += BATCH_SIZE) {
+    const batch = docs.slice(offset, offset + BATCH_SIZE)
+    const results = await client
+      .collections<TypesenseArticleDocument>(collectionName)
+      .documents()
+      .import(batch, { action: 'upsert' })
+    stats.indexed += results.filter((r) => r.success).length
+    const failures = results.filter((r) => !r.success)
+    if (failures.length > 0) {
+      console.error('article import failures', failures.slice(0, 5))
+    }
+    console.log('reindex articles progress', {
+      offset: offset + batch.length,
+      total: docs.length,
+      ...stats,
+    })
+  }
+
+  return stats
+}
+
+// The default when no --only flag is given -- kept as just comments/users so
+// a plain `yarn reindex` stays as fast/scoped as before articles support was
+// added. --only articles (or --only comments,users,articles) opts in.
+const DEFAULT_KINDS: CollectionKind[] = ['comments', 'users']
 
 const reindexKind = async (
-  pgdb: PgDb,
+  pgdb: PgDb | undefined,
   client: Client,
   kind: CollectionKind,
 ) => {
-  if (kind === 'articles') {
-    throw new Error(
-      '"articles" has no Postgres-backed source in this repo -- backfill it ' +
-        "via republik/studio's scripts/backfill-search.ts instead",
-    )
-  }
-
   const aliasName = getAliasName(kind)
   const collectionName = getDatedCollectionName(kind)
   const previousCollectionName = await resolveAlias(client, aliasName)
@@ -177,8 +207,10 @@ const reindexKind = async (
 
   const stats =
     kind === 'comments'
-      ? await reindexComments(pgdb, client, collectionName)
-      : await reindexUsers(pgdb, client, collectionName)
+      ? await reindexComments(pgdb as PgDb, client, collectionName)
+      : kind === 'users'
+        ? await reindexUsers(pgdb as PgDb, client, collectionName)
+        : await reindexArticles(client, collectionName)
 
   console.log(`swapping alias "${aliasName}" -> "${collectionName}"`, stats)
   // Atomic on Typesense's side: an alias upsert switches the pointer.
@@ -201,30 +233,36 @@ const reindexKind = async (
 const parseOnly = (): CollectionKind[] => {
   const onlyArgIndex = process.argv.indexOf('--only')
   if (onlyArgIndex === -1) {
-    return POSTGRES_BACKED_KINDS
+    return DEFAULT_KINDS
   }
   const value = process.argv[onlyArgIndex + 1]
   const kinds = value
     .split(',')
     .map((s) => s.trim())
     .filter((s): s is CollectionKind => ALL_KINDS.includes(s as CollectionKind))
-  return kinds.length > 0 ? kinds : POSTGRES_BACKED_KINDS
+  return kinds.length > 0 ? kinds : DEFAULT_KINDS
 }
 
 const main = async () => {
-  const pgdb = await PgDbConnector.connect({
-    applicationName: 'backends search-typesense reindex',
-  })
-  const client = getClient()
-
   const kinds = parseOnly()
+  // An articles-only run needs no Postgres connectivity at all -- only
+  // connect when comments/users are actually being reindexed.
+  const needsPgdb = kinds.some((kind) => kind === 'comments' || kind === 'users')
+  const pgdb = needsPgdb
+    ? await PgDbConnector.connect({
+        applicationName: 'backends search-typesense reindex',
+      })
+    : undefined
+  const client = getClient()
 
   try {
     for (const kind of kinds) {
       await reindexKind(pgdb, client, kind)
     }
   } finally {
-    await PgDbConnector.disconnect(pgdb)
+    if (pgdb) {
+      await PgDbConnector.disconnect(pgdb)
+    }
   }
 }
 

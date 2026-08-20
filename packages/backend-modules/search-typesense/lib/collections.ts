@@ -3,19 +3,21 @@ import { Client, CollectionCreateSchema, Errors } from 'typesense'
 /**
  * The collection "kinds" this module manages. Each kind has:
  *  - a stable alias name (what queries/writers use)
- *  - N dated, physical collections over time (created by script/reindex.ts,
- *    or -- for "articles" -- by the Sanity studio repo's own backfill script)
+ *  - N dated, physical collections over time (created by script/reindex.ts)
  *
  * This mirrors the blue-green alias pattern used by the existing
  * Elasticsearch pipeline (see lib/utils.js#getIndexAlias and
  * lib/pullElasticsearch.ts in @orbiting/backend-modules-search), but adapted
  * to Typesense's simpler one-alias-to-one-collection model.
  *
- * "articles" is written to by a completely separate repo (republik/studio's
- * Sanity Blueprint functions, see functions/sync-search/*) rather than
- * anything in this module -- its schema/alias are still defined here so this
- * module remains the single source of truth for every collection's shape,
- * and so script/bootstrap.ts can create it alongside comments/users.
+ * "articles" has two writers: *incremental* per-publish sync lives entirely
+ * in republik/studio (its own Sanity Blueprint functions, see
+ * functions/sync-search/*) -- nothing in this module touches that path.
+ * *Bulk* backfill/reindex, however, lives here (script/reindex.ts's
+ * reindexArticles, via lib/sanity/fetchArticles.ts's own GROQ query) since
+ * it's ops tooling for backend people, not editors. Both writers must agree
+ * on this file's schema, which is why it stays the single source of truth
+ * for every collection's shape regardless of who writes to it.
  */
 export type CollectionKind = 'comments' | 'users' | 'articles'
 
@@ -107,9 +109,11 @@ export interface TypesenseUserDocument {
 }
 
 /**
- * Article/page document as stored in Typesense, written by republik/studio's
- * Sanity Blueprint functions/sync-search/* (see shared/search/toSearchDocument.ts
- * there) -- kept here purely as the schema contract both repos must agree on.
+ * Article/page document as stored in Typesense. Written incrementally by
+ * republik/studio's Sanity Blueprint functions/sync-search/* (see
+ * shared/search/toSearchDocument.ts there) on publish, and in bulk by this
+ * module's own script/reindex.ts (see lib/sanity/fetchArticles.ts) -- kept
+ * here as the schema contract both writers must agree on.
  */
 export interface TypesenseArticleDocument {
   /**
