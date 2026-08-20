@@ -25,6 +25,15 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
   "headingColor": teaserSmall.headingColor,
+  _type == "article" => {
+    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),
+    audioSourceMp3,
+    audioDurationMs,
+    discussion->{
+      backendDiscussionId,
+    },
+    inlineDiscussion,
+  },
 `
 
 // Hack to not rely on the main query for types

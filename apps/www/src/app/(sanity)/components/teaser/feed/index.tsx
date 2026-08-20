@@ -7,6 +7,7 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
+import { TeaserActions } from '@/app/(sanity)/components/teaser/feed/teaser-actions'
 import { timeFormat } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
@@ -37,42 +38,47 @@ export default function FeedTeaser({
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
+          gap: 4,
           // exclude last item from border
           '&:last-of-type': { borderBottom: 'none', pb: 0 },
         }),
       )}
     >
-      <Heading teaser={teaser} />
-      <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
-        <LinkOverlay teaser={teaser} />
-      </h4>
-      {hasContent(teaser.description) && (
-        <p className='description'>
-          <InlinePortableText value={teaser.description} />
-        </p>
-      )}
-      {(hasContent(teaser.byline) || !skipPublishDate) && (
-        <p className='byline'>
-          {[
-            hasContent(teaser.byline) && (
-              <InlinePortableText key='byline' value={teaser.byline} />
-            ),
-            !skipPublishDate && teaser.publishDate && (
-              <span key='date'>
-                {formatDate(new Date(stegaClean(teaser.publishDate)))}
-              </span>
-            ),
-          ]
-            .filter(Boolean)
-            .map((part, index) => (
-              <Fragment key={index}>
-                {index > 0 && ', '}
-                {part}
-              </Fragment>
-            ))}
-        </p>
-      )}
+      <div
+        className={css({ display: 'flex', flexDirection: 'column', gap: 2 })}
+      >
+        <Heading teaser={teaser} />
+        <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
+          <LinkOverlay teaser={teaser} />
+        </h4>
+        {hasContent(teaser.description) && (
+          <p className='description'>
+            <InlinePortableText value={teaser.description} />
+          </p>
+        )}
+        {(hasContent(teaser.byline) || !skipPublishDate) && (
+          <p className='byline'>
+            {[
+              hasContent(teaser.byline) && (
+                <InlinePortableText key='byline' value={teaser.byline} />
+              ),
+              !skipPublishDate && teaser.publishDate && (
+                <span key='date'>
+                  {formatDate(new Date(stegaClean(teaser.publishDate)))}
+                </span>
+              ),
+            ]
+              .filter(Boolean)
+              .map((part, index) => (
+                <Fragment key={index}>
+                  {index > 0 && ', '}
+                  {part}
+                </Fragment>
+              ))}
+          </p>
+        )}
+      </div>
+      <TeaserActions teaser={teaser} />
     </div>
   )
 }

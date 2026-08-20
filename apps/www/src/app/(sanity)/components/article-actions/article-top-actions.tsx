@@ -1,6 +1,8 @@
 'use client'
 
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import { ACTION_ICON_SIZE } from './action-style'
+import { AddToPlaylistAction } from './add-to-playlist-action'
 import { useArticleActions } from './article-actions-context'
 import { BookmarkAction } from './bookmark-action'
 import { collectionsDocumentId } from './document-id'
@@ -32,6 +34,10 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
+
+  // Not signed in, or trial ended: reader is looking at a paywall, so the
+  // full text isn't theirs to download.
+  const { hasPaywall } = usePaynotes()
 
   // The floating action bar stays hidden while this row is on screen.
   const ref = useRef<HTMLDivElement>(null)
@@ -79,10 +85,22 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
             collisionPadding={16}
             className={menuPanelStyle}
           >
+            {!hasPaywall && (
+              <DropdownMenu.Item asChild>
+                <PdfDownloadAction
+                  path={path}
+                  version={article._updatedAt}
+                  className={menuItemStyle}
+                />
+              </DropdownMenu.Item>
+            )}
             <DropdownMenu.Item asChild>
-              <PdfDownloadAction
+              <AddToPlaylistAction
+                documentId={documentId}
+                durationMs={article.audioDurationMs ?? undefined}
+                mp3={article.audioSourceMp3 ?? undefined}
                 path={path}
-                version={article._updatedAt}
+                title={title}
                 className={menuItemStyle}
               />
             </DropdownMenu.Item>
