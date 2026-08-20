@@ -7,7 +7,9 @@ import { AudioQueueItemFragment } from '#graphql/republik-api/__generated__/gql/
  * loaded (an article page, a teaser list, …), never from the queue response
  * itself. See `helpers/audioItemCache.ts`.
  */
-export type AudioPlayerItem = NonNullable<AudioQueueItemFragment['document']>
+export type AudioPlayerItem = NonNullable<AudioQueueItemFragment['document']> & {
+  meta: { coverSmDark?: string; coverMdDark?: string }
+}
 
 /**
  * A queue slot. `document` is `null` when the item is a ref the client

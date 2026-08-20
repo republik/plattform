@@ -16,6 +16,7 @@ import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
 import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
+import { getAudioCoverImages } from '@/components/Audio/helpers/audioCoverImages'
 import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { AArrowUp, EllipsisVertical } from 'lucide-react'
@@ -34,6 +35,11 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
+  const coverImages = getAudioCoverImages({
+    teaserSmallImage: article.teaserSmall?.image,
+    cover: article.cover,
+    collectionImage: article.articleCollection?.image,
+  })
 
   // Not signed in, or trial ended: reader is looking at a paywall, so the
   // full text isn't theirs to download.
@@ -62,6 +68,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         mp3={article.audioSourceMp3 ?? undefined}
         path={path}
         title={title}
+        {...coverImages}
       />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
@@ -102,6 +109,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
                 path={path}
                 title={title}
                 className={menuItemStyle}
+                {...coverImages}
               />
             </DropdownMenu.Item>
             <DropdownMenu.Item

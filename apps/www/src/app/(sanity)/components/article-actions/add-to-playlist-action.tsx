@@ -27,6 +27,10 @@ export function AddToPlaylistAction({
   durationMs,
   mp3,
   className,
+  coverSm,
+  coverSmDark,
+  coverMd,
+  coverMdDark,
 }: {
   /** Same join key as `BookmarkAction` — see `document-id.ts`. */
   documentId: string
@@ -36,6 +40,10 @@ export function AddToPlaylistAction({
   mp3?: string
   /** Overrides the standalone look, e.g. when embedded in a menu. */
   className?: string
+  coverSm?: string
+  coverSmDark?: string
+  coverMd?: string
+  coverMdDark?: string
 }) {
   const trackEvent = useTrackEvent()
   const allowed = useAddToPlaylistAllowed(mp3)
@@ -54,6 +62,10 @@ export function AddToPlaylistAction({
     meta: {
       title,
       path,
+      coverSm,
+      coverSmDark,
+      coverMd,
+      coverMdDark,
       audioSource: {
         mediaId: documentId,
         mp3,
