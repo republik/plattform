@@ -137,6 +137,7 @@ export default async function Footer() {
       className={css({
         bg: 'pageBackground',
         color: 'text',
+        '@media print': { display: 'none' },
         '& a': {
           color: 'text',
           textDecoration: 'none',

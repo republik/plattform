@@ -37,6 +37,7 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
         display: 'flex',
         flexWrap: 'wrap',
         gap: '5',
+        '@media print': { display: 'none' },
       })}
     >
       <BookmarkAction documentId={documentId} />

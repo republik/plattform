@@ -60,6 +60,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         display: 'flex',
         flexWrap: 'wrap',
         gap: '5',
+        '@media print': { display: 'none' },
       })}
     >
       <PlayAction
