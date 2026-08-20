@@ -76,6 +76,7 @@ export function PageHeader({
     { href: '/', label: 'Magazin' },
     { href: '/feed', label: 'Feed' },
     { href: '/dialog', label: 'Dialog' },
+    { href: '/vimeotest', label: 'Vimeo Test' },
     { href: '/suche', label: 'Suche', icon: <IconSearchMenu size={18} /> },
   ]
 

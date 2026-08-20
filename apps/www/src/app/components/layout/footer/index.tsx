@@ -106,6 +106,7 @@ export default async function Footer() {
         Cockpit: '/cockpit',
         FAQ: '/faq',
         'Project R': 'https://project-r.construction',
+        'Vimeo Test': '/vimeotest',
       },
     },
     {
