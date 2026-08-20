@@ -9,7 +9,7 @@ import {
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
-import { withAggregations } from './enhancers'
+import { useSearchResults } from './useSearchResults'
 import { DEFAULT_SORT } from './constants'
 import LiveState from './LiveState'
 import { css } from 'glamor'
@@ -27,15 +27,15 @@ const styles = css({
 
 const Form = compose(
   withSearchRouter,
-  withAggregations,
   withT,
 )(
   ({
     startState,
     urlQuery,
+    urlFilter,
+    urlSort,
     pushSearchParams,
     getSearchParams,
-    dataAggregations,
     t,
     searchQuery,
     setSearchQuery,
@@ -46,6 +46,16 @@ const Form = compose(
     const [formValue, setFormValue] = useState(urlQuery)
     const [slowFormValue] = useDebounce(formValue, 200)
     const [colorScheme] = useColorContext()
+
+    // Only fetches while the typed value diverges from the committed URL
+    // query -- otherwise LiveState isn't even rendered (see below).
+    const isLive = !!(formValue && urlQuery !== formValue)
+    const dataAggregations = useSearchResults({
+      searchQuery: searchQuery || urlQuery,
+      filter: urlFilter,
+      sort: urlSort,
+      skip: !isLive,
+    })
 
     useEffect(() => {
       setSearchQuery(slowFormValue)

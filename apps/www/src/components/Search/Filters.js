@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { withAggregations } from './enhancers'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
 import {
@@ -45,10 +44,8 @@ const styles = {
 
 const Filters = compose(
   withSearchRouter,
-  withAggregations,
   withT,
-)(({ t, dataAggregations, urlFilter, getSearchParams, startState }) => {
-  const { search, loading, error } = dataAggregations
+)(({ t, search, loading, error, urlFilter, getSearchParams, startState }) => {
   const [colorScheme] = useColorContext()
   const hoverRule = useMemo(() => {
     return css({

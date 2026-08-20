@@ -9,7 +9,7 @@ import Results from './Results'
 import { Center } from '@project-r/styleguide'
 
 import withSearchRouter from './withSearchRouter'
-import { withResults, withAggregations } from './enhancers'
+import { useSearchResults } from './useSearchResults'
 import ZeroResults from './ZeroResults'
 
 import { trackEvent } from '@/app/lib/analytics/event-tracking'
@@ -28,32 +28,32 @@ const findFilterWithResults = (aggregations) =>
   SUPPORTED_FILTERS.find((filter) => hasResults(aggregations, filter)) ||
   DEFAULT_FILTER
 
-export default compose(
-  withSearchRouter,
-  withAggregations,
-  withResults,
-)(
+export default compose(withSearchRouter)(
   ({
     cleanupUrl,
     urlQuery = '',
     urlFilter,
+    urlSort,
     pushSearchParams,
     startState,
-    data: { search } = {},
-    dataAggregations,
   }) => {
     useEffect(() => {
       cleanupUrl()
     }, [])
 
+    // Fetched once here and passed down to Filters/Results as props --
+    // both need the exact same (searchQuery, filter, sort) result.
+    const { search, loading, error, fetchMore } = useSearchResults({
+      searchQuery: urlQuery,
+      filter: urlFilter,
+      sort: urlSort,
+      skip: startState,
+    })
+
     // calc outside of effect to ensure it only runs when changing
     const keyword = urlQuery.toLowerCase()
     const category = `${urlFilter.key}:${urlFilter.value}`
     const searchCount = search && search.totalCount
-    const aggCount =
-      dataAggregations &&
-      dataAggregations.search &&
-      dataAggregations.search.totalCount
 
     useEffect(() => {
       if (searchCount !== undefined && !startState) {
@@ -63,10 +63,10 @@ export default compose(
 
     // switch to first tab with results
     useEffect(() => {
-      if (!dataAggregations || dataAggregations.loading) {
+      if (loading || !search) {
         return
       }
-      const { aggregations } = dataAggregations.search
+      const { aggregations } = search
       const currentAgg = findAggregation(aggregations, urlFilter)
       if (currentAgg && currentAgg.count) {
         return
@@ -75,7 +75,7 @@ export default compose(
       if (newFilter && !isSameFilter(newFilter, urlFilter)) {
         pushSearchParams({ filter: newFilter })
       }
-    }, [dataAggregations, urlFilter])
+    }, [loading, search, urlFilter])
 
     return (
       <Center style={{ padding: 0 }}>
@@ -84,13 +84,18 @@ export default compose(
           <Filters startState />
         ) : (
           <>
-            <Filters />
-            {searchCount === 0 && aggCount === 0 ? (
+            <Filters search={search} loading={loading} error={error} />
+            {searchCount === 0 ? (
               <ZeroResults />
             ) : (
               <>
                 {searchCount > 0 && <Sort />}
-                <Results />
+                <Results
+                  search={search}
+                  loading={loading}
+                  error={error}
+                  fetchMore={fetchMore}
+                />
               </>
             )}
           </>

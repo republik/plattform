@@ -6,7 +6,6 @@ import Loader from '@/components/Loader'
 import UserResult from './UserResult'
 import DocumentResult from './DocumentResult'
 import CommentResult from './CommentResult'
-import { withResults } from './enhancers'
 import {
   A,
   fontStyles,
@@ -91,30 +90,29 @@ const ResultsFooter = compose(withT)(
   },
 )
 
-const Results = compose(
-  withSearchRouter,
-  withResults,
-)(({ data: { loading, error, search } = {}, fetchMore }) => {
-  return (
-    <div {...styles.container}>
-      <Loader
-        loading={
-          loading ||
-          // wait for index to switch tab
-          (search && search.totalCount === 0)
-        }
-        error={error}
-        render={() => {
-          return (
-            <div {...styles.results}>
-              <ResultsList nodes={search.nodes} />
-              <ResultsFooter search={search} fetchMore={fetchMore} />
-            </div>
-          )
-        }}
-      />
-    </div>
-  )
-})
+const Results = compose(withSearchRouter)(
+  ({ search, loading, error, fetchMore }) => {
+    return (
+      <div {...styles.container}>
+        <Loader
+          loading={
+            loading ||
+            // wait for index to switch tab
+            (search && search.totalCount === 0)
+          }
+          error={error}
+          render={() => {
+            return (
+              <div {...styles.results}>
+                <ResultsList nodes={search.nodes} />
+                <ResultsFooter search={search} fetchMore={fetchMore} />
+              </div>
+            )
+          }}
+        />
+      </div>
+    )
+  },
+)
 
 export default Results
