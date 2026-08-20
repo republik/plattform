@@ -22,18 +22,9 @@ export const buildPreview = (text, length = 240) => {
   }
 }
 
-// Matches packages/backend-modules/documents/lib/meta.js's
-// getEstimatedReadingMinutes (word count / 180wpm, backend-computed there
-// from an Elasticsearch stored field) -- derived client-side here since
-// Typesense only carries the plain text itself.
-const WORDS_PER_MINUTE = 180
-export const estimateReadingMinutes = (text) => {
-  if (!text) return undefined
-  const words = text.trim().split(/\s+/).filter(Boolean).length
-  return words > WORDS_PER_MINUTE
-    ? Math.round(words / WORDS_PER_MINUTE)
-    : undefined
-}
+/** Looks up a Typesense highlight snippet by its raw field name. */
+export const getHighlight = (highlights, field) =>
+  highlights?.find((h) => h.field === field)?.snippet
 
 // doc.credits is a JSON-encoded CreditsNode[] (see republik/studio's
 // shared/search/bylineToCredits.ts) -- the byline exactly as authored in
@@ -48,59 +39,62 @@ const parseCredits = (credits) => {
   }
 }
 
+// Shapes a Typesense article document into the TeaserListItemType TeaserActions
+// expects (see apps/www/src/app/(sanity)/components/teaser/feed/teaser-actions.tsx),
+// so search results can reuse it instead of the legacy ActionBar.
+//
+// audioSourceMp3/audioDurationMs aren't indexed yet -- Typesense's
+// TypesenseArticleDocument only carries hasAudio/audioSourceKind today.
+// PlayAction/AddToPlaylistAction already treat both as optional, so this
+// passes them through as undefined until the schema grows those fields.
+const buildTeaserActionsItem = (doc) => ({
+  _id: doc.id,
+  _type: 'article',
+  slug: doc.slug || '',
+  plainTitle: doc.title,
+  audioSourceMp3: doc.audioSourceMp3 ?? undefined,
+  audioDurationMs: doc.audioDurationMs ?? undefined,
+  discussion: doc.discussionId
+    ? { backendDiscussionId: doc.discussionId }
+    : undefined,
+  inlineDiscussion: false,
+})
+
 const buildDocumentEntity = (hit) => {
   const doc = hit.document
   return {
-    __typename: 'Document',
+    kind: 'Document',
     id: doc.id,
-    repoId: doc.id,
-    // Not part of the old Document contract -- an internal passthrough field
-    // addOwnDiscussions() reads to batch-fetch ownDiscussion, then merges
-    // the result into meta itself. Ignored by DocumentResult/TeaserFeed.
-    // This is the durable join key: repoIds disappear once documents live
-    // only in Sanity, discussionIds do not.
     discussionId: doc.discussionId,
-    meta: {
-      title: doc.title,
-      description: doc.description,
-      publishDate: doc.publishDate
-        ? new Date(doc.publishDate).toISOString()
-        : null,
-      path: doc.slug || '',
-      // All indexed documents are Sanity `article`s (see decision to only
-      // index kind:article) -- ActionBar's reading-time/audio gating checks
-      // this exact value.
-      template: 'article',
-      estimatedConsumptionMinutes: estimateReadingMinutes(doc.plainTextBody),
-      // The article-collection ("Spitzmarke") kicker line -- only a title
-      // (+ the article's own accentColor), no path (Typesense doesn't carry
-      // collection slugs), so it renders as plain text rather than a link.
-      format: doc.collections?.length
-        ? { meta: { title: doc.collections[0], color: doc.accentColor } }
-        : undefined,
-      credits: parseCredits(doc.credits),
-    },
+    teaserActionsItem: buildTeaserActionsItem(doc),
+    title: doc.title,
+    description: doc.description,
+    plainTextBody: doc.plainTextBody,
+    publishDate: doc.publishDate ? new Date(doc.publishDate).toISOString() : null,
+    path: doc.slug || '',
+    // The article-collection ("Spitzmarke") kicker line -- only a title
+    // (+ the article's own accentColor), no path (Typesense doesn't carry
+    // collection slugs), so it renders as plain text rather than a link.
+    format: doc.collections?.length
+      ? { title: doc.collections[0], color: doc.accentColor }
+      : undefined,
+    credits: parseCredits(doc.credits),
+    highlights: hit.highlights || [],
   }
 }
 
 const buildUserEntity = (hit) => {
   const doc = hit.document
   return {
-    __typename: 'User',
+    kind: 'User',
     id: doc.id,
     slug: doc.username || doc.id,
-    firstName: doc.name,
-    lastName: '',
+    name: doc.name,
     portrait: doc.portrait || null,
-    credentials: doc.credential
-      ? [
-          {
-            description: doc.credential,
-            verified: !!doc.credentialVerified,
-            isListed: true,
-          },
-        ]
-      : [],
+    credential: doc.credential
+      ? { description: doc.credential, verified: !!doc.credentialVerified }
+      : null,
+    highlights: hit.highlights || [],
   }
 }
 
@@ -111,10 +105,9 @@ const buildCommentEntity = (hit) => {
         id: doc.authorId,
         name: doc.authorName,
         slug: doc.authorSlug,
-        profilePicture: doc.authorPortrait || null,
+        portrait: doc.authorPortrait || null,
         credential: doc.authorCredential
           ? {
-              id: doc.authorId,
               description: doc.authorCredential,
               verified: !!doc.authorCredentialVerified,
             }
@@ -123,66 +116,35 @@ const buildCommentEntity = (hit) => {
     : null
 
   return {
-    __typename: 'Comment',
+    kind: 'Comment',
     id: doc.id,
     createdAt: new Date(doc.createdAt).toISOString(),
-    published: true,
-    tags: doc.tag ? [doc.tag] : [],
-    parentIds: [],
+    tag: doc.tag || undefined,
+    // Fallback body text for a plain '*' query, where Typesense returns no
+    // highlight snippet at all.
     preview: buildPreview(doc.contentString),
     displayAuthor,
-    // discussion.title isn't carried by the Typesense comments collection --
-    // DiscussionFooter's title link renders empty text rather than crashing.
-    // discussion.document.meta.template is hardcoded to 'article' since every
-    // indexed comment with an articlePath is attached to an article; this
-    // only drives CommentLink's /dialog url prefix, not layout/rendering.
-    discussion: {
-      id: doc.discussionId,
-      title: '',
-      path: doc.articlePath || null,
-      document: doc.articlePath
-        ? { id: null, meta: { template: 'article', path: doc.articlePath } }
-        : null,
-    },
+    discussionId: doc.discussionId,
+    discussionPath: doc.articlePath || null,
+    highlights: hit.highlights || [],
   }
 }
 
-/**
- * What each Typesense collection carries, independent of which tab is asking.
- *
- * `highlightPaths` maps Typesense highlight field names onto the dotted paths
- * findHighlight() in the result components looks up (matching the old
- * Elasticsearch resolver's highlight paths, so DocumentResult/CommentResult/
- * UserResult stay unchanged).
- */
+/** What each Typesense collection carries, independent of which tab is asking. */
 const COLLECTIONS = {
   articles: {
     collectionName: 'articles',
     queryBy: 'title,description,plainTextBody,authors,byline',
-    highlightPaths: {
-      title: 'meta.title',
-      description: 'meta.description',
-      authors: 'meta.authors',
-      plainTextBody: 'contentString',
-    },
     toEntity: buildDocumentEntity,
   },
   users: {
     collectionName: 'users',
     queryBy: 'name,biography,statement',
-    highlightPaths: {
-      name: 'name',
-      biography: 'biography',
-      statement: 'statement',
-    },
     toEntity: buildUserEntity,
   },
   comments: {
     collectionName: 'comments',
     queryBy: 'contentString,authorName',
-    highlightPaths: {
-      contentString: 'contentString',
-    },
     toEntity: buildCommentEntity,
   },
 }
@@ -251,12 +213,6 @@ const buildRequest = (descriptor, { searchQuery, sort, selected, page }) => {
   }
 }
 
-const buildHighlights = (hit, descriptor) =>
-  (hit.highlights || []).map((highlight) => ({
-    path: descriptor.highlightPaths[highlight.field] || highlight.field,
-    fragments: [highlight.snippet || highlight.value || ''],
-  }))
-
 // Kinds sharing a filter key share an aggregation: type covers
 // Document/User/Comment, audioSourceKind covers Audio on its own.
 const buildAggregations = (foundByKind) => {
@@ -285,7 +241,8 @@ const buildAggregations = (foundByKind) => {
  * Reshapes a multi_search response (one result per KINDS entry, in order)
  * into the { nodes, totalCount, aggregations, pageInfo } shape the Search
  * components consume. Pure -- separated from runSearch so it can be unit
- * tested.
+ * tested. Each node is the entity itself (kind/id/... + a raw `highlights`
+ * array) -- there's no separate legacy node/entity wrapper.
  */
 export const buildSearchResult = (results, { selected, page }) => {
   const foundByKind = {}
@@ -294,12 +251,7 @@ export const buildSearchResult = (results, { selected, page }) => {
   })
 
   const selectedResult = results[KINDS.indexOf(selected)]
-
-  const nodes = (selectedResult?.hits || []).map((hit) => ({
-    entity: selected.toEntity(hit),
-    highlights: buildHighlights(hit, selected),
-  }))
-
+  const nodes = (selectedResult?.hits || []).map((hit) => selected.toEntity(hit))
   const found = selectedResult?.found ?? 0
 
   return {

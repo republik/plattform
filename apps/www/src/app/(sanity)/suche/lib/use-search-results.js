@@ -2,28 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useApolloClient } from '@apollo/client'
 
 import { reportError } from '@/lib/errors/reportError'
-import { runWithTypesenseClient } from './typesenseKey'
-import { runSearch, filterToDescriptor } from './typesenseAdapter'
-import { addOwnDiscussions } from './ownDiscussions'
+import { runWithTypesenseClient } from './typesense-key'
+import { runSearch } from './typesense-adapter'
 
-const fetchPage = async (apolloClient, { searchQuery, filter, sort }, page) => {
-  const search = await runWithTypesenseClient(apolloClient, (client) =>
+const fetchPage = (apolloClient, { searchQuery, filter, sort }, page) =>
+  runWithTypesenseClient(apolloClient, (client) =>
     runSearch(client, { searchQuery, filter, sort, page }),
   )
-  // Comment counts only exist for articles -- which covers both the Document
-  // and the Audio tab, since Audio is the hasAudio subset of the same
-  // collection and renders through the same DocumentResult.
-  if (
-    filterToDescriptor(filter).collectionName !== 'articles' ||
-    search.nodes.length === 0
-  ) {
-    return search
-  }
-  return {
-    ...search,
-    nodes: await addOwnDiscussions(apolloClient, search.nodes),
-  }
-}
 
 /**
  * Fetches page 1 of a search whenever (searchQuery, filter, sort) changes,

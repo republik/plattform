@@ -3,9 +3,9 @@ import {
   PER_PAGE,
   buildPreview,
   buildSearchResult,
-  estimateReadingMinutes,
+  getHighlight,
   filterToDescriptor,
-} from './typesenseAdapter'
+} from './typesense-adapter'
 import { SUPPORTED_FILTERS, filterLabelKey } from './constants'
 import { t } from '@/lib/withT'
 
@@ -74,18 +74,20 @@ describe('filter tab translations', () => {
   })
 })
 
-describe('estimateReadingMinutes', () => {
-  it('is undefined for empty text', () => {
-    expect(estimateReadingMinutes('')).toBeUndefined()
-    expect(estimateReadingMinutes(undefined)).toBeUndefined()
+describe('getHighlight', () => {
+  const highlights = [
+    { field: 'title', snippet: '<em>Titel</em>' },
+    { field: 'plainTextBody', value: 'roh' },
+  ]
+
+  it('finds a snippet by field name', () => {
+    expect(getHighlight(highlights, 'title')).toBe('<em>Titel</em>')
   })
 
-  it('is undefined at or below one minute of reading', () => {
-    expect(estimateReadingMinutes('wort '.repeat(180))).toBeUndefined()
-  })
-
-  it('rounds to whole minutes above the threshold', () => {
-    expect(estimateReadingMinutes('wort '.repeat(540))).toBe(3)
+  it('is undefined for a field with no snippet, or missing highlights', () => {
+    expect(getHighlight(highlights, 'plainTextBody')).toBeUndefined()
+    expect(getHighlight(highlights, 'nope')).toBeUndefined()
+    expect(getHighlight(undefined, 'title')).toBeUndefined()
   })
 })
 
@@ -191,55 +193,43 @@ describe('buildSearchResult — document entities', () => {
       slug: '/2026/01/02/titel',
     })
 
-    expect(node.entity).toMatchObject({
-      __typename: 'Document',
+    expect(node).toMatchObject({
+      kind: 'Document',
       id: 'repo-1',
-      repoId: 'repo-1',
       discussionId: 'disc-1',
-    })
-    expect(node.entity.meta).toMatchObject({
       title: 'Titel',
       description: 'Lead',
       publishDate: '2026-01-02T03:04:05.000Z',
       path: '/2026/01/02/titel',
-      template: 'article',
     })
   })
 
   it('parses credits and tolerates malformed JSON', () => {
     const credits = [{ type: 'text', value: 'Von ' }]
     expect(
-      build({ id: 'a', credits: JSON.stringify(credits) }).entity.meta.credits,
+      build({ id: 'a', credits: JSON.stringify(credits) }).credits,
     ).toEqual(credits)
-    expect(
-      build({ id: 'a', credits: '{oops' }).entity.meta.credits,
-    ).toBeUndefined()
-    expect(build({ id: 'a' }).entity.meta.credits).toBeUndefined()
+    expect(build({ id: 'a', credits: '{oops' }).credits).toBeUndefined()
+    expect(build({ id: 'a' }).credits).toBeUndefined()
   })
 
   it('only sets format when the document has collections', () => {
     expect(
-      build({ id: 'a', collections: ['Republik'], accentColor: '#000' }).entity
-        .meta.format,
-    ).toEqual({ meta: { title: 'Republik', color: '#000' } })
-    expect(
-      build({ id: 'a', collections: [] }).entity.meta.format,
-    ).toBeUndefined()
-    expect(build({ id: 'a' }).entity.meta.format).toBeUndefined()
+      build({ id: 'a', collections: ['Republik'], accentColor: '#000' })
+        .format,
+    ).toEqual({ title: 'Republik', color: '#000' })
+    expect(build({ id: 'a', collections: [] }).format).toBeUndefined()
+    expect(build({ id: 'a' }).format).toBeUndefined()
   })
 
-  it('maps highlight fields onto the paths the result components look up', () => {
-    const node = build({ id: 'a' }, [
+  it('carries the raw Typesense highlights through unchanged', () => {
+    const highlights = [
       { field: 'title', snippet: '<em>Titel</em>' },
       { field: 'plainTextBody', snippet: '<em>Text</em>' },
-      { field: 'unmapped', value: 'roh' },
-    ])
+    ]
+    const node = build({ id: 'a' }, highlights)
 
-    expect(node.highlights).toEqual([
-      { path: 'meta.title', fragments: ['<em>Titel</em>'] },
-      { path: 'contentString', fragments: ['<em>Text</em>'] },
-      { path: 'unmapped', fragments: ['roh'] },
-    ])
+    expect(node.highlights).toEqual(highlights)
   })
 })
 
@@ -248,7 +238,7 @@ describe('buildSearchResult — user entities', () => {
     buildSearchResult(
       multiSearchResults({ users: { found: 1, hits: [articleHit(document)] } }),
       { selected: kind('User'), page: 1 },
-    ).nodes[0].entity
+    ).nodes[0]
 
   it('maps a credentialled user', () => {
     expect(
@@ -260,21 +250,20 @@ describe('buildSearchResult — user entities', () => {
         credential: 'Autorin',
         credentialVerified: true,
       }),
-    ).toEqual({
-      __typename: 'User',
+    ).toMatchObject({
+      kind: 'User',
       id: 'u1',
       slug: 'anna',
-      firstName: 'Anna',
-      lastName: '',
+      name: 'Anna',
       portrait: 'https://example.org/a.png',
-      credentials: [{ description: 'Autorin', verified: true, isListed: true }],
+      credential: { description: 'Autorin', verified: true },
     })
   })
 
-  it('falls back to the id as slug and an empty credentials list', () => {
+  it('falls back to the id as slug and no credential/portrait', () => {
     const entity = build({ id: 'u2', name: 'Bea' })
     expect(entity.slug).toBe('u2')
-    expect(entity.credentials).toEqual([])
+    expect(entity.credential).toBeNull()
     expect(entity.portrait).toBeNull()
   })
 })
@@ -286,7 +275,7 @@ describe('buildSearchResult — comment entities', () => {
         comments: { found: 1, hits: [articleHit(document)] },
       }),
       { selected: kind('Comment'), page: 1 },
-    ).nodes[0].entity
+    ).nodes[0]
 
   it('maps an authored comment attached to an article', () => {
     const entity = build({
@@ -304,36 +293,26 @@ describe('buildSearchResult — comment entities', () => {
     })
 
     expect(entity).toMatchObject({
-      __typename: 'Comment',
+      kind: 'Comment',
       id: 'c1',
       createdAt: '2026-01-02T03:04:05.000Z',
-      published: true,
-      tags: ['Frage'],
-      parentIds: [],
+      tag: 'Frage',
+      discussionId: 'disc-1',
+      discussionPath: '/2026/01/02/titel',
       preview: { string: 'Ein Beitrag', more: false },
     })
     expect(entity.displayAuthor).toMatchObject({
       id: 'u1',
       name: 'Anna',
       slug: 'anna',
-      credential: { id: 'u1', description: 'Autorin', verified: true },
-    })
-    expect(entity.discussion).toEqual({
-      id: 'disc-1',
-      title: '',
-      path: '/2026/01/02/titel',
-      document: {
-        id: null,
-        meta: { template: 'article', path: '/2026/01/02/titel' },
-      },
+      credential: { description: 'Autorin', verified: true },
     })
   })
 
   it('handles a comment with no author and no article', () => {
     const entity = build({ id: 'c2', createdAt: '2026-01-02T03:04:05.000Z' })
     expect(entity.displayAuthor).toBeNull()
-    expect(entity.tags).toEqual([])
-    expect(entity.discussion.path).toBeNull()
-    expect(entity.discussion.document).toBeNull()
+    expect(entity.tag).toBeUndefined()
+    expect(entity.discussionPath).toBeNull()
   })
 })
