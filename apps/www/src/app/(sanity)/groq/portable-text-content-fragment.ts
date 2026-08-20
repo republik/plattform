@@ -25,6 +25,11 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
           )
         }
       }
+    },
+
+    _type == "toc" => {
+      ...,
+      "headings": ^.content[_type == "block" && style == "heading"]
     }
   }
 `
