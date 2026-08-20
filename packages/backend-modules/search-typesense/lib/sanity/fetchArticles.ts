@@ -5,21 +5,29 @@ import { blocksToPlainText } from './blocksToPlainText'
 import { bylineToCredits } from './bylineToCredits'
 
 /**
- * One GROQ query, fully dereferenced -- no follow-up fetches needed. Unlike
- * studio's functions/sync-search/index.ts (which resolves
+ * One GROQ query per page, fully dereferenced -- no follow-up fetches
+ * needed. Unlike studio's functions/sync-search/index.ts (which resolves
  * articleCollections/contributors/discussion refs itself because its input
  * is an unresolved Blueprint event payload), this backend writes its own
  * query and can dereference everything inline with `->` and conditional
  * projections, the same way
  * packages/backend-modules/sanity/lib/article.ts#fetchArticleForNotification
  * already does.
+ *
+ * Paginated via a `[$offset...$end]` slice, ordered by `_id` for a stable
+ * cursor -- fetching the entire corpus in one unsliced query previously
+ * OOM-killed the reindex dyno (Heroku error R15, "memory quota vastly
+ * exceeded"): every article's full `content`/`pageBuilder` Portable Text
+ * body held in memory at once is much larger than it looks from the plain-
+ * text output size. See script/reindex.ts's reindexArticles for the
+ * page-by-page loop this feeds.
  */
 const QUERY = `
   *[
     _type in ["article", "page"]
     && !(_id in path("drafts.**"))
     && excludeFromSearch != true
-  ]{
+  ] | order(_id) [$offset...$end] {
     _id,
     _type,
     title,
@@ -99,12 +107,18 @@ const toTypesenseArticleDocument = (doc: RawArticleDoc): TypesenseArticleDocumen
 }
 
 /**
- * Fetches every published, searchable article/page and shapes each into a
- * TypesenseArticleDocument ready to import. See script/reindex.ts's
- * reindexArticles for how this feeds the blue/green collection swap the
- * other kinds already use.
+ * Fetches one page (by `_id` order) of published, searchable articles/pages
+ * and shapes each into a TypesenseArticleDocument ready to import. Returns
+ * fewer than `limit` docs (possibly zero) once the corpus is exhausted --
+ * script/reindex.ts's reindexArticles uses that to know when to stop.
  */
-export const fetchSearchableArticles = async (): Promise<TypesenseArticleDocument[]> => {
-  const docs = await createSanityClient().fetch<RawArticleDoc[]>(QUERY)
+export const fetchSearchableArticlesPage = async (
+  offset: number,
+  limit: number,
+): Promise<TypesenseArticleDocument[]> => {
+  const docs = await createSanityClient().fetch<RawArticleDoc[]>(QUERY, {
+    offset,
+    end: offset + limit,
+  })
   return docs.map(toTypesenseArticleDocument)
 }

@@ -39,7 +39,7 @@ import {
   TypesenseCommentDocument,
   TypesenseUserDocument,
 } from '../lib/collections'
-import { fetchSearchableArticles } from '../lib/sanity/fetchArticles'
+import { fetchSearchableArticlesPage } from '../lib/sanity/fetchArticles'
 import {
   transformComment,
   makeCommentDeps,
@@ -159,31 +159,39 @@ const reindexUsers = async (
   return stats
 }
 
+// Smaller than the Postgres kinds' BATCH_SIZE on purpose: a full article's
+// Portable Text content/pageBuilder body is far larger in memory than a
+// comment/user row, and fetching too many at once previously OOM-killed the
+// reindex dyno (see fetchSearchableArticlesPage's doc comment).
+const ARTICLE_BATCH_SIZE = 200
+
 const reindexArticles = async (
   client: Client,
   collectionName: string,
 ): Promise<{ indexed: number; skipped: number }> => {
   const stats = { indexed: 0, skipped: 0 }
 
-  const docs = await fetchSearchableArticles()
+  let offset = 0
+  let page: TypesenseArticleDocument[]
 
-  for (let offset = 0; offset < docs.length; offset += BATCH_SIZE) {
-    const batch = docs.slice(offset, offset + BATCH_SIZE)
-    const results = await client
-      .collections<TypesenseArticleDocument>(collectionName)
-      .documents()
-      .import(batch, { action: 'upsert' })
-    stats.indexed += results.filter((r) => r.success).length
-    const failures = results.filter((r) => !r.success)
-    if (failures.length > 0) {
-      console.error('article import failures', failures.slice(0, 5))
+  do {
+    page = await fetchSearchableArticlesPage(offset, ARTICLE_BATCH_SIZE)
+
+    if (page.length > 0) {
+      const results = await client
+        .collections<TypesenseArticleDocument>(collectionName)
+        .documents()
+        .import(page, { action: 'upsert' })
+      stats.indexed += results.filter((r) => r.success).length
+      const failures = results.filter((r) => !r.success)
+      if (failures.length > 0) {
+        console.error('article import failures', failures.slice(0, 5))
+      }
     }
-    console.log('reindex articles progress', {
-      offset: offset + batch.length,
-      total: docs.length,
-      ...stats,
-    })
-  }
+
+    offset += ARTICLE_BATCH_SIZE
+    console.log('reindex articles progress', { offset, ...stats })
+  } while (page.length >= ARTICLE_BATCH_SIZE)
 
   return stats
 }
