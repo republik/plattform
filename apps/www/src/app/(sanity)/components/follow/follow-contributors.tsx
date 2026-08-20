@@ -44,7 +44,14 @@ function FollowContributors({
   const contributorsHidden = contributors.slice(CONTRIBUTORS_SHOWN)
 
   return (
-    <div className={css({ mt: 8, mb: 12, md: { mb: 16 } })}>
+    <div
+      className={css({
+        mt: 8,
+        mb: 12,
+        md: { mb: 16 },
+        '@media print': { display: 'none' },
+      })}
+    >
       <ContributorsList contributors={contributorsShown} />
       {!!contributorsHidden?.length && (
         <RadixCollapsible.Root open={showAll} onOpenChange={setShowAll}>

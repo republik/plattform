@@ -41,7 +41,8 @@ export const menuItemStyle = css({
   textAlign: 'left',
   textDecoration: 'none',
   textStyle: 'sans',
-  width: 'full',
+  // `!` wins over `actionStyle`'s `width: fit-content` — see pdf-download-action.tsx.
+  width: 'full!',
   '&[data-highlighted], &:hover': {
     backgroundColor: 'hover',
   },
