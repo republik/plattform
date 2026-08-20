@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function TeaserLargePreviewPage({
   params,
-}: PageProps<'/preview/teasers-large/[id]'>) {
+}: PageProps<'/preview/teaser-large/[id]'>) {
   const { id } = await params
 
   const { data: teaser } = await sanityFetch({

@@ -6,46 +6,41 @@ import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { IconLogoTelegram, IconLogoThreema, IconLogoWhatsApp } from '@republik/icons'
-import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { Facebook, Link, Mail, Share as ShareIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type Ref } from 'react'
 import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
+import {
+  MENU_SIDE_OFFSET,
+  menuItemStyle,
+  menuPanelStyle,
+} from './menu-style'
 
-const menuPanelStyle = css({
-  backgroundColor: 'background.overlay',
-  boxShadow: 'md',
-  color: 'text',
-  minWidth: '12rem',
-  paddingY: '2',
-  _stateOpen: { animation: 'fadeIn' },
-  _stateClosed: { animation: 'fadeOut' },
-})
-
-const menuItemStyle = css({
-  alignItems: 'center',
-  color: 'text',
-  cursor: 'pointer',
-  display: 'flex',
-  gap: '3',
-  fontSize: 's',
-  fontWeight: 'regular',
-  outline: 'none',
-  paddingX: '5',
-  paddingY: '3',
-  textAlign: 'left',
-  textDecoration: 'none',
-  textStyle: 'sans',
-  width: 'full',
-  '&[data-highlighted], &:hover': {
-    backgroundColor: 'hover',
-  },
-  '& > svg': {
-    flexShrink: 0,
-  },
-})
-
-export function ShareAction({ title, path }: { title: string; path: string }) {
+export function ShareAction({
+  title,
+  path,
+  align = 'end',
+  menuOffsetX = 0,
+  menuSideOffset = MENU_SIDE_OFFSET,
+  triggerRef,
+}: {
+  title: string
+  path: string
+  /** Where the menu sits relative to the trigger. */
+  align?: DropdownMenu.DropdownMenuContentProps['align']
+  /**
+   * Shifts the menu sideways, for anchoring it to something other than the
+   * trigger itself. Applied as a transform rather than Radix's `alignOffset`,
+   * which floating-ui ignores for the unaligned `center` placement.
+   */
+  menuOffsetX?: number
+  /**
+   * Gap from the trigger. Raise it when the trigger sits inside a padded
+   * container that the menu should clear, rather than just the button.
+   */
+  menuSideOffset?: number
+  triggerRef?: Ref<HTMLButtonElement>
+}) {
   const url = new URL(path, PUBLIC_BASE_URL).toString()
   const emailSubject = `Republik: ${title}`
   const { isNativeApp } = usePlatformInformation()
@@ -58,6 +53,7 @@ export function ShareAction({ title, path }: { title: string; path: string }) {
   if (isNativeApp) {
     return (
       <button
+        ref={triggerRef}
         className={actionStyle}
         onClick={() => {
           trackEvent({ action: 'shareNative', name: url })
@@ -109,16 +105,25 @@ export function ShareAction({ title, path }: { title: string; path: string }) {
 
   return (
     <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger aria-label='Teilen' className={actionStyle}>
+      <DropdownMenu.Trigger
+        ref={triggerRef}
+        aria-label='Teilen'
+        className={actionStyle}
+      >
         <ShareIcon size={ACTION_ICON_SIZE} />
         <span className={actionLabelStyle}>Teilen</span>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          align='end'
-          sideOffset={8}
+          align={align}
+          sideOffset={menuSideOffset}
           collisionPadding={16}
           className={menuPanelStyle}
+          style={
+            menuOffsetX
+              ? { transform: `translateX(${menuOffsetX}px)` }
+              : undefined
+          }
         >
           {shareLinks.map(({ name, href, icon: Icon, label }) => (
             <DropdownMenu.Item asChild key={name}>

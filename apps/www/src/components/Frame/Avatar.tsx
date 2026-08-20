@@ -85,7 +85,6 @@ const styles = {
   user: css(plainButtonRule, {
     cursor: 'pointer',
     position: 'relative',
-    ...plainButtonRule,
   }),
   portraitImage: css({
     height: USER_IMAGE_SIZE,

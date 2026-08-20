@@ -1,5 +1,6 @@
 'use client'
 
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
@@ -29,6 +30,7 @@ export function PlayAction({
     checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
+  const { hasPaywall } = usePaynotes()
   const trackEvent = useTrackEvent()
   const [failed, setFailed] = useState(false)
 
@@ -54,6 +56,7 @@ export function PlayAction({
   } as unknown as AudioPlayerItem
 
   const onClick = async () => {
+    if (hasPaywall) return
     trackEvent({ action: isActive ? 'audioToggle' : 'audioPlay', name: path })
     setFailed(false)
     try {
@@ -72,13 +75,16 @@ export function PlayAction({
     <button
       className={cx(actionStyle, pillStyle)}
       data-active={isActive || undefined}
+      disabled={hasPaywall}
       onClick={onClick}
       title={
-        failed
-          ? 'Wiedergabe fehlgeschlagen'
-          : isActive && isPlaying
-            ? 'Pausieren'
-            : 'Anhören'
+        hasPaywall
+          ? 'Nur für Mitglieder'
+          : failed
+            ? 'Wiedergabe fehlgeschlagen'
+            : isActive && isPlaying
+              ? 'Pausieren'
+              : 'Anhören'
       }
       type='button'
     >
