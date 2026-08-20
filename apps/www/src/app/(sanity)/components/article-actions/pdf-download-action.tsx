@@ -1,5 +1,6 @@
 'use client'
 
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { PUBLIC_BASE_URL, SCREENSHOT_SERVER_BASE_URL } from '@/lib/constants'
 import { cx } from '@republik/theme/css'
@@ -34,7 +35,14 @@ export function PdfDownloadAction({
   className?: string
 }) {
   const trackEvent = useTrackEvent()
+  const { hasPaywall } = usePaynotes()
   const pdfHref = getArticlePdfUrl({ path, version })
+
+  // Not signed in, or trial ended: reader is looking at a paywall, so the
+  // full text isn't theirs to download.
+  if (hasPaywall) {
+    return null
+  }
 
   return (
     <a
