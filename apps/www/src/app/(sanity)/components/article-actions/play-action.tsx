@@ -16,6 +16,8 @@ export function PlayAction({
   mp3,
   path,
   title,
+  cover,
+  coverDark,
 }: {
   /** Same join key as `BookmarkAction` — see `document-id.ts`. */
   documentId: string
@@ -23,6 +25,8 @@ export function PlayAction({
   mp3?: string
   path: string
   title: string
+  cover?: string
+  coverDark?: string
 }) {
   const {
     toggleAudioPlayer,
@@ -47,6 +51,8 @@ export function PlayAction({
     meta: {
       title,
       path,
+      cover,
+      coverDark,
       audioSource: {
         mediaId: documentId,
         mp3,

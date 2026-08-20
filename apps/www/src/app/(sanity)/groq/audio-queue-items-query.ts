@@ -15,6 +15,9 @@ export const AUDIO_QUEUE_ITEMS_QUERY = defineQuery(`
     publishDate,
     audioSourceMp3,
     audioDurationMs,
+    teaserSmall{ image },
+    cover,
+    "collectionImage": articleCollections[featured == true][0].collection->image,
   }
 `)
 
