@@ -148,6 +148,10 @@ export interface TypesenseArticleDocument {
   hasAudio?: boolean
   /** "produced" | "synthetic" -- absent if there's no audio at all. */
   audioSourceKind?: string
+  /** Public URL of the produced or synthetic mp3, if hasAudio is true. */
+  audioSourceMp3?: string
+  /** Audio duration in milliseconds, if hasAudio is true. */
+  audioDurationMs?: number
   /** The `backendDiscussionId` field on the article's referenced Sanity
    * `discussion` document -- the Postgres `discussions.id` for that thread.
    * Used to batch-fetch live comment counts/paths for search results
@@ -210,6 +214,8 @@ const articlesFields: CollectionCreateSchema['fields'] = [
   { name: 'credits', type: 'string', optional: true, index: false },
   { name: 'hasAudio', type: 'bool', optional: true, facet: true },
   { name: 'audioSourceKind', type: 'string', optional: true, index: false },
+  { name: 'audioSourceMp3', type: 'string', optional: true, index: false },
+  { name: 'audioDurationMs', type: 'int64', optional: true, index: false },
   { name: 'discussionId', type: 'string', optional: true, index: false },
   { name: 'accentColor', type: 'string', optional: true, index: false },
   { name: 'searchScope', type: 'string', facet: true },
