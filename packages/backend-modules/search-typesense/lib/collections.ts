@@ -148,7 +148,7 @@ export interface TypesenseArticleDocument {
    * shared/search/bylineToCredits.ts) -- the article's byline exactly as
    * authored, with internalLink spans resolved to `/~slug` profile links. */
   credits?: string
-  /** True if a produced mp3 exists, or synthetic read-aloud isn't suppressed. */
+  /** True if a produced mp3 exists, or synthetic voice is enabled. */
   hasAudio?: boolean
   /** "produced" | "synthetic" -- absent if there's no audio at all. */
   audioSourceKind?: string

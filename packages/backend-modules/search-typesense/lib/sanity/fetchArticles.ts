@@ -44,7 +44,7 @@ const QUERY = `
     readingAccess,
     "collectionTitles": articleCollections[].collection->title,
     "authorNames": contributors[].contributor->title,
-    suppressSyntheticReadAloud,
+    syntheticVoiceEnabled,
     audioSourceMp3,
     audioDurationMs,
     "discussionId": discussion->backendDiscussionId,
@@ -64,7 +64,7 @@ interface RawArticleDoc {
   readingAccess?: string | null
   collectionTitles?: string[]
   authorNames?: string[]
-  suppressSyntheticReadAloud?: boolean
+  syntheticVoiceEnabled?: boolean
   audioSourceMp3?: string
   audioDurationMs?: number
   discussionId?: string | null
@@ -74,7 +74,7 @@ interface RawArticleDoc {
 const toTypesenseArticleDocument = (doc: RawArticleDoc): TypesenseArticleDocument => {
   const audioSourceKind = doc.audioSourceMp3
     ? 'produced'
-    : !doc.suppressSyntheticReadAloud
+    : doc.syntheticVoiceEnabled ?? true
       ? 'synthetic'
       : undefined
   const credits = bylineToCredits(doc.byline)
