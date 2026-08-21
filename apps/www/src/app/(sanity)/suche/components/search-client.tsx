@@ -33,7 +33,6 @@ export function SearchClient() {
     urlSort,
     pushSearchParams,
     getSearchParams,
-    startState,
   } = useSearchUrl()
 
   useEffect(() => {
@@ -43,11 +42,19 @@ export function SearchClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // An empty query is always the pristine landing state, regardless of
+  // whatever filter/sort happens to be stuck in the URL (e.g. from
+  // submitting a cleared search box while a non-default tab was selected) --
+  // startState itself also requires the default filter/sort, which would
+  // otherwise let an empty query fall through to a live `q: '*'` fetch and
+  // wildcard-list every result for that tab.
+  const hasQuery = !!urlQuery
+
   const { search, loading, error, fetchMore } = useSearchResults({
     searchQuery: urlQuery,
     filter: urlFilter,
     sort: urlSort,
-    skip: startState,
+    skip: !hasQuery,
   })
 
   const keyword = urlQuery.toLowerCase()
@@ -55,10 +62,10 @@ export function SearchClient() {
   const searchCount = search && search.totalCount
 
   useEffect(() => {
-    if (searchCount !== undefined && !startState) {
+    if (searchCount !== undefined && hasQuery) {
       trackEvent(['trackSiteSearch', keyword, category, searchCount])
     }
-  }, [startState, keyword, category, searchCount])
+  }, [hasQuery, keyword, category, searchCount])
 
   // switch to first tab with results
   useEffect(() => {
@@ -80,7 +87,7 @@ export function SearchClient() {
   return (
     <>
       <Form />
-      {startState ? (
+      {!hasQuery ? (
         <Filters startState urlFilter={urlFilter} />
       ) : (
         <>
@@ -106,7 +113,7 @@ export function SearchClient() {
           )}
         </>
       )}
-      {!urlQuery && isSameFilter(urlFilter, DEFAULT_FILTER) && <FeaturedSections />}
+      {!hasQuery && <FeaturedSections />}
     </>
   )
 }
