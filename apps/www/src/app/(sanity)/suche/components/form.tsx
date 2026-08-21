@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Field, useDebounce, usePrevious, plainButtonRule } from '@project-r/styleguide'
+import {
+  Field,
+  RootColorVariables,
+  useDebounce,
+  usePrevious,
+  plainButtonRule,
+} from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 import { IconClose } from '@republik/icons'
 
@@ -68,6 +74,13 @@ export function Form({
 
   return (
     <div className={containerStyle}>
+      {/* Field (a legacy @project-r/styleguide component) reads its focus/
+      error/disabled colors from CSS vars this defines -- the App Router's
+      root layout never renders it (only pages/_app.tsx does), matching the
+      pattern already used by the other legacy-styleguide bridges under
+      app/(sanity)/components/. Without it, Field's border color silently
+      falls back to currentColor instead of the intended focus green. */}
+      <RootColorVariables />
       <form onSubmit={submit} action='/suche'>
         <Field
           name='q'
