@@ -8,27 +8,22 @@ export default async function SucheLayout({
 }>) {
   return (
     <PageLayout>
+      {/* `editorial` is the same width the article-rendering grid recipe
+      (packages/theme/src/recipes/editorial-content.ts) uses for its
+      non-breakout text column -- 695px, matching where most article
+      content already lives, so search results read at the same width. */}
       <div
         className={css({
           color: 'text',
           pb: '16-32',
           pt: '4',
+          mx: 'auto',
+          px: '4',
+          maxWidth: 'editorial',
+          width: 'full',
         })}
       >
-        {/* Narrower than the generic Container (52rem/832px): the old
-        search page used styleguide's Center at its regular (non-breakout)
-        width -- MAX_WIDTH 665px + 15px padding each side -- and search
-        results read better at that width than the wider list-page one. */}
-        <div
-          className={css({
-            mx: 'auto',
-            px: '4',
-            maxWidth: '695px',
-            width: 'full',
-          })}
-        >
-          {children}
-        </div>
+        {children}
       </div>
     </PageLayout>
   )
