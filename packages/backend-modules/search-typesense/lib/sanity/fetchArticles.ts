@@ -17,14 +17,14 @@ import { bylineToCredits } from './bylineToCredits'
  * Paginated via a `[$offset...$end]` slice, ordered by `_id` for a stable
  * cursor -- fetching the entire corpus in one unsliced query previously
  * OOM-killed the reindex dyno (Heroku error R15, "memory quota vastly
- * exceeded"): every article's full `content`/`pageBuilder` Portable Text
- * body held in memory at once is much larger than it looks from the plain-
- * text output size. See script/reindex.ts's reindexArticles for the
- * page-by-page loop this feeds.
+ * exceeded"): every article's full `content` Portable Text body held in
+ * memory at once is much larger than it looks from the plain-text output
+ * size. See script/reindex.ts's reindexArticles for the page-by-page loop
+ * this feeds.
  */
 const QUERY = `
   *[
-    _type in ["article", "page"]
+    _type == "article"
     && !(_id in path("drafts.**"))
   ] | order(_id) [$offset...$end] {
     _id,
@@ -39,7 +39,6 @@ const QUERY = `
     },
     description,
     content,
-    pageBuilder,
     "slug": slug.current,
     publishDate,
     readingAccess,
@@ -55,12 +54,11 @@ const QUERY = `
 
 interface RawArticleDoc {
   _id: string
-  _type: 'article' | 'page'
+  _type: 'article'
   title?: unknown
   byline?: unknown
   description?: unknown
   content?: unknown
-  pageBuilder?: unknown
   slug?: string | null
   publishDate?: string | null
   readingAccess?: string | null
@@ -74,7 +72,6 @@ interface RawArticleDoc {
 }
 
 const toTypesenseArticleDocument = (doc: RawArticleDoc): TypesenseArticleDocument => {
-  const bodyBlocks = doc._type === 'article' ? doc.content : doc.pageBuilder
   const audioSourceKind = doc.audioSourceMp3
     ? 'produced'
     : !doc.suppressSyntheticReadAloud
@@ -88,7 +85,7 @@ const toTypesenseArticleDocument = (doc: RawArticleDoc): TypesenseArticleDocumen
     title: blocksToPlainText(doc.title),
     byline: blocksToPlainText(doc.byline),
     description: blocksToPlainText(doc.description),
-    plainTextBody: blocksToPlainText(bodyBlocks),
+    plainTextBody: blocksToPlainText(doc.content),
     slug: doc.slug ?? undefined,
     publishDate: doc.publishDate ? new Date(doc.publishDate).getTime() : 0,
     readingAccess: doc.readingAccess ?? undefined,
@@ -106,8 +103,8 @@ const toTypesenseArticleDocument = (doc: RawArticleDoc): TypesenseArticleDocumen
 }
 
 /**
- * Fetches one page (by `_id` order) of published, searchable articles/pages
- * and shapes each into a TypesenseArticleDocument ready to import. Returns
+ * Fetches one page (by `_id` order) of published articles and shapes each
+ * into a TypesenseArticleDocument ready to import. Returns
  * fewer than `limit` docs (possibly zero) once the corpus is exhausted --
  * script/reindex.ts's reindexArticles uses that to know when to stop.
  */

@@ -129,7 +129,7 @@ export interface TypesenseArticleDocument {
    * documents belong in this collection.
    */
   id: string
-  /** "article" | "page" */
+  /** always "article" */
   type: string
   title: string
   byline?: string
