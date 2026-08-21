@@ -27,8 +27,23 @@ const PROP_NAME = {
 
 // Results are border-top-only (see document-result.tsx etc.) -- the line
 // between two results is the *next* one's top border. Nothing follows the
-// last result to draw a line before this footer, so it needs its own.
-const footerStyle = css({
+// last result to draw a line before this footer, so it needs its own --
+// with the same mt/pt the preceding row used, so the gap around the
+// footer's border matches the gaps between rows above it. DocumentResult
+// uses mt/pt 6, ProfileResult/CommentResult use 4.
+const footerStyleDocument = css({
+  mt: 6,
+  borderTopWidth: 1,
+  borderTopStyle: 'solid',
+  borderTopColor: 'divider',
+  display: 'flex',
+  justifyContent: 'space-between',
+  py: 6,
+  fontSize: 14,
+  md: { fontSize: 16 },
+})
+
+const footerStyleDefault = css({
   mt: 4,
   borderTopWidth: 1,
   borderTopStyle: 'solid',
@@ -43,6 +58,9 @@ const footerStyle = css({
 function ResultsFooter({ search, fetchMore }) {
   const { t } = useTranslation()
   const { nodes, totalCount, pageInfo } = search
+  const lastKind = nodes[nodes.length - 1]?.kind
+  const footerStyle =
+    lastKind === 'Document' ? footerStyleDocument : footerStyleDefault
   return (
     <div className={footerStyle}>
       {nodes.length === totalCount
