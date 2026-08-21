@@ -93,14 +93,19 @@ export function DocumentResult({ document }) {
             <Highlight snippet={formatExcerpt(bodySnippet)} />
           </p>
         )}
-        {(document.credits || document.publishDate) && (
+        {document.credits ? (
+          // credits is derived from the byline, which already follows the
+          // «von [Name], [date]» convention (see bylineToCredits.ts) -- it
+          // already ends with the publish date, so don't append it again.
           <p className='byline'>
             <Credits credits={document.credits} />
-            {document.credits && document.publishDate && ', '}
-            {document.publishDate && (
-              <span>{formatDate(new Date(document.publishDate))}</span>
-            )}
           </p>
+        ) : (
+          document.publishDate && (
+            <p className='byline'>
+              {formatDate(new Date(document.publishDate))}
+            </p>
+          )
         )}
       </div>
       <TeaserActions teaser={document.teaserActionsItem} />

@@ -2,13 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  Field,
-  useDebounce,
-  usePrevious,
-  useColorContext,
-  plainButtonRule,
-} from '@project-r/styleguide'
+import { Field, useDebounce, usePrevious, plainButtonRule } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 import { IconClose } from '@republik/icons'
 
@@ -35,7 +29,6 @@ export function Form({
   const [searchQuery, setSearchQuery] = useState<string | undefined>()
   const [formValue, setFormValue] = useState(urlQuery)
   const [slowFormValue] = useDebounce(formValue, 200)
-  const [colorScheme] = useColorContext()
 
   // Only fetches while the typed value diverges from the committed URL
   // query -- otherwise LiveState isn't even rendered (see below).
@@ -85,9 +78,8 @@ export function Form({
             !startState ? (
               <button {...plainButtonRule} onClick={reset} type='button'>
                 <IconClose
-                  style={{ cursor: 'pointer' }}
+                  className={css({ cursor: 'pointer', fill: 'text' })}
                   size={30}
-                  {...colorScheme.set('fill', 'text')}
                 />
               </button>
             ) : undefined
