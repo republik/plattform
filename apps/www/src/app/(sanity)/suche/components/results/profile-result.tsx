@@ -23,11 +23,11 @@ export function ProfileResult({ profile }) {
   return (
     <div
       className={css({
-        pb: 4,
-        mb: 4,
-        borderBottomWidth: 1,
-        borderBottomStyle: 'solid',
-        borderBottomColor: 'divider',
+        pt: 4,
+        mt: 4,
+        borderTopWidth: 1,
+        borderTopStyle: 'solid',
+        borderTopColor: 'divider',
         display: 'flex',
         alignItems: 'center',
         gap: 2,

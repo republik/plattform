@@ -6,13 +6,10 @@ import { SUPPORTED_SORT } from '../lib/constants'
 import { SortToggle } from '@/components/SortToggle'
 import { useSearchUrl } from './use-search-url'
 
-const containerStyle = css({
-  pt: '3px',
-  pb: 4,
-  borderBottomWidth: 1,
-  borderBottomStyle: 'solid',
-  borderBottomColor: 'divider',
-})
+// No border here -- the old Sort.js never had one either. The line under
+// the sort toggles is the first result's own top border (results are
+// border-top-only, see document-result.tsx etc.).
+const containerStyle = css({ pt: '3px' })
 
 export function Sort() {
   const { urlQuery, urlSort, getSearchParams, pathname } = useSearchUrl()

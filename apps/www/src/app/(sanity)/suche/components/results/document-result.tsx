@@ -49,28 +49,29 @@ export function DocumentResult({ document }) {
       className={cx(
         typography,
         css({
-          pb: 6,
-          mb: 6,
-          borderBottomWidth: 1,
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'divider',
+          pt: 6,
+          mt: 6,
+          borderTopWidth: 1,
+          borderTopStyle: 'solid',
+          borderTopColor: 'divider',
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           gap: 4,
-          // Deliberately no `&:last-of-type` exclusion: results.tsx renders
-          // a ResultsFooter div right after the last result, which would
-          // itself become the true last `div` sibling, so a `:last-of-type`
-          // rule here would never actually match the last result anyway.
-          // Every item keeps its border -- it's the sole separator line
-          // before the footer (which has no border-top of its own).
+          // Each result's own top border is what's visible between it and
+          // the one before it (mirroring the old TeaserFeed/Container.js,
+          // which was border-top-only too) -- not a bottom border on the
+          // previous item. The very first result's top border is what forms
+          // the line under the sort toggles; the last result's top border
+          // does NOT put a line before the footer, so ResultsFooter draws
+          // its own border-top for that.
         }),
       )}
       // format.color is a per-document runtime hex, not a static token, so
       // it can't live in the css() call above -- inline style overrides the
       // class's plain 'divider' color via specificity, matching the old
       // TeaserFeed's border-accent-by-collection-color behaviour.
-      style={document.format?.color ? { borderBottomColor: document.format.color } : undefined}
+      style={document.format?.color ? { borderTopColor: document.format.color } : undefined}
     >
       <div
         className={css({ display: 'flex', flexDirection: 'column', gap: 2 })}
