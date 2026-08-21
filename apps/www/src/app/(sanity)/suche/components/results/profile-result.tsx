@@ -5,7 +5,12 @@ import { IconCheck } from '@republik/icons'
 
 import { getHighlight } from '../../lib/typesense-adapter'
 import { formatExcerpt } from '@/lib/utils/format'
+import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 import { Highlight } from './highlight'
+
+// Same fallback the profile page itself uses (Profile/ProfileView) when a
+// user has no portrait.
+const DEFAULT_PORTRAIT = `${CDN_FRONTEND_BASE_URL}/static/profiledefault.png`
 
 export function ProfileResult({ profile }) {
   const nameSnippet = getHighlight(profile.highlights, 'name')
@@ -30,15 +35,13 @@ export function ProfileResult({ profile }) {
         md: { gap: 4 },
       })}
     >
-      {profile.portrait && (
-        <img
-          src={profile.portrait}
-          width='84'
-          height='84'
-          alt=''
-          className={css({ flexShrink: 0 })}
-        />
-      )}
+      <img
+        src={profile.portrait || DEFAULT_PORTRAIT}
+        width='84'
+        height='84'
+        alt=''
+        className={css({ flexShrink: 0 })}
+      />
       <div>
         <h4 className={css({ fontWeight: 'bold', lineHeight: '1.2' })}>
           <Link href={href} className={linkOverlay()}>

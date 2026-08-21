@@ -66,6 +66,11 @@ export function DocumentResult({ document }) {
           // before the footer (which has no border-top of its own).
         }),
       )}
+      // format.color is a per-document runtime hex, not a static token, so
+      // it can't live in the css() call above -- inline style overrides the
+      // class's plain 'divider' color via specificity, matching the old
+      // TeaserFeed's border-accent-by-collection-color behaviour.
+      style={document.format?.color ? { borderBottomColor: document.format.color } : undefined}
     >
       <div
         className={css({ display: 'flex', flexDirection: 'column', gap: 2 })}
