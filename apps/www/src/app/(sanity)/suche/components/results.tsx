@@ -29,6 +29,7 @@ const PROP_NAME = {
 // between two results is the *next* one's top border. Nothing follows the
 // last result to draw a line before this footer, so it needs its own.
 const footerStyle = css({
+  mt: 4,
   borderTopWidth: 1,
   borderTopStyle: 'solid',
   borderTopColor: 'divider',
