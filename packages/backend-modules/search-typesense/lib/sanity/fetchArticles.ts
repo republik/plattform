@@ -26,7 +26,6 @@ const QUERY = `
   *[
     _type in ["article", "page"]
     && !(_id in path("drafts.**"))
-    && excludeFromSearch != true
   ] | order(_id) [$offset...$end] {
     _id,
     _type,
