@@ -25,10 +25,10 @@ const PROP_NAME = {
   Comment: 'comment',
 }
 
+// No border-top here -- the last result item already renders its own
+// border-bottom (see document-result.tsx etc.), so adding one here would
+// double up into two adjacent lines.
 const footerStyle = css({
-  borderTopWidth: 1,
-  borderTopStyle: 'solid',
-  borderTopColor: 'divider',
   display: 'flex',
   justifyContent: 'space-between',
   py: 4,

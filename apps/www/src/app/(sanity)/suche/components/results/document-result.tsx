@@ -58,7 +58,12 @@ export function DocumentResult({ document }) {
           display: 'flex',
           flexDirection: 'column',
           gap: 4,
-          '&:last-of-type': { borderBottom: 'none', pb: 0 },
+          // Deliberately no `&:last-of-type` exclusion: results.tsx renders
+          // a ResultsFooter div right after the last result, which would
+          // itself become the true last `div` sibling, so a `:last-of-type`
+          // rule here would never actually match the last result anyway.
+          // Every item keeps its border -- it's the sole separator line
+          // before the footer (which has no border-top of its own).
         }),
       )}
     >

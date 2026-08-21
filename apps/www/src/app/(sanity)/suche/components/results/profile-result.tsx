@@ -36,7 +36,7 @@ export function ProfileResult({ profile }) {
           width='84'
           height='84'
           alt=''
-          className={css({ borderRadius: '96px', flexShrink: 0 })}
+          className={css({ flexShrink: 0 })}
         />
       )}
       <div>
