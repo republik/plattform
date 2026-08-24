@@ -4,17 +4,14 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
+import type * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { IconLogoTelegram, IconLogoThreema, IconLogoWhatsApp } from '@republik/icons'
 import copyToClipboard from 'clipboard-copy'
 import { Facebook, Link, Mail, Share as ShareIcon } from 'lucide-react'
 import { useState, type Ref } from 'react'
 import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
-import {
-  MENU_SIDE_OFFSET,
-  menuItemStyle,
-  menuPanelStyle,
-} from './menu-style'
+import { MENU_SIDE_OFFSET } from './menu-style'
 
 export function ShareAction({
   title,
@@ -104,59 +101,53 @@ export function ShareAction({
   ]
 
   return (
-    <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger
-        ref={triggerRef}
-        aria-label='Teilen'
-        className={actionStyle}
-      >
+    <Menu.Root modal={false}>
+      <Menu.Trigger ref={triggerRef} aria-label='Teilen' className={actionStyle}>
         <ShareIcon size={ACTION_ICON_SIZE} />
         <span className={actionLabelStyle}>Teilen</span>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          align={align}
-          sideOffset={menuSideOffset}
-          collisionPadding={16}
-          className={menuPanelStyle}
-          style={
-            menuOffsetX
-              ? { transform: `translateX(${menuOffsetX}px)` }
-              : undefined
-          }
-        >
-          {shareLinks.map(({ name, href, icon: Icon, label }) => (
-            <DropdownMenu.Item asChild key={name}>
-              <a
-                className={menuItemStyle}
-                href={href}
-                onClick={() =>
-                  trackEvent({ action: `shareButton:${name}`, name: url })
-                }
-                rel='noreferrer'
-                target='_blank'
-              >
-                <Icon size={ACTION_ICON_SIZE} />
-                {label}
-              </a>
-            </DropdownMenu.Item>
-          ))}
-          <DropdownMenu.Item asChild>
+      </Menu.Trigger>
+      <Menu.Content
+        align={align}
+        sideOffset={menuSideOffset}
+        collisionPadding={16}
+        title='Teilen'
+        style={
+          menuOffsetX
+            ? { transform: `translateX(${menuOffsetX}px)` }
+            : undefined
+        }
+      >
+        {shareLinks.map(({ name, href, icon: Icon, label }) => (
+          <Menu.Item asChild key={name}>
             <a
               className={menuItemStyle}
-              href={url}
-              onClick={(e) => {
-                e.preventDefault()
-                trackEvent({ action: 'shareButton:copyLink', name: url })
-                copyToClipboard(url).then(() => setLinkCopied(true))
-              }}
+              href={href}
+              onClick={() =>
+                trackEvent({ action: `shareButton:${name}`, name: url })
+              }
+              rel='noreferrer'
+              target='_blank'
             >
-              <Link size={ACTION_ICON_SIZE} />
-              {linkCopied ? 'Link kopiert' : 'Link kopieren'}
+              <Icon size={ACTION_ICON_SIZE} />
+              {label}
             </a>
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+          </Menu.Item>
+        ))}
+        <Menu.Item asChild>
+          <a
+            className={menuItemStyle}
+            href={url}
+            onClick={(e) => {
+              e.preventDefault()
+              trackEvent({ action: 'shareButton:copyLink', name: url })
+              copyToClipboard(url).then(() => setLinkCopied(true))
+            }}
+          >
+            <Link size={ACTION_ICON_SIZE} />
+            {linkCopied ? 'Link kopiert' : 'Link kopieren'}
+          </a>
+        </Menu.Item>
+      </Menu.Content>
+    </Menu.Root>
   )
 }
