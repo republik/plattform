@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type Src = {
   mp4?: string
   hls?: string
@@ -564,7 +564,7 @@ export type ArticleEditor = Array<
             _key: string
           } & VoiceTag)
       >
-      style?: 'normal' | 'heading' | 'note' | 'interviewQuestion'
+      style?: 'normal' | 'heading' | 'note'
       listItem?: 'bullet' | 'number'
       markDefs?: Array<
         | ({
@@ -1905,7 +1905,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                 }
             >
-            style?: 'heading' | 'interviewQuestion' | 'normal' | 'note'
+            style?: 'heading' | 'normal' | 'note'
             listItem?: 'bullet' | 'number'
             markDefs: Array<
               | {
@@ -3385,7 +3385,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                 }
             >
-            style?: 'heading' | 'interviewQuestion' | 'normal' | 'note'
+            style?: 'heading' | 'normal' | 'note'
             listItem?: 'bullet' | 'number'
             markDefs: Array<
               | {

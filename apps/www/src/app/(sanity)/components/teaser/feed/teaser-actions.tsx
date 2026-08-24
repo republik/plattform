@@ -10,13 +10,11 @@ import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions
 import { DiscussionAction } from '@/app/(sanity)/components/article-actions/discussion-action'
 import {
   MENU_SIDE_OFFSET,
-  menuItemStyle,
-  menuPanelStyle,
   menuTriggerStyle,
 } from '@/app/(sanity)/components/article-actions/menu-style'
 import { PlayAction } from '@/app/(sanity)/components/article-actions/play-action'
 import type { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
 
@@ -76,33 +74,28 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
       </div>
 
       {showAddToPlaylist && (
-        <DropdownMenu.Root modal={false}>
-          <DropdownMenu.Trigger
-            aria-label='Weitere Aktionen'
-            className={menuTriggerStyle}
-          >
+        <Menu.Root modal={false}>
+          <Menu.Trigger aria-label='Weitere Aktionen' className={menuTriggerStyle}>
             <EllipsisVertical size={ACTION_ICON_SIZE} />
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              align='end'
-              sideOffset={MENU_SIDE_OFFSET}
-              collisionPadding={16}
-              className={menuPanelStyle}
-            >
-              <DropdownMenu.Item asChild>
-                <AddToPlaylistAction
-                  documentId={documentId}
-                  durationMs={teaser.audioDurationMs ?? undefined}
-                  mp3={mp3}
-                  path={path}
-                  title={title}
-                  className={menuItemStyle}
-                />
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+          </Menu.Trigger>
+          <Menu.Content
+            align='end'
+            sideOffset={MENU_SIDE_OFFSET}
+            collisionPadding={16}
+            title='Weitere Aktionen'
+          >
+            <Menu.Item asChild>
+              <AddToPlaylistAction
+                documentId={documentId}
+                durationMs={teaser.audioDurationMs ?? undefined}
+                mp3={mp3}
+                path={path}
+                title={title}
+                className={menuItemStyle}
+              />
+            </Menu.Item>
+          </Menu.Content>
+        </Menu.Root>
       )}
     </div>
   )
