@@ -8,10 +8,7 @@ export default async function SucheLayout({
 }>) {
   return (
     <PageLayout>
-      {/* `editorial` is the same width the article-rendering grid recipe
-      (packages/theme/src/recipes/editorial-content.ts) uses for its
-      non-breakout text column -- 695px, matching where most article
-      content already lives, so search results read at the same width. */}
+      {/* `editorial` = 695px, matching the article grid's text column width. */}
       <div
         className={css({
           color: 'text',

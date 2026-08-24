@@ -2,13 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  Field,
-  RootColorVariables,
-  useDebounce,
-  usePrevious,
-  plainButtonRule,
-} from '@project-r/styleguide'
+import { useDebounce, usePrevious, plainButtonRule } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 import { IconClose } from '@republik/icons'
 
@@ -16,6 +10,7 @@ import { useTranslation } from '@/lib/withT'
 import { useSearchUrl } from './use-search-url'
 import { useSearchResults } from '../lib/use-search-results'
 import { LiveState } from './live-state'
+import { SearchField } from './search-field'
 import { DEFAULT_SORT } from '../lib/constants'
 
 const containerStyle = css({ pt: 4, md: { pt: 10 } })
@@ -74,19 +69,12 @@ export function Form({
 
   return (
     <div className={containerStyle}>
-      {/* Field (a legacy @project-r/styleguide component) reads its focus/
-      error/disabled colors from CSS vars this defines -- the App Router's
-      root layout never renders it (only pages/_app.tsx does), matching the
-      pattern already used by the other legacy-styleguide bridges under
-      app/(sanity)/components/. Without it, Field's border color silently
-      falls back to currentColor instead of the intended focus green. */}
-      <RootColorVariables />
       <form onSubmit={submit} action='/suche'>
-        <Field
+        <SearchField
           name='q'
           label={t('search/input/label')}
           value={formValue ?? ''}
-          onChange={(_, value) => setFormValue(value as string)}
+          onChange={setFormValue}
           icon={
             !startState ? (
               <button {...plainButtonRule} onClick={reset} type='button'>

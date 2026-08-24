@@ -10,15 +10,9 @@ const fetchPage = (apolloClient, { searchQuery, filter, sort }, page) =>
     runSearch(client, { searchQuery, filter, sort, page }),
   )
 
-/**
- * Fetches page 1 of a search whenever (searchQuery, filter, sort) changes,
- * and exposes fetchMore to append subsequent pages.
- *
- * Deliberately simple: each call is its own independent fetch, with no
- * cross-component cache or request dedup. Multiple callers with the same
- * params each fire their own request -- callers that need to share one
- * result (see index.js) fetch once and pass it down as props instead.
- */
+// Fetches page 1 whenever (searchQuery, filter, sort) changes, and exposes
+// fetchMore for subsequent pages. No cross-component cache or dedup --
+// callers needing a shared result should fetch once and pass it down.
 export const useSearchResults = ({ searchQuery, filter, sort, skip }) => {
   const apolloClient = useApolloClient()
   const [state, setState] = useState({

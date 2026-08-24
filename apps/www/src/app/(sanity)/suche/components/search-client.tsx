@@ -42,12 +42,8 @@ export function SearchClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // An empty query is always the pristine landing state, regardless of
-  // whatever filter/sort happens to be stuck in the URL (e.g. from
-  // submitting a cleared search box while a non-default tab was selected) --
-  // startState itself also requires the default filter/sort, which would
-  // otherwise let an empty query fall through to a live `q: '*'` fetch and
-  // wildcard-list every result for that tab.
+  // Deliberately ignores filter/sort -- an empty query is always the
+  // landing state, even with a non-default tab/sort stuck in the URL.
   const hasQuery = !!urlQuery
 
   const { search, loading, error, fetchMore } = useSearchResults({
@@ -67,7 +63,6 @@ export function SearchClient() {
     }
   }, [hasQuery, keyword, category, searchCount])
 
-  // switch to first tab with results
   useEffect(() => {
     if (loading || !search) {
       return

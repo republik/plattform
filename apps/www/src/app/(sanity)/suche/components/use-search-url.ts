@@ -12,14 +12,8 @@ const FILTER_VALUE_PARAM = 'fvalue'
 const SORT_KEY_PARAM = 'skey'
 const SORT_DIRECTION_PARAM = 'sdir'
 
-/**
- * App Router replacement for the Pages Router's withSearchRouter.js: same
- * public shape (urlQuery/urlFilter/urlSort/startState/getSearchParams/
- * pushSearchParams/cleanupUrl), built on next/navigation instead of
- * next/router. There's no `shallow` concept here -- App Router
- * push/replace never trigger a full server re-render by default, so that
- * whole concern from the old hook simply doesn't apply.
- */
+// App Router replacement for withSearchRouter.js, same public shape, built
+// on next/navigation -- no `shallow` concept needed here.
 export function useSearchUrl() {
   const pathname = usePathname()
   const router = useRouter()

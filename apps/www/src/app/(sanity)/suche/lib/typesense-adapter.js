@@ -26,10 +26,8 @@ export const buildPreview = (text, length = 240) => {
 export const getHighlight = (highlights, field) =>
   highlights?.find((h) => h.field === field)?.snippet
 
-// doc.credits is a JSON-encoded CreditsNode[] (see republik/studio's
-// shared/search/bylineToCredits.ts) -- the byline exactly as authored in
-// Sanity, with internalLink spans already resolved to `/~slug` profile
-// links server-side. Just needs parsing here.
+// doc.credits is a JSON-encoded CreditsNode[] (see studio's bylineToCredits.ts),
+// already resolved to `/~slug` links server-side.
 const parseCredits = (credits) => {
   if (!credits) return undefined
   try {
@@ -39,14 +37,10 @@ const parseCredits = (credits) => {
   }
 }
 
-// Shapes a Typesense article document into the TeaserListItemType TeaserActions
-// expects (see apps/www/src/app/(sanity)/components/teaser/feed/teaser-actions.tsx),
-// so search results can reuse it instead of the legacy ActionBar.
-//
-// audioSourceMp3/audioDurationMs aren't indexed yet -- Typesense's
-// TypesenseArticleDocument only carries hasAudio/audioSourceKind today.
-// PlayAction/AddToPlaylistAction already treat both as optional, so this
-// passes them through as undefined until the schema grows those fields.
+// Shapes a Typesense article into the shape TeaserActions expects, so
+// search results can reuse it instead of the legacy ActionBar.
+// audioSourceMp3/audioDurationMs aren't indexed yet, hence undefined --
+// PlayAction/AddToPlaylistAction already treat both as optional.
 const buildTeaserActionsItem = (doc) => ({
   _id: doc.id,
   _type: 'article',
@@ -72,9 +66,7 @@ const buildDocumentEntity = (hit) => {
     plainTextBody: doc.plainTextBody,
     publishDate: doc.publishDate ? new Date(doc.publishDate).toISOString() : null,
     path: doc.slug || '',
-    // The article-collection ("Spitzmarke") kicker line -- only a title
-    // (+ the article's own accentColor), no path (Typesense doesn't carry
-    // collection slugs), so it renders as plain text rather than a link.
+    // Spitzmarke kicker -- plain text, not a link: Typesense has no collection slug.
     format: doc.collections?.length
       ? { title: doc.collections[0], color: doc.accentColor }
       : undefined,
@@ -149,11 +141,9 @@ const COLLECTIONS = {
   },
 }
 
-// What distinguishes each kind from the collection it reads. Document and
-// Audio are both the `articles` collection, Audio being the hasAudio:true
-// subset -- there's no "all types" view, so every search fires all four
-// requests in one multi_search to get the tab counts, and returns
-// hits/pageInfo only for the selected one.
+// Document and Audio both read `articles`, Audio filtered to hasAudio:true.
+// Every search fires all four in one multi_search (for the tab counts),
+// returning hits/pageInfo only for the selected one.
 const KIND_COLLECTIONS = {
   Document: { ...COLLECTIONS.articles, filterBy: undefined },
   Audio: { ...COLLECTIONS.articles, filterBy: 'hasAudio:true' },
@@ -161,15 +151,9 @@ const KIND_COLLECTIONS = {
   Comment: { ...COLLECTIONS.comments, filterBy: undefined },
 }
 
-/**
- * The four searchable kinds, built from the tab list in constants.js so the
- * tabs and the searches behind them cannot drift apart.
- *
- * Frozen because identity is load-bearing: buildRequest compares
- * `descriptor === selected` and buildSearchResult uses KINDS.indexOf() to pick
- * the matching multi_search result, so a reorder or mutation would silently
- * return the wrong collection's hits.
- */
+// Built from constants.js's tab list so tabs and searches can't drift apart.
+// Frozen because identity is load-bearing: buildRequest compares by
+// reference and buildSearchResult uses KINDS.indexOf() to match results.
 export const KINDS = Object.freeze(
   SUPPORTED_FILTERS.map(({ kind, key, value }) =>
     Object.freeze({
@@ -237,13 +221,8 @@ const buildAggregations = (foundByKind) => {
   }))
 }
 
-/**
- * Reshapes a multi_search response (one result per KINDS entry, in order)
- * into the { nodes, totalCount, aggregations, pageInfo } shape the Search
- * components consume. Pure -- separated from runSearch so it can be unit
- * tested. Each node is the entity itself (kind/id/... + a raw `highlights`
- * array) -- there's no separate legacy node/entity wrapper.
- */
+// Reshapes a multi_search response (one result per KINDS entry, in order)
+// into what the Search components consume. Pure, so it's separately testable.
 export const buildSearchResult = (results, { selected, page }) => {
   const foundByKind = {}
   KINDS.forEach((descriptor, index) => {

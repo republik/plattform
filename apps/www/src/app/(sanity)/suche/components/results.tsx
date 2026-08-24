@@ -25,12 +25,8 @@ const PROP_NAME = {
   Comment: 'comment',
 }
 
-// Results are border-top-only (see document-result.tsx etc.) -- the line
-// between two results is the *next* one's top border. Nothing follows the
-// last result to draw a line before this footer, so it needs its own --
-// with the same mt/pt the preceding row used, so the gap around the
-// footer's border matches the gaps between rows above it. DocumentResult
-// uses mt/pt 6, ProfileResult/CommentResult use 4.
+// Results are border-top-only, so the footer needs its own border-top --
+// matching mt/pt of the last row (6 for DocumentResult, 4 otherwise).
 const footerStyleDocument = css({
   mt: 6,
   borderTopWidth: 1,

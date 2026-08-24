@@ -11,10 +11,8 @@ import { Highlight } from './highlight'
 
 const formatDate = timeFormat('%d.%m.%Y')
 
-// doc.credits is a JSON-encoded CreditsNode[] (see republik/studio's
-// shared/search/bylineToCredits.ts) -- internalLink spans are already
-// resolved to `/~slug` profile links server-side, so rendering is just a
-// plain text-or-link walk, no portable-text machinery needed.
+// doc.credits is a JSON-encoded CreditsNode[], already resolved to
+// `/~slug` links server-side -- just a plain text-or-link walk.
 function Credits({ credits }: { credits: unknown }) {
   if (!Array.isArray(credits)) return null
   return (
@@ -38,9 +36,7 @@ export function DocumentResult({ document }) {
   const authorSnippet = getHighlight(document.highlights, 'authors')
   const bodySnippet = getHighlight(document.highlights, 'plainTextBody')
 
-  // A title/author match is a stronger signal than a description match,
-  // which in turn outranks showing a body excerpt -- only the single most
-  // relevant highlight is shown per result.
+  // Only the single most relevant highlight is shown: title/author > description > body.
   const showDescription = !titleSnippet && !authorSnippet
   const showBodyExcerpt = showDescription && !descSnippet
 
@@ -58,19 +54,10 @@ export function DocumentResult({ document }) {
           display: 'flex',
           flexDirection: 'column',
           gap: 4,
-          // Each result's own top border is what's visible between it and
-          // the one before it (mirroring the old TeaserFeed/Container.js,
-          // which was border-top-only too) -- not a bottom border on the
-          // previous item. The very first result's top border is what forms
-          // the line under the sort toggles; the last result's top border
-          // does NOT put a line before the footer, so ResultsFooter draws
-          // its own border-top for that.
+          // border-top-only by design, see ResultsFooter in results.tsx
         }),
       )}
-      // format.color is a per-document runtime hex, not a static token, so
-      // it can't live in the css() call above -- inline style overrides the
-      // class's plain 'divider' color via specificity, matching the old
-      // TeaserFeed's border-accent-by-collection-color behaviour.
+      // runtime hex, can't be a css() token -- overrides the class's divider color
       style={document.format?.color ? { borderTopColor: document.format.color } : undefined}
     >
       <div
@@ -105,9 +92,7 @@ export function DocumentResult({ document }) {
           </p>
         )}
         {document.credits ? (
-          // credits is derived from the byline, which already follows the
-          // «von [Name], [date]» convention (see bylineToCredits.ts) -- it
-          // already ends with the publish date, so don't append it again.
+          // the byline already ends with the publish date -- don't append it again
           <p className='byline'>
             <Credits credits={document.credits} />
           </p>

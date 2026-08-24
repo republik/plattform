@@ -13,9 +13,7 @@ export function CommentResult({ comment }) {
   const bodySnippet = getHighlight(comment.highlights, 'contentString')
   const author = comment.displayAuthor
 
-  // discussionPath is only ever set for a comment attached to an article
-  // (see typesense-adapter.js), so the /dialog prefix always applies here --
-  // no need for CommentLink's generic discussion-shape branching.
+  // discussionPath is only ever set for an article-attached comment, so /dialog always applies
   const discussionHref = comment.discussionPath
     ? { pathname: `/dialog${comment.discussionPath}`, query: { focus: comment.id } }
     : undefined
