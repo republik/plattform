@@ -71,31 +71,61 @@ const fetchBreakdown = async (pgdb, asOf) => {
   return pgdb.query(BREAKDOWN_QUERY, [asOf, EXCLUDED_USER_IDS])
 }
 
-// Splits new-system reduced YEARLY_SUBSCRIPTIONs by discount duration —
-// 'once' (first-year-only, e.g. the YEARLY_REDUCED offer, labeled
-// "Einstiegsangebot oder Kampagnen" in the output) vs. 'repeating'/'forever'
-// (a permanent discount applied every renewal, e.g. the STUDENT offer's
-// fixedDiscount — labeled "Reduzierte Mitgliedschaften", merged into one
-// row since both mean "discounted for the life of the subscription").
-// payments.invoices."discounts" stores Stripe's raw
-// discount objects verbatim (invoiceCreated.ts: `discounts: invoice.discounts`),
-// each with a nested coupon.duration — this has no equivalent on the old
-// system (memberships.reducedPrice is a plain boolean with no duration
-// concept), so this is reported separately rather than folded into the
-// main categorized CTE.
-const REDUCED_DURATION_QUERY = `
+// Splits new-system reduced YEARLY_SUBSCRIPTIONs by discount instead of the
+// original two-way "Einstiegsangebot oder Kampagnen" vs. "Reduzierte
+// Mitgliedschaften" (grouped only by Stripe coupon.duration). That coarser
+// split hid several distinct populations:
+//   - U30 discounts are created with `duration: 'repeating'` and a finite
+//     duration_in_months tied to the person's age (see
+//     payments/scripts/create-u30-coupons.ts) — a temporary campaign
+//     discount just like Einstiegsangebot, but by duration alone they were
+//     landing inside "Reduzierte Mitgliedschaften". Kept as one row ("U30")
+//     even though it's actually ~16 separate coupons (one per
+//     duration_in_months, i.e. per age) -- the age-based split isn't
+//     interesting for this report.
+//   - "Einstiegsangebot" is one specific, always-on coupon among many
+//     `once`-duration seasonal/marketing coupons (Frühlingskampagne,
+//     Winterzeitrabatt, Weihnachts-Rabatt, Sonderrabatt, etc.) — worth its
+//     own row since it's the standing entry offer, not a time-boxed
+//     campaign.
+//   - The remaining `once`-duration coupons are now broken out BY NAME
+//     instead of lumped into one "Kampagnen" bucket, so each campaign's
+//     actual size is visible. A coupon is sometimes duplicated under a
+//     second id with an " extended" suffix once a campaign's deadline gets
+//     pushed back (e.g. "Winterzeitrabatt" / "Winterzeitrabatt extended")
+//     — stripped here so both count toward the same campaign name.
+//   - "Reduzierte Mitgliedschaften": remaining `repeating`/`forever`
+//     discounts not tied to a campaign (e.g. Ausbildungsrabatt, named
+//     "Reduzierte Mitgliedschaft"/"Reduktion CHF -X" coupons) — a
+//     permanent discount applied every renewal, merged into one row since
+//     the individual amount doesn't matter for this report the way a
+//     campaign's name does.
+// Confirmed via diagnoseDiscountBreakdown.js (which lists every individual
+// coupon) that this still sums back to exactly the same total as the
+// original two-way split. payments.invoices."discounts" stores Stripe's
+// raw discount objects verbatim (invoiceCreated.ts:
+// `discounts: invoice.discounts`), each with a nested
+// coupon.duration/name/metadata — this has no equivalent on the old system
+// (memberships.reducedPrice is a plain boolean with no duration concept),
+// so this is reported separately rather than folded into the main
+// categorized CTE.
+const DISCOUNT_CATEGORY_QUERY = `
 SELECT
-  CASE disc.duration
-    WHEN 'once' THEN 'Einstiegsangebot oder Kampagnen'
-    WHEN 'repeating' THEN 'Reduzierte Mitgliedschaften'
-    WHEN 'forever' THEN 'Reduzierte Mitgliedschaften'
+  CASE
+    WHEN disc.campaign LIKE 'U30%' THEN 'U30'
+    WHEN disc.coupon_name = 'Einstiegsangebot' THEN 'Einstiegsangebot'
+    WHEN disc.duration = 'once' THEN regexp_replace(disc.coupon_name, ' extended$', '')
+    WHEN disc.duration IN ('repeating', 'forever') THEN 'Reduzierte Mitgliedschaften'
     ELSE COALESCE(disc.duration, 'unknown')
-  END AS discount_duration,
+  END AS category,
   COUNT(DISTINCT s.id)::int AS count
 FROM payments.subscriptions s
 JOIN payments.invoices i ON i."subscriptionId" = s.id
 LEFT JOIN LATERAL (
-  SELECT d->'coupon'->>'duration' AS duration
+  SELECT
+    d->'coupon'->>'duration' AS duration,
+    d->'coupon'->>'name' AS coupon_name,
+    d->'coupon'->'metadata'->>'campaign' AS campaign
   FROM jsonb_array_elements(i.discounts) d
   LIMIT 1
 ) disc ON true
@@ -105,11 +135,11 @@ WHERE s.type = 'YEARLY_SUBSCRIPTION'
   AND s."userId" != ALL($2::uuid[])
   AND s.status NOT IN ('incomplete', 'incomplete_expired')
 GROUP BY 1
-ORDER BY 1
+ORDER BY 2 DESC
 `
 
-const fetchReducedDuration = async (pgdb, asOf) => {
-  return pgdb.query(REDUCED_DURATION_QUERY, [asOf, EXCLUDED_USER_IDS])
+const fetchDiscountCategories = async (pgdb, asOf) => {
+  return pgdb.query(DISCOUNT_CATEGORY_QUERY, [asOf, EXCLUDED_USER_IDS])
 }
 
 const buildTable = (
@@ -163,12 +193,12 @@ const run = async () => {
   const pgdb = await PgDb.connect({ applicationName: 'geschaeftsbericht' })
 
   try {
-    const [counts, lastYearCounts, breakdown, reducedDuration] =
+    const [counts, lastYearCounts, breakdown, discountCategories] =
       await Promise.all([
         fetchCounts(pgdb, asOfInstant.toDate()),
         fetchCounts(pgdb, lastYearAsOfInstant.toDate()),
         fetchBreakdown(pgdb, asOfInstant.toDate()),
-        fetchReducedDuration(pgdb, asOfInstant.toDate()),
+        fetchDiscountCategories(pgdb, asOfInstant.toDate()),
       ])
 
     const unexpected = Object.keys(counts).filter((c) =>
@@ -203,17 +233,17 @@ const run = async () => {
     console.log(`\nBreakdown by source system per ${asOf}`)
     console.table(breakdown)
     console.log(
-      `\nNew-system reduced YEARLY_SUBSCRIPTIONs by discount duration per ${asOf}`,
+      `\nNew-system reduced YEARLY_SUBSCRIPTIONs by discount category per ${asOf}`,
     )
-    console.table(reducedDuration)
+    console.table(discountCategories)
 
     writeCsv(mitgliedschaften, argv.out, `A-mitgliedschaften_FY${fyLabel}`)
     writeCsv(abonnemente, argv.out, `B-abonnemente_FY${fyLabel}`)
     writeCsv(breakdown, argv.out, `A-B-breakdown-by-source_FY${fyLabel}`)
     writeCsv(
-      reducedDuration,
+      discountCategories,
       argv.out,
-      `A-reduced-by-discount-duration_FY${fyLabel}`,
+      `A-reduced-by-discount-category_FY${fyLabel}`,
     )
     writeJson(
       {
@@ -222,7 +252,7 @@ const run = async () => {
         mitgliedschaften,
         abonnemente,
         breakdown,
-        reducedDuration,
+        discountCategories,
         rawCounts: counts,
         rawCountsLastYear: lastYearCounts,
       },
