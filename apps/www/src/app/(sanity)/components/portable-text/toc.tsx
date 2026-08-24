@@ -1,6 +1,6 @@
 import { legacySlugify } from '@/app/(sanity)/components/portable-text/helpers/legacy-slugify'
 import { Sub, Sup } from '@/app/(sanity)/components/portable-text/marks'
-import type { PortableTextContentFragmentType } from '@/app/(sanity)/groq/portable-text-content-fragment'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { css } from '@republik/theme/css'
 import {
   PortableText,
@@ -9,10 +9,7 @@ import {
   type PortableTextReactComponents,
 } from 'next-sanity'
 
-type TocType = Extract<
-  PortableTextContentFragmentType['content'][number],
-  { _type: 'toc' }
->
+type TocType = Extract<ArticlePortableTextBlockType, { _type: 'toc' }>
 
 const tocInlineComponents: Partial<PortableTextReactComponents> = {
   types: {},

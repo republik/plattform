@@ -28,7 +28,7 @@ import { Toc } from '@/app/(sanity)/components/portable-text/toc'
 import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
 import { Variable } from '@/app/(sanity)/components/portable-text/variable'
 import { WebOnly } from '@/app/(sanity)/components/portable-text/web-only'
-import { type ArticleEditor } from '@/sanity.types'
+import type { ArticlePortableTextContentFragmentType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
 
 const articleComponents: Partial<PortableTextReactComponents> = {
@@ -75,6 +75,10 @@ const articleComponents: Partial<PortableTextReactComponents> = {
   },
 }
 
-export async function ArticlePortableText({ value }: { value: ArticleEditor }) {
+export async function ArticlePortableText({
+  value,
+}: {
+  value: ArticlePortableTextContentFragmentType['content']
+}) {
   return <PortableText value={value} components={articleComponents} />
 }

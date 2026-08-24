@@ -1,6 +1,6 @@
 'use client'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { dynamicComponentIdentifiers } from '@/components/Article/DynamicComponents'
-import type { DynamicComponent as DynamicComponentT } from '@/sanity.types'
 import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
 import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import {
@@ -64,7 +64,7 @@ const figureStyle = cva({
 export function LegacyDynamicComponent({
   value,
 }: {
-  value: DynamicComponentT
+  value: Extract<ArticlePortableTextBlockType, { _type: 'dynamicComponent' }>
 }) {
   if (!value.src && !value.identifier) {
     return null

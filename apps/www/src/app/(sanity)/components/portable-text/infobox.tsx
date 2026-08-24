@@ -1,10 +1,14 @@
 import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { Infobox } from '@/app/components/ui/infobox'
-import type { InfoBox as InfoBoxType } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
 import { AsideImage } from './aside-image'
 
-export function InfoBox({ value }: { value: InfoBoxType }) {
+export function InfoBox({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'infoBox' }>
+}) {
   const { title, image, body } = value
 
   const hasImage = image?.asset

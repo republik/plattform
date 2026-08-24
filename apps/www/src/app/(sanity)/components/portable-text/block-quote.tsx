@@ -1,5 +1,6 @@
 import { Caption } from '@/app/(sanity)/components/portable-text/caption'
 import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { css } from '@republik/theme/css'
 
 const containerStyle = css({
@@ -29,7 +30,11 @@ const containerStyle = css({
   },
 })
 
-export function BlockQuote({ value }) {
+export function BlockQuote({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'blockQuote' }>
+}) {
   const { body, caption } = value
 
   return (

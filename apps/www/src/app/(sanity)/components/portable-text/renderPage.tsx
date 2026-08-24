@@ -23,7 +23,7 @@ import { PullQuote } from '@/app/(sanity)/components/portable-text/pull-quote'
 import { StoryComponent } from '@/app/(sanity)/components/portable-text/story-component'
 import { Toc } from '@/app/(sanity)/components/portable-text/toc'
 import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
-import { type PageEditor } from '@/sanity.types'
+import type { PagePortableTextContentFragmentType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
 
 const pageComponents: Partial<PortableTextReactComponents> = {
@@ -61,6 +61,10 @@ const pageComponents: Partial<PortableTextReactComponents> = {
   },
 }
 
-export async function PagePortableText({ value }: { value: PageEditor }) {
+export async function PagePortableText({
+  value,
+}: {
+  value: PagePortableTextContentFragmentType['content']
+}) {
   return <PortableText value={value} components={pageComponents} />
 }
