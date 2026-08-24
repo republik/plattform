@@ -17,7 +17,7 @@ import { useInNativeApp } from '@/lib/withInNativeApp'
 import { AudioEvent, AudioEventHandlers } from './types/AudioEvent'
 import notifyApp from '@/lib/react-native/NotifyApp'
 import useAudioQueue from './hooks/useAudioQueue'
-import useNativeAppEvent from '@/lib/react-native/useNativeAppEvent'
+import useNativeAppEvent from '@/app/lib/hooks/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '@/lib/hooks/useInterval'
 import { reportError } from '@/lib/errors/reportError'
@@ -700,13 +700,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     removeQueueItem,
   )
 
-  useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [
-    initialized,
-    activePlayerItem,
-  ])
-  useNativeAppEvent<string>(
+  useNativeAppEvent<{ payload: AppAudioPlayerState }>(
+    AudioEvent.SYNC,
+    (content) => syncWithNativeApp(content.payload),
+    [initialized, activePlayerItem],
+  )
+  useNativeAppEvent<{ payload: string }>(
     AudioEvent.QUEUE_ADVANCE,
-    async (itemId) => {
+    async (content) => {
+      const itemId = content.payload
       const isHeadOfQueue =
         audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
       const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
@@ -717,10 +719,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     },
     [initialized, activePlayerItem, isAutoPlayEnabled],
   )
-  useNativeAppEvent(AudioEvent.ERROR, handleError, [
-    initialized,
-    activePlayerItem,
-  ])
+  useNativeAppEvent<{ payload: Error | string }>(
+    AudioEvent.ERROR,
+    (content) => handleError(content.payload),
+    [initialized, activePlayerItem],
+  )
 
   // The following two hooks allow for minimizing the player on backpress in android
   useEffect(() => {

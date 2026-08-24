@@ -14,6 +14,8 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from 'react'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
+import { iosAppSafeAreaBottomPaddingStyle } from '@/app/lib/styles/ios-app-safe-area'
 
 /**
  * Same breakpoint as Panda's default `md` token (768px) and the legacy
@@ -56,8 +58,9 @@ const menuPanelStyle = css({
   paddingY: '2',
   // Radix portals menu content to <body> without a z-index of its own, so it
   // would paint below anything that establishes a stacking context — the
-  // floating action bar (20) and the sticky header (100) among them.
-  zIndex: 101,
+  // floating action bar (20), the sticky header (100), and the paynote
+  // overlay (9998-9999) among them.
+  zIndex: 10000,
   _stateOpen: { animation: 'fadeIn' },
   _stateClosed: { animation: 'fadeOut' },
 })
@@ -68,10 +71,19 @@ const drawerOverlayStyle = css({
   inset: 0,
   display: 'grid',
   placeItems: 'end stretch',
-  zIndex: 101,
+  zIndex: 10000,
   _stateOpen: { animation: 'fadeIn' },
   _stateClosed: { animation: 'fadeOut' },
 })
+
+// `env(safe-area-inset-bottom)` in `drawerContentStyle`'s margin doesn't
+// resolve inside the native app's `react-native-webview`, so the sheet sits
+// under the home indicator there. `iosAppSafeAreaBottomPaddingStyle` adds the
+// missing inset as padding on the overlay instead of a margin on the content:
+// padding only shrinks the grid's content area (pushing the `end`-aligned
+// content up), whereas a margin on the overlay itself — `position: fixed;
+// inset: 0` — would shrink the overlay's own box away from the bottom edge,
+// exposing whatever sits behind it there instead of the backdrop.
 
 // Split from the scrolling content below: Safari is known to drop/flatten a
 // `transform` animation (and sometimes the `border-radius` clip) on an
@@ -257,6 +269,7 @@ function Content({
   style,
 }: MenuContentProps) {
   const { isDesktop } = useMenuContext('Content')
+  const { isIOSApp } = usePlatformInformation()
 
   if (isDesktop) {
     return (
@@ -276,7 +289,12 @@ function Content({
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className={drawerOverlayStyle}>
+      <Dialog.Overlay
+        className={cx(
+          drawerOverlayStyle,
+          isIOSApp && iosAppSafeAreaBottomPaddingStyle,
+        )}
+      >
         <Dialog.Content
           aria-describedby={undefined}
           className={cx(drawerContentStyle, className)}
