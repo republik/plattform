@@ -1,3 +1,4 @@
+import { AuthorBlock } from '@/app/(sanity)/components/portable-text/author-block'
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Heading } from '@/app/(sanity)/components/portable-text/blocks'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
@@ -46,6 +47,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     html: Html,
     embedVideo: LegacyEmbedVideo,
     seriesNav: SeriesNav,
+    authorBlock: AuthorBlock,
     // This is the web, we never render emailOnly/voiceTag blocks :)
     emailOnly: () => null,
     voiceTag: () => null,
