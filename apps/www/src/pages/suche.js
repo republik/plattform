@@ -7,7 +7,7 @@ import withT from '@/lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 import { withDefaultSSR } from '@/lib/apollo/helpers'
-import FeaturedSections from '@/components/Sections/Featured'
+import { FeaturedSections } from '@/app/(sanity)/components/featured-sections'
 
 const SearchPage = ({ router, t }) => {
   const meta = {
