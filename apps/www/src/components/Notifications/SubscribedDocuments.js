@@ -1,5 +1,5 @@
 import { graphql } from '@apollo/client/react/hoc'
-import { A, mediaQueries, plainButtonRule } from '@project-r/styleguide'
+import { A, Interaction, mediaQueries, plainButtonRule } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Image from 'next/image'
@@ -74,7 +74,13 @@ const SubscribedDocuments = ({
           subscription.documentDetails?.meta.template === 'format',
       )
 
-      if (!subscriptions.length) return null
+      if (!subscriptions.length) {
+        return (
+          <Interaction.P>
+            {t('Notifications/settings/formats/summary/0')}
+          </Interaction.P>
+        )
+      }
 
       return (
         <div {...styles.formats}>
