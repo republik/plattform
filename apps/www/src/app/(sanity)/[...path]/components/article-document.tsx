@@ -78,14 +78,14 @@ export default function ArticleDocument({
 
           <ArticleTopActions article={article} />
 
-        {/* Floating, viewport-anchored — but inside the <article> it measures
+          {/* Floating, viewport-anchored — but inside the <article> it measures
             against, and early in the tab order for an offer made on arrival. */}
-        <JumpToReadingPosition documentId={documentId} />
+          <JumpToReadingPosition documentId={documentId} />
 
-        <div className={css({ display: 'flex', gap: '2' })}>
-          <EditLink documentId={article._id} documentType='article' />
-          <TeaserSmallPreviewLink documentId={article._id} />
-        </div>
+          <div className={css({ display: 'flex', gap: '2' })}>
+            <EditLink documentId={article._id} documentType='article' />
+            <TeaserSmallPreviewLink documentId={article._id} />
+          </div>
 
           <ContentWall
             readingAccess={readingAccess}
@@ -95,10 +95,10 @@ export default function ArticleDocument({
             fullContent={<ArticlePortableText value={article.content} />}
           />
 
-        {/* End of the text: everything below is outside the measured region. */}
-        <ReadingPositionTracker documentId={documentId} />
+          {/* End of the text: everything below is outside the measured region. */}
+          <ReadingPositionTracker documentId={documentId} />
 
-        <ArticleBottomActions article={article} />
+          <ArticleBottomActions article={article} />
 
           <FollowArticle
             seriesId={seriesId}
