@@ -16,6 +16,8 @@ const deploymentId =
   process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
   undefined
 
+process.env.NEXT_DEPLOYMENT_ID = deploymentId
+
 console.log('Using Next.js deployment ID', deploymentId)
 
 function appendProtocol(href) {
