@@ -1,4 +1,5 @@
 'use client'
+import { ContentErrorBoundary } from '@/app/(sanity)/components/content-error-boundary'
 import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { dynamicComponentIdentifiers } from '@/components/Article/DynamicComponents'
 import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
@@ -17,6 +18,7 @@ import {
 } from '@project-r/styleguide'
 import { cva } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
+import { ErrorBoundary } from 'react-error-boundary'
 
 const dynamicComponentRequire = createRequire().alias({
   'react-apollo': {
@@ -93,16 +95,18 @@ export function LegacyDynamicComponent({
       className={figureStyle({ size: value.size })}
     >
       <RootColorVariables />
-      <DynamicComponent
-        require={dynamicComponentRequire}
-        identifiers={dynamicComponentIdentifiers}
-        identifier={value.identifier}
-        src={value.src}
-        // size={value.size}
-        autoHtml={value.autoHtml}
-        html={value.html}
-        props={props}
-      />
+      <ContentErrorBoundary title='Diese Grafik kann wegen eines Fehlers nicht dargestellt werden.'>
+        <DynamicComponent
+          require={dynamicComponentRequire}
+          identifiers={dynamicComponentIdentifiers}
+          identifier={value.identifier}
+          src={value.src}
+          // size={value.size}
+          autoHtml={value.autoHtml}
+          html={value.html}
+          props={props}
+        />
+      </ContentErrorBoundary>
     </div>
   )
 }

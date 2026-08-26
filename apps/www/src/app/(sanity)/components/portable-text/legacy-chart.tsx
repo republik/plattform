@@ -1,4 +1,5 @@
 'use client'
+import { ContentErrorBoundary } from '@/app/(sanity)/components/content-error-boundary'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import type { Chart as ChartT } from '@/sanity.types'
@@ -40,8 +41,9 @@ export function LegacyChart({
       <p className={css({ textStyle: 'body', fontSize: 'l', mb: '4' })}>
         <InlinePortableText value={value.description} />
       </p>
-
-      <Chart config={config} values={values} />
+      <ContentErrorBoundary title='Diese Grafik kann wegen eines Fehlers nicht dargestellt werden.'>
+        <Chart config={config} values={values} />
+      </ContentErrorBoundary>
     </div>
   )
 }
