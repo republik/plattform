@@ -2,6 +2,7 @@ import { Express } from 'express'
 import bodyParser from 'body-parser'
 import { verifySanityToken, verifyReadToken } from './auth'
 import { discussionsHandler } from './discussions'
+import { fetchEmbedVideoHandler } from './fetchEmbedVideo'
 import { generateAudioHandler } from './generateAudio'
 import { huebschWebhookHandler } from './huebschWebhook'
 import { publishNotificationHandler } from './publishNotification'
@@ -39,6 +40,12 @@ const middleware = async (
     '/webhooks/sanity/subscriber-count',
     verifyReadToken,
     subscriberCountHandler(context),
+  )
+
+  server.get(
+    '/webhooks/sanity/fetch-embed-video',
+    verifyReadToken,
+    fetchEmbedVideoHandler,
   )
 
   // No auth middleware — the signature is HMAC-verified inline

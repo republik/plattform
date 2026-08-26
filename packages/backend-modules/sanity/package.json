@@ -26,6 +26,7 @@
     "@orbiting/backend-modules-assets": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-discussions": "*",
+    "@orbiting/backend-modules-embeds": "*",
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-job-queue": "*",
     "@orbiting/backend-modules-logger": "*",
