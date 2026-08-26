@@ -2,8 +2,6 @@ const {
   Discussion: { upsert: upsertDiscussion },
 } = require('@orbiting/backend-modules-discussions')
 
-const DEFAULT_ROLES = ['member']
-
 const upsert = async (docMeta, context, legacyDiscussionId) => {
   const {
     title,
@@ -37,8 +35,6 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     ...(collapsable !== null ? { collapsable: !!collapsable } : {}),
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired,
-    // TODO: get rid of allowedRoles concept in another branche
-    allowedRoles: DEFAULT_ROLES,
   }
 
   return upsertDiscussion(repoId, settings, context, legacyDiscussionId)

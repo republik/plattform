@@ -15,7 +15,10 @@ module.exports = async (_, args, { pgdb, user, t, loaders }) => {
       throw new Error(t('api/discussion/404'))
     }
 
-    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
+    const isMember = Roles.userIsInRoles(user, ['member'])
+    if (!isMember) {
+      throw new Error(t('api/unauthorized'))
+    }
 
     await setDiscussionPreferences({
       discussionPreferences,
