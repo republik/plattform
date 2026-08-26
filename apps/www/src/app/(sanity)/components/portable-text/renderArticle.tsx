@@ -6,13 +6,13 @@ import { Conditional } from '@/app/(sanity)/components/portable-text/conditional
 import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
+import { EmbedVideo } from '@/app/(sanity)/components/portable-text/embed-video'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
 import { InterviewQuestion } from '@/app/(sanity)/components/portable-text/interview-question'
 import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
 import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
-import { LegacyEmbedVideo } from '@/app/(sanity)/components/portable-text/legacy-embed-video'
 import {
   Em,
   ExternalLink,
@@ -45,7 +45,8 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     dividerStars: DividerStars,
     webOnly: WebOnly,
     html: Html,
-    embedVideo: LegacyEmbedVideo,
+    // Wrap function because renderNode can't be passed to a client component
+    embedVideo: ({ value }) => <EmbedVideo value={value} />,
     seriesNav: SeriesNav,
     authorBlock: AuthorBlock,
     // This is the web, we never render emailOnly/voiceTag blocks :)

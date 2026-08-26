@@ -4,12 +4,12 @@ import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
+import { EmbedVideo } from '@/app/(sanity)/components/portable-text/embed-video'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
 import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
 import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
-import { LegacyEmbedVideo } from '@/app/(sanity)/components/portable-text/legacy-embed-video'
 import {
   Em,
   ExternalLink,
@@ -38,8 +38,8 @@ const pageComponents: Partial<PortableTextReactComponents> = {
     divider: () => <hr />,
     dividerStars: DividerStars,
     html: Html,
-    embedVideo: LegacyEmbedVideo,
     // Wrap function because renderNode can't be passed to a client component
+    embedVideo: ({ value }) => <EmbedVideo value={value} />,
     button: ({ value }) => <Button value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     storyComponent: ({ value }) => <StoryComponent value={value} />,

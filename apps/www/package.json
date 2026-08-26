@@ -128,6 +128,7 @@
     "feed": "^5.0.1",
     "glamor": "^2.20.40",
     "graphql": "^16.11.0",
+    "hls.js": "^1.7.1",
     "ical-generator": "^6.0.0",
     "immer": "^9.0.12",
     "input-otp": "^1.4.2",
