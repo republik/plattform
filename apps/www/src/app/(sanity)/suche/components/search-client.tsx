@@ -16,7 +16,7 @@ import { Filters } from './filters'
 import { Sort } from './sort'
 import { Results } from './results'
 import { ZeroResults } from './zero-results'
-import FeaturedSections from '@/components/Sections/Featured'
+import { FeaturedSections } from '@/app/(sanity)/components/featured-sections'
 
 const hasResults = (aggregations, filter) =>
   !!findAggregation(aggregations, filter).count

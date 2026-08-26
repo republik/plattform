@@ -60,6 +60,13 @@ const styles = {
     paddingRight: 'calc(15px + env(safe-area-inset-left))',
     paddingBottom: 0,
     width: '100%',
+    // `styles.wrapper`'s `ZINDEX_POPOVER + 1` (41) is a legacy z-index that
+    // predates the App Router header, which hardcodes 100 — so the header
+    // always painted on top of the expanded (full-viewport) player and
+    // covered its own minimize button. Overriding it here (this spreads
+    // after `styles.wrapper`) only raises the expanded state above the
+    // header; the mini player keeps the legacy value.
+    zIndex: 101,
   }),
 }
 

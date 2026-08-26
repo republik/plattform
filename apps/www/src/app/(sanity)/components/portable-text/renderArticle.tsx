@@ -1,13 +1,17 @@
+import { AuthorBlock } from '@/app/(sanity)/components/portable-text/author-block'
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
+import { Heading } from '@/app/(sanity)/components/portable-text/blocks'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { Conditional } from '@/app/(sanity)/components/portable-text/conditional'
 import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
-import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
+import { InterviewQuestion } from '@/app/(sanity)/components/portable-text/interview-question'
+import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
+import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { LegacyEmbedVideo } from '@/app/(sanity)/components/portable-text/legacy-embed-video'
 import {
   Em,
@@ -20,13 +24,13 @@ import {
 import { Note } from '@/app/(sanity)/components/portable-text/note'
 import { PullQuote } from '@/app/(sanity)/components/portable-text/pull-quote'
 import { SeriesNav } from '@/app/(sanity)/components/portable-text/series-nav'
+import { StoryComponent } from '@/app/(sanity)/components/portable-text/story-component'
+import { Toc } from '@/app/(sanity)/components/portable-text/toc'
 import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
 import { Variable } from '@/app/(sanity)/components/portable-text/variable'
 import { WebOnly } from '@/app/(sanity)/components/portable-text/web-only'
-import { type ArticleEditor } from '@/sanity.types'
+import type { ArticlePortableTextContentFragmentType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
-import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
-import { StoryComponent } from '@/app/(sanity)/components/portable-text/story-component'
 
 const articleComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
@@ -43,6 +47,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     html: Html,
     embedVideo: LegacyEmbedVideo,
     seriesNav: SeriesNav,
+    authorBlock: AuthorBlock,
     // This is the web, we never render emailOnly/voiceTag blocks :)
     emailOnly: () => null,
     voiceTag: () => null,
@@ -55,10 +60,12 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     storyComponent: ({ value }) => <StoryComponent value={value} />,
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
     chart: ({ value }) => <LegacyChart value={value} />,
+    toc: ({ value }) => <Toc value={value} />,
   },
   block: {
-    heading: ({ children }) => <h2>{children}</h2>,
+    heading: Heading,
     note: Note,
+    interviewQuestion: InterviewQuestion,
   },
   marks: {
     strong: Strong,
@@ -70,6 +77,10 @@ const articleComponents: Partial<PortableTextReactComponents> = {
   },
 }
 
-export async function ArticlePortableText({ value }: { value: ArticleEditor }) {
+export async function ArticlePortableText({
+  value,
+}: {
+  value: ArticlePortableTextContentFragmentType['content']
+}) {
   return <PortableText value={value} components={articleComponents} />
 }

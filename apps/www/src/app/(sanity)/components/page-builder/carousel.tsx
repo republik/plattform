@@ -64,7 +64,9 @@ export async function Carousel({
 
   const teasers = (data?.block?.teasers ?? []).filter(
     (teaser): teaser is TeaserListItemType =>
-      '_id' in teaser && !isExpiredUpcomingTeaser(teaser as TeaserListItemType),
+      teaser &&
+      '_id' in teaser &&
+      !isExpiredUpcomingTeaser(teaser as TeaserListItemType),
   )
   if (!teasers.length) return null
 

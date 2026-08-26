@@ -13,6 +13,7 @@ const contentParts = defineParts({
   fullWidthBlocks: { selector: '& > .full' },
   paragraphs: { selector: '& > p' },
   subheadings: { selector: '& > h2' },
+  smallheadings: { selector: '& > :is(h3,h4,h5,h6)' },
   heading: { selector: '& .page-heading' },
   title: { selector: '& .page-title' },
   titleAfterHeading: { selector: '& .page-heading + .page-title' },
@@ -22,6 +23,7 @@ const contentParts = defineParts({
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
   orderedListItems: { selector: '& > ol li' },
+  interviewQuestion: { selector: '& > .interview-question' },
 })
 
 /**
@@ -121,6 +123,9 @@ export const editorialContentRecipe = defineRecipe({
     byline: {
       mt: '4',
     },
+    interviewQuestion: {
+      '& + p': { mt: '0' },
+    },
   }),
 
   variants: {
@@ -132,8 +137,13 @@ export const editorialContentRecipe = defineRecipe({
         byline: { textStyle: 'editorialByline' },
         paragraphs: readerScaledText('editorialParagraph'),
         subheadings: readerScaledText('editorialSubheading'),
+        smallheadings: {
+          ...readerScaledText('editorialParagraph'),
+          fontWeight: 'bold',
+        },
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
+        interviewQuestion: { fontWeight: 'bold' },
       }),
       META: contentParts({
         heading: { textStyle: 'editorialHeading' },
@@ -142,8 +152,13 @@ export const editorialContentRecipe = defineRecipe({
         byline: { textStyle: 'editorialByline' },
         paragraphs: readerScaledText('editorialParagraph'),
         subheadings: readerScaledText('editorialSubheading'),
+        smallheadings: {
+          ...readerScaledText('editorialParagraph'),
+          fontWeight: 'bold',
+        },
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
+        interviewQuestion: { fontWeight: 'bold' },
       }),
       PAGE: contentParts({
         heading: {
@@ -163,8 +178,13 @@ export const editorialContentRecipe = defineRecipe({
         },
         paragraphs: readerScaledText('metaParagraph'),
         subheadings: readerScaledText('metaSubheading'),
+        smallheadings: {
+          ...readerScaledText('metaSubheading'),
+          fontWeight: 'medium',
+        },
         unorderedListItems: readerScaledText('metaParagraph'),
         orderedListItems: readerScaledText('metaParagraph'),
+        interviewQuestion: { fontWeight: 'medium' },
       }),
     },
   },

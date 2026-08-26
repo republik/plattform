@@ -30,16 +30,18 @@ function NewsletterArticleCard({
           flexDirection: 'column',
         })}
       >
-        <img
-          className={css({
-            flex: '0 0 1',
-            alignSelf: 'flex-start',
-            pt: 1,
-            width: 64,
-          })}
-          src={urlFor(newsletter.image).width(192).height(192).url()}
-          alt=''
-        />
+        {newsletter.image?.asset ? (
+          <img
+            className={css({
+              flex: '0 0 1',
+              alignSelf: 'flex-start',
+              pt: 1,
+              width: 64,
+            })}
+            src={urlFor(newsletter.image).width(192).height(192).url()}
+            alt=''
+          />
+        ) : null}
         <div>
           <h3
             className={css({

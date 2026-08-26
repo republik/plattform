@@ -6,6 +6,7 @@ import createPersistedState from '@/lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
 import { rememberAudioItem, getKnownAudioItem } from '../helpers/audioItemCache'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { getAudioCoverImages } from '../helpers/audioCoverImages'
 import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
 import { reportError } from '@/lib/errors/reportError'
 import { useEffect, useState } from 'react'
@@ -66,18 +67,25 @@ async function getAudioQueueItemsByIds(
 
 /**
  * Shapes a Sanity `AUDIO_QUEUE_ITEMS_QUERY` result into an `AudioPlayerItem`.
- * Cover art is intentionally left out — resizing a raw Sanity image URL
- * client-side isn't wired up, and `AudioCover` already falls back to a
- * generated placeholder when `image` is unset.
+ * Cover art falls back through the same chain as the old per-format fallback:
+ * the article's compact-teaser image, else its own cover, else its featured
+ * collection's image (the "Kolumne"/"Briefing" equivalent).
  */
 function toAudioPlayerItem(content: AudioQueueItemContent): AudioPlayerItem {
   const id = `sanity:${content._id}`
+  const { cover, coverDark } = getAudioCoverImages({
+    teaserSmallImage: content.teaserSmall?.image,
+    cover: content.cover,
+    collectionImage: content.collectionImage,
+  })
   return {
     id,
     meta: {
       title: content.title,
       path: content.path,
       publishDate: content.publishDate,
+      cover,
+      coverDark,
       audioSource: {
         mediaId: id,
         mp3: content.audioSourceMp3,
@@ -399,10 +407,12 @@ const useAudioQueue = (): {
     : null
 
   return {
-    // Items without cached metadata (queued elsewhere, not seen locally yet)
-    // are hidden rather than rendered broken — see `helpers/audioItemCache.ts`.
+    // Items without cached metadata (queued elsewhere, not seen locally yet),
+    // or whose audio has since been removed/unpublished in Sanity (mp3 gone,
+    // ref still lingering in userAudioQueue), are hidden rather than
+    // rendered broken — see `helpers/audioItemCache.ts`.
     audioQueue: resolvedQueue?.filter(
-      (item) => item.document?.meta?.audioSource,
+      (item) => item.document?.meta?.audioSource?.mp3,
     ),
     audioQueueIsLoading: isLoading,
     audioQueueHasError: !me ? null : audioQueueHasError,

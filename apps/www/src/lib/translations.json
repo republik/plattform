@@ -7085,12 +7085,8 @@
       "value": "Gefolgte Rubriken"
     },
     {
-      "key": "Notifications/settings/formats/show",
-      "value": "Alle anzeigen"
-    },
-    {
-      "key": "Notifications/settings/formats/hide",
-      "value": "Weniger anzeigen"
+      "key": "Notifications/settings/formats/unsubscribe",
+      "value": "entfolgen"
     },
     {
       "key": "Notifications/settings/formats/summary/0",

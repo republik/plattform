@@ -1,3 +1,4 @@
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import type { EmbedVideo } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
 import Link from 'next/link'
@@ -19,7 +20,11 @@ const containerStyle = cva({
 
 // TODO: use some full-featured player library like video.js for HLS streaming/subtitle support etc.
 
-export function LegacyEmbedVideo({ value }: { value: EmbedVideo }) {
+export function LegacyEmbedVideo({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'embedVideo' }>
+}) {
   try {
     const { src, size, aspectRatio } = value
     return (

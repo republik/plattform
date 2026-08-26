@@ -1,5 +1,6 @@
 'use client'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import type { Chart as ChartT } from '@/sanity.types'
 import { Chart } from '@project-r/styleguide'
 import { css, cva } from '@republik/theme/css'
@@ -22,7 +23,11 @@ const containerStyle = cva({
   },
 })
 
-export function LegacyChart({ value }: { value: ChartT }) {
+export function LegacyChart({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'chart' }>
+}) {
   const { size, chartConfig } = value
 
   const values = csvParse(chartConfig.data?.code ?? '')

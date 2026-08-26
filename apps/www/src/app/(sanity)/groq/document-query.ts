@@ -67,6 +67,7 @@ const DOCUMENT_FIELDS = /* groq */ `{
       "plainTitle": pt::text(title),
       audioSourceMp3,
       audioDurationMs,
+      teaserSmall{ image },
       _updatedAt,
       publishDate,
       // Plain text and SEO overrides, used for the JSON-LD linked data

@@ -1,4 +1,4 @@
-import type { PullQuote } from '@/sanity.types'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { css, cx } from '@republik/theme/css'
 import { AsideImage } from './aside-image'
 
@@ -14,7 +14,11 @@ const sourceStyle = css({
   fontSize: 'calc(token(fontSizes.s) * var(--article-font-scale, 1))',
 })
 
-export function PullQuote({ value }: { value: PullQuote }) {
+export function PullQuote({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'pullQuote' }>
+}) {
   const { text, source, image, size } = value
 
   const hasImage = image?.asset
