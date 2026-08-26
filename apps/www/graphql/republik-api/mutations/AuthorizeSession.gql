@@ -1,0 +1,13 @@
+mutation authorizeSession(
+  $email: String!
+  $tokens: [SignInToken!]!
+  $consents: [String!]
+  $requiredFields: RequiredUserFields
+) {
+  authorizeSession(
+    email: $email
+    tokens: $tokens
+    consents: $consents
+    requiredFields: $requiredFields
+  )
+}
