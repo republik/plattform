@@ -1,6 +1,7 @@
 import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
-const AGE_DAYS = 365
+// read notifications should be deleted after 180 days
+const AGE_DAYS = 180
 
 export = function setup(
   options: Options,
@@ -13,7 +14,7 @@ export = function setup(
   return async function () {
     const qryConditions = {
       'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
-      'ip !=': null,
+      'readAt !=': null,
     }
 
     const tx = await pgdb.transactionBegin()
@@ -23,11 +24,11 @@ export = function setup(
         debug('update %i rows%s', ids.length, dryRun ? ' (dry-run only)' : '')
         handlerDebug('update ids%s: %o', dryRun ? ' (dry-run only)' : '', ids)
 
-        await tx.public.consents.update({ id: ids }, { ip: null })
+        await tx.public.notifications.delete({ id: ids })
       }
 
       await forEachRow(
-        'consents',
+        'notifications',
         qryConditions,
         options,
         { batchHandler },
