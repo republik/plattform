@@ -5,7 +5,7 @@ import type { Src } from '@/sanity.types'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { useTranslation } from '@/lib/withT'
 import { css, cva } from '@republik/theme/css'
-import { CirclePlay } from 'lucide-react'
+import { CirclePlay, ExternalLink as ExternalLinkIcon } from 'lucide-react'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
@@ -85,26 +85,26 @@ const linkStyle = css({
   cursor: 'pointer',
 })
 
-function VideoThumbnailButton({
+function VideoThumbnail({
   poster,
   aspectRatio,
   label,
   note,
+  icon,
   onClick,
+  href,
 }: {
   poster: string
   aspectRatio?: number
   label: string
   note?: ReactNode
-  onClick: () => void
-}) {
-  return (
-    <button
-      type='button'
-      className={thumbnailButtonStyle}
-      onClick={onClick}
-      aria-label={label}
-    >
+  icon: ReactNode
+} & (
+  | { onClick: () => void; href?: undefined }
+  | { href: string; onClick?: undefined }
+)) {
+  const content = (
+    <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={poster}
@@ -112,8 +112,33 @@ function VideoThumbnailButton({
         className={thumbnailImageStyle}
         style={{ aspectRatio: aspectRatio ?? '16 / 9' }}
       />
-      <CirclePlay size={64} className={playIconStyle} />
+      {icon}
       {note ? <span className={consentNoteStyle}>{note}</span> : null}
+    </>
+  )
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target='_blank'
+        rel='noopener'
+        className={thumbnailButtonStyle}
+        aria-label={label}
+      >
+        {content}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      type='button'
+      className={thumbnailButtonStyle}
+      onClick={onClick}
+      aria-label={label}
+    >
+      {content}
     </button>
   )
 }
@@ -224,7 +249,7 @@ function ConsentGatedEmbed({
   const playerLabel = t(`styleguide/video/dnt/player/${platform}`)
 
   return (
-    <VideoThumbnailButton
+    <VideoThumbnail
       poster={poster}
       aspectRatio={aspectRatio}
       label={title ? `Video abspielen: ${title}` : 'Video abspielen'}
@@ -232,7 +257,38 @@ function ConsentGatedEmbed({
         player: playerLabel,
         platform: playerLabel,
       })}
+      icon={<CirclePlay size={64} className={playIconStyle} />}
       onClick={() => setConsented(true)}
+    />
+  )
+}
+
+function OpenExternallyLink({
+  url,
+  platform,
+  title,
+  poster,
+  aspectRatio,
+}: {
+  url: string
+  platform?: 'youtube' | 'vimeo'
+  title?: string
+  poster: string
+  aspectRatio?: number
+}) {
+  const { t } = useTranslation()
+  const label = platform
+    ? `In ${t(`styleguide/video/dnt/player/${platform}`)} öffnen`
+    : 'Video öffnen'
+
+  return (
+    <VideoThumbnail
+      poster={poster}
+      aspectRatio={aspectRatio}
+      label={title ? `${label}: ${title}` : label}
+      note={label}
+      icon={<ExternalLinkIcon size={64} className={playIconStyle} />}
+      href={url}
     />
   )
 }
@@ -256,10 +312,11 @@ export function EmbedVideo({
           revealed || !poster ? (
             <HlsVideo src={src} poster={poster} aspectRatio={aspectRatio} />
           ) : (
-            <VideoThumbnailButton
+            <VideoThumbnail
               poster={poster}
               aspectRatio={aspectRatio}
               label={title ? `Video abspielen: ${title}` : 'Video abspielen'}
+              icon={<CirclePlay size={64} className={playIconStyle} />}
               onClick={() => setRevealed(true)}
             />
           )
@@ -267,6 +324,14 @@ export function EmbedVideo({
           <ConsentGatedEmbed
             id={stegaClean(id)}
             platform={stegaClean(platform)}
+            title={title}
+            poster={poster}
+            aspectRatio={aspectRatio}
+          />
+        ) : poster && url ? (
+          <OpenExternallyLink
+            url={url}
+            platform={platform ? stegaClean(platform) : undefined}
             title={title}
             poster={poster}
             aspectRatio={aspectRatio}
