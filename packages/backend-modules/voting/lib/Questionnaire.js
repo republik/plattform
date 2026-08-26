@@ -5,6 +5,7 @@ const { resultForArchive } = require('./Question')
 const { resultForValues: rangeResultForValues } = require('./Question/Range')
 const finalizeLib = require('./finalize')
 const { shuffle } = require('d3-array')
+const { getCache } = require('./cache')
 
 const transformQuestion = (q, questionnaire) => ({
   ...q.typePayload,
@@ -35,18 +36,23 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     ...questionnaire,
   }
 
-  const questions = await pgdb.public.questions
-    .find(
-      {
-        questionnaireId: questionnaire.id,
-        ...(orderFilter ? { order: orderFilter } : {}),
-        ...(includeHidden ? {} : { hidden: false }),
-      },
-      { orderBy: { order: 'asc' } },
-    )
-    .then((questions) =>
-      questions.map((q) => transformQuestion(q, questionnaireWithTurnout)),
-    )
+  const questions = getCache(questionnaire.id, {
+    orderFilter,
+    includeHidden,
+  }).cache(async () => {
+    return pgdb.public.questions
+      .find(
+        {
+          questionnaireId: questionnaire.id,
+          ...(orderFilter ? { order: orderFilter } : {}),
+          ...(includeHidden ? {} : { hidden: false }),
+        },
+        { orderBy: { order: 'asc' } },
+      )
+      .then((questions) =>
+        questions.map((q) => transformQuestion(q, questionnaireWithTurnout)),
+      )
+  })
 
   if (args.shuffle) {
     // +1 for weights > 0
