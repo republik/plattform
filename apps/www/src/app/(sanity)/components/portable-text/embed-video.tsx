@@ -1,6 +1,7 @@
 'use client'
 
 import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
+import { useHlsSource } from '@/app/(sanity)/components/portable-text/hooks/useHlsSource'
 import type { Src } from '@/sanity.types'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { useTranslation } from '@/lib/withT'
@@ -8,7 +9,7 @@ import { css, cva } from '@republik/theme/css'
 import { CirclePlay, ExternalLink as ExternalLinkIcon } from 'lucide-react'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 
 const containerStyle = cva({
   base: {},
@@ -153,45 +154,7 @@ function HlsVideo({
   aspectRatio?: number
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video || !src.hls) {
-      return
-    }
-
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // canPlayType is only a heuristic — fall back to the mp4 <source> if
-      // the native HLS playback actually fails (e.g. a stale/expired
-      // signed manifest URL, or a browser that over-reports support).
-      const handleError = () => {
-        if (src.mp4) {
-          video.removeAttribute('src')
-          video.load()
-        }
-      }
-      video.addEventListener('error', handleError)
-      video.src = src.hls
-      return () => video.removeEventListener('error', handleError)
-    }
-
-    let hls: import('hls.js').default | undefined
-    let cancelled = false
-
-    import('hls.js').then(({ default: Hls }) => {
-      if (cancelled || !Hls.isSupported()) {
-        return
-      }
-      hls = new Hls()
-      hls.loadSource(src.hls as string)
-      hls.attachMedia(video)
-    })
-
-    return () => {
-      cancelled = true
-      hls?.destroy()
-    }
-  }, [src.hls])
+  useHlsSource(videoRef, src.hls, src.mp4)
 
   return (
     <video

@@ -37,6 +37,10 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
       ...,
       contributor->
     },
+    _type == "audio" => {
+      ...,
+      "fileUrl": file.asset->url
+    },
   }
 `
 // Hack to not rely on the main query for types
