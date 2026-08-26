@@ -6,13 +6,17 @@ const { withPlausibleProxy } = require('next-plausible')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const buildId =
+const deploymentId =
   // Git commit hash on Heroku
+  process.env.SOURCE_COMMIT?.substring(0, 10) ||
   process.env.SOURCE_VERSION?.substring(0, 10) ||
+  process.env.HEROKU_BUILD_COMMIT?.substring(0, 10) ||
   // ... and on Vercel
   process.env.NEXT_DEPLOYMENT_ID ||
   process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
-  `${Date.now()}`
+  undefined
+
+console.log('Using Next.js deployment ID', deploymentId)
 
 function appendProtocol(href) {
   if (href && !href.startsWith('http')) {
@@ -29,25 +33,19 @@ const PUBLIC_BASE_URL = appendProtocol(
     `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`,
 )
 
-const PUBLIC_CDN_URL = process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
-  ? appendProtocol(process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL)
-  : ''
-
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
   // deploymentId for Skew protection: this will trigger a hard refresh when outdated clients navigate. See https://nextjs.org/docs/app/guides/self-hosting#version-skew
-  deploymentId: buildId,
-  generateBuildId: () => buildId,
+  deploymentId,
   env: {
-    BUILD_ID: buildId,
+    DEPLOYMENT_ID: deploymentId,
     PUBLIC_BASE_URL,
-    PUBLIC_CDN_URL,
   },
 
   poweredByHeader: false,
-  assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
+
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,
   images: {
