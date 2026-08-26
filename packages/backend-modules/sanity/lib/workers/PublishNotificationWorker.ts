@@ -76,7 +76,7 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     // portable-text tree, and these end up inside a per-user `mail` callback.
     const descriptionText = plainText(article.description)
     const bylineText = plainText(article.byline)
-    const notificationTitle = plainText(article.notificationTitle)
+    const notificationTitle = plainText(article.pushNotificationText)
     const articleUrl = article.slug?.current
       ? `${process.env.FRONTEND_BASE_URL}${article.slug.current}`
       : process.env.FRONTEND_BASE_URL

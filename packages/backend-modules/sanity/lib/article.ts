@@ -4,7 +4,7 @@ import type { PortableTextBlocks } from './audio'
 export interface ArticleForNotification {
   _id: string
   title?: PortableTextBlocks
-  notificationTitle?: PortableTextBlocks
+  pushNotificationText?: PortableTextBlocks
   description?: PortableTextBlocks
   byline?: PortableTextBlocks
   slug?: { current: string }
@@ -24,7 +24,7 @@ export interface ArticleForNotification {
 export const fetchArticleForNotification = (documentId: string) =>
   sanityClient().fetch<ArticleForNotification | null>(
     `*[_id == $id][0]{
-      _id, title, notificationTitle, description, byline, slug,
+      _id, title, pushNotificationText, description, byline, slug,
       "format": heading->{ "title": pt::text(title), "path": slug.current },
       articleCollections[]{ "collection": collection->{ _id, title } },
       contributors[]{ "contributor": contributor->{ userId } }
