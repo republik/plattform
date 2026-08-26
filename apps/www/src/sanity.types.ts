@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type Src = {
   mp4?: string
   hls?: string
@@ -160,6 +160,7 @@ export type TeaserLarge = {
   _createdAt: string
   _updatedAt: string
   _rev: string
+  teaserTitle?: string
   target?: Array<
     | ArticleReference
     | PageReference
@@ -808,7 +809,7 @@ export type Discussion = {
 
 export type Theme = {
   _type: 'theme'
-  name?: 'EDITORIAL' | 'META' | 'PAGE'
+  name?: 'PAGE' | 'EDITORIAL' | 'META'
   accentColor?: Color
   darkMode?: boolean
 }
@@ -1211,9 +1212,7 @@ export type Page = {
   theme?: Theme
   slugSegment?: string
   slugTemplate?:
-    | '{{segment}}-{{title}}'
-    | '{{title}}-{{segment}}'
-    | '{{segment}}'
+    '{{segment}}-{{title}}' | '{{title}}-{{segment}}' | '{{segment}}'
 }
 
 export type Code = {
@@ -1942,17 +1941,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   content?: InlineEditor
                   href?: string
                   reference?:
-                    | ArticleReference
-                    | ContributorReference
-                    | PageReference
+                    ArticleReference | ContributorReference | PageReference
                 }
               | {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    | ArticleReference
-                    | ContributorReference
-                    | PageReference
+                    ArticleReference | ContributorReference | PageReference
                   slug: string | null
                 }
               | {
@@ -2647,9 +2642,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -2712,9 +2705,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -3442,17 +3433,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   content?: InlineEditor
                   href?: string
                   reference?:
-                    | ArticleReference
-                    | ContributorReference
-                    | PageReference
+                    ArticleReference | ContributorReference | PageReference
                 }
               | {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    | ArticleReference
-                    | ContributorReference
-                    | PageReference
+                    ArticleReference | ContributorReference | PageReference
                   slug: string | null
                 }
               | {
@@ -4147,9 +4134,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -4212,9 +4197,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -5023,17 +5006,13 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 content?: InlineEditor
                 href?: string
                 reference?:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
+                  ArticleReference | ContributorReference | PageReference
               }
             | {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
+                  ArticleReference | ContributorReference | PageReference
                 slug: string | null
               }
             | {
@@ -5074,9 +5053,7 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                       _key: string
                       _type: 'internalLink'
                       reference:
-                        | ArticleReference
-                        | ContributorReference
-                        | PageReference
+                        ArticleReference | ContributorReference | PageReference
                       slug: string | null
                     }
                   | {
@@ -5312,9 +5289,7 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                       _key: string
                       _type: 'internalLink'
                       reference:
-                        | ArticleReference
-                        | ContributorReference
-                        | PageReference
+                        ArticleReference | ContributorReference | PageReference
                       slug: string | null
                     }
                   | {
@@ -5469,9 +5444,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               content?: InlineEditor
               href?: string
               reference?:
-                | ArticleReference
-                | ContributorReference
-                | PageReference
+                ArticleReference | ContributorReference | PageReference
             }
           | {
               _key: string
@@ -5517,9 +5490,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -5671,9 +5642,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -5806,9 +5775,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -5871,9 +5838,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -5949,9 +5914,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -6084,9 +6047,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      | ArticleReference
-                      | ContributorReference
-                      | PageReference
+                      ArticleReference | ContributorReference | PageReference
                     slug: string | null
                   }
                 | {
@@ -6240,9 +6201,7 @@ export type SERIES_MENU_QUERY_RESULT = {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    | ArticleReference
-                    | ContributorReference
-                    | PageReference
+                    ArticleReference | ContributorReference | PageReference
                   slug: string | null
                 }
               | {
@@ -6305,9 +6264,7 @@ export type SERIES_MENU_QUERY_RESULT = {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    | ArticleReference
-                    | ContributorReference
-                    | PageReference
+                    ArticleReference | ContributorReference | PageReference
                   slug: string | null
                 }
               | {
@@ -6389,9 +6346,7 @@ export type SERIES_NAV_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
+                  ArticleReference | ContributorReference | PageReference
                 slug: string | null
               }
             | {
@@ -6454,9 +6409,7 @@ export type SERIES_NAV_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
+                  ArticleReference | ContributorReference | PageReference
                 slug: string | null
               }
             | {
