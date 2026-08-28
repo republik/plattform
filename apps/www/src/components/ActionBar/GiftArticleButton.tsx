@@ -30,9 +30,6 @@ const styles = {
     textStyle: 'sansSerifMedium',
     fontSize: 'base',
     marginBottom: '1',
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: '1',
   }),
   description: css({
     fontSize: 'xs',
@@ -60,11 +57,6 @@ const styles = {
     borderTopStyle: 'solid',
     borderColor: 'divider',
     marginTop: '4',
-  }),
-  exhausted: css({
-    fontSize: 's',
-    color: 'textSoft',
-    fontStyle: 'italic',
   }),
 }
 
@@ -191,12 +183,8 @@ export default function GiftArticleButton({
     },
   )
 
-  const status = data?.giftArticleStatus
-  const remaining = status?.remainingGiftsThisMonth ?? 0
-  const max = status?.maxGiftsPerMonth ?? 10
-  const existingUrl = status?.existingLink?.url
+  const existingUrl = data?.giftArticleStatus?.existingLink?.url
   const effectiveUrl = giftUrl || existingUrl
-  const isExhausted = remaining === 0 && !existingUrl // exhausted only if no gifts left AND no existing gift URL
 
   const ensureGiftUrl = async (): Promise<string | null> => {
     if (effectiveUrl) return effectiveUrl
@@ -241,32 +229,6 @@ export default function GiftArticleButton({
     setTimeout(() => setLinkCopied(false), 3000)
   }
 
-  const handleCopyRegularLink = async () => {
-    await copyToClipboard(shareUrl)
-    setLinkCopied(true)
-    trackEvent(['ActionBar', 'giftArticle:copyRegularLink', shareUrl])
-    setTimeout(() => setLinkCopied(false), 3000)
-  }
-
-  const handleNativeShareRegular = async () => {
-    trackEvent(['ActionBar', 'giftArticle:nativeShareRegular', shareUrl])
-    if (isNativeApp) {
-      postMessage({
-        type: 'share',
-        payload: {
-          title,
-          url: shareUrl,
-          subject: emailSubject,
-          dialogTitle: t('article/actionbar/share'),
-        },
-      })
-    } else if (navigator?.share) {
-      try {
-        await navigator.share({ title, url: shareUrl })
-      } catch {}
-    }
-  }
-
   const Icon = forwardRef<HTMLAnchorElement & HTMLButtonElement>(
     (props, ref) => (
       <IconButton
@@ -285,73 +247,29 @@ export default function GiftArticleButton({
       <div className={styles.container}>
         <div className={styles.header}>
           <span>{t('article/actionbar/gift/title')}</span>
-          <span>
-            {remaining}/{max}
-          </span>
         </div>
-
-        {isExhausted ? (
-          <>
-            <div className={styles.exhausted}>
-              {t('article/actionbar/gift/exhausted')}
-            </div>
-            <div
-              className={css({
-                fontSize: 's',
-                lineHeight: '1.4',
-                marginTop: '3',
-                marginBottom: '2',
-                color: 'textSoft',
-              })}
-            >
-              {t('article/actionbar/gift/shareAnyway')}
-            </div>
-            {useNativeShare ? (
-              <button
-                className={styles.linkButton}
-                onClick={handleNativeShareRegular}
-              >
-                <IconShare size={20} />
-                <span>{t('article/actionbar/share')}</span>
-              </button>
-            ) : (
-              <ShareOptions
-                getUrl={() => shareUrl}
-                emailSubject={emailSubject}
-                onCopyLink={handleCopyRegularLink}
-                linkCopied={linkCopied}
-                trackPrefix='giftArticle:shareRegular'
-                copyLabel={t('article/actionbar/gift/copyLink/regular')}
-                t={t}
-              />
-            )}
-          </>
+        <div className={styles.description}>
+          {t('article/actionbar/gift/description')}
+        </div>
+        {useNativeShare ? (
+          <button
+            className={styles.linkButton}
+            onClick={handleNativeShare}
+            disabled={creating || loading}
+          >
+            <IconShare size={20} />
+            <span>{t('article/actionbar/gift/nativeShare')}</span>
+          </button>
         ) : (
-          <>
-            <div className={styles.description}>
-              {t('article/actionbar/gift/description')}
-            </div>
-            {useNativeShare ? (
-              <button
-                className={styles.linkButton}
-                onClick={handleNativeShare}
-                disabled={creating || loading}
-              >
-                <IconShare size={20} />
-                <span>{t('article/actionbar/gift/nativeShare')}</span>
-              </button>
-            ) : (
-              <ShareOptions
-                getUrl={ensureGiftUrl}
-                emailSubject={emailSubject}
-                onCopyLink={handleCopyGiftLink}
-                linkCopied={linkCopied}
-                trackPrefix='giftArticle:share'
-                copyLabel={t('article/actionbar/gift/copyLink')}
-                t={t}
-              />
-            )}
-          </>
+          <ShareOptions
+            getUrl={ensureGiftUrl}
+            emailSubject={emailSubject}
+            onCopyLink={handleCopyGiftLink}
+            linkCopied={linkCopied}
+            trackPrefix='giftArticle:share'
+            copyLabel={t('article/actionbar/gift/copyLink')}
+            t={t}
+          />
         )}
       </div>
     </CalloutMenu>

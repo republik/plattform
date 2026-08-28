@@ -3,8 +3,6 @@ import { gql } from '@apollo/client'
 export const GIFT_ARTICLE_STATUS = gql`
   query GiftArticleStatus($documentPath: String!) {
     giftArticleStatus(documentPath: $documentPath) {
-      remainingGiftsThisMonth
-      maxGiftsPerMonth
       existingLink {
         id
         token

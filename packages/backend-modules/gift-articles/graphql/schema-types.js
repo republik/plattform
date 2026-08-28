@@ -10,8 +10,6 @@ type GiftArticleLink {
 }
 
 type GiftArticleStatus {
-  remainingGiftsThisMonth: Int!
-  maxGiftsPerMonth: Int!
   existingLink: GiftArticleLink
 }
 

@@ -2,7 +2,6 @@ const crypto = require('crypto')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { ensureUserHasRole } = require('@orbiting/backend-modules-auth/lib/Roles')
 const {
-  MAX_GIFTS_PER_MONTH,
   GIFT_LINK_TTL_DAYS,
 } = require('../../../lib/allowance')
 
@@ -40,21 +39,6 @@ module.exports = async (_, { documentPath }, context) => {
     if (existingRows[0]) {
       await tx.transactionCommit()
       return formatLink(existingRows[0])
-    }
-
-    const count = await tx.queryOneField(
-      `SELECT COUNT(DISTINCT "documentPath")::int
-       FROM "giftArticleLinks"
-       WHERE "granterUserId" = :userId
-         AND "createdAt" >= date_trunc('month', now())`,
-      { userId: me.id },
-    )
-
-    if ((count || 0) >= MAX_GIFTS_PER_MONTH) {
-      await tx.transactionCommit()
-      throw new Error(
-        `Sie haben diesen Monat bereits alle ${MAX_GIFTS_PER_MONTH} Geschenk-Artikel aufgebraucht.`,
-      )
     }
 
     const token = crypto.randomUUID()
