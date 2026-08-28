@@ -1054,7 +1054,6 @@ export type Audio = {
     media?: unknown
     _type: 'file'
   }
-  durationMs?: number
   legacyAudioSrc?: LegacyAudioSrc
 }
 
@@ -1923,7 +1922,6 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
               media?: unknown
               _type: 'file'
             }
-            durationMs?: number
             legacyAudioSrc?: LegacyAudioSrc
             markDefs: null
             body: null
@@ -2859,7 +2857,6 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     media?: unknown
                     _type: 'file'
                   }
-                  durationMs?: number
                   legacyAudioSrc?: LegacyAudioSrc
                   markDefs: null
                   body: null
@@ -3447,7 +3444,6 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
               media?: unknown
               _type: 'file'
             }
-            durationMs?: number
             legacyAudioSrc?: LegacyAudioSrc
             markDefs: null
             body: null
@@ -4383,7 +4379,6 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     media?: unknown
                     _type: 'file'
                   }
-                  durationMs?: number
                   legacyAudioSrc?: LegacyAudioSrc
                   markDefs: null
                   body: null
@@ -5090,7 +5085,6 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
             media?: unknown
             _type: 'file'
           }
-          durationMs?: number
           legacyAudioSrc?: LegacyAudioSrc
           markDefs: null
           body: null
@@ -5506,7 +5500,6 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
           media?: unknown
           _type: 'file'
         }
-        durationMs?: number
         legacyAudioSrc?: LegacyAudioSrc
         markDefs: null
         body: null
