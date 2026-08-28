@@ -48,7 +48,9 @@ export const getStaticPaths = async () => {
   )
 
   const responsesWithTypes = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
-  const ids = responsesWithTypes.map((d) => d.uuid)
+  // A row with a missing uuid (bad data in the source CSV) would otherwise
+  // produce a path with id: undefined, which Next.js rejects at build time.
+  const ids = responsesWithTypes.map((d) => d.uuid).filter(Boolean)
   const paths = Array.from(new Set(ids)).map((d) => {
     return {
       params: {

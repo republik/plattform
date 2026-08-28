@@ -1,4 +1,4 @@
-import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
+import { OG_SHARE_IMAGE_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { client } from '@/app/(sanity)/lib/client'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { ImageResponse } from 'next/og'
@@ -12,14 +12,22 @@ import {
 
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get('slug')
+  const documentId = req.nextUrl.searchParams.get('documentId')
 
-  if (!slug) {
-    return new Response('Missing slug', { status: 400 })
+  if (!slug && !documentId) {
+    return new Response('Missing slug or documentId', { status: 400 })
   }
 
-  // Published content only — no draft mode. Disable stega so invisible editing
-  // characters don't end up baked into the rendered text.
-  const data = await client.fetch(SEO_QUERY, { slug }, { stega: false })
+  // Published-only lookup, by slug (or documentId for a just-published
+  // article whose slug might not be indexed yet). Studio's own SEO preview
+  // renders this same component via satori client-side instead of calling
+  // this route — see the studio repo's shareImagePreview/renderShareImage.ts
+  // — so this route only ever needs to serve the public og:image.
+  const data = await client.fetch(
+    OG_SHARE_IMAGE_QUERY,
+    { slug: slug ?? null, id: documentId ?? null },
+    { stega: false },
+  )
 
   if (!data) {
     return new Response('Not found', { status: 404 })
@@ -44,7 +52,6 @@ export async function GET(req: NextRequest) {
 
   const fonts = await loadShareImageFonts()
 
-  // Cache in production, but never in dev
   const cacheControl =
     process.env.NODE_ENV === 'development'
       ? 'no-store'
