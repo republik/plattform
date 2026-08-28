@@ -27,6 +27,11 @@ export type Src = {
   thumbnail?: string
 }
 
+export type LegacyAudioSrc = {
+  mp4?: string
+  hls?: string
+}
+
 export type EmbedCommentDiscussion = {
   id?: string
   path?: string
@@ -325,8 +330,8 @@ export type ArticleTemplate = {
   heading?: PageReference
   content?: ArticleEditor
   publishDate?: string
-  emailSubject?: TextOnlyInlineEditor
-  pushNotificationText?: TextOnlyInlineEditor
+  emailSubject?: PlainTextInlineEditor
+  pushNotificationText?: PlainTextInlineEditor
   articleRecommendations?: ArrayOf<ArticleReference | PageReference>
   seo?: Seo
   cover?: EditorialImage
@@ -507,6 +512,21 @@ export type TextOnlyEditor = Array<{
   _key: string
 }>
 
+export type PlainTextInlineEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: never
+  markDefs?: null
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
 export type PageEditor = Array<
   | {
       children?: Array<{
@@ -556,6 +576,9 @@ export type PageEditor = Array<
   | ({
       _key: string
     } & EmbedVideo)
+  | ({
+      _key: string
+    } & Audio)
   | ({
       _key: string
     } & EmbedDataWrapper)
@@ -656,6 +679,9 @@ export type ArticleEditor = Array<
     } & EmbedVideo)
   | ({
       _key: string
+    } & Audio)
+  | ({
+      _key: string
     } & EmbedDataWrapper)
   | ({
       _key: string
@@ -737,8 +763,8 @@ export type Article = {
   heading?: PageReference
   content?: ArticleEditor
   publishDate?: string
-  emailSubject?: TextOnlyInlineEditor
-  pushNotificationText?: TextOnlyInlineEditor
+  emailSubject?: PlainTextInlineEditor
+  pushNotificationText?: PlainTextInlineEditor
   articleRecommendations?: ArrayOf<ArticleReference | PageReference>
   seo?: Seo
   cover?: EditorialImage
@@ -864,8 +890,8 @@ export type EditorialImage = {
 
 export type Seo = {
   _type: 'seo'
-  title?: TextOnlyInlineEditor
-  description?: TextOnlyInlineEditor
+  title?: PlainTextInlineEditor
+  description?: PlainTextInlineEditor
   useImageBuilder?: boolean
   image?: {
     asset?: SanityImageAssetReference
@@ -1064,6 +1090,18 @@ export type EmbedTwitter = {
   playable?: boolean
 }
 
+export type Audio = {
+  _type: 'audio'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  title?: string
+  file?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
+  legacyAudioSrc?: LegacyAudioSrc
+}
+
 export type EmbedVideo = {
   _type: 'embedVideo'
   size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
@@ -1242,7 +1280,9 @@ export type Page = {
   theme?: Theme
   slugSegment?: string
   slugTemplate?:
-    '{{segment}}-{{title}}' | '{{title}}-{{segment}}' | '{{segment}}'
+    | '{{segment}}-{{title}}'
+    | '{{title}}-{{segment}}'
+    | '{{segment}}'
 }
 
 export type Code = {
@@ -1456,6 +1496,7 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | Src
+  | LegacyAudioSrc
   | EmbedCommentDiscussion
   | ChartConfig
   | SanityImageAssetReference
@@ -1494,6 +1535,7 @@ export type AllSanitySchemaTypes =
   | Mdast
   | NestedEditor
   | TextOnlyEditor
+  | PlainTextInlineEditor
   | PageEditor
   | ArticleEditor
   | Caption
@@ -1526,6 +1568,7 @@ export type AllSanitySchemaTypes =
   | EmbedComment
   | EmbedDataWrapper
   | EmbedTwitter
+  | Audio
   | EmbedVideo
   | Chart
   | DividerStars
@@ -1642,6 +1685,19 @@ export type ARTICLE_QUERY_RESULT = {
   content: Array<
     | {
         _key: string
+        _type: 'audio'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        title?: string
+        file?: {
+          asset?: SanityFileAssetReference
+          media?: unknown
+          _type: 'file'
+        }
+        legacyAudioSrc?: LegacyAudioSrc
+        markDefs: null
+      }
+    | {
+        _key: string
         _type: 'authorBlock'
         contributor: ContributorReference
         displayName?: string
@@ -1673,7 +1729,9 @@ export type ARTICLE_QUERY_RESULT = {
               content?: InlineEditor
               href?: string
               reference?:
-                ArticleReference | ContributorReference | PageReference
+                | ArticleReference
+                | ContributorReference
+                | PageReference
             }
           | {
               _key: string
@@ -1976,7 +2034,9 @@ export type ARTICLE_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -2032,7 +2092,9 @@ export type ARTICLE_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -2472,6 +2534,19 @@ export type PAGE_QUERY_RESULT = {
         _type: 'editorBlock'
         content: Array<
           | {
+              _key: string
+              _type: 'audio'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              title?: string
+              file?: {
+                asset?: SanityFileAssetReference
+                media?: unknown
+                _type: 'file'
+              }
+              legacyAudioSrc?: LegacyAudioSrc
+              markDefs: null
+            }
+          | {
               children?: Array<{
                 marks?: Array<string>
                 text?: string
@@ -2487,13 +2562,17 @@ export type PAGE_QUERY_RESULT = {
                     content?: InlineEditor
                     href?: string
                     reference?:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                   }
                 | {
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -2770,6 +2849,19 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
   block: {
     content: Array<
       | {
+          _key: string
+          _type: 'audio'
+          size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+          title?: string
+          file?: {
+            asset?: SanityFileAssetReference
+            media?: unknown
+            _type: 'file'
+          }
+          legacyAudioSrc?: LegacyAudioSrc
+          markDefs: null
+        }
+      | {
           children?: Array<{
             marks?: Array<string>
             text?: string
@@ -2785,13 +2877,17 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 content?: InlineEditor
                 href?: string
                 reference?:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
               }
             | {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -3019,25 +3115,6 @@ export type SEO_QUERY_RESULT =
   | {
       title: string
       description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
-      useImageBuilder: boolean | null
-      imageBuilder: SeoImageBuilder | null
-      heading: string
-      theme: {
-        name: 'EDITORIAL' | 'META' | 'PAGE' | null
-        accentColor: Color | null
-        darkMode: boolean | null
-      } | null
-    }
-  | {
-      title: string
-      description: string
       image: null
       useImageBuilder: null
       imageBuilder: null
@@ -3080,6 +3157,25 @@ export type SEO_QUERY_RESULT =
       imageBuilder: null
       heading: string
       theme: null
+    }
+  | {
+      title: string
+      description: string
+      image: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'image'
+      } | null
+      useImageBuilder: boolean | null
+      imageBuilder: SeoImageBuilder | null
+      heading: string
+      theme: {
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
+        accentColor: Color | null
+        darkMode: boolean | null
+      } | null
     }
   | null
 
@@ -3090,25 +3186,6 @@ export type OG_SHARE_IMAGE_QUERY_RESULT =
   | {
       title: string
       description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
-      useImageBuilder: boolean | null
-      imageBuilder: SeoImageBuilder | null
-      heading: string
-      theme: {
-        name: 'EDITORIAL' | 'META' | 'PAGE' | null
-        accentColor: Color | null
-        darkMode: boolean | null
-      } | null
-    }
-  | {
-      title: string
-      description: string
       image: null
       useImageBuilder: null
       imageBuilder: null
@@ -3151,6 +3228,25 @@ export type OG_SHARE_IMAGE_QUERY_RESULT =
       imageBuilder: null
       heading: string
       theme: null
+    }
+  | {
+      title: string
+      description: string
+      image: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'image'
+      } | null
+      useImageBuilder: boolean | null
+      imageBuilder: SeoImageBuilder | null
+      heading: string
+      theme: {
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
+        accentColor: Color | null
+        darkMode: boolean | null
+      } | null
     }
   | null
 
