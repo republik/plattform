@@ -1,9 +1,5 @@
-import { DisableDraftMode } from '@/app/(sanity)/components/disable-draft-mode'
-import { SanityLive } from '@/app/(sanity)/lib/live'
 import { PageLayout } from '@/app/components/layout'
 import { css } from '@republik/theme/css'
-import { VisualEditing } from 'next-sanity/visual-editing'
-import { draftMode } from 'next/headers'
 
 export default async function SanityFrontLayout({
   children,
@@ -11,24 +7,15 @@ export default async function SanityFrontLayout({
   children: React.ReactNode
 }>) {
   return (
-    <>
-      <PageLayout showDraftModeIndicator={false}>
-        <div
-          className={css({
-            color: 'text',
-            position: 'relative',
-          })}
-        >
-          {children}
-        </div>
-      </PageLayout>
-      <SanityLive />
-      {(await draftMode()).isEnabled && (
-        <>
-          <VisualEditing />
-          <DisableDraftMode />
-        </>
-      )}
-    </>
+    <PageLayout>
+      <div
+        className={css({
+          color: 'text',
+          position: 'relative',
+        })}
+      >
+        {children}
+      </div>
+    </PageLayout>
   )
 }

@@ -19,7 +19,7 @@ function FollowCollectionCard({
 
   return (
     <FollowCollectionContainer>
-      <div>
+      <div className={css({ flex: 1, minWidth: 0 })}>
         <h3
           className={css({
             textStyle: 'subtitleBold',
@@ -41,7 +41,14 @@ function FollowCollectionCard({
           width={360}
           height={360}
           alt={collection.title}
-          style={{ objectFit: 'cover', borderRadius: 120, marginLeft: 'auto' }}
+          style={{
+            objectFit: 'cover',
+            borderRadius: 120,
+            marginLeft: 'auto',
+            width: 120,
+            height: 120,
+            flexShrink: 0,
+          }}
         />
       )}
     </FollowCollectionContainer>

@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { Interaction, RawHtml } from '@project-r/styleguide'
@@ -98,12 +98,12 @@ const Questionnaire = (props) => {
     setState({ updating: true })
     submitQuestionnaire(id)
       .then(({ data }) => {
-        router.replace({
-          pathname: redirectPath.replace(
+        router.replace(
+          redirectPath.replace(
             '{id}',
             data?.submitQuestionnaire?.userSubmissionId,
           ),
-        })
+        )
       })
       .catch(onSubmitError)
   }

@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react'
-import { withRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import ErrorMessage from '../ErrorMessage'
 import voteT from './voteT'
 
@@ -146,7 +146,7 @@ class ElectionCandidacy extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isEditing: !!props.router.query.edit || false,
+      isEditing: props.initialIsEditing || false,
       showErrors: true,
       errors: {},
       dirty: {},
@@ -660,10 +660,25 @@ const query = gql`
   }
 `
 
+// The class only ever needed the `edit` search param, read once at construction.
+// Injecting just that keeps the component free of any router dependency.
+const withInitialIsEditing = (WrappedComponent) => {
+  const WithInitialIsEditing = (props) => {
+    const searchParams = useSearchParams()
+    return (
+      <WrappedComponent
+        {...props}
+        initialIsEditing={!!searchParams.get('edit')}
+      />
+    )
+  }
+  return WithInitialIsEditing
+}
+
 export default compose(
   withT,
   voteT,
-  withRouter,
+  withInitialIsEditing,
   withMe,
   graphql(query, {
     options: ({ slug }) => ({

@@ -26,11 +26,10 @@ const gridStyle = css({
   rowGap: '12',
 })
 
-function getSeriesLabels(teasers: any[]) {
+function getSeriesLabels(teasers: TeaserListItemType[]) {
   const labels = []
   let firstEpisode = 1
   for (const teaser of teasers) {
-    // TODO: add use case of a label on the teaser
     if (teaser.heading?.title) {
       labels.push(teaser.heading.title)
     } else {

@@ -1,13 +1,18 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
 import { editorialContentRecipe } from '../src/recipes/editorial-content'
+import { editorialFontSizes } from '../src/typography'
 
 export const presetRepublik = definePreset({
   name: 'republik',
   conditions: {
     extend: {
       light: '[data-theme="light"] &',
-      dark: '[data-theme="dark"] &',
+      // Dark applies when an ancestor is `[data-theme="dark"]`, or when a
+      // `data-force-theme="dark"` marker exists anywhere in the document — the
+      // latter puts the whole app in dark mode and outranks a `[data-theme]` set
+      // on `<html>` (e.g. by next-themes).
+      dark: ':is([data-theme="dark"], :root:has([data-force-theme="dark"])) &',
       stateOpen: '&[data-state="open"]',
       stateClosed: '&[data-state="closed"]',
     },
@@ -41,7 +46,7 @@ export const presetRepublik = definePreset({
         shadows: {
           sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.3)' },
           md: { value: '0 0 15px 0 rgba(0, 0, 0, 0.3)' },
-          overlay: { value: 'rgba(0, 0, 0, 0.1) 0px -5px 15px -3px' },
+          overlay: { value: 'rgba(0, 0, 0, 0.12) 0px -2px 15px -3px' },
         },
         sizes: {
           full: { value: '100%' },
@@ -349,7 +354,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'republikSerif',
             fontWeight: 'black',
             fontStyle: 'normal',
-            fontSize: { base: '1.875rem', md: '3.625rem' },
+            fontSize: editorialFontSizes.editorialTitle,
             lineHeight: 1.1333,
           },
         },
@@ -358,7 +363,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: '400',
             fontStyle: 'normal',
-            fontSize: { base: '1.1875rem', md: '1.4375rem' },
+            fontSize: editorialFontSizes.editorialLead,
             lineHeight: 1.5,
           },
         },
@@ -367,7 +372,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: '400',
             fontStyle: 'normal',
-            fontSize: { base: '0.875rem', md: '0.9375rem' },
+            fontSize: editorialFontSizes.editorialByline,
             lineHeight: 1.25,
           },
         },
@@ -376,7 +381,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: '500',
             fontStyle: 'normal',
-            fontSize: { base: '1rem', md: '1.25rem' },
+            fontSize: editorialFontSizes.editorialHeading,
           },
         },
         editorialParagraph: {
@@ -384,7 +389,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: 400,
             fontStyle: 'normal',
-            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            fontSize: editorialFontSizes.editorialParagraph,
             lineHeight: 1.6,
           },
         },
@@ -393,7 +398,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: 700,
             fontStyle: 'normal',
-            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            fontSize: editorialFontSizes.editorialSubheading,
             lineHeight: 1.5,
           },
         },
@@ -402,7 +407,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
             fontStyle: 'normal',
-            fontSize: { base: '1.875rem', md: '3.625rem' },
+            fontSize: editorialFontSizes.metaTitle,
             lineHeight: 1.1333,
           },
         },
@@ -411,7 +416,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
             fontStyle: 'normal',
-            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            fontSize: editorialFontSizes.metaSubheading,
             lineHeight: 1.5,
           },
         },
@@ -420,7 +425,7 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontWeight: 400,
             fontStyle: 'normal',
-            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            fontSize: editorialFontSizes.metaParagraph,
             lineHeight: 1.6,
           },
         },

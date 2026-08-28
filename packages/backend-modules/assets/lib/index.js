@@ -5,6 +5,7 @@ const returnImage = require('./returnImage')
 const urlPrefixing = require('./urlPrefixing')
 const webp = require('./webp')
 const Repo = require('./Repo')
+const userAgent = require('./userAgent')
 
 module.exports = {
   Portrait,
@@ -14,5 +15,6 @@ module.exports = {
   webp,
   Repo,
   urlPrefixing,
+  userAgent,
   ...urlPrefixing,
 }

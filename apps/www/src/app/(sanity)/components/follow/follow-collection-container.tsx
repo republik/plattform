@@ -19,6 +19,7 @@ function FollowCollectionContainer({
         display: 'flex',
         alignItems: 'center',
         gap: 4,
+        '@media print': { display: 'none' },
       })}
     >
       {children}

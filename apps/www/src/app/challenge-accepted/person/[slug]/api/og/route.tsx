@@ -5,11 +5,12 @@ import { ImageResponse } from 'next/og'
 const CHALLENGE_ACCEPTED_SVG_URL =
   'https://www.datocms-assets.com/104239/1695397092-501_challenge-accepted.svg'
 
-export const runtime = 'edge'
-
 // Image generation
-export async function GET(_: NextRequest, props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
+export async function GET(
+  _: NextRequest,
+  props: { params: Promise<{ slug: string }> },
+) {
+  const params = await props.params
   const res = await fetch(process.env.DATO_CMS_API_URL, {
     method: 'POST',
     headers: {

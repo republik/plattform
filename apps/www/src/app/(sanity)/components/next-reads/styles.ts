@@ -7,6 +7,7 @@ export const nextReadsSection = css({
   maxWidth: '1700px',
   margin: '0 auto',
   textAlign: 'center',
+  '@media print': { display: 'none' },
 })
 
 export const nextReadHeader = css({

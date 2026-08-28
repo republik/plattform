@@ -1,4 +1,5 @@
 import { defineParts, defineRecipe } from '@pandacss/dev'
+import { editorialFontSizes, readerScaledFontSize } from '../typography'
 
 const contentParts = defineParts({
   root: { selector: '&' },
@@ -12,6 +13,7 @@ const contentParts = defineParts({
   fullWidthBlocks: { selector: '& > .full' },
   paragraphs: { selector: '& > p' },
   subheadings: { selector: '& > h2' },
+  smallheadings: { selector: '& > :is(h3,h4,h5,h6)' },
   heading: { selector: '& .page-heading' },
   title: { selector: '& .page-title' },
   titleAfterHeading: { selector: '& .page-heading + .page-title' },
@@ -21,6 +23,17 @@ const contentParts = defineParts({
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
   orderedListItems: { selector: '& > ol li' },
+  interviewQuestion: { selector: '& > .interview-question' },
+})
+
+/**
+ * An editorial text style whose size follows the reader's font size setting.
+ * Size and text style come from the same key, so the two can't drift — see
+ * `editorialFontSizes`, which the preset's `textStyles` use as well.
+ */
+const readerScaledText = (textStyle: keyof typeof editorialFontSizes) => ({
+  textStyle,
+  ...readerScaledFontSize(editorialFontSizes[textStyle]),
 })
 
 export const editorialContentRecipe = defineRecipe({
@@ -29,6 +42,9 @@ export const editorialContentRecipe = defineRecipe({
 
   base: contentParts({
     root: {
+      // Confines the reader's font size setting to editorial content — see
+      // `READER_FONT_SCALE`.
+      '--article-font-scale': 'var(--reader-font-scale, 1)',
       display: 'grid',
       gridTemplateColumns: `
         [full-start]
@@ -107,6 +123,9 @@ export const editorialContentRecipe = defineRecipe({
     byline: {
       mt: '4',
     },
+    interviewQuestion: {
+      '& + p': { mt: '0' },
+    },
   }),
 
   variants: {
@@ -114,30 +133,32 @@ export const editorialContentRecipe = defineRecipe({
       EDITORIAL: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'editorialTitle' },
-        lead: { textStyle: 'editorialLead' },
+        lead: readerScaledText('editorialLead'),
         byline: { textStyle: 'editorialByline' },
-        paragraphs: { textStyle: 'editorialParagraph' },
-        subheadings: { textStyle: 'editorialSubheading' },
-        unorderedListItems: {
-          textStyle: 'editorialParagraph',
+        paragraphs: readerScaledText('editorialParagraph'),
+        subheadings: readerScaledText('editorialSubheading'),
+        smallheadings: {
+          ...readerScaledText('editorialParagraph'),
+          fontWeight: 'bold',
         },
-        orderedListItems: {
-          textStyle: 'editorialParagraph',
-        },
+        unorderedListItems: readerScaledText('editorialParagraph'),
+        orderedListItems: readerScaledText('editorialParagraph'),
+        interviewQuestion: { fontWeight: 'bold' },
       }),
       META: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'metaTitle' },
-        lead: { textStyle: 'editorialLead' },
+        lead: readerScaledText('editorialLead'),
         byline: { textStyle: 'editorialByline' },
-        paragraphs: { textStyle: 'editorialParagraph' },
-        subheadings: { textStyle: 'editorialSubheading' },
-        unorderedListItems: {
-          textStyle: 'editorialParagraph',
+        paragraphs: readerScaledText('editorialParagraph'),
+        subheadings: readerScaledText('editorialSubheading'),
+        smallheadings: {
+          ...readerScaledText('editorialParagraph'),
+          fontWeight: 'bold',
         },
-        orderedListItems: {
-          textStyle: 'editorialParagraph',
-        },
+        unorderedListItems: readerScaledText('editorialParagraph'),
+        orderedListItems: readerScaledText('editorialParagraph'),
+        interviewQuestion: { fontWeight: 'bold' },
       }),
       PAGE: contentParts({
         heading: {
@@ -151,18 +172,19 @@ export const editorialContentRecipe = defineRecipe({
           gridColumn: 'breakout',
         },
         lead: {
-          textStyle: 'editorialLead',
+          ...readerScaledText('editorialLead'),
           textAlign: 'center',
           gridColumn: 'breakout',
         },
-        paragraphs: { textStyle: 'metaParagraph' },
-        subheadings: { textStyle: 'metaSubheading' },
-        unorderedListItems: {
-          textStyle: 'metaParagraph',
+        paragraphs: readerScaledText('metaParagraph'),
+        subheadings: readerScaledText('metaSubheading'),
+        smallheadings: {
+          ...readerScaledText('metaSubheading'),
+          fontWeight: 'medium',
         },
-        orderedListItems: {
-          textStyle: 'metaParagraph',
-        },
+        unorderedListItems: readerScaledText('metaParagraph'),
+        orderedListItems: readerScaledText('metaParagraph'),
+        interviewQuestion: { fontWeight: 'medium' },
       }),
     },
   },

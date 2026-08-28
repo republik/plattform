@@ -17,7 +17,7 @@ import { useInNativeApp } from '@/lib/withInNativeApp'
 import { AudioEvent, AudioEventHandlers } from './types/AudioEvent'
 import notifyApp from '@/lib/react-native/NotifyApp'
 import useAudioQueue from './hooks/useAudioQueue'
-import useNativeAppEvent from '@/lib/react-native/useNativeAppEvent'
+import useNativeAppEvent from '@/app/lib/hooks/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '@/lib/hooks/useInterval'
 import { reportError } from '@/lib/errors/reportError'
@@ -32,8 +32,6 @@ import {
 } from './types/AudioActionTracking'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
 import { useGlobalAudioState } from './globalAudioState'
-import { getFragmentData } from '#graphql/cms/__generated__/gql'
-import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -579,11 +577,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         if (isHeadOfQueue && audioQueue?.length > 0) {
           nextUp = audioQueue?.[0]
         } else {
-          const { data } = await addAudioQueueItem(item, 1)
-          const queue = getFragmentData(
-            AudioQueueItemFragmentDoc,
-            data.audioQueueItems,
-          )
+          const queue = await addAudioQueueItem(item, 1)
           if (!queue || queue.length === 0) {
             return
           }
@@ -607,6 +601,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         ])
       } catch (error) {
         handleError(error)
+        // Rethrow so `AudioProvider.toggleAudioPlayer` — which awaits this via
+        // the TOGGLE_PLAYER event — can reject its promise. Without this, a
+        // failed play silently succeeds from the caller's point of view.
+        throw error
       }
     },
     [inNativeApp, setupNextAudioItem, setOptimisticTimeUI, audioQueue],
@@ -681,9 +679,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   useAudioContextEvent<{
     item: AudioPlayerItem
     location?: AudioPlayerLocations
-  }>(AudioContextEvent.TOGGLE_PLAYER, ({ item, location }) =>
-    togglePlayer(item, location),
-  )
+    onSettled?: (error?: unknown) => void
+  }>(AudioContextEvent.TOGGLE_PLAYER, async ({ item, location, onSettled }) => {
+    try {
+      await togglePlayer(item, location)
+      onSettled?.()
+    } catch (error) {
+      onSettled?.(error)
+    }
+  })
   useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYBACK, togglePlayback)
   useAudioContextEvent<{
     item: AudioPlayerItem
@@ -696,13 +700,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     removeQueueItem,
   )
 
-  useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [
-    initialized,
-    activePlayerItem,
-  ])
-  useNativeAppEvent<string>(
+  useNativeAppEvent<{ payload: AppAudioPlayerState }>(
+    AudioEvent.SYNC,
+    (content) => syncWithNativeApp(content.payload),
+    [initialized, activePlayerItem],
+  )
+  useNativeAppEvent<{ payload: string }>(
     AudioEvent.QUEUE_ADVANCE,
-    async (itemId) => {
+    async (content) => {
+      const itemId = content.payload
       const isHeadOfQueue =
         audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
       const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
@@ -713,10 +719,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     },
     [initialized, activePlayerItem, isAutoPlayEnabled],
   )
-  useNativeAppEvent(AudioEvent.ERROR, handleError, [
-    initialized,
-    activePlayerItem,
-  ])
+  useNativeAppEvent<{ payload: Error | string }>(
+    AudioEvent.ERROR,
+    (content) => handleError(content.payload),
+    [initialized, activePlayerItem],
+  )
 
   // The following two hooks allow for minimizing the player on backpress in android
   useEffect(() => {

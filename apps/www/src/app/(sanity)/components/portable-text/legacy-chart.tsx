@@ -1,5 +1,7 @@
 'use client'
+import { ContentErrorBoundary } from '@/app/(sanity)/components/content-error-boundary'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import type { Chart as ChartT } from '@/sanity.types'
 import { Chart } from '@project-r/styleguide'
 import { css, cva } from '@republik/theme/css'
@@ -22,7 +24,11 @@ const containerStyle = cva({
   },
 })
 
-export function LegacyChart({ value }: { value: ChartT }) {
+export function LegacyChart({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'chart' }>
+}) {
   const { size, chartConfig } = value
 
   const values = csvParse(chartConfig.data?.code ?? '')
@@ -35,8 +41,9 @@ export function LegacyChart({ value }: { value: ChartT }) {
       <p className={css({ textStyle: 'body', fontSize: 'l', mb: '4' })}>
         <InlinePortableText value={value.description} />
       </p>
-
-      <Chart config={config} values={values} />
+      <ContentErrorBoundary title='Diese Grafik kann wegen eines Fehlers nicht dargestellt werden.'>
+        <Chart config={config} values={values} />
+      </ContentErrorBoundary>
     </div>
   )
 }

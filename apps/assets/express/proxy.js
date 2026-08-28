@@ -2,6 +2,7 @@ const debug = require('debug')('assets:proxy')
 const {
   authenticate,
   returnImage,
+  userAgent,
 } = require('@orbiting/backend-modules-assets/lib')
 
 module.exports = (server) => {
@@ -20,6 +21,9 @@ module.exports = (server) => {
     debug('GET %s', url)
     const result = await fetch(url, {
       method: 'GET',
+      headers: {
+        'User-Agent': userAgent,
+      },
     }).catch((error) => {
       console.error('proxy fetch failed', { error })
       return res.status(404).end()

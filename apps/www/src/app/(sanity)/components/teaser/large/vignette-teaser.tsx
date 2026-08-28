@@ -1,6 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import {
-  getHref,
   Heading,
   TeaserLargeImage,
 } from '@/app/(sanity)/components/teaser/large/helpers'
@@ -32,10 +32,11 @@ const teaserStyle = cva({
 const teaserTitle = cva({
   base: {
     textWrap: 'balance',
-    fontSize: '38px',
-    lineHeight: '43px',
-    md: { fontSize: '58px', lineHeight: '60px' },
-    lg: { fontSize: '80px', lineHeight: '90px' },
+    // Legacy TileHeadline never grows past its `mUp` (~640px) step —
+    // there is no further size increase at wider viewports.
+    fontSize: '26px',
+    lineHeight: '32px',
+    md: { fontSize: '32px', lineHeight: '37px' },
     position: 'relative', // place above the link overlay
   },
   variants: {
@@ -51,21 +52,19 @@ const teaserTitle = cva({
       },
     },
     size: {
+      // No legacy TileHeadline equivalent for a below-standard size — kept
+      // at the mobile size with no growth step.
       SMALL: {
-        fontSize: '26px',
-        lineHeight: '32px',
-        md: {
-          fontSize: '48px',
-          lineHeight: '54px',
-        },
+        md: { fontSize: '26px', lineHeight: '32px' },
       },
+      // Matches legacy TileHeadline's `medium` step exactly.
       MEDIUM: {
-        md: { fontSize: '60px', lineHeight: '70px' },
-        lg: { fontSize: '80px', lineHeight: '90px' },
+        md: { fontSize: '48px', lineHeight: '54px' },
       },
+      // No legacy TileHeadline equivalent above `medium` — extrapolated one
+      // tier further using the next size up from the shared teaser scale.
       LARGE: {
-        md: { fontSize: '80px', lineHeight: '90px' },
-        lg: { fontSize: '100px', lineHeight: '110px' },
+        md: { fontSize: '58px', lineHeight: '60px' },
       },
       STANDARD: {},
     },
@@ -113,11 +112,13 @@ export function VignetteTeaser({
   _id,
   _type,
   target,
+  targetId,
+  publishDate,
   theme,
   heading,
   teaser,
 }: TeaserLargeFragmentType) {
-  const href = getHref(target, _type)
+  const href = target ?? '#'
 
   return (
     <div
@@ -183,6 +184,17 @@ export function VignetteTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
+        {teaser.audioSourceMp3 && (
+          <TeaserAudioPlayButton
+            targetId={targetId}
+            title={teaser.audioTitle}
+            path={target}
+            publishDate={publishDate}
+            mp3={teaser.audioSourceMp3}
+            durationMs={teaser.audioDurationMs}
+            align='center'
+          />
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import {
-  getHref,
   Heading,
   TeaserLargeImage,
 } from '@/app/(sanity)/components/teaser/large/helpers'
@@ -196,11 +196,13 @@ export function SplitTeaser({
   _id,
   _type,
   target,
+  targetId,
+  publishDate,
   theme,
   heading,
   teaser,
 }: TeaserLargeFragmentType) {
-  const href = getHref(target, _type)
+  const href = target ?? '#'
 
   return (
     <div
@@ -282,6 +284,17 @@ export function SplitTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
+        {teaser.audioSourceMp3 && (
+          <TeaserAudioPlayButton
+            targetId={targetId}
+            title={teaser.audioTitle}
+            path={target}
+            publishDate={publishDate}
+            mp3={teaser.audioSourceMp3}
+            durationMs={teaser.audioDurationMs}
+            align={teaser.textAlignment === 'CENTER' ? 'center' : 'left'}
+          />
+        )}
       </div>
     </div>
   )

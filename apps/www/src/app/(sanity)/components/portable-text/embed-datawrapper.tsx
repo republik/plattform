@@ -1,4 +1,5 @@
 'use client'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import type { EmbedDataWrapper } from '@/sanity.types'
 import { css, cva, cx } from '@republik/theme/css'
 import { useTheme } from 'next-themes'
@@ -50,7 +51,7 @@ const styles = {
 function DataWrapperInteractive({
   value: { datawrapperId, forceDark = false, size, plain = false },
 }: {
-  value: EmbedDataWrapper
+  value: Extract<ArticlePortableTextBlockType, { _type: 'embedDataWrapper' }>
 }) {
   const chartRef = useRef<HTMLDivElement>(null)
   const [embedData, setEmbedData] = useState<
@@ -159,7 +160,11 @@ function DataWrapperPrint({ datawrapperId }: { datawrapperId: string }) {
   )
 }
 
-export function EmbedDataWrapper({ value }: { value: EmbedDataWrapper }) {
+export function EmbedDataWrapper({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'embedDataWrapper' }>
+}) {
   return (
     <>
       <DataWrapperInteractive value={value} />

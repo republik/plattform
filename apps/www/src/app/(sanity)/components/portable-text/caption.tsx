@@ -1,30 +1,28 @@
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { type Caption } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
-import { PortableText, PortableTextReactComponents } from 'next-sanity'
 
+// Sizes follow the reader's font size setting — see `READER_FONT_SCALE` in the
+// theme package. Outside editorial content the `1` fallback applies.
 const legendStyle = css({
   fontFamily: 'gtAmericaStandard',
-  fontSize: '0.75rem',
+  fontSize: 'calc(0.75rem * var(--article-font-scale, 1))',
   lineHeight: '1.2',
   color: 'text',
   md: {
-    fontSize: '0.9375rem',
+    fontSize: 'calc(0.9375rem * var(--article-font-scale, 1))',
   },
 })
 
 const creditStyle = css({
-  fontSize: '0.625rem',
+  fontSize: 'calc(0.625rem * var(--article-font-scale, 1))',
   _before: {
     content: '" "',
   },
   md: {
-    fontSize: '0.75rem',
+    fontSize: 'calc(0.75rem * var(--article-font-scale, 1))',
   },
 })
-
-const ptComponents: Partial<PortableTextReactComponents> = {
-  block: { normal: ({ children }) => <>{children}</> },
-}
 
 export function Caption({
   caption,
@@ -41,10 +39,10 @@ export function Caption({
   return (
     (legend || credit) && (
       <figcaption id={id} className={cx(legendStyle, className)}>
-        <PortableText components={ptComponents} value={legend} />
+        <InlinePortableText value={legend} />
         {credit && (
           <span className={creditStyle}>
-            <PortableText components={ptComponents} value={credit} />
+            <InlinePortableText value={credit} />
           </span>
         )}
       </figcaption>

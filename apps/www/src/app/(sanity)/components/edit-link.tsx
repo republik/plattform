@@ -1,8 +1,19 @@
+'use client'
 import { editUrl, type EditUrlProps } from '@/app/(sanity)/lib/edit-url'
 import { css } from '@republik/theme/css'
 import { SquarePen } from 'lucide-react'
+import { useVisualEditingEnvironment } from 'next-sanity/hooks'
 
 export function EditLink(props: EditUrlProps) {
+  const visualEditingEnvironment = useVisualEditingEnvironment()
+
+  if (
+    !visualEditingEnvironment ||
+    visualEditingEnvironment === 'presentation-iframe'
+  ) {
+    return null
+  }
+
   const href = editUrl(props)
 
   return (

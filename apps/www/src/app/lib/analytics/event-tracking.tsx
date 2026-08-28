@@ -56,14 +56,6 @@ export const useTrackEvent = () => {
 
   const trackPlausibleEvent = usePlausible()
 
-  if (!ctxValue) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error(
-        `useTrackEvent: context missing. Please wrap this component in a <TrackingContext> `,
-      )
-    }
-  }
-
   return useCallback(
     (
       params: { action?: string; name?: string; value?: number } & Record<
@@ -71,6 +63,15 @@ export const useTrackEvent = () => {
         string | number
       >,
     ) => {
+      if (!ctxValue) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error(
+            `useTrackEvent: context missing. Please wrap this component in a <TrackingContext> `,
+          )
+        }
+        return
+      }
+
       const { category, ...props } = {
         ...ctxValue,
         ...params,

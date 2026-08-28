@@ -11,11 +11,13 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   "slug": slug.current,
   "image": teaserSmall.image,
   publishDate,
-  heading->{
-    _id,
-    "title": coalesce(^.teaserSmall.heading, pt::text(title)),
-    "slug": slug.current,
-  },
+  "heading": select(
+    defined(teaserSmall.heading) || defined(heading) => {
+      "_id": heading->_id,
+      "title": coalesce(teaserSmall.heading, pt::text(heading->title)),
+      "slug": heading->slug.current,
+    }
+  ),
   theme {
     name,
     accentColor,
@@ -23,6 +25,15 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
   "headingColor": teaserSmall.headingColor,
+  _type == "article" => {
+    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),
+    audioSourceMp3,
+    audioDurationMs,
+    discussion->{
+      backendDiscussionId,
+    },
+    inlineDiscussion,
+  },
 `
 
 // Hack to not rely on the main query for types

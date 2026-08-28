@@ -53,6 +53,8 @@ const CurrentlyPlaying = ({
         format,
         audioCoverCrop,
         coverMd,
+        cover,
+        coverDark,
       },
     },
   } = item
@@ -61,7 +63,8 @@ const CurrentlyPlaying = ({
     <div>
       <div {...styles.root}>
         <AudioCover
-          cover={coverMd}
+          cover={coverMd ?? cover}
+          coverDark={coverDark}
           size={90}
           image={image}
           format={format?.meta}

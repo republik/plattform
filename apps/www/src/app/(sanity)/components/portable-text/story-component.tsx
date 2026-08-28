@@ -1,6 +1,6 @@
 'use client'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { Spinner } from '@/app/components/ui/spinner'
-import type { StoryComponent } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
 import Script from 'next/script'
 import { useState } from 'react'
@@ -25,7 +25,11 @@ const figureStyle = cva({
     },
   },
 })
-export function StoryComponent({ value }: { value: StoryComponent }) {
+export function StoryComponent({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'storyComponent' }>
+}) {
   const [error, setError] = useState<string | null>(null)
 
   if (!value.url) {

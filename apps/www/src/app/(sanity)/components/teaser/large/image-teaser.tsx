@@ -1,6 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import {
-  getHref,
   Heading,
   TeaserLargeImage,
 } from '@/app/(sanity)/components/teaser/large/helpers'
@@ -34,21 +34,25 @@ const teaserTextPosition = cva({
     md: { gap: '6' },
   },
   variants: {
+    // Keyed to `lg` (not `md`) to match `teaserTextContainer`, which only
+    // switches to the absolute-positioned overlay grid at `lg` — placement
+    // rules at a narrower breakpoint would be inert since `placeSelf`/
+    // `gridColumn` have no effect until the parent is actually a grid.
     position: {
       TOP_LEFT: {
-        md: { placeSelf: 'start start' },
+        lg: { placeSelf: 'start start' },
       },
       TOP_RIGHT: {
-        md: { gridColumn: '2', placeSelf: 'start end' },
+        lg: { gridColumn: '2', placeSelf: 'start end' },
       },
       BOTTOM_LEFT: {
-        md: { placeSelf: 'end start' },
+        lg: { placeSelf: 'end start' },
       },
       BOTTOM_RIGHT: {
-        md: { gridColumn: '2', placeSelf: 'end end' },
+        lg: { gridColumn: '2', placeSelf: 'end end' },
       },
       TOP: {
-        md: {
+        lg: {
           gridColumn: '1 / -1',
           placeSelf: 'start center',
           // centering the text could be a separate style but for now it's not a setting
@@ -56,7 +60,7 @@ const teaserTextPosition = cva({
         },
       },
       MIDDLE: {
-        md: {
+        lg: {
           gridColumn: '1 / -1',
           placeSelf: 'center center',
           // centering the text could be a separate style but for now it's not a setting
@@ -64,7 +68,7 @@ const teaserTextPosition = cva({
         },
       },
       BOTTOM: {
-        md: {
+        lg: {
           gridColumn: '1 / -1',
           placeSelf: 'end center',
           // centering the text could be a separate style but for now it's not a setting
@@ -104,10 +108,15 @@ const teaserTitle = cva({
       },
     },
     size: {
+      // Caps at the shared `base.md` step (58/60) — legacy ImageHeadline's
+      // `small` never grows past `mUp`.
       SMALL: {},
-      LARGE: { md: { fontSize: '125px', lineHeight: '137px' } },
-      MEDIUM: { md: { fontSize: '100px', lineHeight: '110px' } },
-      STANDARD: { md: { fontSize: '80px', lineHeight: '90px' } },
+      // `md` is left untouched so every non-SMALL size still grows through
+      // `base.md` (58/60) first, matching legacy's `mUp` step, before its
+      // own further growth at `lg` (legacy's `tUp` step).
+      STANDARD: { lg: { fontSize: '80px', lineHeight: '90px' } },
+      MEDIUM: { lg: { fontSize: '100px', lineHeight: '110px' } },
+      LARGE: { lg: { fontSize: '125px', lineHeight: '137px' } },
     },
   },
   defaultVariants: { theme: 'META', size: 'STANDARD' },
@@ -138,11 +147,13 @@ const teaserByline = css({
 export function ImageTeaser({
   _type,
   target,
+  targetId,
+  publishDate,
   theme,
   heading,
   teaser,
 }: TeaserLargeFragmentType) {
-  const href = getHref(target, _type)
+  const href = target ?? '#'
 
   return (
     <div
@@ -206,6 +217,25 @@ export function ImageTeaser({
           <p className={teaserByline}>
             <InlinePortableText value={teaser.byline} />
           </p>
+          {teaser.audioSourceMp3 && (
+            <TeaserAudioPlayButton
+              targetId={targetId}
+              title={teaser.audioTitle}
+              path={target}
+              publishDate={publishDate}
+              mp3={teaser.audioSourceMp3}
+              durationMs={teaser.audioDurationMs}
+              // Matches teaserTextPosition's own centering rule above —
+              // TOP/MIDDLE/BOTTOM (and the unset default, MIDDLE) center the
+              // text; the corner variants and UNDERNEATH don't.
+              align={
+                !teaser.textPosition ||
+                ['TOP', 'MIDDLE', 'BOTTOM'].includes(teaser.textPosition)
+                  ? 'center'
+                  : 'left'
+              }
+            />
+          )}
         </div>
       </div>
     </div>

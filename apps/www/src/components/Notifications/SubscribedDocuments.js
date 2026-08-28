@@ -1,112 +1,136 @@
 import { graphql } from '@apollo/client/react/hoc'
-import {
-  A,
-  plainButtonRule,
-  TeaserSectionTitle,
-  useColorContext,
-} from '@project-r/styleguide'
+import { A, Interaction, mediaQueries, plainButtonRule } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { useEffect, useMemo, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import withT from '@/lib/withT'
 import { withMembership } from '../Auth/checkRoles'
-import { possibleSubscriptions } from './enhancers'
-import SubscribeCheckbox from './SubscribeCheckbox'
+import Loader from '../Loader'
+import { myDocumentSubscriptions, withUnsubFromDoc } from './enhancers'
 
 const styles = {
-  checkboxes: css({
-    margin: '8px 0 16px',
+  formats: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+  }),
+  formatContainer: css({
+    display: 'grid',
+    columnGap: 16,
+    gridTemplateColumns: '64px 1fr',
+    gridTemplateAreas: `"image title"
+      "image actions"`,
+    placeItems: 'center start',
+    [mediaQueries.mUp]: {
+      gridTemplateColumns: '64px 1fr max-content',
+      gridTemplateAreas: '"image title actions"',
+    },
+  }),
+  formatImage: css({
+    gridArea: 'image',
+    backgroundColor: 'var(--color-hover)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 64,
+    height: 64,
+    boxSizing: 'border-box',
+  }),
+  formatImagePicture: css({
+    display: 'block',
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+  }),
+  formatImageFallback: css({
+    fontSize: 28,
+    fontWeight: '700',
+    lineHeight: 1,
+  }),
+  formatTitle: css({
+    gridArea: 'title',
+    display: 'block',
+    fontWeight: '700',
+    textDecoration: 'none',
+  }),
+  actions: css({
+    gridArea: 'actions',
   }),
 }
 
-const FormatCheckboxes = ({ formats }) => (
-  <div {...styles.checkboxes}>
-    {formats.map((format, i) => (
-      <SubscribeCheckbox
-        key={i}
-        subscription={format.subscribedByMe}
-        filterName='Document'
-      />
-    ))}
-  </div>
-)
+const SubscribedDocuments = ({
+  t,
+  unsubFromDoc,
+  data: { myDocumentSubscriptions, loading, error },
+}) => (
+  <Loader
+    loading={loading}
+    error={error}
+    render={() => {
+      const subscriptions = myDocumentSubscriptions.subscribedTo.nodes.filter(
+        (subscription) =>
+          subscription.active &&
+          subscription.documentDetails?.meta.template === 'format',
+      )
 
-const getSuggestSubscription = (section) => section.meta.suggestSubscription
+      if (!subscriptions.length) {
+        return (
+          <Interaction.P>
+            {t('Notifications/settings/formats/summary/0')}
+          </Interaction.P>
+        )
+      }
 
-const getSubscriptionCount = (section) =>
-  section.formats.nodes.filter((f) => f.subscribedByMe.active).length
-
-const getVisibleSections = (sections, prevShown = []) =>
-  sections.filter(
-    (section) =>
-      prevShown.find((s) => s.id === section.id) ||
-      getSubscriptionCount(section) ||
-      getSuggestSubscription(section),
-  )
-
-const SubscribedDocuments = ({ t, data: { sections } }) => {
-  const [showAll, setShowAll] = useState(false)
-  const [colorScheme] = useColorContext()
-  const sectionNodes = sections && sections.nodes
-  const sectionsWithFormat = useMemo(() => {
-    return sectionNodes
-      ? sectionNodes.filter((s) => s.formats.nodes.length > 0)
-      : []
-  }, [sectionNodes])
-
-  const [visibleSections, setVisibleSections] = useState(
-    getVisibleSections(sectionsWithFormat || []),
-  )
-
-  useEffect(() => {
-    setVisibleSections((prevShown) =>
-      getVisibleSections(sectionsWithFormat, prevShown),
-    )
-  }, [sectionsWithFormat])
-
-  const totalSubs =
-    sectionsWithFormat &&
-    sectionsWithFormat.reduce(
-      (reducer, section) => reducer + getSubscriptionCount(section),
-      0,
-    )
-
-  if (!sectionsWithFormat || !sectionsWithFormat.length) return null
-
-  return (
-    <>
-      {(showAll ? sectionsWithFormat : visibleSections).map((section) => (
-        <div
-          {...colorScheme.set(
-            'color',
-            section.meta?.color || 'textSoft',
-            'format',
-          )}
-          key={section.id}
-        >
-          <TeaserSectionTitle small>{section.meta.title}</TeaserSectionTitle>
-          <FormatCheckboxes formats={section.formats.nodes} />
+      return (
+        <div {...styles.formats}>
+          {subscriptions.map((subscription) => {
+            const format = subscription.documentDetails
+            return (
+              <div {...styles.formatContainer} key={subscription.id}>
+                <div {...styles.formatImage}>
+                  {format.meta.image ? (
+                    <Image
+                      className={styles.formatImagePicture}
+                      src={format.meta.image}
+                      width={48}
+                      height={48}
+                      alt=''
+                    />
+                  ) : (
+                    <span
+                      {...styles.formatImageFallback}
+                      style={{ color: format.meta.color }}
+                    >
+                      {format.meta.title.charAt(0)}
+                    </span>
+                  )}
+                </div>
+                <Link {...styles.formatTitle} href={format.meta.path}>
+                  {format.meta.title}
+                </Link>
+                <div {...styles.actions}>
+                  <button
+                    {...plainButtonRule}
+                    onClick={() =>
+                      unsubFromDoc({ subscriptionId: subscription.id })
+                    }
+                  >
+                    <A>{t('Notifications/settings/formats/unsubscribe')}</A>
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
-      ))}
-      {sectionsWithFormat.length !== visibleSections.length && (
-        <button
-          {...plainButtonRule}
-          onClick={() => {
-            setVisibleSections(getVisibleSections(sectionsWithFormat))
-            setShowAll(!showAll)
-          }}
-        >
-          <A>
-            {t(`Notifications/settings/formats/${showAll ? 'hide' : 'show'}`)}
-          </A>
-        </button>
-      )}
-    </>
-  )
-}
+      )
+    }}
+  />
+)
 
 export default compose(
   withT,
   withMembership,
-  graphql(possibleSubscriptions),
+  graphql(myDocumentSubscriptions),
+  withUnsubFromDoc,
 )(SubscribedDocuments)

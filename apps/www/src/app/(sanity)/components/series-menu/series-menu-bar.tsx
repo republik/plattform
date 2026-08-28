@@ -1,6 +1,7 @@
 'use client'
 
 import { getSeriesLabels } from '@/app/(sanity)/components/series-labels'
+import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
 import { SERIES_MENU_QUERY_RESULT } from '@/sanity.types'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
@@ -39,9 +40,10 @@ const menuStyle = css({
   left: 0,
   right: 0,
   bottom: 0,
+  zIndex: 1,
   overflow: 'auto',
   WebkitOverflowScrolling: 'touch',
-  background: 'pageBackground',
+  background: 'background',
   color: 'text',
   visibility: 'hidden',
   opacity: 0,
@@ -80,7 +82,9 @@ export function SeriesMenuBar({
 
   const episodes = collection.episodes ?? []
   const labels = getSeriesLabels(episodes)
-  const currentIndex = episodes.findIndex((e) => e.slug === currentSlug)
+  const currentIndex = episodes.findIndex(
+    (e) => 'slug' in e && e.slug === currentSlug,
+  )
 
   // position the panel right below the bar, and lock body scroll while open
   useEffect(() => {
@@ -94,6 +98,7 @@ export function SeriesMenuBar({
   }, [expanded])
 
   const Icon = expanded ? IconKeyboardArrowUp : IconKeyboardArrowDown
+  const teasers = getNotExpiredTeasers(episodes)
 
   return (
     <>
@@ -142,7 +147,7 @@ export function SeriesMenuBar({
             </p>
           )}
           <div className={gridStyle}>
-            {episodes.map((episode, index) => (
+            {teasers.map((episode, index) => (
               <div
                 key={episode._id}
                 onClick={() => setExpanded(false)}

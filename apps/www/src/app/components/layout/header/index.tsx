@@ -75,7 +75,6 @@ export function PageHeader({
   const navLinks = [
     { href: '/', label: 'Magazin' },
     { href: '/feed', label: 'Feed' },
-    { href: '/articles/feed', label: 'Feed (Sanity)' },
     { href: '/dialog', label: 'Dialog' },
     { href: '/suche', label: 'Suche', icon: <IconSearchMenu size={18} /> },
   ]
@@ -89,6 +88,7 @@ export function PageHeader({
         top: 0,
         transition: 'transform 0.3s ease-out',
         zIndex: 100,
+        '@media print': { display: 'none' },
       })}
       style={{
         transform: `translateY(${

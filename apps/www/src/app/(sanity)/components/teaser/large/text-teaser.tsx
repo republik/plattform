@@ -1,8 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import {
-  getHref,
-  Heading,
-} from '@/app/(sanity)/components/teaser/large/helpers'
+import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
+import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -45,11 +43,16 @@ const teaserTitle = cva({
           lineHeight: '72px',
         },
       },
+      // `md` is left untouched here so MEDIUM/LARGE still grow through
+      // `base.md` (100/110) first, matching legacy's `mUp` step, before
+      // their own further growth at `lg`/`xlg` (legacy's `tUp`/`dUp` steps).
       LARGE: {
-        md: { fontSize: '125px', lineHeight: '137px' },
-        lg: { fontSize: '156px', lineHeight: '169px' },
+        lg: { fontSize: '125px', lineHeight: '137px' },
+        xlg: { fontSize: '156px', lineHeight: '169px' },
       },
-      MEDIUM: { md: { fontSize: '125px', lineHeight: '137px' } },
+      MEDIUM: { lg: { fontSize: '125px', lineHeight: '137px' } },
+      // Caps at the shared `base.md` step (100/110) — legacy TypoHeadline's
+      // default never grows past `mUp`.
       STANDARD: {},
     },
   },
@@ -76,13 +79,14 @@ const teaserByline = css({
 })
 
 export function TextTeaser({
-  _type,
   target,
+  targetId,
+  publishDate,
   theme,
   teaser,
   heading,
 }: TeaserLargeFragmentType) {
-  const href = getHref(target, _type)
+  const href = target ?? '#'
 
   return (
     <div
@@ -134,6 +138,17 @@ export function TextTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
+        {teaser.audioSourceMp3 && (
+          <TeaserAudioPlayButton
+            targetId={targetId}
+            title={teaser.audioTitle}
+            path={target}
+            publishDate={publishDate}
+            mp3={teaser.audioSourceMp3}
+            durationMs={teaser.audioDurationMs}
+            align='center'
+          />
+        )}
       </div>
     </div>
   )

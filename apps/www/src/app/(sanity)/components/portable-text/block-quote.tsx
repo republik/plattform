@@ -1,48 +1,46 @@
 import { Caption } from '@/app/(sanity)/components/portable-text/caption'
+import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { css } from '@republik/theme/css'
-import { PortableText, PortableTextReactComponents } from 'next-sanity'
-import { ReactNode } from 'react'
 
 const containerStyle = css({
   backgroundColor: 'hover',
-  padding: '12px 15px',
+  py: '3',
+  px: '4',
   md: {
-    padding: '20px 25px',
+    py: '5',
+    px: '6',
   },
-})
 
-const quoteParagraph = css({
-  fontFamily: 'gtAmericaStandard',
-  fontSize: '0.9375rem',
-  lineHeight: 1.4,
-  pb: '12px',
-  md: {
-    fontSize: '1.125rem',
-    lineHeight: 1.5,
-    pb: '20px',
-  },
-  _last: {
-    pb: 0,
-  },
-})
-
-const ptComponents: Partial<PortableTextReactComponents> = {
-  block: {
-    normal({ children }: { children?: ReactNode }) {
-      return <p className={quoteParagraph}>{children}</p>
+  // Sizes follow the reader's font size setting — see `READER_FONT_SCALE` in the
+  // theme package.
+  '& > *': {
+    fontFamily: 'gtAmericaStandard',
+    fontSize: 'calc(0.9375rem * var(--article-font-scale, 1))',
+    lineHeight: 1.4,
+    pt: '3',
+    md: {
+      fontSize: 'calc(1.125rem * var(--article-font-scale, 1))',
+      lineHeight: 1.5,
+      pt: '4',
+    },
+    _first: {
+      pt: 0,
     },
   },
-}
+})
 
-// TODO: quid list support??
-
-export function BlockQuote({ value }) {
+export function BlockQuote({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'blockQuote' }>
+}) {
   const { body, caption } = value
 
   return (
     <div className={css({})}>
       <div className={containerStyle}>
-        <PortableText value={body} components={ptComponents} />
+        <NestedPortableText value={body} />
       </div>
       {caption && <Caption caption={caption} />}
     </div>

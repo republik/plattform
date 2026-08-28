@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { format } from 'url'
 import { useQuery } from '@apollo/client'
 
@@ -51,11 +51,12 @@ const getSearchParams = ({ sort, search }) => {
 const Submissions = ({ slug, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  const { query } = router
-  const shareId = query.share
-  const sortBy = query.skey || 'random'
-  const sortDirection = query.sdir || undefined
-  const searchQuery = query.q || ''
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const shareId = searchParams.get('share')
+  const sortBy = searchParams.get('skey') || 'random'
+  const sortDirection = searchParams.get('sdir') || undefined
+  const searchQuery = searchParams.get('q') || ''
   const prevSearchQuery = usePrevious(searchQuery)
   const [searchValue, setSearchValue] = useState(searchQuery)
   const [debouncedSearch] = useDebounce(searchValue, 200)
@@ -65,22 +66,18 @@ const Submissions = ({ slug, extract, share = {} }) => {
     }
   }, [searchQuery, prevSearchQuery, searchValue])
   useEffect(() => {
-    if ((debouncedSearch || '') === (router.query.q || '')) {
+    if ((debouncedSearch || '') === searchQuery) {
       return
     }
-    router[router.query.q ? 'replace' : 'push'](
-      format({
-        pathname,
-        query: getSearchParams({
-          sort: { key: router.query.skey, direction: router.query.sdir },
-          search: debouncedSearch,
-        }),
+    const url = format({
+      pathname,
+      query: getSearchParams({
+        sort: { key: sortBy, direction: sortDirection },
+        search: debouncedSearch,
       }),
-      undefined,
-      { shallow: true },
-    )
+    })
+    router[searchQuery ? 'replace' : 'push'](url, { scroll: false })
   }, [debouncedSearch])
-  const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {
@@ -115,11 +112,11 @@ const Submissions = ({ slug, extract, share = {} }) => {
     shareQuery.data?.questionnaire?.submissions?.nodes?.[0]
 
   if (extract) {
-    if (query.extract && shareSubmission) {
+    if (searchParams.get('extract') && shareSubmission) {
       return (
         <ShareSubmission
           pathname={pathname}
-          qid={query.qid}
+          qid={searchParams.get('qid')}
           share={share}
           submission={shareSubmission}
           questions={questions}
@@ -189,7 +186,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
                     <ShareSubmission
                       meta
                       pathname={pathname}
-                      qid={query.qid}
+                      qid={searchParams.get('qid')}
                       share={share}
                       submission={shareSubmission}
                       questions={questions}
