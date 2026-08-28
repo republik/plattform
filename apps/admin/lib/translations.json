@@ -823,6 +823,14 @@
       "value": "Alle 2 – 3 Wochen"
     },
     {
+      "key": "account/newsletterSubscriptions/COURSE-CLIMATE/label",
+      "value": "Kurs: Klimakurs"
+    },
+    {
+      "key": "account/newsletterSubscriptions/COURSE-BIGTECH/label",
+      "value": "Kurs: Bye-Bye Big Tech"
+    },
+    {
       "key": "account/authSettings/title",
       "value": "Anmeldung"
     },

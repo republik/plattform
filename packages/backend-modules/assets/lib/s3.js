@@ -1,4 +1,5 @@
 const aws = require('aws-sdk')
+const userAgent = require('./userAgent')
 
 const { AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET } =
   process.env
@@ -99,6 +100,9 @@ const del = async ({ path, bucket }) => {
 const get = ({ region = AWS_REGION, bucket, path }) => {
   return fetch(`https://s3.${region}.amazonaws.com/${bucket}/${path}`, {
     method: 'GET',
+    headers: {
+      'User-Agent': userAgent,
+    },
   }).catch((error) => {
     return {
       status: 404,

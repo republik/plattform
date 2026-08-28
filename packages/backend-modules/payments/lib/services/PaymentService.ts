@@ -216,6 +216,12 @@ export class PaymentService {
     )
   }
 
+  async releaseScheduleSubscription(company: Company, scheduleId: string) {
+    return this.#stripeAdapters[company].subscriptionSchedules.release(
+      scheduleId,
+    )
+  }
+
   async createSubscriptionItem(
     company: Company,
     params: Stripe.SubscriptionItemCreateParams,

@@ -24,6 +24,15 @@ const sessionQuery = gql`
         country
         ipAddress
         userAgent
+        device {
+          information {
+            appVersion
+            os
+            osVersion
+            model
+          }
+          lastSeen
+        }
       }
     }
   }
@@ -66,7 +75,22 @@ class SessionOverview extends Component {
                 <Interaction.P>
                   {session.city} {session.country}
                 </Interaction.P>
-                <Interaction.P>{session.userAgent}</Interaction.P>
+                {session.device ? (
+                  <Interaction.P>
+                    {session.device.information.os.toUpperCase()}{' '}
+                    {session.device.information.osVersion} ·{' '}
+                    {session.device.information.model} · App{' '}
+                    {session.device.information.appVersion} · zuletzt gesehen{' '}
+                    {displayDateTime(session.device.lastSeen)}
+                  </Interaction.P>
+                ) : (
+                  <>
+                    <Interaction.P>{session.userAgent}</Interaction.P>
+                    <Label>
+                      Geräte und Betriebssysteminformationen dieser Session können veraltet sein.
+                    </Label>
+                  </>
+                )}
                 <TextButton
                   onClick={() => {
                     this.props.clearSession({
