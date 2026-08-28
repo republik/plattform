@@ -1,3 +1,4 @@
+import { AudioEmbed } from '@/app/(sanity)/components/portable-text/audio-embed'
 import { AuthorBlock } from '@/app/(sanity)/components/portable-text/author-block'
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Heading } from '@/app/(sanity)/components/portable-text/blocks'
@@ -47,6 +48,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     html: Html,
     // Wrap function because renderNode can't be passed to a client component
     embedVideo: ({ value }) => <EmbedVideo value={value} />,
+    audio: ({ value }) => <AudioEmbed value={value} />,
     seriesNav: SeriesNav,
     authorBlock: AuthorBlock,
     // This is the web, we never render emailOnly/voiceTag blocks :)

@@ -1,3 +1,4 @@
+import { AudioEmbed } from '@/app/(sanity)/components/portable-text/audio-embed'
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Heading } from '@/app/(sanity)/components/portable-text/blocks'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
@@ -40,6 +41,7 @@ const pageComponents: Partial<PortableTextReactComponents> = {
     html: Html,
     // Wrap function because renderNode can't be passed to a client component
     embedVideo: ({ value }) => <EmbedVideo value={value} />,
+    audio: ({ value }) => <AudioEmbed value={value} />,
     button: ({ value }) => <Button value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     storyComponent: ({ value }) => <StoryComponent value={value} />,
