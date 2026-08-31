@@ -5,7 +5,7 @@ enum EventObjectType {
   Document
   ReadAloud
 }
-union EventObject = Comment | Document
+union EventObject = Comment | Document | SanityDocumentRef
 
 enum SubscriptionObjectType {
   User
