@@ -40,10 +40,9 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
         // rather than as `Document` — the frontend needs `__typename` to
         // tell the two apart and fetch preview data from Sanity directly.
         if (isSanityRef(obj.objectId)) {
-          const sanityId = fromSanityRef(obj.objectId)
           return {
-            id: sanityId,
-            sanityId,
+            id: fromSanityRef(obj.objectId),
+            type: obj.sanityType,
             objectId: obj.objectId,
             __typename: 'SanityDocumentRef',
           }

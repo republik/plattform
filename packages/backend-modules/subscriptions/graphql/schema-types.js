@@ -16,15 +16,15 @@ union SubscriptionObject = Document | SanityDocumentRef | User | Discussion
 """
 A reference to a Sanity-backed document that has no full GraphQL \`Document\`
 representation (no mdast/content resolved) — the frontend fetches display
-data from Sanity directly using \`sanityId\`. Carries no content of its own,
+data from Sanity directly using \`id\`. Carries no content of its own,
 so it is not access-gated server-side; the frontend is responsible for
 gating display based on the viewer's membership state.
 """
 type SanityDocumentRef {
-  "same value as sanityId"
-  id: ID!
   "Sanity \`_id\`"
-  sanityId: ID!
+  id: ID!
+  "Sanity \`_type\`"
+  type: String
 }
 
 extend type User {
