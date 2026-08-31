@@ -44,12 +44,14 @@ interface PortableTextNode {
   style?: string
   children?: PortableTextChild[]
   body?: PortableTextBlocks
-  // Unlike the fields below, these three are known, confirmed-from-schema
-  // plain strings (infoBox.title, pullQuote.text/source) — not portable
-  // text — so they get an actual type instead of `unknown`.
+  // Unlike the fields below, these are known, confirmed-from-schema plain
+  // strings/booleans (infoBox.title/includeInSyntheticVoice, pullQuote.text/
+  // source) — not portable text — so they get an actual type instead of
+  // `unknown`.
   title?: string
   text?: string
   source?: string
+  includeInSyntheticVoice?: boolean
   caption?: { legend?: PortableTextBlocks; credit?: PortableTextBlocks }
   [key: string]: unknown
 }
@@ -259,6 +261,11 @@ const blockQuoteTransform: NodeTransform = (node, ctx) => {
 }
 
 const infoBoxTransform: NodeTransform = (node, ctx) => {
+  // Infoboxen carry sidebar material that usually reads badly aloud, so
+  // they're excluded from the Audioversion by default; an editor opts a
+  // specific box back in via this field. Absent (every Infobox written
+  // before the field existed) must also mean excluded, not just `false`.
+  if (node.includeInSyntheticVoice !== true) return []
   const title = plainText(node.title)
   const nested = ctx.flatten(node.body ?? [], ctx.voice, 'infobox')
   if (!title && !nested.length) return []

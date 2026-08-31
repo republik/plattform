@@ -335,12 +335,13 @@ describe('buildSpeakableContent', () => {
   })
 
   describe('infoBox', () => {
-    it('speaks title then body', () => {
+    it('speaks title then body when opted in', () => {
       const result = buildSpeakableContent(
         {
           content: [
             {
               _type: 'infoBox',
+              includeInSyntheticVoice: true,
               title: 'Zum Hintergrund',
               body: [block('Kasteninhalt.')],
             },
@@ -356,9 +357,18 @@ describe('buildSpeakableContent', () => {
       )
     })
 
-    it('still includes the title when body is empty', () => {
+    it('still includes the title when body is empty and opted in', () => {
       const result = buildSpeakableContent(
-        { content: [{ _type: 'infoBox', title: 'Nur ein Titel', body: [] }] },
+        {
+          content: [
+            {
+              _type: 'infoBox',
+              includeInSyntheticVoice: true,
+              title: 'Nur ein Titel',
+              body: [],
+            },
+          ],
+        },
         'voice-a',
       )
       expect(paragraphs(result)).toEqual(
@@ -366,9 +376,39 @@ describe('buildSpeakableContent', () => {
       )
     })
 
+    it('is dropped entirely when not opted in, regardless of content', () => {
+      const result = buildSpeakableContent(
+        {
+          content: [
+            {
+              _type: 'infoBox',
+              title: 'Zum Hintergrund',
+              body: [block('Kasteninhalt.')],
+            },
+            {
+              _type: 'infoBox',
+              includeInSyntheticVoice: false,
+              title: 'Auch nicht',
+              body: [block('Auch nicht.')],
+            },
+            block('Absatz.'),
+          ],
+        },
+        'voice-a',
+      )
+      expect(paragraphs(result).some((p) => p.role.startsWith('infobox'))).toBe(
+        false,
+      )
+    })
+
     it('is dropped entirely when both title and body are empty', () => {
       const result = buildSpeakableContent(
-        { content: [{ _type: 'infoBox', body: [] }, block('Absatz.')] },
+        {
+          content: [
+            { _type: 'infoBox', includeInSyntheticVoice: true, body: [] },
+            block('Absatz.'),
+          ],
+        },
         'voice-a',
       )
       expect(paragraphs(result).some((p) => p.role.startsWith('infobox'))).toBe(
