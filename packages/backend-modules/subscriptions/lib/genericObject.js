@@ -1,8 +1,13 @@
 const { getParsedDocumentId } = require('../../search/lib/Documents')
-const {
-  isSanityRef,
-  fromSanityRef,
-} = require('@orbiting/backend-modules-sanity')
+
+// Duplicated from @orbiting/backend-modules-sanity's lib/document.ts rather
+// than imported: that package already depends on this one (lib/article.js
+// sends notifications via @orbiting/backend-modules-subscriptions), so a
+// dependency the other way would form a cycle. Keep in sync if the prefix
+// ever changes.
+const SANITY_ID_PREFIX = 'sanity:'
+const isSanityRef = (value) => value.startsWith(SANITY_ID_PREFIX)
+const fromSanityRef = (value) => value.slice(SANITY_ID_PREFIX.length)
 
 const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
   const normalize = (obj) => {
