@@ -80,7 +80,6 @@ const teaserTitle = cva({
     textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
-    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -127,13 +126,11 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
-  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
-  position: 'relative', // place above the link overlay
 })
 
 const imageCredits = cva({
@@ -206,6 +203,11 @@ export function SplitTeaser({
 
   return (
     <div
+      data-sanity={dataAttribute({
+        id: _id,
+        type: _type,
+        path: '/',
+      })}
       className={teaserStyle({
         imagePosition: teaser.imagePosition ?? 'LEFT',
         imagePadding: teaser.imagePadding ? 'TRUE' : 'FALSE',
@@ -219,15 +221,9 @@ export function SplitTeaser({
         className={css({
           gridArea: 'image',
           position: 'relative',
-          zIndex: 1, // place above the link overlay
         })}
       >
         <TeaserLargeImage
-          data-sanity={dataAttribute({
-            id: _id,
-            type: _type,
-            path: 'teaserLarge.image',
-          })}
           image={teaser.image}
           className={css({
             display: 'block',
