@@ -17,7 +17,7 @@ export interface ArticleDoc {
   content?: PortableTextBlocks
   slug?: { current: string }
   syntheticVoice?: string
-  suppressSyntheticReadAloud?: boolean
+  syntheticVoiceEnabled?: boolean
 }
 
 export const fetchArticle = (documentId: string) =>
@@ -29,7 +29,7 @@ export const fetchArticle = (documentId: string) =>
   sanityClient().fetch<ArticleDoc | null>(
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
-      syntheticVoice, suppressSyntheticReadAloud
+      syntheticVoice, syntheticVoiceEnabled
     }`,
     { id: documentId },
     { perspective: 'raw' },

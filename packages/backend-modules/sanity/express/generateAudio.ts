@@ -35,8 +35,8 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     return res.status(404).json(errorBody(`document ${documentId} not found`))
   }
 
-  if (article.suppressSyntheticReadAloud) {
-    const message = 'synthetic read aloud is suppressed for this document'
+  if (article.syntheticVoiceEnabled === false) {
+    const message = 'synthetic voice is disabled for this document'
     await reportAudioGenerationError(documentId, message)
     return res.status(422).json(errorBody(message))
   }
