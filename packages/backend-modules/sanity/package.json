@@ -30,6 +30,7 @@
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-job-queue": "*",
     "@orbiting/backend-modules-logger": "*",
+    "@orbiting/backend-modules-redirections": "*",
     "@orbiting/backend-modules-subscriptions": "*",
     "@portabletext/toolkit": "^2.0.16",
     "@sanity/client": "^6.24.1",

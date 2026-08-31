@@ -1,6 +1,7 @@
 import { Express } from 'express'
 import bodyParser from 'body-parser'
 import { verifySanityToken, verifyReadToken } from './auth'
+import { createRedirectHandler } from './createRedirect'
 import { discussionsHandler } from './discussions'
 import { fetchEmbedVideoHandler } from './fetchEmbedVideo'
 import { generateAudioHandler } from './generateAudio'
@@ -34,6 +35,13 @@ const middleware = async (
     bodyParser.json(),
     verifySanityToken,
     publishNotificationHandler,
+  )
+
+  server.post(
+    '/webhooks/sanity/create-redirect',
+    bodyParser.json(),
+    verifySanityToken,
+    createRedirectHandler(pgdb),
   )
 
   server.get(
