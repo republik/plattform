@@ -18,6 +18,12 @@ export interface ArticleDoc {
   slug?: { current: string }
   syntheticVoice?: string
   syntheticVoiceEnabled?: boolean
+  // Hash of the speakable fields as of the last successful generation (see
+  // hashSpeakableContent) — lets this handler recognize a request for
+  // already-generated content itself, rather than trusting sync-audio's own
+  // copy of that same check to have caught it first.
+  audioContentHash?: string
+  audioGenerationResult?: { status?: string }
 }
 
 export const fetchArticle = (documentId: string) =>
@@ -29,7 +35,8 @@ export const fetchArticle = (documentId: string) =>
   sanityClient().fetch<ArticleDoc | null>(
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
-      syntheticVoice, syntheticVoiceEnabled
+      syntheticVoice, syntheticVoiceEnabled, audioContentHash,
+      "audioGenerationResult": audioGenerationResult{status}
     }`,
     { id: documentId },
     { perspective: 'raw' },

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import {
   fetchArticle,
+  reportAudioGenerationSuccess,
   reportAudioGenerationError,
   errorMessage,
 } from '../lib/audio'
@@ -35,6 +36,21 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     return res.status(404).json(errorBody(`document ${documentId} not found`))
   }
 
+  // sync-audio has its own copy of this same check and is meant to skip
+  // calling this endpoint at all when content is unchanged — but that check
+  // has proven unreliable in practice (a Blueprint Function redeploy isn't
+  // always reflected the way a normal deploy is, and it's occasionally
+  // missed a genuine match). Re-checking here means a request that shouldn't
+  // have been sent still self-heals a wrong/stuck status instead of costing
+  // a full Huebsch generation, regardless of what sync-audio decided.
+  const contentHash = hashSpeakableContent(article)
+  if (article.audioContentHash && article.audioContentHash === contentHash) {
+    if (article.audioGenerationResult?.status !== 'success') {
+      await reportAudioGenerationSuccess(documentId)
+    }
+    return res.json({ success: true, unchanged: true })
+  }
+
   if (article.syntheticVoiceEnabled === false) {
     const message = 'synthetic voice is disabled for this document'
     await reportAudioGenerationError(documentId, message)
@@ -59,10 +75,6 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
 
   const slug = article.slug?.current ?? article._id
   const titleSlug = titleSlugFrom(article.slug?.current, article._id)
-  // Fingerprints exactly the content this request is about to speak, so the
-  // webhook can later persist it as audioContentHash — only once generation
-  // is confirmed to have actually succeeded.
-  const contentHash = hashSpeakableContent(article)
   const publicUrl = process.env.PUBLIC_URL
   if (!publicUrl) {
     // Routed the same way as every other failure in this handler, so it shows
