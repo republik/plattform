@@ -18,5 +18,8 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "link": "yarn link"
+  },
+  "dependencies": {
+    "@orbiting/backend-modules-sanity": "*"
   }
 }

@@ -1,4 +1,8 @@
 const { getParsedDocumentId } = require('../../search/lib/Documents')
+const {
+  isSanityRef,
+  fromSanityRef,
+} = require('@orbiting/backend-modules-sanity')
 
 const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
   const normalize = (obj) => {
@@ -22,7 +26,25 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
       // for a Sanity-backed one it's the loader's normalized `sanity:`-
       // prefixed ref (see documents/loaders/Document.js).
       .then((o) => o && { ...o, objectId: o.meta.repoId })
-      .then(normalize)
+      .then((obj) => {
+        if (!obj) {
+          return
+        }
+        // A Sanity-backed document has no resolvable GraphQL `Document`
+        // (no mdast/content), so it's surfaced as its own union member
+        // rather than as `Document` — the frontend needs `__typename` to
+        // tell the two apart and fetch preview data from Sanity directly.
+        if (isSanityRef(obj.objectId)) {
+          const sanityId = fromSanityRef(obj.objectId)
+          return {
+            id: sanityId,
+            sanityId,
+            objectId: obj.objectId,
+            __typename: 'SanityDocumentRef',
+          }
+        }
+        return normalize(obj)
+      })
   }
   throw new Error(t('api/subscriptions/type/notSupported'))
 }
