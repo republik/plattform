@@ -1,9 +1,7 @@
 import { AudioEmbed } from '@/app/(sanity)/components/portable-text/audio-embed'
-import { AuthorBlock } from '@/app/(sanity)/components/portable-text/author-block'
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Heading } from '@/app/(sanity)/components/portable-text/blocks'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
-import { Conditional } from '@/app/(sanity)/components/portable-text/conditional'
 import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
@@ -50,14 +48,14 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     embedVideo: ({ value }) => <EmbedVideo value={value} />,
     audio: ({ value }) => <AudioEmbed value={value} />,
     seriesNav: SeriesNav,
-    authorBlock: AuthorBlock,
-    // This is the web, we never render emailOnly/voiceTag blocks :)
+    // This is the web, we never render emailOnly/voiceTag/conditionals/author blocks :)
     emailOnly: () => null,
     voiceTag: () => null,
+    if: () => null,
+    ifNot: () => null,
+    authorBlock: () => null,
     // Wrap function because renderNode can't be passed to a client component
     button: ({ value }) => <Button value={value} />,
-    if: ({ value }) => <Conditional value={value} />,
-    ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     variable: ({ value }) => <Variable value={value} />,
     storyComponent: ({ value }) => <StoryComponent value={value} />,
