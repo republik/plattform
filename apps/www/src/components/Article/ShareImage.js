@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import Head from 'next/head'
 import { ShareImagePreview } from '@project-r/styleguide'
 
-const ShareImage = ({ meta }) => (
+const ShareImage = ({ meta, isGift = false }) => (
   <Fragment>
     <Head>
       <meta name='robots' content='noindex' />
@@ -13,6 +13,7 @@ const ShareImage = ({ meta }) => (
       fontSize={meta['shareFontSize']}
       inverted={meta['shareInverted']}
       textPosition={meta['shareTextPosition']}
+      isGift={isGift}
     />
   </Fragment>
 )

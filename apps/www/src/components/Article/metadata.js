@@ -84,15 +84,16 @@ function getCitationMetaData(meta) {
 export const getCacheKey = (documentId, meta) =>
   `${documentId}${meta.format ? `-${meta.format.id}` : ''}`
 
-export const getMetaData = (documentId, meta) => {
+export const getMetaData = (documentId, meta, { isGift } = {}) => {
   const cacheKey = getCacheKey(documentId, meta)
+  const giftParam = isGift ? '&gift=1' : ''
   const shareImage =
     meta.shareText &&
     screenshotUrl({
-      url: `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
+      url: `${PUBLIC_BASE_URL}${meta.path}?extract=share${giftParam}`,
       width: SHARE_IMAGE_WIDTH,
       height: SHARE_IMAGE_HEIGHT,
-      version: cacheKey,
+      version: isGift ? `${cacheKey}-gift` : cacheKey,
     })
 
   const metaWithUrls = {
