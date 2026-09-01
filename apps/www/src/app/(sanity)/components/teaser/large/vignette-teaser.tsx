@@ -37,7 +37,6 @@ const teaserTitle = cva({
     fontSize: '26px',
     lineHeight: '32px',
     md: { fontSize: '32px', lineHeight: '37px' },
-    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -82,13 +81,11 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
-  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
-  position: 'relative', // place above the link overlay
 })
 
 const imageStyle = css({
@@ -122,13 +119,18 @@ export function VignetteTeaser({
 
   return (
     <div
+      data-sanity={dataAttribute({
+        id: _id,
+        type: _type,
+        path: '/',
+      })}
       className={teaserStyle()}
       style={{
         color: teaser.color?.hex,
         backgroundColor: teaser.backgroundColor?.hex,
       }}
     >
-      <div className={css({ position: 'relative', zIndex: 1 })}>
+      <div className={css({ position: 'relative' })}>
         <TeaserLargeImage
           data-sanity={dataAttribute({
             id: _id,

@@ -2,6 +2,7 @@ import { InlinePortableText } from '@/app/(sanity)/components/portable-text/rend
 import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -16,7 +17,6 @@ const teaserTitle = cva({
       fontSize: '100px',
       lineHeight: '110px',
     },
-    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -69,16 +69,16 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
-  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
-  position: 'relative', // place above the link overlay
 })
 
 export function TextTeaser({
+  _id,
+  _type,
   target,
   targetId,
   publishDate,
@@ -90,6 +90,11 @@ export function TextTeaser({
 
   return (
     <div
+      data-sanity={dataAttribute({
+        id: _id,
+        type: _type,
+        path: '/',
+      })}
       className={css({
         position: 'relative',
         display: 'grid',

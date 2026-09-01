@@ -5,6 +5,7 @@ import {
   TeaserLargeImage,
 } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -93,7 +94,6 @@ const teaserTitle = cva({
       fontSize: '58px',
       lineHeight: '60px',
     },
-    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -129,7 +129,6 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
-  position: 'relative', // place above the link overlay
 })
 
 const teaserContainer = css({
@@ -141,10 +140,10 @@ const teaserContainer = css({
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
-  position: 'relative', // place above the link overlay
 })
 
 export function ImageTeaser({
+  _id,
   _type,
   target,
   targetId,
@@ -157,6 +156,11 @@ export function ImageTeaser({
 
   return (
     <div
+      data-sanity={dataAttribute({
+        id: _id,
+        type: _type,
+        path: '/',
+      })}
       className={teaserContainer}
       style={{
         color: teaser.color?.hex,

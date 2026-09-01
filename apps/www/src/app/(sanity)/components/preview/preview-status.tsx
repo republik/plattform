@@ -59,14 +59,16 @@ export function PreviewStatus({
           ? 'Publizierte Version'
           : JSON.stringify(perspective)}
       </span>
-      <button
+      {/*
+        Disabled because it was too easy to accidentally click, leading to a 404
+        <button
         className={css({ textDecoration: 'underline' })}
         onClick={() => {
           fetch('/api/draft/disable').then(() => window.location.reload())
         }}
       >
         Vorschau verlassen
-      </button>
+      </button>*/}
     </div>
   )
 }

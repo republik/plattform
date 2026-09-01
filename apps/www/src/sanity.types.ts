@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type Src = {
   mp4?: string
   hls?: string
