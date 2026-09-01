@@ -6,6 +6,7 @@ import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-st
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { EmbedVideo } from '@/app/(sanity)/components/portable-text/embed-video'
+import { ExpandableLink } from '@/app/(sanity)/components/portable-text/expandable-link'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
@@ -75,6 +76,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     sup: Sup,
     link: ExternalLink,
     internalLink: InternalLink,
+    expandableLink: ExpandableLink,
   },
 }
 
