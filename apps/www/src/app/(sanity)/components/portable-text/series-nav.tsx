@@ -33,6 +33,8 @@ export async function SeriesNav({
         {!compact && (
           <p>
             {series.description}{' '}
+            {/* FIXME: series.slug is always null, as the articleCollection type does not have a slug field,
+                so it's currently impossible to render this link*/}
             {series.slug && <Link href={series.slug}>Zur Übersicht.</Link>}
           </p>
         )}
