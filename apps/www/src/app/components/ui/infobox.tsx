@@ -1,7 +1,8 @@
 import { css } from '@republik/theme/css'
 import { ReactNode } from 'react'
+import { Expandable } from './expandable'
 
-export function Infobox({
+function InfoboxBody({
   title,
   children,
 }: {
@@ -33,4 +34,24 @@ export function Infobox({
       </div>
     </div>
   )
+}
+
+export function Infobox({
+  title,
+  collapsible,
+  children,
+}: {
+  title: string
+  collapsible?: boolean
+  children: ReactNode
+}) {
+  if (collapsible) {
+    return (
+      <Expandable>
+        <InfoboxBody title={title}>{children}</InfoboxBody>
+      </Expandable>
+    )
+  }
+
+  return <InfoboxBody title={title}>{children}</InfoboxBody>
 }
