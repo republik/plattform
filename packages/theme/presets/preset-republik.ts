@@ -15,6 +15,7 @@ export const presetRepublik = definePreset({
       dark: ':is([data-theme="dark"], :root:has([data-force-theme="dark"])) &',
       stateOpen: '&[data-state="open"]',
       stateClosed: '&[data-state="closed"]',
+      canHover: '@media (hover: hover) and (pointer: fine)',
     },
   },
   globalCss: {
