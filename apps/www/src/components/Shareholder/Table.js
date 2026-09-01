@@ -99,6 +99,19 @@ export default () => (
     </thead>
     <tbody>
       {groupped.children.map((group, i) => {
+        const leaves = group.leaves()
+        const types = [
+          ...new Map(
+            leaves.map((d) => [
+              `${d.data.Typ}|${d.data['Nominal CHF']}`,
+              d.data,
+            ]),
+          ).values(),
+        ]
+        const groupCapital = leaves.reduce(
+          (acc, d) => acc + d.data.Anzahl * d.data['Nominal CHF'],
+          0,
+        )
         const elements = [
           <tr key={i}>
             <td {...styles.groupTd} style={{ lineHeight: '1.3em' }}>
@@ -110,15 +123,17 @@ export default () => (
               </span>
               <br />
               <span style={{ fontSize: 12 }}>
-                Typ&nbsp;{group.data.Typ}, CHF&nbsp;{group.data['Nominal CHF']}
+                {types
+                  .map(
+                    (t) => `Typ\u00a0${t.Typ}, CHF\u00a0${t['Nominal CHF']}`,
+                  )
+                  .join(' / ')}
               </span>
             </td>
             <th {...styles.groupTdNum}>{countFormat(group.value)}</th>
             <th {...styles.groupTdNum}>{percentFormat(group.value / total)}</th>
             <th {...styles.groupTdNum}>
-              {percentFormat(
-                (group.value * group.data['Nominal CHF']) / totalChf,
-              )}
+              {percentFormat(groupCapital / totalChf)}
             </th>
           </tr>,
         ]
