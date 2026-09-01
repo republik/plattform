@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 
 import {
   fontStyles,
@@ -20,9 +20,8 @@ export const ShareImage = ({
   bgColor,
   fgColor,
 }: ShareImageProps) => {
-  const router = useRouter()
-  const { query } = router
-  if (!query.extract) {
+  const searchParams = useSearchParams()
+  if (!searchParams.get('extract')) {
     return null
   }
 

@@ -1,24 +1,24 @@
-import { useEffect, useState, useMemo } from 'react'
-import { AudioPlayerProps } from '../AudioPlayerController'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { useUserAgent } from '@/lib/context/UserAgentContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
-import ExpandedAudioPlayer from './ExpandedAudioPlayer'
-import MiniAudioPlayer from './MiniAudioPlayer'
-import Backdrop from './ui/Backdrop'
-import { useRouter } from 'next/router'
 import {
-  useMediaQuery,
   mediaQueries,
   useBodyScrollLock,
-  useColorContext,
+  useMediaQuery,
 } from '@project-r/styleguide'
-import { AnimatePresence, motion } from 'motion/react'
+import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
-import AudioPlaybackElement from './AudioPlaybackElement'
-import { useUserAgent } from '@/lib/context/UserAgentContext'
+import { AnimatePresence, motion } from 'motion/react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 import { ZINDEX_POPOVER } from '../../constants'
+import { AudioPlayerProps } from '../AudioPlayerController'
+import AudioPlaybackElement from './AudioPlaybackElement'
 import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
+import ExpandedAudioPlayer from './ExpandedAudioPlayer'
+import MiniAudioPlayer, { MINI_AUDIO_PLAYER_HEIGHT } from './MiniAudioPlayer'
+import Backdrop from './ui/Backdrop'
 
 const MARGIN = 15
 
@@ -28,19 +28,24 @@ const MARGIN = 15
 // easiest would be to clear the storage if this object was found (unless in legacy app)
 const styles = {
   wrapper: css({
+    // Centered via auto margins rather than a `translateX` transform: the
+    // `motion.div` below animates its own inline `transform` (the y slide-in),
+    // which would otherwise clobber a class-based transform.
     position: 'fixed',
     zIndex: ZINDEX_POPOVER + 1,
     bottom: 0,
+    left: 0,
     right: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto',
     display: 'flex',
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
   }),
   wrapperMini: css({
-    marginRight: 'calc(15px + env(safe-area-inset-right))',
-    marginLeft: 'calc(15px + env(safe-area-inset-left))',
     marginBottom: 'calc(15px + env(safe-area-inset-bottom))',
     width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
     maxHeight: '100vh',
+    borderRadius: MINI_AUDIO_PLAYER_HEIGHT,
   }),
   wrapperExpanded: css({
     maxHeight: '100vh',
@@ -55,6 +60,13 @@ const styles = {
     paddingRight: 'calc(15px + env(safe-area-inset-left))',
     paddingBottom: 0,
     width: '100%',
+    // `styles.wrapper`'s `ZINDEX_POPOVER + 1` (41) is a legacy z-index that
+    // predates the App Router header, which hardcodes 100 — so the header
+    // always painted on top of the expanded (full-viewport) player and
+    // covered its own minimize button. Overriding it here (this spreads
+    // after `styles.wrapper`) only raises the expanded state above the
+    // header; the mini player keeps the legacy value.
+    zIndex: 101,
   }),
 }
 
@@ -85,7 +97,6 @@ const AudioPlayer = ({
   )
   const { t } = useTranslation()
   const router = useRouter()
-  const [colorScheme] = useColorContext()
   const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
 
@@ -95,10 +106,8 @@ const AudioPlayer = ({
       !inNativeApp
         ? css({
             [`${mediaQueries.mUp} and (hover: hover)`]: {
-              right: 15,
               width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
               maxWidth: 420,
-              marginRight: MARGIN * 2,
               marginBottom: MARGIN * 2,
               padding: 0,
               maxHeight: ' min(720px, calc(100vh - 60px))',
@@ -114,8 +123,8 @@ const AudioPlayer = ({
         ? css({
             [`${mediaQueries.mUp} and (hover: hover)`]: {
               height: 'auto',
-              marginRight: 'calc(15px + env(safe-area-inset-right))',
-              marginLeft: 'calc(15px + env(safe-area-inset-left))',
+              marginLeft: 'auto',
+              marginRight: 'auto',
               marginBottom: 'calc(15px + env(safe-area-inset-bottom))',
               padding: 9,
             },
@@ -224,11 +233,9 @@ const AudioPlayer = ({
                 {...desktopWrapperStyle}
                 {...(isExpanded && desktopWrapperExpandedStyle)}
                 {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
-                {...(inNativeApp && isExpanded
-                  ? colorScheme.set('backgroundColor', 'default')
-                  : colorScheme.set('backgroundColor', 'overlay'))}
-                {...colorScheme.set('boxShadow', 'overlayShadow')}
                 style={{
+                  backgroundColor: token.var('colors.background.overlay'),
+                  boxShadow: token.var('shadows.overlay'),
                   marginBottom:
                     paynoteInlineHeight !== 0
                       ? `calc(${

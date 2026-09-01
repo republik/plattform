@@ -1,0 +1,112 @@
+'use client'
+import { ContentErrorBoundary } from '@/app/(sanity)/components/content-error-boundary'
+import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
+import { dynamicComponentIdentifiers } from '@/components/Article/DynamicComponents'
+import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
+import { Mutation, Query, Subscription } from '@apollo/client/react/components'
+import {
+  graphql,
+  withApollo,
+  withMutation,
+  withQuery,
+  withSubscription,
+} from '@apollo/client/react/hoc'
+import {
+  createRequire,
+  DynamicComponent,
+  RootColorVariables,
+} from '@project-r/styleguide'
+import { cva } from '@republik/theme/css'
+import compose from 'lodash/flowRight'
+import { ErrorBoundary } from 'react-error-boundary'
+
+const dynamicComponentRequire = createRequire().alias({
+  'react-apollo': {
+    // Reexport react-apollo
+    // (work around until all dynamic components are updated)
+    // ApolloContext is no longer available but is exported in old versions of react-apollo
+    ApolloConsumer,
+    ApolloProvider,
+    Query,
+    Mutation,
+    Subscription,
+    graphql,
+    withQuery,
+    withMutation,
+    withSubscription,
+    withApollo,
+    compose,
+  },
+  // Reexport graphql-tag to be used by dynamic-components
+  'graphql-tag': gql,
+})
+
+const figureStyle = cva({
+  base: {
+    '& > figcaption': {
+      mt: '1',
+    },
+  },
+  variants: {
+    size: {
+      NORMAL: {},
+      BREAKOUT: {
+        gridColumn: 'breakout',
+      },
+      FULL: {
+        gridColumn: 'full',
+        '& > figcaption': {
+          ml: '4',
+        },
+      },
+    },
+  },
+})
+
+export function LegacyDynamicComponent({
+  value,
+}: {
+  value: Extract<ArticlePortableTextBlockType, { _type: 'dynamicComponent' }>
+}) {
+  if (!value.src && !value.identifier) {
+    return null
+  }
+
+  let componentName = 'unknown'
+  if (value.src) {
+    const src = new URL(value.src)
+    const match = src.pathname.match(
+      /\/dynamic-components\/([a-z0-9\-]+)\/([a-z0-9\-]+)\.js/,
+    )
+    componentName = match
+      ? match[2] === 'index'
+        ? match[1]
+        : `${match[1]}-${match[2]}`
+      : null
+  } else if (value.identifier) {
+    componentName = value.identifier
+  }
+
+  const props = JSON.parse(value.props?.code ?? '{}')
+
+  return (
+    <div
+      data-dynamic-component={`${componentName}`}
+      className={figureStyle({ size: value.size })}
+    >
+      <RootColorVariables />
+      <ContentErrorBoundary title='Diese Grafik kann wegen eines Fehlers nicht dargestellt werden.'>
+        <DynamicComponent
+          require={dynamicComponentRequire}
+          identifiers={dynamicComponentIdentifiers}
+          identifier={value.identifier}
+          src={value.src}
+          // size={value.size}
+          autoHtml={value.autoHtml}
+          html={value.html}
+          props={props}
+        />
+      </ContentErrorBoundary>
+    </div>
+  )
+}

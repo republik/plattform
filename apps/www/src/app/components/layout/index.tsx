@@ -11,6 +11,7 @@ import { PullToRefresh } from './pull-to-refresh'
 type LayoutProps = {
   showHeader?: boolean
   showFooter?: boolean
+  showDraftModeIndicator?: boolean
   children: React.ReactNode
 }
 

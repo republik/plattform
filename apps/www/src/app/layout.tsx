@@ -2,14 +2,20 @@ import { NativeAppMessageSync } from '@/app/components/native-app'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 
-import { PaynoteOverlay } from '@/app/components/paynotes/paynote/paynote-overlay'
+import { PaynotesProvider } from '@/app/components/paynotes/paynotes-context'
 import { ThemeProvider } from '@/app/components/theme-provider'
 import { AnalyticsProvider } from '@/app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 import { ApolloWrapper } from '@/app/lib/apollo/provider'
-import { css } from '@republik/theme/css'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import MeContextProvider from '@/lib/context/MeContext'
+import UserAgentProvider from '@/lib/context/UserAgentContext'
+
+import AudioPlayerOrchestrator from '@/components/Audio/AudioPlayerOrchestrator'
+import AudioProvider from '@/components/Audio/AudioProvider'
+import MediaProgressContext from '@/components/Audio/MediaProgress'
+
+import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
 
@@ -58,10 +64,19 @@ export default async function RootLayout({
           <ApolloWrapper>
             <MeContextProvider>
               <AnalyticsProvider>
-                {children}
-                <NativeAppMessageSync />
-                <SyncUTMToSessionStorage />
-                {/* <PaynoteOverlay /> */}
+                <UserAgentProvider>
+                  <MediaProgressContext>
+                    <AudioProvider>
+                      <PaynotesProvider>
+                        {children}
+                        <NativeAppMessageSync />
+                        <AudioPlayerOrchestrator />
+                        <SyncUTMToSessionStorage />
+                        {/* <PaynoteOverlay /> */}
+                      </PaynotesProvider>
+                    </AudioProvider>
+                  </MediaProgressContext>
+                </UserAgentProvider>
               </AnalyticsProvider>
             </MeContextProvider>
           </ApolloWrapper>

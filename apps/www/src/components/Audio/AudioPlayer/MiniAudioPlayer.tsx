@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import Scrubber from './controls/Scrubber'
 import { AudioPlayerProps } from './shared'
 import Time from './ui/Time'
 import {
@@ -8,7 +7,6 @@ import {
   Spinner,
   fontStyles,
   mediaQueries,
-  useMediaQuery,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
 import AudioCover from '../AudioPlayer/ui/AudioCover'
@@ -34,7 +32,7 @@ const styles = {
     justifyContent: 'flex-start',
     gap: 8,
     alignItems: 'center',
-    padding: '0 16px 0 8px',
+    padding: '0 16px 0 16px',
   }),
   metaDataWrapper: css({
     display: 'flex',
@@ -78,16 +76,12 @@ const MiniAudioPlayer = ({
   isLoading,
   currentTime = 0,
   duration = 0,
-  buffered,
   handleExpand,
   handleToggle,
-  handleSeek,
   handleClose,
   handleOpenArticle,
   hasError,
 }: MiniAudioPlayerProps) => {
-  const isDesktop = useMediaQuery(mediaQueries.mUp)
-
   if (!activeItem) {
     handleClose()
     return null
@@ -95,7 +89,16 @@ const MiniAudioPlayer = ({
 
   const {
     document: {
-      meta: { title, path, image, format, audioCoverCrop, coverSm },
+      meta: {
+        title,
+        path,
+        image,
+        format,
+        audioCoverCrop,
+        coverSm,
+        cover,
+        coverDark,
+      },
     },
   } = activeItem
 
@@ -118,7 +121,8 @@ const MiniAudioPlayer = ({
           />
         )}
         <AudioCover
-          cover={coverSm}
+          cover={coverSm ?? cover}
+          coverDark={coverDark}
           size={40}
           image={image}
           format={format?.meta}
@@ -155,16 +159,6 @@ const MiniAudioPlayer = ({
         ) : (
           <AudioError />
         )}
-      </div>
-      <div>
-        <Scrubber
-          currentTime={currentTime}
-          duration={duration}
-          buffered={buffered}
-          onSeek={handleSeek}
-          disabled={!isDesktop || isLoading || hasError}
-          showScrubber={false}
-        />
       </div>
     </div>
   )

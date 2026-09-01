@@ -4,15 +4,15 @@ import {
   NextReadDocumentFieldsFragment,
   NextReadDocumentFieldsFragmentDoc,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
 import { ArticleSection } from '@/app/components/ui/section'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@/app/lib/analytics/event-tracking'
+import { useTranslation } from '@/lib/withT'
+import { useQuery } from '@apollo/client'
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
-import { useTranslation } from '@/lib/withT'
 import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {

@@ -9,21 +9,10 @@
     "target": "ES2020",
     "strictNullChecks": false,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "#graphql/*": [
-        "./graphql/*"
-      ],
+      "@/*": ["./src/*"],
+      "#graphql/*": ["./graphql/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

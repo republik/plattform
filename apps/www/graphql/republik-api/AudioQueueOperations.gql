@@ -1,3 +1,53 @@
+fragment AudioQueueItemRef on AudioQueueItemRef {
+  id
+  sequence
+  mediaId
+  repoId
+  sanityId
+  userProgress {
+    id
+    secs
+  }
+}
+
+query AudioQueueQuery {
+  userAudioQueue {
+    ...AudioQueueItemRef
+  }
+}
+
+mutation AddAudioQueueItemRef($entity: AudioQueueEntityInput!, $sequence: Int) {
+  audioQueueItems: addAudioQueueItemRef(entity: $entity, sequence: $sequence) {
+    ...AudioQueueItemRef
+  }
+}
+
+mutation MoveAudioQueueItem($id: ID!, $sequence: Int!) {
+  audioQueueItems: moveAudioQueueItemRef(id: $id, sequence: $sequence) {
+    id
+    sequence
+  }
+}
+
+mutation RemoveAudioQueueItem($id: ID!) {
+  audioQueueItems: removeAudioQueueItemRef(id: $id) {
+    id
+  }
+}
+
+mutation ClearAudioQueue {
+  audioQueueItems: clearAudioQueueRefs {
+    id
+  }
+}
+
+mutation ReorderAudioQueue($ids: [ID!]!) {
+  audioQueueItems: reorderAudioQueueRefs(ids: $ids) {
+    id
+    sequence
+  }
+}
+
 fragment AudioQueueItem on AudioQueueItem {
   id
   sequence
@@ -43,44 +93,9 @@ fragment AudioQueueItem on AudioQueueItem {
   }
 }
 
-query AudioQueueQuery {
-  me {
-    id
-    audioQueue {
-      ...AudioQueueItem
-    }
-  }
-}
-
 mutation AddAudioQueueItems($entity: AudioQueueEntityInput!, $sequence: Int) {
   audioQueueItems: addAudioQueueItem(entity: $entity, sequence: $sequence) {
     ...AudioQueueItem
-  }
-}
-
-mutation MoveAudioQueueItem($id: ID!, $sequence: Int!) {
-  audioQueueItems: moveAudioQueueItem(id: $id, sequence: $sequence) {
-    id
-    sequence
-  }
-}
-
-mutation RemoveAudioQueueItem($id: ID!) {
-  audioQueueItems: removeAudioQueueItem(id: $id) {
-    id
-  }
-}
-
-mutation ClearAudioQueue {
-  audioQueueItems: clearAudioQueue {
-    id
-  }
-}
-
-mutation ReorderAudioQueue($ids: [ID!]!) {
-  audioQueueItems: reorderAudioQueue(ids: $ids) {
-    id
-    sequence
   }
 }
 

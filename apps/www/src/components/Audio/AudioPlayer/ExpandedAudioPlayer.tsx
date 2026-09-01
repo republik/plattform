@@ -1,33 +1,32 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
-import { css } from 'glamor'
-import { useRouter } from 'next/router'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
+import { useMe } from '@/lib/context/MeContext'
+import { useUserAgent } from '@/lib/context/UserAgentContext'
+import { useInNativeApp } from '@/lib/withInNativeApp'
 import {
+  fontStyles,
   IconButton,
   mediaQueries,
-  useMediaQuery,
   Scroller,
   TabButton,
-  useColorContext,
-  fontStyles,
+  useMediaQuery,
 } from '@project-r/styleguide'
-import { motion } from 'motion/react'
-import { AudioPlayerProps } from './shared'
-import CurrentlyPlaying from './ui/CurrentlyPlaying'
-import Queue from './ui/tabs/queue/Queue'
-import AudioControl, { AudioControlProps } from './controls/AudioControl'
-import LatestArticles from './ui/tabs/latest/LatestArticles'
-import AudioError from './ui/AudioError'
-import { useUserAgent } from '@/lib/context/UserAgentContext'
-import { useMe } from '@/lib/context/MeContext'
-import { useInNativeApp } from '@/lib/withInNativeApp'
-import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
-import { trackEvent } from '@/app/lib/analytics/event-tracking'
-import {
-  AudioPlayerLocations,
-  AudioPlayerActions,
-} from '../types/AudioActionTracking'
 import { IconExpandMore } from '@republik/icons'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import { motion } from 'motion/react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
+import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
+import {
+  AudioPlayerActions,
+  AudioPlayerLocations,
+} from '../types/AudioActionTracking'
 import { AudioQueueItem } from '../types/AudioPlayerItem'
+import AudioControl, { AudioControlProps } from './controls/AudioControl'
+import { AudioPlayerProps } from './shared'
+import AudioError from './ui/AudioError'
+import CurrentlyPlaying from './ui/CurrentlyPlaying'
+import LatestArticles from './ui/tabs/latest/LatestArticles'
+import Queue from './ui/tabs/queue/Queue'
 
 const styles = {
   root: css({
@@ -73,6 +72,7 @@ const styles = {
     flexGrow: 1,
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
+    borderColor: token.var('colors.divider'),
   }),
   header: css({
     display: 'flex',
@@ -91,6 +91,7 @@ const styles = {
     lineHeight: '20px',
     marginBottom: 8,
     marginTop: 0,
+    color: token.var('colors.text'),
   }),
   topWrapper: css({
     display: 'flex',
@@ -139,12 +140,10 @@ const ExpandedAudioPlayer = ({
   isAutoPlayEnabled,
   setAutoPlayEnabled,
 }: ExpandedAudioPlayerProps) => {
-  const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
   const { isAndroid } = useUserAgent()
   const { inNativeApp } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const router = useRouter()
   const { hasAccess, isMember } = useMe()
 
   // On Android we expect the back-button to close the expanded-player
@@ -153,13 +152,15 @@ const ExpandedAudioPlayer = ({
     if (isDesktop || !isAndroid) {
       return
     }
-    router.beforePopState(() => {
+    // FIXME: this does not actually prevent navigation if there is no state that was pushed before
+    const handlePopState = (e) => {
+      e.preventDefault()
       handleMinimize()
       return false
-    })
-
-    return () => router.beforePopState(() => true)
-  }, [router.beforePopState, handleMinimize])
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [handleMinimize])
 
   const handleDownload = async (item: AudioQueueItem['document']) => {
     try {
@@ -180,15 +181,15 @@ const ExpandedAudioPlayer = ({
         '&::-webkit-scrollbar': {
           height: 6,
           width: 6,
-          backgroundColor: colorScheme.getCSSColor('hover'),
+          backgroundColor: token.var('colors.hover'),
           borderRadius: 10,
         },
         '&::-webkit-scrollbar-thumb': {
-          backgroundColor: colorScheme.getCSSColor('divider'),
+          backgroundColor: token.var('colors.divider'),
           borderRadius: 10,
         },
       }),
-    [colorScheme],
+    [],
   )
 
   const nativeAppBodyStyle = useMemo(
@@ -210,7 +211,7 @@ const ExpandedAudioPlayer = ({
   return (
     <div {...styles.root} {...(!hasAccess && styles.rootNoAccess)}>
       <div {...styles.header}>
-        <p {...styles.heading} {...colorScheme.set('color', 'text')}>
+        <p {...styles.heading}>
           {t(
             activeItem
               ? 'AudioPlayer/Queue/ActiveHeading'
@@ -267,10 +268,7 @@ const ExpandedAudioPlayer = ({
                 isActive={activeTab === 'LATEST'}
                 onClick={() => setActiveTab('LATEST')}
               />
-              <span
-                {...styles.tabBorder}
-                {...colorScheme.set('borderColor', 'divider')}
-              />
+              <span {...styles.tabBorder} />
             </Scroller>
             <motion.div
               ref={bodyLockTargetRef}

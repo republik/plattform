@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
+import { token } from '@republik/theme/tokens'
 
 const styles = {
   filterButton: css({
@@ -23,12 +24,15 @@ type FilterButtonProps = {
 }
 
 const FilterButton = ({ children, onClick, isActive }: FilterButtonProps) => {
-  const [colorScheme] = useColorContext()
   return (
     <button
       onClick={() => onClick()}
       {...styles.filterButton}
-      {...colorScheme.set('color', isActive ? 'text' : 'disabled')}
+      style={{
+        color: isActive
+          ? token.var('colors.text')
+          : token.var('colors.disabled'),
+      }}
     >
       {children}
     </button>

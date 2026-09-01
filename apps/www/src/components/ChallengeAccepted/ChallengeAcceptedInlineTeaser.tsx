@@ -12,7 +12,7 @@ import { css } from 'glamor'
 import { useMe } from '@/lib/context/MeContext'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 import ChallengeAcceptedSVG from '@/../public/static/challenge-accepted/challenge-accepted.svg'
 import ChallengeAcceptedSVGDark from '@/../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { challengeAcceptedColors } from './colors'
@@ -65,7 +65,7 @@ export const CAOverViewLink = () => (
 )
 
 export const CANewsLetterSignUp = () => {
-  const { asPath } = useRouter()
+  const pathname = usePathname()
   return (
     <div {...css({ width: '100%' })}>
       <h2
@@ -77,7 +77,7 @@ export const CANewsLetterSignUp = () => {
       >
         20’000 sind schon dabei. Jetzt für den Newsletter anmelden.
       </h2>
-      <EventTrackingContext category='ChallengeAcceptedPayNote' name={asPath}>
+      <EventTrackingContext category='ChallengeAcceptedPayNote' name={pathname}>
         <NewsletterSignUp name={NEWSLETTER_NAME} free />
       </EventTrackingContext>
     </div>
@@ -111,7 +111,6 @@ function CABottomInlineTeaser({
   isMember,
   isNLSubscribed,
 }: CAInlineTeaserProps) {
-  const router = useRouter()
   if (isMember && isNLSubscribed) {
     return (
       <>
