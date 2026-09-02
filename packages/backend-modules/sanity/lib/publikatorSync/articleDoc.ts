@@ -58,7 +58,10 @@ export interface DraftArticleDoc {
 // written to Elasticsearch only, never back into the `publikator.commits`
 // row this hook reads from — reading it here would find it essentially
 // always empty.
-function resolveSlug(meta: Record<string, unknown> | undefined): {
+function resolveSlug(
+  meta: Record<string, unknown> | undefined,
+  effectivePublishDate: string | undefined,
+): {
   slugAuto: boolean
   slug?: { _type: 'slug'; current: string }
 } {
@@ -76,7 +79,7 @@ function resolveSlug(meta: Record<string, unknown> | undefined): {
   ).trim()
   if (!segment) return { slugAuto: false }
 
-  const datePart = formatSlugDate(meta?.publishDate)
+  const datePart = formatSlugDate(effectivePublishDate)
   const current = `/${[datePart, segment].filter(Boolean).join('/')}`
   return { slugAuto: false, slug: { _type: 'slug', current } }
 }
@@ -84,11 +87,11 @@ function resolveSlug(meta: Record<string, unknown> | undefined): {
 // getPath()'s date segment, for the templates this hook ever syncs
 // (format/section/page/front are excluded entirely by eligibility.ts, so
 // their "no date prefix" branch in getPath() never applies here). Falls
-// back to today when meta.publishDate isn't set yet (a not-yet-scheduled
-// draft) — a preview, same caveat Sanity's own native auto-derivation
-// carries for an in-progress draft, not a promise of the eventual real path.
-function formatSlugDate(publishDate: unknown): string {
-  const parsed = typeof publishDate === 'string' ? new Date(publishDate) : null
+// back to today when no publish/scheduled date is known yet at all — a
+// preview, same caveat Sanity's own native auto-derivation carries for an
+// in-progress draft, not a promise of the eventual real path.
+function formatSlugDate(effectivePublishDate: string | undefined): string {
+  const parsed = effectivePublishDate ? new Date(effectivePublishDate) : null
   const date = parsed && !Number.isNaN(parsed.getTime()) ? parsed : new Date()
   const yyyy = date.getUTCFullYear()
   const mm = String(date.getUTCMonth() + 1).padStart(2, '0')
@@ -96,10 +99,33 @@ function formatSlugDate(publishDate: unknown): string {
   return `${yyyy}/${mm}/${dd}`
 }
 
-export function buildDraftArticleDoc(commit: PublikatorCommit): DraftArticleDoc {
+// The planned/actual publication date. repoMeta.publishDate — not
+// commit.meta.publishDate — is the field to read: publish.js's
+// prepareMetaForPublish computes the effective date (the scheduled time for
+// a scheduled publish, "now" for an immediate one) and persists it via
+// updateRepo() onto the *repo* record the moment a publish is set up —
+// before this hook's own publish sync ever runs (immediate) or well before
+// the scheduled time arrives (scheduled). commit.meta.publishDate, like
+// commit.meta.path, is never written back into the raw commits row this
+// hook otherwise reads from, so it's only a fallback for the rare case
+// where an editor typed a publishDate directly into the document meta.
+function resolvePublishDate(
+  commit: PublikatorCommit,
+  repoMeta: Record<string, unknown> | undefined,
+): string | undefined {
+  if (typeof repoMeta?.publishDate === 'string') return repoMeta.publishDate
+  if (typeof commit.meta?.publishDate === 'string') return commit.meta.publishDate
+  return undefined
+}
+
+export function buildDraftArticleDoc(
+  commit: PublikatorCommit,
+  repoMeta?: Record<string, unknown>,
+): DraftArticleDoc {
   const nodes = commit.content?.children ?? []
   const { title, description, byline } = extractTitleZoneData(nodes, true)
-  const { slugAuto, slug } = resolveSlug(commit.meta)
+  const publishDate = resolvePublishDate(commit, repoMeta)
+  const { slugAuto, slug } = resolveSlug(commit.meta, publishDate)
 
   return {
     _type: 'article',
@@ -109,8 +135,6 @@ export function buildDraftArticleDoc(commit: PublikatorCommit): DraftArticleDoc 
     content: mdastToPortableText(bodyChildren(nodes), true),
     slugAuto,
     ...(slug ? { slug } : {}),
-    ...(typeof commit.meta?.publishDate === 'string'
-      ? { publishDate: commit.meta.publishDate }
-      : {}),
+    ...(publishDate ? { publishDate } : {}),
   }
 }
