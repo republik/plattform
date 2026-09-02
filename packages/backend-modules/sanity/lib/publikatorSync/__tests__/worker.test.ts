@@ -1,29 +1,12 @@
 const createOrReplace = jest.fn()
 const deleteDoc = jest.fn().mockResolvedValue(undefined)
 const getDocument = jest.fn()
-const createIfNotExists = jest.fn()
-const transactionPatch = jest.fn()
-const transactionCommit = jest.fn().mockResolvedValue(undefined)
 
 jest.mock('../../client', () => ({
   sanityClient: () => ({
     createOrReplace,
     delete: deleteDoc,
     getDocument,
-    transaction: () => {
-      const tx = {
-        createIfNotExists: (...args: unknown[]) => {
-          createIfNotExists(...args)
-          return tx
-        },
-        patch: (...args: unknown[]) => {
-          transactionPatch(...args)
-          return tx
-        },
-        commit: transactionCommit,
-      }
-      return tx
-    },
   }),
 }))
 
@@ -31,13 +14,6 @@ jest.mock('../articleDoc', () => ({
   buildDraftArticleDoc: (commit: { id: string }) => ({
     _type: 'article',
     _syncedFromCommitId: commit.id,
-    title: [
-      {
-        _type: 'block',
-        children: [{ _type: 'span', text: 'Mocked Title' }],
-      },
-    ],
-    slug: { _type: 'slug', current: '/2024/01/01/mocked-title' },
   }),
 }))
 
@@ -72,9 +48,6 @@ describe('PublikatorSyncWorker', () => {
     createOrReplace.mockReset()
     deleteDoc.mockReset().mockResolvedValue(undefined)
     getDocument.mockReset()
-    createIfNotExists.mockReset()
-    transactionPatch.mockReset()
-    transactionCommit.mockReset().mockResolvedValue(undefined)
   })
 
   it('commit: syncs the latest commit for the repo, not the one in the payload', async () => {
@@ -171,100 +144,6 @@ describe('PublikatorSyncWorker', () => {
     expect(createOrReplace.mock.invocationCallOrder[0]).toBeLessThan(
       deleteDoc.mock.invocationCallOrder[0],
     )
-  })
-
-  describe('syncDiscussion (only runs on publish)', () => {
-    it('is not called for the commit action', async () => {
-      const findOne = jest.fn().mockResolvedValue(
-        { id: 'c1', repoId: 'republik/foo', meta: { template: 'article' } },
-      )
-      const worker = makeWorker({ publikator: { commits: { findOne } } })
-
-      await worker.perform([
-        { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
-      ])
-
-      expect(createIfNotExists).not.toHaveBeenCalled()
-    })
-
-    it('createIfNotExists + patches discussionClosed after a publish, using the same id derivation as create-discussion', async () => {
-      const findOne = jest
-        .fn()
-        .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: { discussionClosed: true } })
-      const worker = makeWorker({ publikator: { commits: { findOne } } })
-
-      await worker.perform([
-        {
-          data: {
-            $version: 'v1',
-            repoId: 'republik/foo',
-            commitId: 'c42',
-            action: 'publish',
-          },
-        },
-      ])
-
-      const [publishedArticle] = createOrReplace.mock.calls[0]
-
-      expect(createIfNotExists).toHaveBeenCalledTimes(1)
-      const [discussion] = createIfNotExists.mock.calls[0]
-      expect(discussion._type).toBe('discussion')
-      expect(discussion.title).toBe('Mocked Title')
-      expect(discussion.path).toBe(publishedArticle.slug.current)
-      expect(discussion.discussionClosed).toBe(true)
-
-      expect(transactionPatch).toHaveBeenCalledWith(discussion._id, {
-        set: { discussionClosed: true },
-      })
-      // createIfNotExists is a no-op if create-discussion already created the
-      // document (e.g. with its own hardcoded discussionClosed: false) —
-      // the patch is what actually corrects the closed state either way.
-      expect(transactionCommit).toHaveBeenCalledTimes(1)
-    })
-
-    it('defaults discussionClosed to false when meta.discussionClosed is not true', async () => {
-      const findOne = jest
-        .fn()
-        .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: {} })
-      const worker = makeWorker({ publikator: { commits: { findOne } } })
-
-      await worker.perform([
-        {
-          data: {
-            $version: 'v1',
-            repoId: 'republik/foo',
-            commitId: 'c42',
-            action: 'publish',
-          },
-        },
-      ])
-
-      const [discussion] = createIfNotExists.mock.calls[0]
-      expect(discussion.discussionClosed).toBe(false)
-    })
-
-    it('does not fail the publish when the discussion sync itself fails', async () => {
-      transactionCommit.mockRejectedValueOnce(new Error('discussion write failed'))
-      const findOne = jest
-        .fn()
-        .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: {} })
-      const worker = makeWorker({ publikator: { commits: { findOne } } })
-
-      await expect(
-        worker.perform([
-          {
-            data: {
-              $version: 'v1',
-              repoId: 'republik/foo',
-              commitId: 'c42',
-              action: 'publish',
-            },
-          },
-        ]),
-      ).resolves.toBeUndefined()
-
-      expect(createOrReplace).toHaveBeenCalledTimes(1)
-    })
   })
 
   it('publish: the published doc still gets written even if the draft cleanup delete fails', async () => {
