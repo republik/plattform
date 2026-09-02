@@ -26,39 +26,80 @@ export interface DraftArticleDoc {
   byline?: unknown[]
   content: unknown[]
   slug?: { _type: 'slug'; current: string }
+  slugAuto: boolean
   publishDate?: string
 }
 
-// meta.slug — not meta.path — is the field to read here. meta.slug is
-// what's actually present on every commit: either typed by the editor, or
-// auto-derived from the title client-side when the editor's "autoSlug"
-// toggle is on (apps/publikator/components/editor/modules/document/index.js:
-// `newData.set('slug', slug(newData.get('title')))`). meta.path (the full
-// dated member-facing route, e.g. "/2024/01/01/some-title") is a
-// *different*, publish-time-only computation — publish.js's
-// prepareMetaForPublish calls lib/Document.js's getPath(), which derives it
-// from meta.slug + publishDate + template — and that result is only ever
-// written to Elasticsearch, never back into the `publikator.commits` row
-// this hook reads from. Reading meta.path here (an earlier version of this
-// file did) meant the field was essentially always empty, silently
-// dropping the slug — autoSlug included — from every synced article.
+// Sanity's article schema has its own, near-identical automatic/manual slug
+// system (workspaces/newsroom/schema/article/sharedFields.ts in studio):
+// `slugAuto: boolean` plus a `slug` that is *deliberately left empty* while
+// automatic — Sanity's own publish action derives `/yyyy/MM/dd/titel` from
+// title + publishDate at that point (shared/slug/deriveSlug.ts), the same
+// shape Publikator's own getPath() produces. That comment is explicit about
+// this: "Every path that creates an article must set [slugAuto] true —
+// initialValue covers the Studio form, but NOT raw client.create ... A new
+// creation path that forgets this silently opts the article out of
+// automatic slugs." This hook is exactly such a path, via createOrReplace,
+// so slugAuto is always set below, never left to its schema default.
 //
-// getPath()'s own cleanup for a slug containing "/" (keep only the last
-// segment) is mirrored here for the same reason: a manually-entered
-// "custom/nested/slug" shouldn't produce a multi-segment Sanity slug.
-const toSlug = (rawSlug: unknown): { _type: 'slug'; current: string } | undefined => {
-  if (typeof rawSlug !== 'string') return undefined
-  const lastSegment = rawSlug.includes('/')
-    ? rawSlug.slice(rawSlug.lastIndexOf('/') + 1)
-    : rawSlug
-  const current = lastSegment.trim()
-  return current ? { _type: 'slug', current } : undefined
+// Publikator's own meta.autoSlug (apps/publikator/components/editor/
+// modules/document/index.js) defaults to true (documentTemplate.js) and,
+// when on, auto-derives meta.slug from the title client-side the same way.
+// So: autoSlug on → mirror Sanity's own "automatic" state (slugAuto: true,
+// no slug value — let Sanity derive it at its own publish time, no need to
+// replicate Publikator's derivation here). autoSlug off → the editor chose
+// a specific address; pass it through as a manual slug, date-prefixed the
+// same way lib/Document.js's getPath() would (Publikator applies that
+// prefix regardless of auto/manual — only the segment's source differs).
+//
+// meta.slug — not meta.path — is the field to read for the segment itself.
+// meta.path (the full dated route) is a *different*, publish-time-only
+// computation (publish.js's prepareMetaForPublish → getPath()) that's
+// written to Elasticsearch only, never back into the `publikator.commits`
+// row this hook reads from — reading it here would find it essentially
+// always empty.
+function resolveSlug(meta: Record<string, unknown> | undefined): {
+  slugAuto: boolean
+  slug?: { _type: 'slug'; current: string }
+} {
+  const slugAuto = meta?.autoSlug !== false
+  if (slugAuto) return { slugAuto: true }
+
+  const rawSlug = typeof meta?.slug === 'string' ? meta.slug : undefined
+  if (!rawSlug) return { slugAuto: false }
+
+  // getPath()'s own cleanup for a slug containing "/" (keep only the last
+  // segment) — a manually-entered "custom/nested/slug" shouldn't produce a
+  // multi-segment path.
+  const segment = (
+    rawSlug.includes('/') ? rawSlug.slice(rawSlug.lastIndexOf('/') + 1) : rawSlug
+  ).trim()
+  if (!segment) return { slugAuto: false }
+
+  const datePart = formatSlugDate(meta?.publishDate)
+  const current = `/${[datePart, segment].filter(Boolean).join('/')}`
+  return { slugAuto: false, slug: { _type: 'slug', current } }
+}
+
+// getPath()'s date segment, for the templates this hook ever syncs
+// (format/section/page/front are excluded entirely by eligibility.ts, so
+// their "no date prefix" branch in getPath() never applies here). Falls
+// back to today when meta.publishDate isn't set yet (a not-yet-scheduled
+// draft) — a preview, same caveat Sanity's own native auto-derivation
+// carries for an in-progress draft, not a promise of the eventual real path.
+function formatSlugDate(publishDate: unknown): string {
+  const parsed = typeof publishDate === 'string' ? new Date(publishDate) : null
+  const date = parsed && !Number.isNaN(parsed.getTime()) ? parsed : new Date()
+  const yyyy = date.getUTCFullYear()
+  const mm = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const dd = String(date.getUTCDate()).padStart(2, '0')
+  return `${yyyy}/${mm}/${dd}`
 }
 
 export function buildDraftArticleDoc(commit: PublikatorCommit): DraftArticleDoc {
   const nodes = commit.content?.children ?? []
   const { title, description, byline } = extractTitleZoneData(nodes, true)
-  const slug = toSlug(commit.meta?.slug)
+  const { slugAuto, slug } = resolveSlug(commit.meta)
 
   return {
     _type: 'article',
@@ -66,6 +107,7 @@ export function buildDraftArticleDoc(commit: PublikatorCommit): DraftArticleDoc 
     ...(description ? { description } : {}),
     ...(byline ? { byline } : {}),
     content: mdastToPortableText(bodyChildren(nodes), true),
+    slugAuto,
     ...(slug ? { slug } : {}),
     ...(typeof commit.meta?.publishDate === 'string'
       ? { publishDate: commit.meta.publishDate }
