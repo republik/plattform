@@ -29,18 +29,36 @@ export interface DraftArticleDoc {
   publishDate?: string
 }
 
-// meta.path is the member-facing route, e.g. "/2024/01/01/some-title" —
-// Sanity's `slug.current` convention (see lib/document.ts / lib/audio.ts)
-// stores it without the leading slash.
-const toSlug = (path: unknown): { _type: 'slug'; current: string } | undefined =>
-  typeof path === 'string' && path
-    ? { _type: 'slug', current: path.replace(/^\//, '') }
-    : undefined
+// meta.slug — not meta.path — is the field to read here. meta.slug is
+// what's actually present on every commit: either typed by the editor, or
+// auto-derived from the title client-side when the editor's "autoSlug"
+// toggle is on (apps/publikator/components/editor/modules/document/index.js:
+// `newData.set('slug', slug(newData.get('title')))`). meta.path (the full
+// dated member-facing route, e.g. "/2024/01/01/some-title") is a
+// *different*, publish-time-only computation — publish.js's
+// prepareMetaForPublish calls lib/Document.js's getPath(), which derives it
+// from meta.slug + publishDate + template — and that result is only ever
+// written to Elasticsearch, never back into the `publikator.commits` row
+// this hook reads from. Reading meta.path here (an earlier version of this
+// file did) meant the field was essentially always empty, silently
+// dropping the slug — autoSlug included — from every synced article.
+//
+// getPath()'s own cleanup for a slug containing "/" (keep only the last
+// segment) is mirrored here for the same reason: a manually-entered
+// "custom/nested/slug" shouldn't produce a multi-segment Sanity slug.
+const toSlug = (rawSlug: unknown): { _type: 'slug'; current: string } | undefined => {
+  if (typeof rawSlug !== 'string') return undefined
+  const lastSegment = rawSlug.includes('/')
+    ? rawSlug.slice(rawSlug.lastIndexOf('/') + 1)
+    : rawSlug
+  const current = lastSegment.trim()
+  return current ? { _type: 'slug', current } : undefined
+}
 
 export function buildDraftArticleDoc(commit: PublikatorCommit): DraftArticleDoc {
   const nodes = commit.content?.children ?? []
   const { title, description, byline } = extractTitleZoneData(nodes, true)
-  const slug = toSlug(commit.meta?.path)
+  const slug = toSlug(commit.meta?.slug)
 
   return {
     _type: 'article',
