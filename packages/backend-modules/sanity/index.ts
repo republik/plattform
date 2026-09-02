@@ -25,3 +25,10 @@ export type { GenericDocument } from './lib/document'
 export { sanityAudioMediaId } from './lib/mediaId'
 export { repoIdToSanityId } from './lib/legacyId'
 export { PublishNotificationWorker } from './lib/workers/PublishNotificationWorker'
+export {
+  PublikatorSyncWorker,
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+  isArticleLikeMeta,
+} from './lib/publikatorSync'
+export type { PublikatorMetaLike } from './lib/publikatorSync'

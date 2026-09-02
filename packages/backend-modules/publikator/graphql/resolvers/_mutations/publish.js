@@ -47,6 +47,14 @@ const {
 const { finalizePublication } = require('../../../lib/Publication')
 const { document: getDocument } = require('../Commit')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+  isArticleLikeMeta,
+} = require('@orbiting/backend-modules-sanity')
+
 const { FRONTEND_BASE_URL, DISABLE_PUBLISH } = process.env
 
 module.exports = async (_, args, context) => {
@@ -414,6 +422,18 @@ module.exports = async (_, args, context) => {
       milestone: publication,
     },
   })
+
+  // SANITY_SYNC (transition period, removable): mirror this publish into
+  // Sanity — the draft becomes the published document. Only for
+  // article-shaped repos (see isArticleLikeMeta), same reasoning as commit.js.
+  // Enqueue never throws, so a queue hiccup can't turn this already-successful
+  // publish into a reported failure.
+  if (
+    isSyncFromPublikatorEnabled() &&
+    isArticleLikeMeta({ ...doc.content.meta, isTemplate: repoMeta?.isTemplate })
+  ) {
+    await enqueueSyncFromPublikator({ repoId, commitId, action: 'publish' })
+  }
 
   return {
     unresolvedRepoIds,

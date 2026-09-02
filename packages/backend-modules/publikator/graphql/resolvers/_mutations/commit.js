@@ -20,6 +20,14 @@ const { hashObject } = require('../../../lib/git')
 const { updateCurrentPhase, toCommit } = require('../../../lib/postgres')
 const { maybeApplyAudioSourceDuration } = require('../../../lib/audioSource')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+  isArticleLikeMeta,
+} = require('@orbiting/backend-modules-sanity')
+
 const {
   lib: {
     process: {
@@ -203,6 +211,19 @@ module.exports = async (_, args, context) => {
         commit,
       },
     })
+
+    // SANITY_SYNC (transition period, removable): mirror this commit into
+    // Sanity as a draft — only for article-shaped repos (see
+    // isArticleLikeMeta), never for format/section/page/front/template
+    // repos, which need Sanity types this hook doesn't build. Enqueue never
+    // throws, so a queue hiccup can't turn this already-successful commit
+    // into a reported failure.
+    if (
+      isSyncFromPublikatorEnabled() &&
+      isArticleLikeMeta({ ...meta, isTemplate })
+    ) {
+      await enqueueSyncFromPublikator({ repoId, action: 'commit' })
+    }
 
     return toCommit(commit)
   } catch (e) {

@@ -112,6 +112,8 @@ const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
 const { CockpitWorker } = require('./workers/cockpit')
 const {
   PublishNotificationWorker,
+  PublikatorSyncWorker,
+  isSyncFromPublikatorEnabled,
 } = require('@orbiting/backend-modules-sanity')
 
 function setupQueue(context, monitorQueueState = undefined) {
@@ -166,6 +168,13 @@ function setupQueue(context, monitorQueueState = undefined) {
       ChangeoverDeactivateWorker,
       ReferralRewardsWorker,
     )
+  }
+
+  // SANITY_SYNC (transition period, removable — see
+  // packages/backend-modules/sanity/lib/publikatorSync/index.ts). Registered
+  // only when enabled, so the queue is a no-op footprint otherwise.
+  if (isSyncFromPublikatorEnabled()) {
+    workers.push(PublikatorSyncWorker)
   }
 
   queue.registerWorkers(workers)

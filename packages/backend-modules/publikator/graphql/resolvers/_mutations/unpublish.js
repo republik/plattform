@@ -5,6 +5,13 @@ const debug = require('debug')('publikator:mutation:unpublish')
 
 const { updateCurrentPhase } = require('../../../lib/postgres')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+} = require('@orbiting/backend-modules-sanity')
+
 const { DISABLE_PUBLISH } = process.env
 
 module.exports = async (_, { repoId }, context) => {
@@ -51,6 +58,12 @@ module.exports = async (_, { repoId }, context) => {
     debug('rollback', { repoId, user: user.id })
 
     throw e
+  }
+
+  // SANITY_SYNC (transition period, removable): revert the mirrored Sanity
+  // document from published back to a draft.
+  if (isSyncFromPublikatorEnabled()) {
+    await enqueueSyncFromPublikator({ repoId, action: 'unpublish' })
   }
 
   return true
