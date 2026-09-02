@@ -6,7 +6,6 @@ import { sanityClient } from '../client'
 import { repoIdToSanityId } from '../legacyId'
 import { buildDraftArticleDoc, PublikatorCommit } from './articleDoc'
 import { resolveAssetMarkers } from './assets'
-import { buildDiscussionDoc } from './discussionDoc'
 import { isArticleLikeMeta } from './eligibility'
 
 export type PublikatorSyncPayload =
@@ -117,47 +116,18 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // publish: the published doc goes live, the draft companion is removed.
     // Deliberately two separate calls, not one atomic transaction — see
     // deleteIfExists below for why.
+    //
+    // No separate write for the linked discussion here: Sanity's own
+    // create-discussion Blueprint Function already auto-creates and links
+    // one for any published article that doesn't have one yet (filter:
+    // `_type == "article" && (!defined(discussion) || ...)`, on
+    // create/update) — this createOrReplace already puts the article in
+    // exactly the state that triggers it, no help needed. Publikator's own
+    // meta.discussionClosed is deliberately not forwarded (out of scope for
+    // now) — create-discussion's own buildDiscussionDoc always creates the
+    // discussion open regardless.
     await sanityClient().createOrReplace({ _id: id, ...doc })
     await this.deleteIfExists(draftId)
-    await this.syncDiscussion(id, doc, commit.meta?.discussionClosed)
-  }
-
-  // Sanity's own create-discussion Blueprint Function already auto-creates
-  // (and keeps the path of) the discussion linked to a published article —
-  // that already happens on its own once the write above publishes the
-  // article, nothing to do there. What it can't do is know Publikator's
-  // meta.discussionClosed, since the article document it reads has no such
-  // field — its own buildDiscussionDoc hardcodes discussionClosed: false
-  // unconditionally. This carries that one value across: createIfNotExists
-  // covers the case where this runs before create-discussion's event fires
-  // (using the exact same id/shape it would produce, so whichever of the
-  // two creates it first, the other is a no-op), and the patch corrects the
-  // closed state either way — including when create-discussion already
-  // created it first with its hardcoded false.
-  //
-  // Best-effort like deleteIfExists: the article itself already published
-  // successfully by this point, so a failure here is logged and swallowed,
-  // never allowed to turn that success into a failed/retried job.
-  private async syncDiscussion(
-    articleId: string,
-    doc: { title?: unknown[]; slug?: { current?: string } },
-    discussionClosed: unknown,
-  ) {
-    const discussion = buildDiscussionDoc(articleId, doc, discussionClosed === true)
-    try {
-      await sanityClient()
-        .transaction()
-        .createIfNotExists(discussion)
-        .patch(discussion._id, {
-          set: { discussionClosed: discussion.discussionClosed },
-        })
-        .commit()
-    } catch (error) {
-      this.logger.warn(
-        { error, articleId, discussionId: discussion._id },
-        'sanity sync: failed to sync discussion discussionClosed state',
-      )
-    }
   }
 
   // A plain delete() mutation is normally idempotent against a missing
