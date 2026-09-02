@@ -424,25 +424,38 @@ module.exports = async (_, args, context) => {
   })
 
   // SANITY_SYNC (transition period, removable): mirror this publish into
-  // Sanity — the draft becomes the published document. Only for
-  // article-shaped repos (see isArticleLikeMeta), same reasoning as commit.js.
-  // Enqueue never throws, so a queue hiccup can't turn this already-successful
+  // Sanity. Only for article-shaped repos (see isArticleLikeMeta). Enqueue
+  // never throws, so a queue hiccup can't turn this already-successful
   // publish into a reported failure.
   //
-  // Deliberately skipped when `scheduledAt` is set: a scheduled publish
-  // doesn't actually go live now — this resolver only records the schedule
-  // (Elasticsearch keeps `__state.published: false` until the scheduled
-  // time, see search's `publishScheduled`/`prepublishScheduled`). Syncing
-  // to Sanity here would flip the article to "published" in Studio hours or
-  // days before Publikator itself considers it live. The real go-live sync
-  // for a scheduled publish happens in PublicationWorker.js's doPublish,
-  // which runs at the scheduled time.
+  // Two different actions depending on scheduledAt:
+  //
+  // - Unset (publishing now): the draft becomes the published document
+  //   immediately, action 'publish'.
+  // - Set (a scheduled publish): this resolver doesn't make the article go
+  //   live now — Elasticsearch keeps `__state.published: false` until the
+  //   scheduled time (search's `publishScheduled`/`prepublishScheduled`).
+  //   Enqueueing 'publish' here would flip Sanity to "published" hours or
+  //   days early; the real go-live sync for that happens later, in
+  //   PublicationWorker.js's doPublish. But prepareMetaForPublish (above,
+  //   via getPath()) just persisted the effective publishDate — the
+  //   scheduled time itself — onto the repo record, and the *draft*
+  //   currently sitting in Sanity has no way to pick that up on its own: it
+  //   only gets refreshed on the next commit, which may not happen before
+  //   the scheduled time arrives. So refresh the draft now too (action
+  //   'commit', not 'publish') purely so its publishDate stops being stale
+  //   while it waits — worker.ts's buildDraftArticleDoc reads
+  //   repos.meta.publishDate before commit.meta.publishDate for exactly
+  //   this reason.
   if (
     isSyncFromPublikatorEnabled() &&
-    !scheduledAt &&
     isArticleLikeMeta({ ...doc.content.meta, isTemplate: repoMeta?.isTemplate })
   ) {
-    await enqueueSyncFromPublikator({ repoId, commitId, action: 'publish' })
+    await enqueueSyncFromPublikator(
+      scheduledAt
+        ? { repoId, action: 'commit' }
+        : { repoId, commitId, action: 'publish' },
+    )
   }
 
   return {
