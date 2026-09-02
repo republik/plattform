@@ -428,8 +428,18 @@ module.exports = async (_, args, context) => {
   // article-shaped repos (see isArticleLikeMeta), same reasoning as commit.js.
   // Enqueue never throws, so a queue hiccup can't turn this already-successful
   // publish into a reported failure.
+  //
+  // Deliberately skipped when `scheduledAt` is set: a scheduled publish
+  // doesn't actually go live now — this resolver only records the schedule
+  // (Elasticsearch keeps `__state.published: false` until the scheduled
+  // time, see search's `publishScheduled`/`prepublishScheduled`). Syncing
+  // to Sanity here would flip the article to "published" in Studio hours or
+  // days before Publikator itself considers it live. The real go-live sync
+  // for a scheduled publish happens in PublicationWorker.js's doPublish,
+  // which runs at the scheduled time.
   if (
     isSyncFromPublikatorEnabled() &&
+    !scheduledAt &&
     isArticleLikeMeta({ ...doc.content.meta, isTemplate: repoMeta?.isTemplate })
   ) {
     await enqueueSyncFromPublikator({ repoId, commitId, action: 'publish' })
