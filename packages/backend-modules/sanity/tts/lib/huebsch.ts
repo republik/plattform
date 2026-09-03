@@ -50,7 +50,7 @@ const intakeUrl = () => {
 export const uploadToHuebsch = async (
   speakableContent: unknown[],
   documentId: string,
-  slug: string,
+  slug: string | undefined,
   title: string,
   webhookUrl: string,
   options?: { description?: string; source?: string },
@@ -66,9 +66,16 @@ export const uploadToHuebsch = async (
           type: 'article',
           attrs: {
             title,
-            slug,
             webhook: webhookUrl,
             meta: { format: 'article' },
+            // Huebsch validates slug's format when present ("alphanumeric,
+            // hyphens and slashes, beginning with a slash") — it's an
+            // identifier, not spoken content, and a document with no real
+            // slug yet (e.g. an automatic-slug article, deliberately left
+            // empty until it's actually published) has nothing valid to
+            // offer, so it's omitted rather than sent as some synthesized
+            // placeholder value.
+            ...(slug && { slug }),
             // 256 char max per the intake docs
             ...(options?.description && {
               description: options.description.slice(0, 256),
