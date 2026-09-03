@@ -4,8 +4,9 @@ import {
   reportAudioGenerationSuccess,
   reportAudioGenerationError,
   errorMessage,
-  isAudioGenerationInProgress,
+  hasPendingVersion,
   claimAudioGeneration,
+  removePendingVersion,
 } from '../lib/audio'
 import {
   buildSpeakableContent,
@@ -73,11 +74,15 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
   // each independently winning its own claim (confirmed in practice: 13
   // separate requests to this endpoint within ~2 seconds for one article).
   // Checked/claimed here, at the layer that actually talks to Huebsch, so
-  // that scenario can only ever result in one real generation.
-  if (isAudioGenerationInProgress(article.audioGenerationResult)) {
+  // that scenario can only ever result in one real generation for a given
+  // content hash. Scoped to *this* hash specifically (not "is anything at
+  // all pending") — an editor changing the article again while an earlier,
+  // different-hash generation is still in flight must be able to start a
+  // second, independent one rather than being blocked by it.
+  if (hasPendingVersion(article.pendingAudioVersions, contentHash)) {
     return res.json({ success: true, alreadyInProgress: true })
   }
-  if (!(await claimAudioGeneration(documentId, article._rev))) {
+  if (!(await claimAudioGeneration(documentId, article._rev, contentHash))) {
     // The document changed since fetchArticle read it above — most likely a
     // sibling request's own claim just landed. Don't race it.
     return res.json({ success: true, alreadyInProgress: true })
@@ -138,6 +143,11 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     webhookUrl,
     { description, source },
   ).catch(async (e: unknown) => {
+    // The claim's placeholder was already inserted above, but the request to
+    // Huebsch itself never got off the ground — there's no job in flight to
+    // eventually resolve it, so it must not linger looking "pending" until
+    // the 72h staleness cutoff.
+    await removePendingVersion(article._id, contentHash)
     await reportAudioGenerationError(article._id, e)
   })
 
