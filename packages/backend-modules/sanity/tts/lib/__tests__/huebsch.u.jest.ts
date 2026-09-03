@@ -81,8 +81,37 @@ describe('uploadToHuebsch / parseHuebschResult (fetch stubbed)', () => {
 
     const [, requestInit] = fetchMock.mock.calls[0]
     const body = JSON.parse(requestInit.body as string)
+    expect(body.content[0].attrs.slug).toBe('/slug')
     expect(body.content[0].attrs.description).toBe('A lead.')
     expect(body.content[0].attrs.source).toBe('https://www.republik.ch/slug')
+  })
+
+  it('omits attrs.slug entirely when there is no slug yet, rather than sending a placeholder', async () => {
+    // A draft with no slug (e.g. an automatic-slug article, deliberately
+    // left empty until it's actually published) has nothing valid to offer
+    // here — Huebsch validates slug's format when present ("alphanumeric,
+    // hyphens and slashes, beginning with a slash"), so sending an empty or
+    // synthesized value would just trade one failure mode for another.
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ ok: true, val: 'accepted' }), {
+          status: 200,
+        }),
+      )
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    await uploadToHuebsch(
+      [{ type: 'sound' }],
+      'drafts.doc-1',
+      undefined,
+      'Title',
+      'https://x/webhook',
+    )
+
+    const [, requestInit] = fetchMock.mock.calls[0]
+    const body = JSON.parse(requestInit.body as string)
+    expect('slug' in body.content[0].attrs).toBe(false)
   })
 
   it('uploadToHuebsch throws a HuebschError with the parsed message on a Result-pattern error', async () => {

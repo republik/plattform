@@ -73,7 +73,12 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     return res.status(422).json(errorBody(errorMessage(e)))
   }
 
-  const slug = article.slug?.current ?? article._id
+  // A draft with no slug yet (e.g. an automatic-slug article, deliberately
+  // left empty until it's actually published) has nothing valid to offer
+  // here — uploadToHuebsch omits attrs.slug entirely rather than sending a
+  // synthesized placeholder just to have *something*; the slug is an
+  // identifier, not something the audio itself depends on.
+  const slug = article.slug?.current
   const titleSlug = titleSlugFrom(article.slug?.current, article._id)
   const publicUrl = process.env.PUBLIC_URL
   if (!publicUrl) {
