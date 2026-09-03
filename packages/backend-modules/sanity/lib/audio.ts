@@ -23,7 +23,7 @@ export interface ArticleDoc {
   // already-generated content itself, rather than trusting sync-audio's own
   // copy of that same check to have caught it first.
   audioContentHash?: string
-  audioGenerationResult?: { status?: string }
+  audioGenerationResult?: { status?: string; updatedAt?: string }
   // Only needed to derive a preview slug (see tts/lib/deriveSlug.ts) when
   // slug is empty — an automatic-slug article deliberately has no stored
   // slug until it's actually published, but Huebsch's intake API requires
@@ -44,7 +44,7 @@ export const fetchArticle = (documentId: string) =>
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
       syntheticVoice, syntheticVoiceEnabled, audioContentHash,
-      "audioGenerationResult": audioGenerationResult{status},
+      "audioGenerationResult": audioGenerationResult{status, updatedAt},
       publishDate,
       "heading": heading->{"segment": slugSegment, "template": slugTemplate}
     }`,
@@ -69,6 +69,61 @@ export const fetchAudioContentHash = (documentId: string) =>
     { id: documentId },
     { perspective: 'raw' },
   )
+
+// Mirrors studio's own STALE_AFTER_MS (functions/sync-audio/index.ts) — the
+// longest a legitimate generation + Huebsch webhook delivery can take. A
+// claim older than this must belong to a run that was abandoned (backend
+// unreachable, Huebsch's webhook lost, ...), not one still genuinely in
+// flight — without this, a lost run would block every future generation
+// for this article forever.
+const IN_PROGRESS_STALE_AFTER_MS = 72 * 60 * 60 * 1000
+
+export const isAudioGenerationInProgress = (
+  result: { status?: string; updatedAt?: string } | undefined,
+): boolean => {
+  if (result?.status !== 'in-progress') return false
+  if (!result.updatedAt) return true
+  const updatedAt = Date.parse(result.updatedAt)
+  return Number.isNaN(updatedAt) || Date.now() - updatedAt < IN_PROGRESS_STALE_AFTER_MS
+}
+
+// Atomically claims the "in-progress" slot for a generation, guarded by the
+// revision this request read the article at. sync-audio's own ifRevisionId
+// claim (functions/sync-audio/index.ts) only protects against two
+// invocations racing for the *same* revision — it does nothing to stop a
+// burst of rapid saves each spawning their own invocation, each targeting a
+// *different*, newer revision, each independently winning its own claim and
+// calling this endpoint (confirmed in practice: 13 separate
+// /webhooks/sanity/generate-audio requests within ~2 seconds for one
+// article, each passing every check up to this point and firing its own
+// Huebsch generation). This is a second, independent claim at the layer
+// that actually talks to Huebsch, so a burst of trigger requests for the
+// same content can only ever result in one real generation: if the document
+// changed since this handler read it — e.g. a sibling request's own claim
+// already landed — the commit is rejected (409) rather than racing ahead.
+export const claimAudioGeneration = async (
+  documentId: string,
+  rev: string,
+): Promise<boolean> => {
+  try {
+    await sanityClient()
+      .patch(documentId)
+      .ifRevisionId(rev)
+      .set({
+        audioGenerationResult: {
+          status: 'in-progress',
+          updatedAt: new Date().toISOString(),
+        },
+      })
+      .commit()
+    return true
+  } catch (error) {
+    if ((error as { statusCode?: number } | null)?.statusCode === 409) {
+      return false
+    }
+    throw error
+  }
+}
 
 export interface AudioVersionChapter {
   _key: string

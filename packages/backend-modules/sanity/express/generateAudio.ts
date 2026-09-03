@@ -4,6 +4,8 @@ import {
   reportAudioGenerationSuccess,
   reportAudioGenerationError,
   errorMessage,
+  isAudioGenerationInProgress,
+  claimAudioGeneration,
 } from '../lib/audio'
 import {
   buildSpeakableContent,
@@ -62,6 +64,23 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     const message = 'no synthetic voice configured'
     await reportAudioGenerationError(documentId, message)
     return res.status(422).json(errorBody(message))
+  }
+
+  // A second, independent claim against duplicate concurrent generations —
+  // sync-audio's own ifRevisionId claim only protects against two
+  // invocations racing for the *same* revision, not a burst of rapid saves
+  // each spawning their own invocation for a *different*, newer revision,
+  // each independently winning its own claim (confirmed in practice: 13
+  // separate requests to this endpoint within ~2 seconds for one article).
+  // Checked/claimed here, at the layer that actually talks to Huebsch, so
+  // that scenario can only ever result in one real generation.
+  if (isAudioGenerationInProgress(article.audioGenerationResult)) {
+    return res.json({ success: true, alreadyInProgress: true })
+  }
+  if (!(await claimAudioGeneration(documentId, article._rev))) {
+    // The document changed since fetchArticle read it above — most likely a
+    // sibling request's own claim just landed. Don't race it.
+    return res.json({ success: true, alreadyInProgress: true })
   }
 
   let speakableContent: unknown[]
