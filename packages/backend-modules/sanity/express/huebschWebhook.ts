@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 // augmentation into scope for this module's compilation.
 import type {} from '@orbiting/backend-modules-logger'
 import {
+  fetchAudioContentHash,
   recordAudioVersion,
   reportAudioGenerationError,
   reportAudioGenerationSuccess,
@@ -63,13 +64,33 @@ export const huebschWebhookHandler = async (req: Request, res: Response) => {
   return res.status(204).end()
 }
 
-const processResult = async (
+// Exported for direct unit testing — in particular the idempotency check at
+// the top, which the handler above never awaits (it's fire-and-forget), so
+// exercising it through the handler would mean racing a background promise.
+export const processResult = async (
   req: Request,
   documentId: string,
   titleSlug: string,
   contentHash: string,
   body: unknown,
 ) => {
+  // Idempotency: a webhook provider retrying a delivery (at-least-once
+  // semantics, or just not seeing our 204 fast enough) resends the exact
+  // same signed request — nothing here would otherwise notice, and
+  // recordAudioVersion has no dedup of its own, so each delivery would
+  // append its own "new" audio version for what is actually one generation.
+  // If this contentHash is already recorded, a previous delivery already
+  // handled this result — skip before doing any of the (wasteful) work
+  // below.
+  const existingHash = await fetchAudioContentHash(documentId)
+  if (existingHash === contentHash) {
+    req.log.info(
+      { documentId, contentHash },
+      'huebsch webhook: already recorded this generation, skipping duplicate delivery',
+    )
+    return
+  }
+
   const { audioFile, chapters, durationMs } = await parseHuebschResult(body)
   const buffer = Buffer.from(audioFile)
   const generatedAt = new Date().toISOString()
