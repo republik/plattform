@@ -137,7 +137,11 @@ export function PageHeader({
           )}
         </div>
         <div className={css({ m: 'header.logoMargin', md: { width: '100%' } })}>
-          <Link href='/'>
+          {/*
+            FIXME: disable prefetching of the front because it's running in an infinite loop in prod
+            See https://github.com/vercel/next.js/issues/97329
+            */}
+          <Link href='/' prefetch={false}>
             <Logo />
           </Link>
         </div>
