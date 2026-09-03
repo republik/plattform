@@ -4,16 +4,30 @@ import {
 } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
+// Resolves a document reference to the path it lives under.
+// Contributors have no slug of their own, so they fall back to their userId.
+const REFERENCE_SLUG = /* groq */ `select(
+  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
+  reference->slug.current
+)`
+
+// A contributor's title is a plain string; articles and pages carry portable text.
+const REFERENCE_TITLE = /* groq */ `select(
+  reference->_type == "contributor" => reference->title,
+  pt::text(reference->title)
+)`
+
 export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
   content[]{
     ...,
     markDefs[]{
       ...,
       _type == "internalLink" => {
-        "slug": select(
-          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
-          reference->slug.current
-        )
+        "slug": ${REFERENCE_SLUG}
+      },
+      _type == "expandableLink" => {
+        "slug": ${REFERENCE_SLUG},
+        "referenceTitle": ${REFERENCE_TITLE}
       }
     },
     body[] { // Nested PT, e.g. in infoboxes
@@ -21,10 +35,11 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
       markDefs[]{
         ...,
         _type == "internalLink" => {
-          "slug": select(
-            reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
-            reference->slug.current
-          )
+          "slug": ${REFERENCE_SLUG}
+        },
+        _type == "expandableLink" => {
+          "slug": ${REFERENCE_SLUG},
+          "referenceTitle": ${REFERENCE_TITLE}
         }
       }
     },
@@ -36,6 +51,10 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
     _type == "authorBlock" => {
       ...,
       contributor->
+    },
+    _type == "audio" => {
+      ...,
+      "fileUrl": file.asset->url
     },
   }
 `

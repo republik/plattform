@@ -9,7 +9,7 @@ export function InfoBox({
 }: {
   value: Extract<ArticlePortableTextBlockType, { _type: 'infoBox' }>
 }) {
-  const { title, image, body } = value
+  const { title, image, body, collapsible } = value
 
   const hasImage = image?.asset
 
@@ -29,7 +29,7 @@ export function InfoBox({
     >
       {image?.asset && <AsideImage image={image} />}
 
-      <Infobox title={title}>
+      <Infobox title={title} collapsible={collapsible}>
         <NestedPortableText value={body} />
       </Infobox>
     </div>

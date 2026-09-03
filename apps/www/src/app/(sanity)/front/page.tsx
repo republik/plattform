@@ -8,6 +8,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
 // Static SEO metadata: the Sanity front document has no metadata fields
 const title = 'Republik Magazin - Ohne Journalismus keine Demokratie'
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   openGraph: {
-    title: title ,
+    title: title,
     description,
     images: ['/static/social-media/teilen.png'],
   },
@@ -68,7 +69,13 @@ export default async function FrontPage() {
         ))}
       </div>
 
-      <FrontFeed />
+      {/*
+        FIXME: The Front feed query is extremely slow and blocks the whole page load
+        So we wrap it in a Suspense boundary
+        */}
+      <Suspense>
+        <FrontFeed />
+      </Suspense>
     </EventTrackingContext>
   )
 }

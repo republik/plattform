@@ -1,6 +1,7 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
 import { editorialContentRecipe } from '../src/recipes/editorial-content'
+import { infoboxRecipe } from '../src/recipes/infobox'
 import { editorialFontSizes } from '../src/typography'
 
 export const presetRepublik = definePreset({
@@ -15,6 +16,7 @@ export const presetRepublik = definePreset({
       dark: ':is([data-theme="dark"], :root:has([data-force-theme="dark"])) &',
       stateOpen: '&[data-state="open"]',
       stateClosed: '&[data-state="closed"]',
+      canHover: '@media (hover: hover) and (pointer: fine)',
     },
   },
   globalCss: {
@@ -47,6 +49,12 @@ export const presetRepublik = definePreset({
           sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.3)' },
           md: { value: '0 0 15px 0 rgba(0, 0, 0, 0.3)' },
           overlay: { value: 'rgba(0, 0, 0, 0.12) 0px -2px 15px -3px' },
+        },
+        gradients: {
+          simple: {
+            value:
+              'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+          },
         },
         sizes: {
           full: { value: '100%' },
@@ -622,6 +630,7 @@ export const presetRepublik = definePreset({
     recipes: {
       button: buttonRecipe,
       editorialContent: editorialContentRecipe,
+      infobox: infoboxRecipe,
     },
 
     keyframes: {

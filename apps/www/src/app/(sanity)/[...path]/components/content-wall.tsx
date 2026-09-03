@@ -42,8 +42,7 @@ export function ContentWall({
               width: '100%',
               height: '200px',
               mt: '-200px',
-              background:
-                'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+              bgGradient: 'simple',
             })}
           />
         </>

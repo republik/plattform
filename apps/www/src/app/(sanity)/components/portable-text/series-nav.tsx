@@ -32,7 +32,10 @@ export async function SeriesNav({
       <Infobox title={series.title}>
         {!compact && (
           <p>
-            {series.description} <Link href={series.slug}>Zur Übersicht.</Link>
+            {series.description}{' '}
+            {/* FIXME: series.slug is always null, as the articleCollection type does not have a slug field,
+                so it's currently impossible to render this link*/}
+            {series.slug && <Link href={series.slug}>Zur Übersicht.</Link>}
           </p>
         )}
       </Infobox>

@@ -1,3 +1,4 @@
+import { Button } from '@/app/(sanity)/components/portable-text/button'
 import {
   Em,
   ExternalLink,
@@ -42,6 +43,7 @@ const nestedComponents: Partial<PortableTextReactComponents> = {
 
   types: {
     variable: ({ value }) => <Variable value={value} />,
+    button: ({ value }) => <Button value={value} />,
     voiceTag: () => null,
   },
 
