@@ -2,7 +2,8 @@
 
 import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useScrollDirection } from '@/app/lib/hooks/useScrollDirection'
-import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
+import AudioPlayerToggle from '@/components/Frame/AudioPlayerToggle'
+import { IconAccountBox, IconSearchMenu } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { hstack } from '@republik/theme/patterns'
 import Image from 'next/image'
@@ -10,7 +11,6 @@ import Link from 'next/link'
 import { ComponentPropsWithoutRef, useRef } from 'react'
 import { Logo } from './logo'
 import { NavLink } from './nav-link'
-import AudioPlayerToggle from '@/components/Frame/AudioPlayerToggle'
 
 const getInitials = (name, email) =>
   (name && name.trim()
@@ -228,8 +228,8 @@ export function PageHeader({
         className={css({
           left: 0,
           right: 0,
-          height: '3px',
-          color: 'divider', // panda's currentcolor is the fallback for borderTopColor
+          height: 'var(--page-theme-accent-bar-height)',
+          color: 'divider',
           backgroundColor: 'var(--page-theme-accent-color)',
           borderTopColor: 'var(--page-theme-accent-color)',
           borderTopWidth: 1,
