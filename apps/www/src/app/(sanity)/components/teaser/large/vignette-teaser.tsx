@@ -131,17 +131,19 @@ export function VignetteTeaser({
       }}
     >
       <div className={css({ position: 'relative' })}>
-        <TeaserLargeImage
-          data-sanity={dataAttribute({
-            id: _id,
-            type: _type,
-            path: 'teaserLarge.image',
-          })}
-          image={teaser.image}
-          className={imageStyle}
-          alt={''}
-          sizes={'(max-width: 768px) 100vw, 50vw'}
-        />
+        {teaser.image && (
+          <TeaserLargeImage
+            data-sanity={dataAttribute({
+              id: _id,
+              type: _type,
+              path: 'teaserLarge.image',
+            })}
+            image={teaser.image}
+            className={imageStyle}
+            alt={''}
+            sizes={'(max-width: 768px) 100vw, 50vw'}
+          />
+        )}
 
         {teaser.imageCredits && (
           <span
@@ -163,7 +165,8 @@ export function VignetteTeaser({
           flexDirection: 'column',
           gap: '3',
           md: {
-            px: '13%',
+            maxWidth: 'editorial',
+            px: '4',
             gap: '6',
           },
         })}
