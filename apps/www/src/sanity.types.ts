@@ -27,6 +27,11 @@ export type Src = {
   thumbnail?: string
 }
 
+export type LegacyAudioSrc = {
+  mp4?: string
+  hls?: string
+}
+
 export type EmbedCommentDiscussion = {
   id?: string
   path?: string
@@ -146,8 +151,8 @@ export type TeaserSmallConfig = {
     _type: 'image'
   }
   heading?: string
-  title?: InlineEditor
-  description?: InlineEditor
+  title?: TextOnlyInlineEditor
+  description?: TextOnlyInlineEditor
   byline?: InlineEditor
   color?: Color
   backgroundColor?: Color
@@ -160,6 +165,7 @@ export type TeaserLarge = {
   _createdAt: string
   _updatedAt: string
   _rev: string
+  teaserTitle?: string
   target?: Array<
     | ArticleReference
     | PageReference
@@ -170,8 +176,8 @@ export type TeaserLarge = {
   layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
   imagePosition?: 'LEFT' | 'RIGHT'
   heading?: string
-  title?: InlineEditor
-  description?: InlineEditor
+  title?: TextOnlyInlineEditor
+  description?: TextOnlyInlineEditor
   byline?: InlineEditor
   color?: Color
   backgroundColor?: Color
@@ -244,6 +250,21 @@ export type InlineEditor = Array<{
   _key: string
 }>
 
+export type TextOnlyInlineEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: never
+  markDefs?: null
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
 export type TeaserLargeReference = {
   _ref: string
   _type: 'reference'
@@ -257,7 +278,7 @@ export type Front = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title: InlineEditor
+  title: TextOnlyInlineEditor
   publishDate?: string
   pageBuilder?: Array<
     | ({
@@ -303,14 +324,14 @@ export type ArticleTemplate = {
   _updatedAt: string
   _rev: string
   templateName?: string
-  title: InlineEditor
-  description?: InlineEditor
+  title: TextOnlyInlineEditor
+  description?: TextOnlyInlineEditor
   byline?: InlineEditor
   heading?: PageReference
   content?: ArticleEditor
   publishDate?: string
-  emailSubject?: string
-  pushNotificationText?: string
+  emailSubject?: PlainTextInlineEditor
+  pushNotificationText?: PlainTextInlineEditor
   articleRecommendations?: ArrayOf<ArticleReference | PageReference>
   seo?: Seo
   cover?: EditorialImage
@@ -384,6 +405,9 @@ export type AudioVersion = {
   durationMs?: number
   generatedAt?: string
   source?: string
+  status?: string
+  contentHash?: string
+  error?: string
   label?: string
   chapters?: Array<{
     name?: string
@@ -476,6 +500,36 @@ export type NestedEditor = Array<
     } & Button)
 >
 
+export type TextOnlyEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: never
+  markDefs?: null
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
+export type PlainTextInlineEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: never
+  markDefs?: null
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
 export type PageEditor = Array<
   | {
       children?: Array<{
@@ -525,6 +579,9 @@ export type PageEditor = Array<
   | ({
       _key: string
     } & EmbedVideo)
+  | ({
+      _key: string
+    } & Audio)
   | ({
       _key: string
     } & EmbedDataWrapper)
@@ -625,6 +682,9 @@ export type ArticleEditor = Array<
     } & EmbedVideo)
   | ({
       _key: string
+    } & Audio)
+  | ({
+      _key: string
     } & EmbedDataWrapper)
   | ({
       _key: string
@@ -700,14 +760,14 @@ export type Article = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title: InlineEditor
-  description?: InlineEditor
+  title: TextOnlyInlineEditor
+  description?: TextOnlyInlineEditor
   byline?: InlineEditor
   heading?: PageReference
   content?: ArticleEditor
   publishDate?: string
-  emailSubject?: string
-  pushNotificationText?: string
+  emailSubject?: PlainTextInlineEditor
+  pushNotificationText?: PlainTextInlineEditor
   articleRecommendations?: ArrayOf<ArticleReference | PageReference>
   seo?: Seo
   cover?: EditorialImage
@@ -808,7 +868,7 @@ export type Discussion = {
 
 export type Theme = {
   _type: 'theme'
-  name?: 'EDITORIAL' | 'META' | 'PAGE'
+  name?: 'PAGE' | 'EDITORIAL' | 'META'
   accentColor?: Color
   darkMode?: boolean
 }
@@ -833,8 +893,8 @@ export type EditorialImage = {
 
 export type Seo = {
   _type: 'seo'
-  title?: string
-  description?: string
+  title?: PlainTextInlineEditor
+  description?: PlainTextInlineEditor
   useImageBuilder?: boolean
   image?: {
     asset?: SanityImageAssetReference
@@ -898,6 +958,7 @@ export type InfoBox = {
   title?: string
   body?: NestedEditor
   image?: AsideImage
+  includeInSyntheticVoice?: boolean
   size?: 'float' | 'breakout'
   figureSize?: 'S' | 'M' | 'L'
   figureFloat?: boolean
@@ -1031,6 +1092,18 @@ export type EmbedTwitter = {
   image?: string
   more?: string
   playable?: boolean
+}
+
+export type Audio = {
+  _type: 'audio'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  title?: string
+  file?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
+  legacyAudioSrc?: LegacyAudioSrc
 }
 
 export type EmbedVideo = {
@@ -1184,8 +1257,8 @@ export type Page = {
   _rev: string
   cover?: EditorialImage
   heading?: PageReference
-  title: InlineEditor
-  description?: InlineEditor
+  title: TextOnlyInlineEditor
+  description?: TextOnlyInlineEditor
   publishDate?: string
   slug: Slug
   repoId?: string
@@ -1211,7 +1284,9 @@ export type Page = {
   theme?: Theme
   slugSegment?: string
   slugTemplate?:
-    '{{segment}}-{{title}}' | '{{title}}-{{segment}}' | '{{segment}}'
+    | '{{segment}}-{{title}}'
+    | '{{title}}-{{segment}}'
+    | '{{segment}}'
 }
 
 export type Code = {
@@ -1272,7 +1347,7 @@ export type ArticleCollection = {
 
 export type SeoImageBuilder = {
   _type: 'seoImageBuilder'
-  text?: string
+  text?: TextOnlyEditor
   fontSize?: number
   layout?: 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
   textPosition?: 'top' | 'center' | 'bottom'
@@ -1425,6 +1500,7 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | Src
+  | LegacyAudioSrc
   | EmbedCommentDiscussion
   | ChartConfig
   | SanityImageAssetReference
@@ -1446,6 +1522,7 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | Color
   | InlineEditor
+  | TextOnlyInlineEditor
   | TeaserLargeReference
   | Front
   | SanityFileAssetReference
@@ -1461,6 +1538,8 @@ export type AllSanitySchemaTypes =
   | LegacyMeta
   | Mdast
   | NestedEditor
+  | TextOnlyEditor
+  | PlainTextInlineEditor
   | PageEditor
   | ArticleEditor
   | Caption
@@ -1493,6 +1572,7 @@ export type AllSanitySchemaTypes =
   | EmbedComment
   | EmbedDataWrapper
   | EmbedTwitter
+  | Audio
   | EmbedVideo
   | Chart
   | DividerStars
@@ -1544,8 +1624,8 @@ export type TEASER_LARGE_QUERY_RESULT = {
   }
   teaser: {
     layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-    title: InlineEditor | null
-    description: InlineEditor | null
+    title: TextOnlyInlineEditor | null
+    description: TextOnlyInlineEditor | null
     byline: Array<{
       children?: Array<{
         marks?: Array<string>
@@ -1609,8 +1689,8 @@ export type TEASER_LARGE_QUERY_RESULT = {
 export type ARTICLES_QUERY_RESULT = Array<{
   _id: string
   _type: 'article'
-  title: InlineEditor
-  description: InlineEditor | null
+  title: TextOnlyInlineEditor
+  description: TextOnlyInlineEditor | null
   byline: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -1774,8 +1854,8 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
   | {
       _id: string
       _type: 'article'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       slug: string | null
       _updatedAt: string
       cover: {
@@ -1797,7 +1877,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
       } | null
       heading: {
         _id: string
-        title: InlineEditor
+        title: TextOnlyInlineEditor
         slug: string
       } | null
       theme: {
@@ -1822,8 +1902,8 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
       publishDate: string | null
       plainDescription: string
       seo: {
-        title: string | null
-        description: string | null
+        title: PlainTextInlineEditor | null
+        description: PlainTextInlineEditor | null
         image: {
           asset?: SanityImageAssetReference
           media?: unknown
@@ -1888,6 +1968,20 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
       content: Array<
         | {
             _key: string
+            _type: 'audio'
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+            title?: string
+            file?: {
+              asset?: SanityFileAssetReference
+              media?: unknown
+              _type: 'file'
+            }
+            legacyAudioSrc?: LegacyAudioSrc
+            markDefs: null
+            body: null
+          }
+        | {
+            _key: string
             _type: 'authorBlock'
             contributor: {
               _id: string
@@ -1940,13 +2034,17 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   content?: InlineEditor
                   href?: string
                   reference?:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                 }
               | {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -2456,6 +2554,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                 }
             > | null
             image?: AsideImage
+            includeInSyntheticVoice?: boolean
             size?: 'breakout' | 'float'
             figureSize?: 'L' | 'M' | 'S'
             figureFloat?: boolean
@@ -2625,8 +2724,8 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         | {
             _id: string
             _type: 'article'
-            title: InlineEditor
-            description: InlineEditor | null
+            title: TextOnlyInlineEditor
+            description: TextOnlyInlineEditor | null
             byline: Array<{
               children?: Array<{
                 marks?: Array<string>
@@ -2641,7 +2740,9 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -2688,8 +2789,8 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         | {
             _id: string
             _type: 'page'
-            title: InlineEditor
-            description: InlineEditor | null
+            title: TextOnlyInlineEditor
+            description: TextOnlyInlineEditor | null
             byline: Array<{
               children?: Array<{
                 marks?: Array<string>
@@ -2704,7 +2805,9 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -2746,8 +2849,8 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
   | {
       _id: string
       _type: 'page'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       slug: string
       _updatedAt: string
       cover: {
@@ -2769,7 +2872,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
       } | null
       heading: {
         _id: string
-        title: InlineEditor
+        title: TextOnlyInlineEditor
         slug: string
       } | null
       theme: {
@@ -2806,6 +2909,20 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             _key: string
             _type: 'editorBlock'
             content: Array<
+              | {
+                  _key: string
+                  _type: 'audio'
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+                  title?: string
+                  file?: {
+                    asset?: SanityFileAssetReference
+                    media?: unknown
+                    _type: 'file'
+                  }
+                  legacyAudioSrc?: LegacyAudioSrc
+                  markDefs: null
+                  body: null
+                }
               | {
                   children?: Array<{
                     marks?: Array<string>
@@ -3148,6 +3265,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                       }
                   > | null
                   image?: AsideImage
+                  includeInSyntheticVoice?: boolean
                   size?: 'breakout' | 'float'
                   figureSize?: 'L' | 'M' | 'S'
                   figureFloat?: boolean
@@ -3266,8 +3384,8 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
   | {
       _id: string
       _type: 'article'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       slug: string | null
       _updatedAt: string
       cover: {
@@ -3289,7 +3407,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
       } | null
       heading: {
         _id: string
-        title: InlineEditor
+        title: TextOnlyInlineEditor
         slug: string
       } | null
       theme: {
@@ -3314,8 +3432,8 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
       publishDate: string | null
       plainDescription: string
       seo: {
-        title: string | null
-        description: string | null
+        title: PlainTextInlineEditor | null
+        description: PlainTextInlineEditor | null
         image: {
           asset?: SanityImageAssetReference
           media?: unknown
@@ -3380,6 +3498,20 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
       content: Array<
         | {
             _key: string
+            _type: 'audio'
+            size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+            title?: string
+            file?: {
+              asset?: SanityFileAssetReference
+              media?: unknown
+              _type: 'file'
+            }
+            legacyAudioSrc?: LegacyAudioSrc
+            markDefs: null
+            body: null
+          }
+        | {
+            _key: string
             _type: 'authorBlock'
             contributor: {
               _id: string
@@ -3432,13 +3564,17 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   content?: InlineEditor
                   href?: string
                   reference?:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                 }
               | {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -3948,6 +4084,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                 }
             > | null
             image?: AsideImage
+            includeInSyntheticVoice?: boolean
             size?: 'breakout' | 'float'
             figureSize?: 'L' | 'M' | 'S'
             figureFloat?: boolean
@@ -4117,8 +4254,8 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         | {
             _id: string
             _type: 'article'
-            title: InlineEditor
-            description: InlineEditor | null
+            title: TextOnlyInlineEditor
+            description: TextOnlyInlineEditor | null
             byline: Array<{
               children?: Array<{
                 marks?: Array<string>
@@ -4133,7 +4270,9 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -4180,8 +4319,8 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         | {
             _id: string
             _type: 'page'
-            title: InlineEditor
-            description: InlineEditor | null
+            title: TextOnlyInlineEditor
+            description: TextOnlyInlineEditor | null
             byline: Array<{
               children?: Array<{
                 marks?: Array<string>
@@ -4196,7 +4335,9 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                     _key: string
                     _type: 'internalLink'
                     reference:
-                      ArticleReference | ContributorReference | PageReference
+                      | ArticleReference
+                      | ContributorReference
+                      | PageReference
                     slug: string | null
                   }
                 | {
@@ -4238,8 +4379,8 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
   | {
       _id: string
       _type: 'page'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       slug: string
       _updatedAt: string
       cover: {
@@ -4261,7 +4402,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
       } | null
       heading: {
         _id: string
-        title: InlineEditor
+        title: TextOnlyInlineEditor
         slug: string
       } | null
       theme: {
@@ -4298,6 +4439,20 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             _key: string
             _type: 'editorBlock'
             content: Array<
+              | {
+                  _key: string
+                  _type: 'audio'
+                  size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+                  title?: string
+                  file?: {
+                    asset?: SanityFileAssetReference
+                    media?: unknown
+                    _type: 'file'
+                  }
+                  legacyAudioSrc?: LegacyAudioSrc
+                  markDefs: null
+                  body: null
+                }
               | {
                   children?: Array<{
                     marks?: Array<string>
@@ -4640,6 +4795,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                       }
                   > | null
                   image?: AsideImage
+                  includeInSyntheticVoice?: boolean
                   size?: 'breakout' | 'float'
                   figureSize?: 'L' | 'M' | 'S'
                   figureFloat?: boolean
@@ -4818,8 +4974,8 @@ export type FRONT_FEED_QUERY_RESULT = Array<{
   }
   teaser: {
     layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-    title: InlineEditor | null
-    description: InlineEditor | null
+    title: TextOnlyInlineEditor | null
+    description: TextOnlyInlineEditor | null
     byline: Array<{
       children?: Array<{
         marks?: Array<string>
@@ -4882,7 +5038,7 @@ export type FRONT_FEED_QUERY_RESULT = Array<{
 // Query: *[_type == "front"] | order(publishDate desc)[0]{    _id,    title,    pageBuilder[]{      _key,      _type,      _type == "teaserList" => {          appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref      },      _type == "teaserLarge" => {        "reference": @->{  _id,  _type,  "targetType": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "targetId": target[0]->_id,  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,    // Audio always comes from the target article itself — a teaserLarge    // override doc has no audio of its own.    "audioTitle": pt::text(target[0]->title),    "audioSourceMp3": target[0]->audioSourceMp3,    "audioDurationMs": target[0]->audioDurationMs,  }}      },    },  }
 export type FRONT_LATEST_QUERY_RESULT = {
   _id: string
-  title: InlineEditor
+  title: TextOnlyInlineEditor
   pageBuilder: Array<
     | {
         _key: string
@@ -4918,7 +5074,7 @@ export type FRONT_LATEST_QUERY_RESULT = {
 // Query: *[_type == "front" && _id == $id][0]{    _id,    title,    pageBuilder[]{      _key,      _type,      _type == "teaserList" => {          appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref      },      _type == "teaserLarge" => {        "reference": @->{  _id,  _type,  "targetType": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "targetId": target[0]->_id,  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,    // Audio always comes from the target article itself — a teaserLarge    // override doc has no audio of its own.    "audioTitle": pt::text(target[0]->title),    "audioSourceMp3": target[0]->audioSourceMp3,    "audioDurationMs": target[0]->audioDurationMs,  }}      },    },  }
 export type FRONT_QUERY_RESULT = {
   _id: string
-  title: InlineEditor
+  title: TextOnlyInlineEditor
   pageBuilder: Array<
     | {
         _key: string
@@ -4990,6 +5146,20 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
   block: {
     content: Array<
       | {
+          _key: string
+          _type: 'audio'
+          size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+          title?: string
+          file?: {
+            asset?: SanityFileAssetReference
+            media?: unknown
+            _type: 'file'
+          }
+          legacyAudioSrc?: LegacyAudioSrc
+          markDefs: null
+          body: null
+        }
+      | {
           children?: Array<{
             marks?: Array<string>
             text?: string
@@ -5005,13 +5175,17 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 content?: InlineEditor
                 href?: string
                 reference?:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
               }
             | {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -5052,7 +5226,9 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                       _key: string
                       _type: 'internalLink'
                       reference:
-                        ArticleReference | ContributorReference | PageReference
+                        | ArticleReference
+                        | ContributorReference
+                        | PageReference
                       slug: string | null
                     }
                   | {
@@ -5288,7 +5464,9 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                       _key: string
                       _type: 'internalLink'
                       reference:
-                        ArticleReference | ContributorReference | PageReference
+                        | ArticleReference
+                        | ContributorReference
+                        | PageReference
                       slug: string | null
                     }
                   | {
@@ -5323,6 +5501,7 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               }
           > | null
           image?: AsideImage
+          includeInSyntheticVoice?: boolean
           size?: 'breakout' | 'float'
           figureSize?: 'L' | 'M' | 'S'
           figureFloat?: boolean
@@ -5389,6 +5568,20 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
 // Query: *[_type == "article"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(            reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),            reference->slug.current          )        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },  }  }
 export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
   content: Array<
+    | {
+        _key: string
+        _type: 'audio'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        title?: string
+        file?: {
+          asset?: SanityFileAssetReference
+          media?: unknown
+          _type: 'file'
+        }
+        legacyAudioSrc?: LegacyAudioSrc
+        markDefs: null
+        body: null
+      }
     | {
         _key: string
         _type: 'authorBlock'
@@ -5960,6 +6153,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
             }
         > | null
         image?: AsideImage
+        includeInSyntheticVoice?: boolean
         size?: 'breakout' | 'float'
         figureSize?: 'L' | 'M' | 'S'
         figureFloat?: boolean
@@ -6104,8 +6298,8 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
 // Query: *[slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description)),    "image": coalesce(seo.image, image),    "useImageBuilder": seo.useImageBuilder,    "imageBuilder": seo.imageBuilder,    "heading": pt::text(heading->title),    theme {      name,      accentColor,      darkMode    }  }
 export type SEO_QUERY_RESULT =
   | {
-      title: string
-      description: string
+      title: PlainTextInlineEditor | string
+      description: PlainTextInlineEditor | string
       image: {
         asset?: SanityImageAssetReference
         media?: unknown
@@ -6198,8 +6392,8 @@ export type SERIES_MENU_QUERY_RESULT = {
       | {
           _id: string
           _type: 'article'
-          title: InlineEditor
-          description: InlineEditor | null
+          title: TextOnlyInlineEditor
+          description: TextOnlyInlineEditor | null
           byline: Array<{
             children?: Array<{
               marks?: Array<string>
@@ -6214,7 +6408,9 @@ export type SERIES_MENU_QUERY_RESULT = {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -6261,8 +6457,8 @@ export type SERIES_MENU_QUERY_RESULT = {
       | {
           _id: string
           _type: 'teaserSmall'
-          title: InlineEditor | null
-          description: InlineEditor | null
+          title: TextOnlyInlineEditor | null
+          description: TextOnlyInlineEditor | null
           byline: Array<{
             children?: Array<{
               marks?: Array<string>
@@ -6277,7 +6473,9 @@ export type SERIES_MENU_QUERY_RESULT = {
                   _key: string
                   _type: 'internalLink'
                   reference:
-                    ArticleReference | ContributorReference | PageReference
+                    | ArticleReference
+                    | ContributorReference
+                    | PageReference
                   slug: string | null
                 }
               | {
@@ -6343,8 +6541,8 @@ export type SERIES_NAV_QUERY_RESULT = {
     | {
         _id: string
         _type: 'article'
-        title: InlineEditor
-        description: InlineEditor | null
+        title: TextOnlyInlineEditor
+        description: TextOnlyInlineEditor | null
         byline: Array<{
           children?: Array<{
             marks?: Array<string>
@@ -6359,7 +6557,9 @@ export type SERIES_NAV_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -6406,8 +6606,8 @@ export type SERIES_NAV_QUERY_RESULT = {
     | {
         _id: string
         _type: 'teaserSmall'
-        title: InlineEditor | null
-        description: InlineEditor | null
+        title: TextOnlyInlineEditor | null
+        description: TextOnlyInlineEditor | null
         byline: Array<{
           children?: Array<{
             marks?: Array<string>
@@ -6422,7 +6622,9 @@ export type SERIES_NAV_QUERY_RESULT = {
                 _key: string
                 _type: 'internalLink'
                 reference:
-                  ArticleReference | ContributorReference | PageReference
+                  | ArticleReference
+                  | ContributorReference
+                  | PageReference
                 slug: string | null
               }
             | {
@@ -6500,8 +6702,8 @@ export type TEASER_LARGE_FRAGMENT_QUERY_RESULT = {
   }
   teaser: {
     layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-    title: InlineEditor | null
-    description: InlineEditor | null
+    title: TextOnlyInlineEditor | null
+    description: TextOnlyInlineEditor | null
     byline: Array<{
       children?: Array<{
         marks?: Array<string>
@@ -6583,8 +6785,8 @@ export type TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT = {
 export type TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT = Array<{
   _id: string
   _type: 'teaserSmall'
-  title: InlineEditor | null
-  description: InlineEditor | null
+  title: TextOnlyInlineEditor | null
+  description: TextOnlyInlineEditor | null
   byline: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -6642,8 +6844,8 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
   | {
       _id: string
       _type: 'article'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       byline: Array<{
         children?: Array<{
           marks?: Array<string>
@@ -6704,8 +6906,8 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
   | {
       _id: string
       _type: 'page'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       byline: Array<{
         children?: Array<{
           marks?: Array<string>
@@ -6765,8 +6967,8 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
   | {
       _id: string
       _type: 'article'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       byline: Array<{
         children?: Array<{
           marks?: Array<string>
@@ -6827,8 +7029,8 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
   | {
       _id: string
       _type: 'page'
-      title: InlineEditor
-      description: InlineEditor | null
+      title: TextOnlyInlineEditor
+      description: TextOnlyInlineEditor | null
       byline: Array<{
         children?: Array<{
           marks?: Array<string>
@@ -6897,8 +7099,8 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                   | {
                       _id: string
                       _type: 'article'
-                      title: InlineEditor
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -6962,8 +7164,8 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                   | {
                       _id: string
                       _type: 'page'
-                      title: InlineEditor
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7020,8 +7222,8 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                   | {
                       _id: string
                       _type: 'teaserSmall'
-                      title: InlineEditor | null
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor | null
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7080,8 +7282,8 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                   | {
                       _id: string
                       _type: 'article'
-                      title: InlineEditor
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7145,8 +7347,8 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                   | {
                       _id: string
                       _type: 'teaserSmall'
-                      title: InlineEditor | null
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor | null
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7225,8 +7427,8 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                   | {
                       _id: string
                       _type: 'article'
-                      title: InlineEditor
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7290,8 +7492,8 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                   | {
                       _id: string
                       _type: 'page'
-                      title: InlineEditor
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7351,8 +7553,8 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                   | {
                       _id: string
                       _type: 'article'
-                      title: InlineEditor
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
@@ -7416,8 +7618,8 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                   | {
                       _id: string
                       _type: 'teaserSmall'
-                      title: InlineEditor | null
-                      description: InlineEditor | null
+                      title: TextOnlyInlineEditor | null
+                      description: TextOnlyInlineEditor | null
                       byline: Array<{
                         children?: Array<{
                           marks?: Array<string>
