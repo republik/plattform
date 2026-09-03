@@ -6,6 +6,8 @@ export {
 } from './lib/textToSpeech'
 export { hashSpeakableContent } from './lib/contentHash'
 export { titleSlugFrom, compactTimestamp } from './lib/filename'
+export { deriveSlug } from './lib/deriveSlug'
+export type { HeadingSlugConfig } from './lib/deriveSlug'
 export { buildSignedWebhookPath, verifyWebhookSignature } from './lib/webhookSignature'
 export {
   uploadToHuebsch,
