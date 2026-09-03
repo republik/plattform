@@ -1,6 +1,7 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
 import { editorialContentRecipe } from '../src/recipes/editorial-content'
+import { infoboxRecipe } from '../src/recipes/infobox'
 import { editorialFontSizes } from '../src/typography'
 
 export const presetRepublik = definePreset({
@@ -629,6 +630,7 @@ export const presetRepublik = definePreset({
     recipes: {
       button: buttonRecipe,
       editorialContent: editorialContentRecipe,
+      infobox: infoboxRecipe,
     },
 
     keyframes: {
