@@ -231,10 +231,19 @@ const blockTransform: NodeTransform = (node, ctx) => {
   const segments = splitBlockByVoiceTag(node, ctx.voice)
   if (!segments.length) return []
   const isHeading = node.style === 'heading'
+  // 'question' is Huebsch's documented role for interview questions (see
+  // intake-republik docs, "example keys"); `interviewQuestion` is the style
+  // `styleInterviewQuestions` (mdastToPortableText.ts) stamps on the block
+  // preceding an interview answer.
+  const role = isHeading
+    ? 'subtitle'
+    : node.style === 'interviewQuestion'
+      ? 'question'
+      : ctx.defaultRole
   return [
     {
       kind: 'text',
-      role: isHeading ? 'subtitle' : ctx.defaultRole,
+      role,
       isHeading,
       segments,
     },
@@ -267,10 +276,15 @@ const infoBoxTransform: NodeTransform = (node, ctx) => {
   // before the field existed) must also mean excluded, not just `false`.
   if (node.includeInSyntheticVoice !== true) return []
   const title = plainText(node.title)
-  const nested = ctx.flatten(node.body ?? [], ctx.voice, 'infobox')
+  // 'aside' is Huebsch's documented role for sidebar-style content (see
+  // intake-republik docs, "example keys") — using it (rather than a
+  // repo-invented string) lets Huebsch's pipeline apply its own aside
+  // handling. Only 'aside' itself is documented, so the title paragraph
+  // gets the same role rather than an invented 'aside-title'.
+  const nested = ctx.flatten(node.body ?? [], ctx.voice, 'aside')
   if (!title && !nested.length) return []
   return withPauseBoundary([
-    ...(title ? [textItem('infobox-title', ctx.voice, title)] : []),
+    ...(title ? [textItem('aside', ctx.voice, title)] : []),
     ...nested,
   ])
 }

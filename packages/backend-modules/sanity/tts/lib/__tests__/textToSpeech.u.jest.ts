@@ -172,6 +172,23 @@ describe('buildSpeakableContent', () => {
       // both pauses flanking the heading are heavy
       expect(durations.slice(-2)).toEqual([1.4, 1.4])
     })
+
+    it('tags an interviewQuestion block role "question"', () => {
+      const result = buildSpeakableContent(
+        {
+          content: [
+            block('Was denken Sie?', 'interviewQuestion'),
+            block('Nun ja...'),
+          ],
+        },
+        'voice-a',
+      )
+      expect(paragraphs(result)).toEqual(
+        expect.arrayContaining([
+          { role: 'question', text: 'Was denken Sie?' },
+        ]),
+      )
+    })
   })
 
   describe('chapter markers (opt-in)', () => {
@@ -351,8 +368,8 @@ describe('buildSpeakableContent', () => {
       )
       expect(paragraphs(result)).toEqual(
         expect.arrayContaining([
-          { role: 'infobox-title', text: 'Zum Hintergrund.' },
-          { role: 'infobox', text: 'Kasteninhalt.' },
+          { role: 'aside', text: 'Zum Hintergrund.' },
+          { role: 'aside', text: 'Kasteninhalt.' },
         ]),
       )
     })
@@ -372,7 +389,7 @@ describe('buildSpeakableContent', () => {
         'voice-a',
       )
       expect(paragraphs(result)).toEqual(
-        expect.arrayContaining([{ role: 'infobox-title', text: 'Nur ein Titel.' }]),
+        expect.arrayContaining([{ role: 'aside', text: 'Nur ein Titel.' }]),
       )
     })
 
@@ -396,7 +413,7 @@ describe('buildSpeakableContent', () => {
         },
         'voice-a',
       )
-      expect(paragraphs(result).some((p) => p.role.startsWith('infobox'))).toBe(
+      expect(paragraphs(result).some((p) => p.role.startsWith('aside'))).toBe(
         false,
       )
     })
@@ -411,7 +428,7 @@ describe('buildSpeakableContent', () => {
         },
         'voice-a',
       )
-      expect(paragraphs(result).some((p) => p.role.startsWith('infobox'))).toBe(
+      expect(paragraphs(result).some((p) => p.role.startsWith('aside'))).toBe(
         false,
       )
     })
