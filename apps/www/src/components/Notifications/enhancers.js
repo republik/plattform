@@ -162,6 +162,9 @@ export const myDocumentSubscriptions = gql`
                 template
               }
             }
+            ... on SanityDocumentRef {
+              id
+            }
           }
         }
       }
