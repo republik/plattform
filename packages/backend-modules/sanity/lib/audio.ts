@@ -157,16 +157,28 @@ export const claimAudioGeneration = async (
   }
 }
 
-// Cleans up the placeholder a claim just inserted when the request that was
-// supposed to fill it in never actually got as far as asking Huebsch (e.g.
-// the synchronous uploadToHuebsch() call itself throws) — otherwise it would
-// sit there looking "pending" until the 72h staleness cutoff even though no
-// job was ever started for it.
-export const removePendingVersion = (documentId: string, contentHash: string) =>
-  sanityClient()
+// Turns the placeholder a claim inserted into a visible failure record
+// instead of silently discarding it, once it's clear that specific attempt
+// isn't going to finish (buildSpeakableContent throwing, the Huebsch
+// upload/request itself failing, or Huebsch reporting a failed generation on
+// its webhook callback) — an editor looking at the history should be able to
+// tell which attempt failed and why, not just see it vanish. Only the
+// status/error sub-fields are patched, so contentHash/generatedAt survive
+// untouched — "since when this attempt was running" stays visible.
+export const markPendingVersionError = (
+  documentId: string,
+  contentHash: string,
+  error: unknown,
+) => {
+  const path = `audioVersions[contentHash == "${contentHash}" && status == "pending"]`
+  return sanityClient()
     .patch(documentId)
-    .unset([`audioVersions[contentHash == "${contentHash}" && status == "pending"]`])
+    .set({
+      [`${path}.status`]: 'error',
+      [`${path}.error`]: errorMessage(error),
+    })
     .commit({ autoGenerateArrayKeys: true })
+}
 
 // Looks up the _key of the pending placeholder a given contentHash's
 // generation was claimed under, so the Huebsch webhook can replace it in

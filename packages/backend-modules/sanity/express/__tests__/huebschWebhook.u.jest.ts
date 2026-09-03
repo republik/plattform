@@ -1,5 +1,6 @@
 const fetchAudioContentHash = jest.fn()
 const fetchPendingVersionKey = jest.fn()
+const markPendingVersionError = jest.fn().mockResolvedValue(undefined)
 const recordAudioVersion = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationSuccess = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationError = jest.fn().mockResolvedValue(undefined)
@@ -8,6 +9,7 @@ const uploadAudioAsset = jest.fn()
 jest.mock('../../lib/audio', () => ({
   fetchAudioContentHash: (...args: unknown[]) => fetchAudioContentHash(...args),
   fetchPendingVersionKey: (...args: unknown[]) => fetchPendingVersionKey(...args),
+  markPendingVersionError: (...args: unknown[]) => markPendingVersionError(...args),
   recordAudioVersion: (...args: unknown[]) => recordAudioVersion(...args),
   reportAudioGenerationSuccess: (...args: unknown[]) =>
     reportAudioGenerationSuccess(...args),
@@ -37,8 +39,10 @@ describe('processResult (huebsch webhook idempotency)', () => {
   beforeEach(() => {
     fetchAudioContentHash.mockReset()
     fetchPendingVersionKey.mockReset().mockResolvedValue(undefined)
+    markPendingVersionError.mockReset().mockResolvedValue(undefined)
     recordAudioVersion.mockReset().mockResolvedValue(undefined)
     reportAudioGenerationSuccess.mockReset().mockResolvedValue(undefined)
+    reportAudioGenerationError.mockReset().mockResolvedValue(undefined)
     uploadAudioAsset.mockReset()
     parseHuebschResult.mockReset()
   })
@@ -103,5 +107,25 @@ describe('processResult (huebsch webhook idempotency)', () => {
 
     const [, , , pendingKey] = recordAudioVersion.mock.calls[0]
     expect(pendingKey).toBeUndefined()
+  })
+
+  it('marks the matching placeholder as errored when Huebsch reports a failed generation, without rethrowing', async () => {
+    fetchAudioContentHash.mockResolvedValue(undefined)
+    fetchPendingVersionKey.mockResolvedValue('pending-key-1')
+    const failure = new Error('huebsch reported a failed generation')
+    parseHuebschResult.mockRejectedValue(failure)
+
+    await expect(
+      processResult(fakeReq(), 'drafts.doc-1', 'my-slug', 'hash-new', { ok: false }),
+    ).resolves.toBeUndefined()
+
+    expect(recordAudioVersion).not.toHaveBeenCalled()
+    expect(reportAudioGenerationSuccess).not.toHaveBeenCalled()
+    expect(markPendingVersionError).toHaveBeenCalledWith(
+      'drafts.doc-1',
+      'hash-new',
+      failure,
+    )
+    expect(reportAudioGenerationError).toHaveBeenCalledWith('drafts.doc-1', failure)
   })
 })
