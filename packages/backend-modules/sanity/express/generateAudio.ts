@@ -13,6 +13,7 @@ import {
   buildSignedWebhookPath,
   uploadToHuebsch,
   titleSlugFrom,
+  deriveSlug,
 } from '../tts'
 import { errorBody } from './respond'
 
@@ -74,12 +75,23 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
   }
 
   // A draft with no slug yet (e.g. an automatic-slug article, deliberately
-  // left empty until it's actually published) has nothing valid to offer
-  // here — uploadToHuebsch omits attrs.slug entirely rather than sending a
-  // synthesized placeholder just to have *something*; the slug is an
-  // identifier, not something the audio itself depends on.
-  const slug = article.slug?.current
-  const titleSlug = titleSlugFrom(article.slug?.current, article._id)
+  // left empty until it's actually published — see studio's
+  // sharedFields.ts) has nothing to offer here, but Huebsch's intake API
+  // requires attrs.slug regardless (omitting it, tried first, got a
+  // "Required" validation error back). So derive the same preview a
+  // publish would eventually freeze — title (+ Spitzmarke heading segment,
+  // per its template) date-prefixed and slugified, matching
+  // slug-freeze-publish's own algorithm (see tts/lib/deriveSlug.ts for why
+  // this isn't byte-identical, and why that's fine: this is only ever a
+  // preview, corrected for real at actual publish time). Only as a last
+  // resort — a title-less article, deriving nothing usable — fall back to
+  // a sanitized id, same as titleSlugFrom's own fallback below.
+  const titleText = plainTitle(article.title)
+  const slug =
+    article.slug?.current ??
+    deriveSlug(titleText, article.publishDate, new Date(), article.heading) ??
+    `/${titleSlugFrom(undefined, article._id)}`
+  const titleSlug = titleSlugFrom(slug, article._id)
   const publicUrl = process.env.PUBLIC_URL
   if (!publicUrl) {
     // Routed the same way as every other failure in this handler, so it shows

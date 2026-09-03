@@ -24,6 +24,14 @@ export interface ArticleDoc {
   // copy of that same check to have caught it first.
   audioContentHash?: string
   audioGenerationResult?: { status?: string }
+  // Only needed to derive a preview slug (see tts/lib/deriveSlug.ts) when
+  // slug is empty — an automatic-slug article deliberately has no stored
+  // slug until it's actually published, but Huebsch's intake API requires
+  // attrs.slug regardless. Aliased to segment/template (deriveSlug's
+  // HeadingSlugConfig shape) in the query below, matching studio's own
+  // HEADING_SLUG_CONFIG_QUERY convention.
+  publishDate?: string
+  heading?: { segment?: string | null; template?: string | null }
 }
 
 export const fetchArticle = (documentId: string) =>
@@ -36,7 +44,9 @@ export const fetchArticle = (documentId: string) =>
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
       syntheticVoice, syntheticVoiceEnabled, audioContentHash,
-      "audioGenerationResult": audioGenerationResult{status}
+      "audioGenerationResult": audioGenerationResult{status},
+      publishDate,
+      "heading": heading->{"segment": slugSegment, "template": slugTemplate}
     }`,
     { id: documentId },
     { perspective: 'raw' },
