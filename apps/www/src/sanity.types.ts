@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type Src = {
   mp4?: string
   hls?: string
@@ -405,6 +405,9 @@ export type AudioVersion = {
   durationMs?: number
   generatedAt?: string
   source?: string
+  status?: string
+  contentHash?: string
+  error?: string
   label?: string
   chapters?: Array<{
     name?: string

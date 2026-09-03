@@ -19,7 +19,7 @@ import { useTranslation } from '@/lib/withT'
 import ErrorMessage from '../../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
-import { SortToggle } from '../../../Search/Sort'
+import { SortToggle } from '../../../SortToggle'
 import ShareSubmission from './Share'
 import {
   hasMoreData,

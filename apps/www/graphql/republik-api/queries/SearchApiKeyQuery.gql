@@ -1,0 +1,6 @@
+query SearchApiKey {
+  searchApiKey {
+    key
+    expiresAt
+  }
+}
