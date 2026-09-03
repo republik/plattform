@@ -24,6 +24,11 @@ export interface ArticleDoc {
   // copy of that same check to have caught it first.
   audioContentHash?: string
   audioGenerationResult?: { status?: string; updatedAt?: string }
+  // In-flight placeholder entries currently sitting in audioVersions (see
+  // hasPendingVersion below) — a slim projection, not the full array, since
+  // this is only ever used to check "is there already a pending generation
+  // for this exact content hash".
+  pendingAudioVersions?: { contentHash?: string; generatedAt?: string }[]
   // Only needed to derive a preview slug (see tts/lib/deriveSlug.ts) when
   // slug is empty — an automatic-slug article deliberately has no stored
   // slug until it's actually published, but Huebsch's intake API requires
@@ -45,6 +50,7 @@ export const fetchArticle = (documentId: string) =>
       _id, _rev, title, description, byline, content, slug,
       syntheticVoice, syntheticVoiceEnabled, audioContentHash,
       "audioGenerationResult": audioGenerationResult{status, updatedAt},
+      "pendingAudioVersions": audioVersions[status == "pending"]{contentHash, generatedAt},
       publishDate,
       "heading": heading->{"segment": slugSegment, "template": slugTemplate}
     }`,
@@ -78,22 +84,38 @@ export const fetchAudioContentHash = (documentId: string) =>
 // for this article forever.
 const IN_PROGRESS_STALE_AFTER_MS = 72 * 60 * 60 * 1000
 
-export const isAudioGenerationInProgress = (
-  result: { status?: string; updatedAt?: string } | undefined,
-): boolean => {
-  if (result?.status !== 'in-progress') return false
-  if (!result.updatedAt) return true
-  const updatedAt = Date.parse(result.updatedAt)
-  return Number.isNaN(updatedAt) || Date.now() - updatedAt < IN_PROGRESS_STALE_AFTER_MS
-}
+// The actual duplicate-generation guard: a generation is only a duplicate of
+// *this* request if one is already pending for the exact same content hash.
+// A different hash (the article changed since the other one was kicked off)
+// is a legitimate, independent generation and must be allowed to proceed —
+// a blanket "anything pending at all" check (this replaces the old
+// document-level isAudioGenerationInProgress) would otherwise block it
+// forever.
+export const hasPendingVersion = (
+  pending: { contentHash?: string; generatedAt?: string }[] | undefined,
+  contentHash: string,
+): boolean =>
+  Boolean(
+    pending?.some((v) => {
+      if (v.contentHash !== contentHash) return false
+      if (!v.generatedAt) return true
+      const generatedAt = Date.parse(v.generatedAt)
+      return (
+        Number.isNaN(generatedAt) ||
+        Date.now() - generatedAt < IN_PROGRESS_STALE_AFTER_MS
+      )
+    }),
+  )
 
-// Atomically claims the "in-progress" slot for a generation, guarded by the
-// revision this request read the article at. sync-audio's own ifRevisionId
-// claim (functions/sync-audio/index.ts) only protects against two
-// invocations racing for the *same* revision — it does nothing to stop a
-// burst of rapid saves each spawning their own invocation, each targeting a
-// *different*, newer revision, each independently winning its own claim and
-// calling this endpoint (confirmed in practice: 13 separate
+// Atomically claims this content hash's generation slot, guarded by the
+// revision this request read the article at, and inserts a "pending"
+// placeholder into audioVersions in the same commit so it's visible in
+// Studio's history the moment the claim lands. sync-audio's own
+// ifRevisionId claim (functions/sync-audio/index.ts) only protects against
+// two invocations racing for the *same* revision — it does nothing to stop
+// a burst of rapid saves each spawning their own invocation, each targeting
+// a *different*, newer revision, each independently winning its own claim
+// and calling this endpoint (confirmed in practice: 13 separate
 // /webhooks/sanity/generate-audio requests within ~2 seconds for one
 // article, each passing every check up to this point and firing its own
 // Huebsch generation). This is a second, independent claim at the layer
@@ -104,18 +126,28 @@ export const isAudioGenerationInProgress = (
 export const claimAudioGeneration = async (
   documentId: string,
   rev: string,
+  contentHash: string,
 ): Promise<boolean> => {
   try {
     await sanityClient()
       .patch(documentId)
       .ifRevisionId(rev)
+      .setIfMissing({ audioVersions: [] })
+      .insert('after', 'audioVersions[-1]', [
+        {
+          _type: 'audioVersion',
+          status: 'pending',
+          contentHash,
+          generatedAt: new Date().toISOString(),
+        },
+      ])
       .set({
         audioGenerationResult: {
           status: 'in-progress',
           updatedAt: new Date().toISOString(),
         },
       })
-      .commit()
+      .commit({ autoGenerateArrayKeys: true })
     return true
   } catch (error) {
     if ((error as { statusCode?: number } | null)?.statusCode === 409) {
@@ -124,6 +156,29 @@ export const claimAudioGeneration = async (
     throw error
   }
 }
+
+// Cleans up the placeholder a claim just inserted when the request that was
+// supposed to fill it in never actually got as far as asking Huebsch (e.g.
+// the synchronous uploadToHuebsch() call itself throws) — otherwise it would
+// sit there looking "pending" until the 72h staleness cutoff even though no
+// job was ever started for it.
+export const removePendingVersion = (documentId: string, contentHash: string) =>
+  sanityClient()
+    .patch(documentId)
+    .unset([`audioVersions[contentHash == "${contentHash}" && status == "pending"]`])
+    .commit({ autoGenerateArrayKeys: true })
+
+// Looks up the _key of the pending placeholder a given contentHash's
+// generation was claimed under, so the Huebsch webhook can replace it in
+// place (see recordAudioVersion) instead of appending a duplicate entry.
+// `raw` for the same reason as fetchArticle/fetchAudioContentHash above —
+// documentId is very often a drafts.* id.
+export const fetchPendingVersionKey = (documentId: string, contentHash: string) =>
+  sanityClient().fetch<string | undefined>(
+    `*[_id == $id][0].audioVersions[status == "pending" && contentHash == $hash][0]._key`,
+    { id: documentId, hash: contentHash },
+    { perspective: 'raw' },
+  )
 
 export interface AudioVersionChapter {
   _key: string
@@ -141,20 +196,31 @@ export interface AudioVersion {
   chapters?: AudioVersionChapter[]
 }
 
-// Sets the "current" audio fields (read by the frontend) and appends this
-// generation to `audioVersions` (the full history, browsable/restorable in
+// Sets the "current" audio fields (read by the frontend) and records this
+// generation in `audioVersions` (the full history, browsable/restorable in
 // Studio) in the same commit, so the two never drift out of sync.
+//
+// When `pendingKey` identifies the placeholder claimAudioGeneration inserted
+// for this run, the finished entry replaces it in place (same _key) rather
+// than being appended — the replacement object has no `status`/`contentHash`
+// fields, so it reads exactly like every other finished entry once written.
+// Falls back to appending when no matching placeholder exists (a generation
+// kicked off before this placeholder mechanism existed, or one whose
+// placeholder was already cleaned up by removePendingVersion).
 export const recordAudioVersion = (
   documentId: string,
   currentFields: Record<string, unknown>,
   version: AudioVersion,
-) =>
-  sanityClient()
-    .patch(documentId)
-    .set(currentFields)
-    .setIfMissing({ audioVersions: [] })
-    .append('audioVersions', [version])
-    .commit({ autoGenerateArrayKeys: true })
+  pendingKey: string | undefined,
+) => {
+  const patch = sanityClient().patch(documentId).set(currentFields)
+  if (pendingKey) {
+    patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
+  } else {
+    patch.setIfMissing({ audioVersions: [] }).append('audioVersions', [version])
+  }
+  return patch.commit({ autoGenerateArrayKeys: true })
+}
 
 export const uploadAudioAsset = (buffer: Buffer, filename: string) =>
   sanityClient().assets.upload('file', buffer, {

@@ -1,4 +1,5 @@
 const fetchAudioContentHash = jest.fn()
+const fetchPendingVersionKey = jest.fn()
 const recordAudioVersion = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationSuccess = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationError = jest.fn().mockResolvedValue(undefined)
@@ -6,6 +7,7 @@ const uploadAudioAsset = jest.fn()
 
 jest.mock('../../lib/audio', () => ({
   fetchAudioContentHash: (...args: unknown[]) => fetchAudioContentHash(...args),
+  fetchPendingVersionKey: (...args: unknown[]) => fetchPendingVersionKey(...args),
   recordAudioVersion: (...args: unknown[]) => recordAudioVersion(...args),
   reportAudioGenerationSuccess: (...args: unknown[]) =>
     reportAudioGenerationSuccess(...args),
@@ -34,6 +36,7 @@ function fakeReq() {
 describe('processResult (huebsch webhook idempotency)', () => {
   beforeEach(() => {
     fetchAudioContentHash.mockReset()
+    fetchPendingVersionKey.mockReset().mockResolvedValue(undefined)
     recordAudioVersion.mockReset().mockResolvedValue(undefined)
     reportAudioGenerationSuccess.mockReset().mockResolvedValue(undefined)
     uploadAudioAsset.mockReset()
@@ -67,5 +70,38 @@ describe('processResult (huebsch webhook idempotency)', () => {
     expect(documentId).toBe('drafts.doc-1')
     expect(currentFields.audioContentHash).toBe('hash-new')
     expect(reportAudioGenerationSuccess).toHaveBeenCalledWith('drafts.doc-1')
+  })
+
+  it('replaces the matching pending placeholder in place when one exists', async () => {
+    fetchAudioContentHash.mockResolvedValue(undefined)
+    fetchPendingVersionKey.mockResolvedValue('pending-key-1')
+    parseHuebschResult.mockResolvedValue({
+      audioFile: new Uint8Array([1, 2, 3]),
+      chapters: undefined,
+      durationMs: 12000,
+    })
+    uploadAudioAsset.mockResolvedValue({ _id: 'file-asset-1', url: 'https://x/a.mp3' })
+
+    await processResult(fakeReq(), 'drafts.doc-1', 'my-slug', 'hash-new', {})
+
+    expect(fetchPendingVersionKey).toHaveBeenCalledWith('drafts.doc-1', 'hash-new')
+    const [, , , pendingKey] = recordAudioVersion.mock.calls[0]
+    expect(pendingKey).toBe('pending-key-1')
+  })
+
+  it('falls back to appending when no matching pending placeholder exists', async () => {
+    fetchAudioContentHash.mockResolvedValue(undefined)
+    fetchPendingVersionKey.mockResolvedValue(undefined)
+    parseHuebschResult.mockResolvedValue({
+      audioFile: new Uint8Array([1, 2, 3]),
+      chapters: undefined,
+      durationMs: 12000,
+    })
+    uploadAudioAsset.mockResolvedValue({ _id: 'file-asset-1', url: 'https://x/a.mp3' })
+
+    await processResult(fakeReq(), 'drafts.doc-1', 'my-slug', 'hash-new', {})
+
+    const [, , , pendingKey] = recordAudioVersion.mock.calls[0]
+    expect(pendingKey).toBeUndefined()
   })
 })

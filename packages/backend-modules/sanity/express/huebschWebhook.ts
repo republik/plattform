@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import type {} from '@orbiting/backend-modules-logger'
 import {
   fetchAudioContentHash,
+  fetchPendingVersionKey,
   recordAudioVersion,
   reportAudioGenerationError,
   reportAudioGenerationSuccess,
@@ -91,6 +92,14 @@ export const processResult = async (
     return
   }
 
+  // Identifies the "pending" placeholder claimAudioGeneration inserted for
+  // this exact content hash, so the finished entry below can replace it in
+  // place instead of being appended alongside it. undefined when no such
+  // placeholder exists (a generation kicked off before this mechanism
+  // existed, or one whose placeholder was already removed) — recordAudioVersion
+  // falls back to appending in that case.
+  const pendingKey = await fetchPendingVersionKey(documentId, contentHash)
+
   const { audioFile, chapters, durationMs } = await parseHuebschResult(body)
   const buffer = Buffer.from(audioFile)
   const generatedAt = new Date().toISOString()
@@ -130,6 +139,7 @@ export const processResult = async (
       generatedAt,
       ...(keyedChapters?.length && { chapters: keyedChapters }),
     },
+    pendingKey,
   )
 
   // A failed S3 mirror is an internal backup-copy concern, not something
