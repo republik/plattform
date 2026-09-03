@@ -4,7 +4,7 @@ jest.mock('../client', () => ({
   sanityClient: () => ({ patch }),
 }))
 
-import { claimAudioGeneration, hasPendingVersion } from '../audio'
+import { claimAudioGeneration, hasPendingVersion, markPendingVersionError } from '../audio'
 
 describe('hasPendingVersion', () => {
   it('is false when nothing is pending', () => {
@@ -106,5 +106,37 @@ describe('claimAudioGeneration', () => {
     await expect(
       claimAudioGeneration('drafts.doc-1', 'rev-1', 'hash-1'),
     ).rejects.toThrow('network error')
+  })
+})
+
+describe('markPendingVersionError', () => {
+  const set = jest.fn()
+  const commit = jest.fn()
+
+  beforeEach(() => {
+    patch.mockReset().mockReturnValue({ set })
+    set.mockReset().mockReturnValue({ commit })
+    commit.mockReset().mockResolvedValue(undefined)
+  })
+
+  it('patches only the matching pending entry\'s status/error sub-fields', async () => {
+    await markPendingVersionError('drafts.doc-1', 'hash-1', new Error('boom'))
+
+    expect(patch).toHaveBeenCalledWith('drafts.doc-1')
+    const path = 'audioVersions[contentHash == "hash-1" && status == "pending"]'
+    expect(set).toHaveBeenCalledWith({
+      [`${path}.status`]: 'error',
+      [`${path}.error`]: 'boom',
+    })
+    expect(commit).toHaveBeenCalledWith({ autoGenerateArrayKeys: true })
+  })
+
+  it('stringifies a non-Error value', async () => {
+    await markPendingVersionError('drafts.doc-1', 'hash-1', 'plain string error')
+
+    const path = 'audioVersions[contentHash == "hash-1" && status == "pending"]'
+    expect(set).toHaveBeenCalledWith(
+      expect.objectContaining({ [`${path}.error`]: 'plain string error' }),
+    )
   })
 })

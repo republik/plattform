@@ -6,7 +6,7 @@ import {
   errorMessage,
   hasPendingVersion,
   claimAudioGeneration,
-  removePendingVersion,
+  markPendingVersionError,
 } from '../lib/audio'
 import {
   buildSpeakableContent,
@@ -94,6 +94,10 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
       chapterMarkers: process.env.ENABLE_CHAPTER_MARKERS === 'true',
     })
   } catch (e) {
+    // The claim above already inserted a placeholder for this contentHash —
+    // mark that specific attempt as failed rather than leaving it looking
+    // "pending" forever, in addition to the general status below.
+    await markPendingVersionError(documentId, contentHash, e)
     await reportAudioGenerationError(documentId, e)
     return res.status(422).json(errorBody(errorMessage(e)))
   }
@@ -121,6 +125,7 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     // Routed the same way as every other failure in this handler, so it shows
     // up on the article in Studio rather than only as an unhandled rejection.
     const message = 'PUBLIC_URL is not set'
+    await markPendingVersionError(documentId, contentHash, message)
     await reportAudioGenerationError(documentId, message)
     return res.status(500).json(errorBody(message))
   }
@@ -144,10 +149,10 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     { description, source },
   ).catch(async (e: unknown) => {
     // The claim's placeholder was already inserted above, but the request to
-    // Huebsch itself never got off the ground — there's no job in flight to
-    // eventually resolve it, so it must not linger looking "pending" until
-    // the 72h staleness cutoff.
-    await removePendingVersion(article._id, contentHash)
+    // Huebsch itself never got off the ground — mark that specific attempt
+    // as failed rather than leaving it looking "pending" until the 72h
+    // staleness cutoff even though no job is actually running for it.
+    await markPendingVersionError(article._id, contentHash, e)
     await reportAudioGenerationError(article._id, e)
   })
 

@@ -3,7 +3,7 @@ const reportAudioGenerationSuccess = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationError = jest.fn().mockResolvedValue(undefined)
 const hasPendingVersion = jest.fn()
 const claimAudioGeneration = jest.fn()
-const removePendingVersion = jest.fn().mockResolvedValue(undefined)
+const markPendingVersionError = jest.fn().mockResolvedValue(undefined)
 
 jest.mock('../../lib/audio', () => ({
   fetchArticle: (...args: unknown[]) => fetchArticle(...args),
@@ -14,7 +14,7 @@ jest.mock('../../lib/audio', () => ({
   errorMessage: (e: unknown) => (e instanceof Error ? e.message : String(e)),
   hasPendingVersion: (...args: unknown[]) => hasPendingVersion(...args),
   claimAudioGeneration: (...args: unknown[]) => claimAudioGeneration(...args),
-  removePendingVersion: (...args: unknown[]) => removePendingVersion(...args),
+  markPendingVersionError: (...args: unknown[]) => markPendingVersionError(...args),
 }))
 
 const uploadToHuebsch = jest.fn()
@@ -66,7 +66,7 @@ describe('generateAudioHandler concurrency guard', () => {
     reportAudioGenerationError.mockReset().mockResolvedValue(undefined)
     hasPendingVersion.mockReset().mockReturnValue(false)
     claimAudioGeneration.mockReset().mockResolvedValue(true)
-    removePendingVersion.mockReset().mockResolvedValue(undefined)
+    markPendingVersionError.mockReset().mockResolvedValue(undefined)
     uploadToHuebsch.mockReset().mockResolvedValue(undefined)
     process.env.PUBLIC_URL = 'https://api.example.com'
   })
@@ -142,7 +142,7 @@ describe('generateAudioHandler concurrency guard', () => {
     expect(res.json).toHaveBeenCalledWith({ success: true, alreadyInProgress: true })
   })
 
-  it('cleans up the claimed placeholder when the Huebsch request itself fails', async () => {
+  it('marks the claimed placeholder as errored when the Huebsch request itself fails', async () => {
     fetchArticle.mockResolvedValue(baseArticle)
     const failure = new Error('huebsch unreachable')
     uploadToHuebsch.mockRejectedValue(failure)
@@ -153,7 +153,11 @@ describe('generateAudioHandler concurrency guard', () => {
     // the microtask queue so its .catch() has a chance to run.
     await new Promise((resolve) => setImmediate(resolve))
 
-    expect(removePendingVersion).toHaveBeenCalledWith('drafts.doc-1', 'content-hash-1')
+    expect(markPendingVersionError).toHaveBeenCalledWith(
+      'drafts.doc-1',
+      'content-hash-1',
+      failure,
+    )
     expect(reportAudioGenerationError).toHaveBeenCalledWith('drafts.doc-1', failure)
   })
 })
