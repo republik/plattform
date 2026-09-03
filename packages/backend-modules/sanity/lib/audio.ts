@@ -52,6 +52,24 @@ export const fetchArticle = (documentId: string) =>
     { perspective: 'raw' },
   )
 
+// Cheap idempotency check for the Huebsch webhook: an already-recorded
+// audioContentHash matching the one this specific delivery is for means a
+// prior delivery of the *same* generation's result already handled it —
+// webhook providers commonly retry a delivery (at-least-once semantics, or
+// simply not seeing our ack fast enough), and nothing about a retried
+// delivery's signed query params changes, so it looks like a perfectly
+// valid, brand-new request. Checked before doing any of the (wasteful, and
+// non-idempotent on their own) S3/asset upload work below.
+export const fetchAudioContentHash = (documentId: string) =>
+  // `raw` for the same reason as fetchArticle above — documentId is very
+  // often a `drafts.*` id, and the default (published) perspective returns
+  // null for one even on an exact _id match.
+  sanityClient().fetch<string | undefined>(
+    `*[_id == $id][0].audioContentHash`,
+    { id: documentId },
+    { perspective: 'raw' },
+  )
+
 export interface AudioVersionChapter {
   _key: string
   name: string
