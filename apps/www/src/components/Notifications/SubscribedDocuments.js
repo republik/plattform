@@ -93,7 +93,10 @@ const SubscribedDocuments = ({
   data: { myDocumentSubscriptions, loading, error },
 }) => {
   const subscriptions = myDocumentSubscriptions?.subscribedTo.nodes.filter(
-    (subscription) => subscription.active && subscription.documentDetails?.id,
+    (subscription) =>
+      subscription.active &&
+      subscription.documentDetails.__typename === 'SanityDocumentRef' &&
+      subscription.documentDetails?.id,
   )
 
   const collections = useCollections(
@@ -101,8 +104,6 @@ const SubscribedDocuments = ({
       ? subscriptions.map((s) => s.documentDetails.id)
       : [],
   )
-
-  console.log(collections)
 
   return (
     <Loader
