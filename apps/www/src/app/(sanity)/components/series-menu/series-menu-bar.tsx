@@ -1,6 +1,5 @@
 'use client'
 
-import { getSeriesLabels } from '@/app/(sanity)/components/series-labels'
 import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
 import { SERIES_MENU_QUERY_RESULT } from '@/sanity.types'
@@ -81,7 +80,6 @@ export function SeriesMenuBar({
   const [menuTop, setMenuTop] = useState(0)
 
   const episodes = collection.episodes ?? []
-  const labels = getSeriesLabels(episodes)
   const currentIndex = episodes.findIndex(
     (e) => 'slug' in e && e.slug === currentSlug,
   )
@@ -111,7 +109,7 @@ export function SeriesMenuBar({
       >
         <span className={barTitleStyle}>
           <span>
-            Folge {currentIndex + 1}: {collection.title}
+            {episodes[currentIndex].label}: {collection.title}
           </span>
           <span className={css({ md: { display: 'none' } })}>
             <Icon size={18} />
@@ -155,11 +153,7 @@ export function SeriesMenuBar({
               >
                 <GridTeaser
                   teaser={episode}
-                  label={
-                    index === currentIndex
-                      ? `<span style="font-weight: 500">Sie lesen: ${labels[index]}</span>`
-                      : labels[index]
-                  }
+                  isCurrentArticle={index === currentIndex}
                 />
               </div>
             ))}

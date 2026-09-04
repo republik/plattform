@@ -1,6 +1,3 @@
-import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
-import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { CarouselTeaser } from '@/app/(sanity)/components/teaser/carousel'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
@@ -115,21 +112,13 @@ export default async function TeaserSmallPreviewPage({
       <section className={section}>
         <h2 className={sectionTitle}>Serien-Übersicht (Grid)</h2>
         <p className={placeholderNote}>
-          Platzhalter: wird nur innerhalb einer Serie gezeigt, mit allen
-          echten Episoden nebeneinander – hier zur Veranschaulichung mit
-          diesem Teaser dreifach dupliziert.
+          Platzhalter: wird nur innerhalb einer Serie gezeigt, mit allen echten
+          Episoden nebeneinander – hier zur Veranschaulichung mit diesem Teaser
+          dreifach dupliziert.
         </p>
         <div className={gridStyle}>
           {[0, 1, 2].map((i) => (
-            <GridTeaser
-              key={i}
-              teaser={teaser}
-              label={
-                i === 1
-                  ? `<span style="font-weight: 500">Sie lesen: Folge ${i + 1}</span>`
-                  : `Folge ${i + 1}`
-              }
-            />
+            <GridTeaser key={i} teaser={teaser} isCurrentArticle={i === 1} />
           ))}
         </div>
       </section>
@@ -137,14 +126,14 @@ export default async function TeaserSmallPreviewPage({
       <section className={section}>
         <h2 className={sectionTitle}>Serien-Übersicht (Inline)</h2>
         <p className={placeholderNote}>
-          Platzhalter: wird nur innerhalb einer Serie gezeigt, mit allen
-          echten Episoden nebeneinander – hier zur Veranschaulichung mit
-          diesem Teaser dreifach dupliziert.
+          Platzhalter: wird nur innerhalb einer Serie gezeigt, mit allen echten
+          Episoden nebeneinander – hier zur Veranschaulichung mit diesem Teaser
+          dreifach dupliziert.
         </p>
         <div className={carouselBreakout}>
           <div className={inlineScroll}>
             {[0, 1, 2].map((i) => (
-              <InlineTeaser key={i} teaser={teaser} label={`Folge ${i + 1}`} />
+              <InlineTeaser key={i} teaser={teaser} />
             ))}
           </div>
         </div>

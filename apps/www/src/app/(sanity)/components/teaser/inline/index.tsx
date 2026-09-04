@@ -9,16 +9,10 @@ import {
 import { css } from '@republik/theme/css'
 import { usePathname } from 'next/navigation'
 
-export function InlineTeaser({
-  teaser,
-  label,
-}: {
-  teaser: TeaserListItemType
-  label?: string
-}) {
+export function InlineTeaser({ teaser }: { teaser: TeaserListItemType }) {
   const pathname = usePathname()
   const upcoming = upcomingTeaser(teaser)
-  const isCurrentEpisode = 'slug' in teaser && pathname === teaser.slug
+  const isCurrentArticle = 'slug' in teaser && pathname === teaser.slug
 
   return (
     <div
@@ -35,9 +29,11 @@ export function InlineTeaser({
     >
       <h6
         className={css({ fontSize: 's', fontFamily: 'gtAmericaStandard' })}
-        style={{ fontWeight: isCurrentEpisode ? 500 : 'normal' }}
+        style={{ fontWeight: isCurrentArticle ? 500 : 'normal' }}
       >
-        {isCurrentEpisode ? `Sie lesen: ${label}` : label}
+        {isCurrentArticle && teaser.label
+          ? `Sie lesen: ${teaser.label}`
+          : teaser.label}
       </h6>
       <TeaserImage
         image={teaser.image}

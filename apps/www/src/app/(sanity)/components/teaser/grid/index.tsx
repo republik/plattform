@@ -10,10 +10,10 @@ import { css, cx } from '@republik/theme/css'
 
 export default function GridTeaser({
   teaser,
-  label,
+  isCurrentArticle = false,
 }: {
   teaser: TeaserListItemType
-  label?: string
+  isCurrentArticle?: boolean
 }) {
   const upcoming = upcomingTeaser(teaser)
 
@@ -30,9 +30,15 @@ export default function GridTeaser({
         }),
       )}
     >
-      {label && <h6 dangerouslySetInnerHTML={{ __html: label }} />}
+      {teaser.label && (
+        <h6
+          className={css({ fontSize: 's', fontFamily: 'gtAmericaStandard' })}
+          style={{ fontWeight: isCurrentArticle ? 500 : 'normal' }}
+        >
+          {isCurrentArticle ? `Sie lesen: ${teaser.label}` : teaser.label}
+        </h6>
+      )}
       <TeaserImage
-
         image={teaser.image}
         alt=''
         width={640}

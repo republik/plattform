@@ -1,4 +1,3 @@
-import { getSeriesLabels } from '@/app/(sanity)/components/series-labels'
 import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { InlineTeaser } from '@/app/(sanity)/components/teaser/inline'
 import { SERIES_NAV_QUERY } from '@/app/(sanity)/groq/series-nav-query'
@@ -6,7 +5,6 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { Infobox } from '@/app/components/ui/infobox'
 import type { SeriesNav } from '@/sanity.types'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
 
 export async function SeriesNav({
   value,
@@ -25,19 +23,11 @@ export async function SeriesNav({
   }
 
   const teasers = getNotExpiredTeasers(series.episodes)
-  const labels = getSeriesLabels(teasers)
 
   return (
     <>
       <Infobox title={series.title}>
-        {!compact && (
-          <p>
-            {series.description}{' '}
-            {/* FIXME: series.slug is always null, as the articleCollection type does not have a slug field,
-                so it's currently impossible to render this link*/}
-            {series.slug && <Link href={series.slug}>Zur Übersicht.</Link>}
-          </p>
-        )}
+        {!compact && <p>{series.description}</p>}
       </Infobox>
       <div
         className={css({
@@ -61,7 +51,7 @@ export async function SeriesNav({
           })}
         >
           {teasers.map((episode, i) => (
-            <InlineTeaser key={i} teaser={episode} label={labels[i]} />
+            <InlineTeaser key={i} teaser={episode} />
           ))}
         </div>
       </div>

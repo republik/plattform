@@ -28,6 +28,15 @@ const carouselItemStyle = css({
   },
 })
 
+function getCarouselHeading(teaser: TeaserListItemType): string {
+  if (teaser._type === 'teaserSmall') {
+    return teaser.label
+  }
+  return (
+    teaser.label || teaser.articleCollection?.title || teaser.heading?.title
+  )
+}
+
 export function CarouselTeaser({
   teaser,
   imageStyle = 'NORMAL',
@@ -43,7 +52,7 @@ export function CarouselTeaser({
   const noImage = stegaClean(imageStyle) === 'NONE'
   const smallImage = stegaClean(imageStyle) === 'SMALL'
 
-  const heading = teaser.heading && stegaClean(teaser.heading.title)
+  const heading = getCarouselHeading(teaser)
 
   return (
     <div

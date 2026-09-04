@@ -2,6 +2,14 @@ import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { TEASER_SMALL_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
+/* "heading": select(
+  defined(teaserSmall.heading) || defined(heading) => {
+  "_id": heading->_id,
+    "title": coalesce(teaserSmall.heading, pt::text(heading->title)),
+    "slug": heading->slug.current,
+}
+), */
+
 export const TEASER_SMALL_FRAGMENT = /* groq */ `
   _id,
   _type,
@@ -11,13 +19,17 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   "slug": slug.current,
   "image": teaserSmall.image,
   publishDate,
-  "heading": select(
-    defined(teaserSmall.heading) || defined(heading) => {
-      "_id": heading->_id,
-      "title": coalesce(teaserSmall.heading, pt::text(heading->title)),
-      "slug": heading->slug.current,
-    }
-  ),
+  heading->{
+    _id,
+    "title": pt::text(title),
+    "slug": slug.current
+  },
+  "articleCollection": articleCollections[featured == true][0].collection->{
+    _id,
+    title,
+    series
+  },
+  "label": teaserSmall.heading,
   theme {
     name,
     accentColor,

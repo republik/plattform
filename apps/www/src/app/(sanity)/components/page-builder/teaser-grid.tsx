@@ -26,20 +26,6 @@ const gridStyle = css({
   rowGap: '12',
 })
 
-function getSeriesLabels(teasers: TeaserListItemType[]) {
-  const labels = []
-  let firstEpisode = 1
-  for (const teaser of teasers) {
-    if (teaser.heading?.title) {
-      labels.push(teaser.heading.title)
-    } else {
-      labels.push(`Folge ${firstEpisode}`)
-      firstEpisode++
-    }
-  }
-  return labels
-}
-
 export async function TeaserGrid({
   teaserList,
   documentId,
@@ -67,8 +53,6 @@ export async function TeaserGrid({
   const teasers = getNotExpiredTeasers(data?.block?.teasers)
   if (!teasers.length) return null
 
-  const labels = series && getSeriesLabels(teasers)
-
   return (
     <>
       {!!title && (
@@ -84,11 +68,7 @@ export async function TeaserGrid({
       )}
       <div className={gridStyle}>
         {teasers.map((teaser, index) => (
-          <GridTeaser
-            key={teaser._id}
-            teaser={teaser as TeaserListItemType}
-            label={labels && labels[index]}
-          />
+          <GridTeaser key={teaser._id} teaser={teaser as TeaserListItemType} />
         ))}
       </div>
     </>
