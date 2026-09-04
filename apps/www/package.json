@@ -163,6 +163,7 @@
     "styled-components": "^6.4.4",
     "subscriptions-transport-ws": "^0.11.0",
     "topojson": "^3.0.2",
+    "typesense": "^3.0.6",
     "use-resize-observer": "^9.1.0",
     "useragent": "^2.3.0",
     "uuid": "^9.0.1",

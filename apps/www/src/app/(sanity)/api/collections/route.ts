@@ -1,17 +1,8 @@
-import { AUDIO_QUEUE_ITEMS_QUERY } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { COLLECTIONS_QUERY } from '@/app/(sanity)/groq/collections-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { draftMode } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-/**
- * Plain API route rather than a server action: `useAudioQueue` is a shared
- * hook reachable from both the App Router and the legacy Pages Router, and
- * only App Router pages get the RSC compilation that strips a server
- * action's real (server-only) implementation out of the client bundle. A
- * Pages Router page importing a `sanityFetch`-based server action bundles
- * `defineLive` itself into client JS, which throws at runtime. A `fetch()`
- * call to a URL has no such coupling.
- */
 export async function POST(req: Request) {
   let body: unknown
   try {
@@ -36,10 +27,9 @@ export async function POST(req: Request) {
   }
 
   const { data } = await sanityFetch({
-    query: AUDIO_QUEUE_ITEMS_QUERY,
+    query: COLLECTIONS_QUERY,
     params: { ids },
     perspective: (await draftMode()) ? 'drafts' : 'published',
   })
-
   return NextResponse.json(data)
 }

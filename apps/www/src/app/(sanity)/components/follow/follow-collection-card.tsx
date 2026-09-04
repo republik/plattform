@@ -33,7 +33,11 @@ function FollowCollectionCard({
         <p className={css({ pt: 1, pb: 4, textStyle: 'airy' })}>
           {collection.description}
         </p>
-        <FollowButton type={SubscriptionObjectType.Document} size='small' />
+        <FollowButton
+          objectId={`sanity:${collection._id}`}
+          type={SubscriptionObjectType.Document}
+          size='small'
+        />
       </div>
       {!!collection.image && (
         <TeaserImage

@@ -1,10 +1,17 @@
 import { graphql } from '@apollo/client/react/hoc'
-import { A, Interaction, mediaQueries, plainButtonRule } from '@project-r/styleguide'
+import {
+  A,
+  Interaction,
+  mediaQueries,
+  plainButtonRule,
+} from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import Image from 'next/image'
-import Link from 'next/link'
+
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import withT from '@/lib/withT'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { withMembership } from '../Auth/checkRoles'
 import Loader from '../Loader'
 import { myDocumentSubscriptions, withUnsubFromDoc } from './enhancers'
@@ -59,74 +66,108 @@ const styles = {
   }),
 }
 
+function useCollections(ids /* : string[] */) {
+  const [collections, setCollections] = useState([])
+
+  if (ids.length === 0) {
+    return []
+  }
+
+  const params = JSON.stringify({ ids })
+
+  useEffect(() => {
+    fetch(`/api/collections`, {
+      method: 'POST',
+      body: params,
+    })
+      .then((res) => res.json())
+      .then((collections) => setCollections(collections))
+  }, [params])
+
+  return collections
+}
+
 const SubscribedDocuments = ({
   t,
   unsubFromDoc,
   data: { myDocumentSubscriptions, loading, error },
-}) => (
-  <Loader
-    loading={loading}
-    error={error}
-    render={() => {
-      const subscriptions = myDocumentSubscriptions.subscribedTo.nodes.filter(
-        (subscription) =>
-          subscription.active &&
-          subscription.documentDetails?.meta.template === 'format',
-      )
+}) => {
+  const subscriptions = myDocumentSubscriptions?.subscribedTo.nodes.filter(
+    (subscription) => subscription.active && subscription.documentDetails?.id,
+  )
 
-      if (!subscriptions.length) {
+  const collections = useCollections(
+    subscriptions?.length > 0
+      ? subscriptions.map((s) => s.documentDetails.id)
+      : [],
+  )
+
+  console.log(collections)
+
+  return (
+    <Loader
+      loading={loading || collections.length < subscriptions.length}
+      error={error}
+      render={() => {
+        if (!subscriptions.length) {
+          return (
+            <Interaction.P>
+              {t('Notifications/settings/formats/summary/0')}
+            </Interaction.P>
+          )
+        }
+
         return (
-          <Interaction.P>
-            {t('Notifications/settings/formats/summary/0')}
-          </Interaction.P>
-        )
-      }
+          <div {...styles.formats}>
+            {subscriptions.map((subscription, i) => {
+              const collection = collections[i]
 
-      return (
-        <div {...styles.formats}>
-          {subscriptions.map((subscription) => {
-            const format = subscription.documentDetails
-            return (
-              <div {...styles.formatContainer} key={subscription.id}>
-                <div {...styles.formatImage}>
-                  {format.meta.image ? (
-                    <Image
-                      className={styles.formatImagePicture}
-                      src={format.meta.image}
-                      width={48}
-                      height={48}
-                      alt=''
-                    />
-                  ) : (
-                    <span
-                      {...styles.formatImageFallback}
-                      style={{ color: format.meta.color }}
+              let imageSrc
+              try {
+                imageSrc = urlFor(collection.image).width(96).height(96).url()
+              } catch (e) {
+                console.warn(e)
+              }
+
+              return (
+                <div {...styles.formatContainer} key={subscription.id}>
+                  <div {...styles.formatImage}>
+                    {imageSrc ? (
+                      <Image
+                        className={styles.formatImagePicture}
+                        src={imageSrc}
+                        width={48}
+                        height={48}
+                        alt=''
+                        unoptimized
+                      />
+                    ) : (
+                      <span {...styles.formatImageFallback}>
+                        {collection.title.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                  <span {...styles.formatTitle}>{collection.title}</span>
+
+                  <div {...styles.actions}>
+                    <button
+                      {...plainButtonRule}
+                      onClick={() =>
+                        unsubFromDoc({ subscriptionId: subscription.id })
+                      }
                     >
-                      {format.meta.title.charAt(0)}
-                    </span>
-                  )}
+                      <A>{t('Notifications/settings/formats/unsubscribe')}</A>
+                    </button>
+                  </div>
                 </div>
-                <Link {...styles.formatTitle} href={format.meta.path}>
-                  {format.meta.title}
-                </Link>
-                <div {...styles.actions}>
-                  <button
-                    {...plainButtonRule}
-                    onClick={() =>
-                      unsubFromDoc({ subscriptionId: subscription.id })
-                    }
-                  >
-                    <A>{t('Notifications/settings/formats/unsubscribe')}</A>
-                  </button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )
-    }}
-  />
-)
+              )
+            })}
+          </div>
+        )
+      }}
+    />
+  )
+}
 
 export default compose(
   withT,
