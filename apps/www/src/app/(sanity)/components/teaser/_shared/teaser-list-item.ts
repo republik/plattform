@@ -17,20 +17,14 @@ function isTeaserListItem(item: RawTeaserListItem): item is TeaserListItemType {
 }
 
 export function upcomingTeaser(teaser: TeaserListItemType): boolean {
-  return (
-    teaser._type === 'teaserSmall' &&
-    teaser.upcomingOnly === true &&
-    (!teaser.publishDate ||
-      new Date(stegaClean(teaser.publishDate)) > new Date())
-  )
+  return teaser._type === 'teaserSmall' && teaser.upcomingOnly === true
 }
 
 export function isExpiredUpcomingTeaser(teaser: TeaserListItemType): boolean {
   return (
     teaser._type === 'teaserSmall' &&
     teaser.upcomingOnly === true &&
-    !!teaser.publishDate &&
-    new Date(stegaClean(teaser.publishDate)) <= new Date()
+    !!stegaClean(teaser.targetPublishDate)
   )
 }
 

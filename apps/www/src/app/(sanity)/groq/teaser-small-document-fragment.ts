@@ -22,6 +22,7 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   "image": teaserSmallConfig.image,
   publishDate,
   upcomingOnly,
+  "targetPublishDate": target[0]->publishDate,
   "label": teaserSmallConfig.heading,
   "theme": {
     "accentColor": teaserSmallConfig.headingColor,
