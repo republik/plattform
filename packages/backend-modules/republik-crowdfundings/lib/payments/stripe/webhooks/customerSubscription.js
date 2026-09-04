@@ -39,6 +39,13 @@ module.exports = {
             pledgeId,
           })
 
+        if (existingMembership?.migratedAt) {
+          console.info(
+            `customerSubscription: membership ${existingMembership.id} already migrated, skipping legacy update`,
+          )
+          return 200
+        }
+
         if (subscription.cancel_at_period_end) {
           await transaction.public.memberships.update(
             {
