@@ -1,4 +1,5 @@
 import { sanityClient } from './client'
+import { toSanityRef } from './document'
 import type { PortableTextBlocks } from './audio'
 
 export interface ArticleForNotification {
@@ -48,9 +49,15 @@ export const resolveNotificationRecipients = async (
   article: ArticleForNotification,
   context: any,
 ): Promise<{ collectionSubscribers: any[]; authorSubscribers: any[] }> => {
+  // Subscriptions to Sanity-backed documents are stored (and looked up
+  // elsewhere, e.g. loaders.Document.byRepoId) under the `sanity:`-prefixed,
+  // published-id form — see toSanityRef. Without this, a bare Sanity _id
+  // here never matches the stored objectDocumentId and collection followers
+  // are silently invisible to both the notification send and the count.
   const articleCollectionIds = (article.articleCollections ?? [])
     .map((entry) => entry.collection?._id)
     .filter((id): id is string => Boolean(id))
+    .map(toSanityRef)
   const authorUserIds = (article.contributors ?? [])
     .map((entry) => entry.contributor?.userId)
     .filter((id): id is string => Boolean(id))
