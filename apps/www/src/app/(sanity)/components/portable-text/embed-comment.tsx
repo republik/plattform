@@ -7,9 +7,9 @@ import { getClient } from '@/app/lib/apollo/client'
 import { formatDateTimeLong, formatTimeAgo } from '@/app/lib/util/time-format'
 import type { NestedEditor } from '@/sanity.types'
 import { markdownToPortableText } from '@portabletext/markdown'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
-import { NestedPortableText } from './render'
+import { NestedPortableTextWithoutLinks } from './render'
 
 type EmbedCommentValue = Extract<
   ArticlePortableTextBlockType,
@@ -39,17 +39,23 @@ function getCommentHref(
 
 const rootStyle = css({
   position: 'relative',
+  width: 'full',
   maxWidth: '455px',
   mx: 'auto',
-  my: '8',
   py: '3',
+  mt: '8',
   borderColor: 'divider',
   borderStyle: 'solid',
   borderTopWidth: '1px',
-  borderBottomWidth: '1px',
   textAlign: 'left',
   color: 'text',
   textStyle: 'sans',
+  '.comment-embed + &': { mt: '0' },
+  '&:not(:has(+ .comment-embed))': {
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    mb: '8',
+  },
 })
 
 const headerStyle = css({
@@ -67,10 +73,6 @@ const portraitStyle = css({
 
 const nameStyle = css({
   textStyle: 'sansSerifMedium',
-  fontSize: 'm',
-  lineHeight: '1.25',
-  color: 'text',
-  textDecoration: 'none',
 })
 
 const metaLineStyle = css({
@@ -78,18 +80,7 @@ const metaLineStyle = css({
   alignItems: 'center',
   gap: '1',
   fontSize: 's',
-  lineHeight: '1.25',
   color: 'textSoft',
-})
-
-const credentialStyle = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '1',
-  minWidth: 0,
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
 })
 
 const bodyLinkStyle = css({
@@ -97,12 +88,6 @@ const bodyLinkStyle = css({
   my: '3',
   color: 'text',
   textDecoration: 'none',
-})
-
-const tagStyle = css({
-  textStyle: 'sansSerifMedium',
-  fontSize: 'm',
-  mb: '2',
 })
 
 const footerStyle = css({
@@ -141,7 +126,7 @@ export async function EmbedComment({ value }: { value: EmbedCommentValue }) {
   const body = content ? markdownToPortableText(content) : undefined
 
   return (
-    <div id={id} className={rootStyle}>
+    <div id={id} className={cx('comment-embed', rootStyle)}>
       <div className={headerStyle}>
         {published && author?.profilePicture && (
           <img
@@ -175,7 +160,11 @@ export async function EmbedComment({ value }: { value: EmbedCommentValue }) {
       </div>
 
       <CommentBodyLink href={href}>
-        {body && <NestedPortableText value={body as unknown as NestedEditor} />}
+        {body && (
+          <NestedPortableTextWithoutLinks
+            value={body as unknown as NestedEditor}
+          />
+        )}
       </CommentBodyLink>
 
       {title && (

@@ -10,7 +10,11 @@ import {
 import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
 import { Variable } from '@/app/(sanity)/components/portable-text/variable'
 import { type InlineEditor, type NestedEditor } from '@/sanity.types'
-import { PortableText, type PortableTextReactComponents } from 'next-sanity'
+import {
+  PortableText,
+  type PortableTextMarkComponentProps,
+  type PortableTextReactComponents,
+} from 'next-sanity'
 
 const inlineComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
@@ -62,4 +66,41 @@ const nestedComponents: Partial<PortableTextReactComponents> = {
 
 export function NestedPortableText({ value }: { value: NestedEditor }) {
   return <PortableText components={nestedComponents} value={value} />
+}
+
+const nestedComponentsWithoutLinks: Partial<PortableTextReactComponents> = {
+  unknownType: UnknownType,
+
+  types: {
+    variable: ({ value }) => <Variable value={value} />,
+    button: ({ value }) => null,
+    voiceTag: () => null,
+  },
+
+  block: {
+    heading: ({ children }) => <h2>{children}</h2>,
+  },
+  marks: {
+    strong: Strong,
+    em: Em,
+    sub: Sub,
+    sup: Sup,
+    link: ({ text }: PortableTextMarkComponentProps) => {
+      return text
+    },
+    internalLink: ({ text }: PortableTextMarkComponentProps) => {
+      return text
+    },
+  },
+}
+
+// for comment embed
+export function NestedPortableTextWithoutLinks({
+  value,
+}: {
+  value: NestedEditor
+}) {
+  return (
+    <PortableText components={nestedComponentsWithoutLinks} value={value} />
+  )
 }
