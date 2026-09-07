@@ -79,6 +79,7 @@
     "@hookform/resolvers": "^3.3.1",
     "@juggle/resize-observer": "^3.4.0",
     "@next/bundle-analyzer": "^16.2.6",
+    "@portabletext/markdown": "^2.0.0",
     "@portabletext/react": "^6.2.0",
     "@project-r/styleguide": "*",
     "@radix-ui/react-collapsible": "^1.0.3",

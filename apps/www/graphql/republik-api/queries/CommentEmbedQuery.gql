@@ -1,0 +1,25 @@
+query CommentEmbed($id: ID!) {
+  comment(id: $id) {
+    id
+    published
+    adminUnpublished
+    parentIds
+    displayAuthor {
+      id
+      name
+      profilePicture
+    }
+    discussion {
+      id
+      title
+      path
+      document {
+        id
+        meta {
+          template
+          path
+        }
+      }
+    }
+  }
+}

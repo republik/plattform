@@ -21,15 +21,15 @@ type ArrayOf<T> = Array<
 >
 
 // Source: ../../../studio/schema.json
+export type LegacyAudioSrc = {
+  mp4?: string
+  hls?: string
+}
+
 export type Src = {
   mp4?: string
   hls?: string
   thumbnail?: string
-}
-
-export type LegacyAudioSrc = {
-  mp4?: string
-  hls?: string
 }
 
 export type EmbedCommentDiscussion = {
@@ -344,6 +344,11 @@ export type ArticleTemplate = {
     | 'huebsch-82170-rpblk'
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
+    | 'huebsch-01150-rpblk'
+    | 'huebsch-01150'
+    | 'huebsch-62964'
+    | 'huebsch-08316'
+    | 'huebsch-01670'
   audioSourceMp3?: string
   audioVersions?: Array<
     {
@@ -565,10 +570,7 @@ export type PageEditor = Array<
     } & InfoBox)
   | ({
       _key: string
-    } & BlockQuote)
-  | ({
-      _key: string
-    } & PullQuote)
+    } & EmbedDataWrapper)
   | ({
       _key: string
     } & Divider)
@@ -577,34 +579,37 @@ export type PageEditor = Array<
     } & DividerStars)
   | ({
       _key: string
-    } & EmbedVideo)
+    } & BlockQuote)
+  | ({
+      _key: string
+    } & PullQuote)
   | ({
       _key: string
     } & Audio)
   | ({
       _key: string
-    } & EmbedDataWrapper)
+    } & EmbedVideo)
   | ({
       _key: string
-    } & Html)
+    } & Toc)
   | ({
       _key: string
     } & Button)
   | ({
       _key: string
+    } & DynamicComponent)
+  | ({
+      _key: string
     } & StoryComponent)
   | ({
       _key: string
-    } & Toc)
+    } & Html)
   | ({
       _key: string
     } & EmbedTwitter)
   | ({
       _key: string
     } & EmbedComment)
-  | ({
-      _key: string
-    } & DynamicComponent)
   | ({
       _key: string
     } & Chart)
@@ -654,22 +659,7 @@ export type ArticleEditor = Array<
     } & InfoBox)
   | ({
       _key: string
-    } & BlockQuote)
-  | ({
-      _key: string
-    } & PullQuote)
-  | ({
-      _key: string
-    } & WebOnly)
-  | ({
-      _key: string
-    } & EmailOnly)
-  | ({
-      _key: string
-    } & If)
-  | ({
-      _key: string
-    } & IfNot)
+    } & EmbedDataWrapper)
   | ({
       _key: string
     } & Divider)
@@ -678,19 +668,16 @@ export type ArticleEditor = Array<
     } & DividerStars)
   | ({
       _key: string
-    } & EmbedVideo)
+    } & BlockQuote)
+  | ({
+      _key: string
+    } & PullQuote)
   | ({
       _key: string
     } & Audio)
   | ({
       _key: string
-    } & EmbedDataWrapper)
-  | ({
-      _key: string
-    } & Html)
-  | ({
-      _key: string
-    } & StoryComponent)
+    } & EmbedVideo)
   | ({
       _key: string
     } & Toc)
@@ -705,13 +692,31 @@ export type ArticleEditor = Array<
     } & AuthorBlock)
   | ({
       _key: string
+    } & WebOnly)
+  | ({
+      _key: string
+    } & EmailOnly)
+  | ({
+      _key: string
+    } & If)
+  | ({
+      _key: string
+    } & IfNot)
+  | ({
+      _key: string
+    } & DynamicComponent)
+  | ({
+      _key: string
+    } & StoryComponent)
+  | ({
+      _key: string
+    } & Html)
+  | ({
+      _key: string
     } & EmbedTwitter)
   | ({
       _key: string
     } & EmbedComment)
-  | ({
-      _key: string
-    } & DynamicComponent)
   | ({
       _key: string
     } & Chart)
@@ -732,6 +737,11 @@ export type VoiceTag = {
     | 'huebsch-82170-rpblk'
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
+    | 'huebsch-01150-rpblk'
+    | 'huebsch-01150'
+    | 'huebsch-62964'
+    | 'huebsch-08316'
+    | 'huebsch-01670'
 }
 
 export type InternalLink = {
@@ -780,6 +790,11 @@ export type Article = {
     | 'huebsch-82170-rpblk'
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
+    | 'huebsch-01150-rpblk'
+    | 'huebsch-01150'
+    | 'huebsch-62964'
+    | 'huebsch-08316'
+    | 'huebsch-01670'
   audioSourceMp3?: string
   audioVersions?: Array<
     {
@@ -1496,8 +1511,8 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
-  | Src
   | LegacyAudioSrc
+  | Src
   | EmbedCommentDiscussion
   | ChartConfig
   | SanityImageAssetReference

@@ -4,6 +4,7 @@ import { Heading } from '@/app/(sanity)/components/portable-text/blocks'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
+import { EmbedComment } from '@/app/(sanity)/components/portable-text/embed-comment'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { EmbedVideo } from '@/app/(sanity)/components/portable-text/embed-video'
 import { ExpandableLink } from '@/app/(sanity)/components/portable-text/expandable-link'
@@ -63,6 +64,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
     chart: ({ value }) => <LegacyChart value={value} />,
     toc: ({ value }) => <Toc value={value} />,
+    embedComment: ({ value }) => <EmbedComment value={value} />,
   },
   block: {
     heading: Heading,
