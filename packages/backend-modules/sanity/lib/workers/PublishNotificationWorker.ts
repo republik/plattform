@@ -70,7 +70,7 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     const { collectionSubscribers, authorSubscribers } =
       await resolveNotificationRecipients(article, context)
 
-    const eventInfo = { objectType: 'Document', objectId: article._id }
+    const eventInfo = { objectType: 'Document', objectId: `sanity:${article._id}` }
     const articleTitle = plainText(article.title)
     // Flattened once for the whole job, not per recipient: `plainText` walks a
     // portable-text tree, and these end up inside a per-user `mail` callback.
