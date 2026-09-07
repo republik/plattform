@@ -111,6 +111,7 @@ export async function EmbedComment({ value }: { value: EmbedCommentValue }) {
       ).query<CommentEmbedQuery>({
         query: CommentEmbedDocument,
         variables: { id },
+        errorPolicy: 'all',
       })
     : { data: undefined }
 
