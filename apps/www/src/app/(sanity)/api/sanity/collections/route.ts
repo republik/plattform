@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const { data } = await sanityFetch({
     query: COLLECTIONS_QUERY,
     params: { ids },
-    perspective: (await draftMode()) ? 'drafts' : 'published',
+    perspective: (await draftMode()).isEnabled ? 'drafts' : 'published',
   })
   return NextResponse.json(data)
 }

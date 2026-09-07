@@ -1,3 +1,4 @@
+import { useSanityCollections } from '@/lib/use-sanity-data'
 import { graphql } from '@apollo/client/react/hoc'
 import {
   A,
@@ -11,7 +12,6 @@ import compose from 'lodash/flowRight'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import withT from '@/lib/withT'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 import { withMembership } from '../Auth/checkRoles'
 import Loader from '../Loader'
 import { myDocumentSubscriptions, withUnsubFromDoc } from './enhancers'
@@ -66,23 +66,6 @@ const styles = {
   }),
 }
 
-function useCollections(ids /* : string[] */) {
-  const [collections, setCollections] = useState([])
-
-  const params = JSON.stringify({ ids })
-
-  useEffect(() => {
-    fetch(`/api/collections`, {
-      method: 'POST',
-      body: params,
-    })
-      .then((res) => res.json())
-      .then((collections) => setCollections(collections))
-  }, [params])
-
-  return collections
-}
-
 const SubscribedDocuments = ({
   t,
   unsubFromDoc,
@@ -95,7 +78,7 @@ const SubscribedDocuments = ({
       subscription.documentDetails?.id,
   )
 
-  const collections = useCollections(
+  const collectionsById = useSanityCollections(
     subscriptions?.length > 0
       ? subscriptions.map((s) => s.documentDetails.id)
       : [],
@@ -103,7 +86,9 @@ const SubscribedDocuments = ({
 
   return (
     <Loader
-      loading={loading || collections.length < subscriptions.length}
+      loading={
+        loading || Object.keys(collectionsById).length < subscriptions.length
+      }
       error={error}
       render={() => {
         if (!subscriptions.length) {
@@ -117,7 +102,8 @@ const SubscribedDocuments = ({
         return (
           <div {...styles.formats}>
             {subscriptions.map((subscription, i) => {
-              const collection = collections[i]
+              const collection =
+                collectionsById[subscription.documentDetails.id]
 
               let imageSrc
               try {

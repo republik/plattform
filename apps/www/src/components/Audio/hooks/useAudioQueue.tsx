@@ -54,7 +54,7 @@ function refDocumentId(ref: AudioQueueItemRefFragment): string | null {
 async function getAudioQueueItemsByIds(
   ids: string[],
 ): Promise<AudioQueueItemContent[]> {
-  const response = await fetch('/api/audio-queue-items', {
+  const response = await fetch('/api/sanity/audio-queue-items', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ids }),
@@ -197,7 +197,9 @@ const useAudioQueue = (): {
           return next
         })
       })
-      .catch((error) => reportError('useAudioQueue: hydrate from Sanity', error))
+      .catch((error) =>
+        reportError('useAudioQueue: hydrate from Sanity', error),
+      )
     return () => {
       cancelled = true
     }
@@ -258,9 +260,12 @@ const useAudioQueue = (): {
     })
   }
 
-  const [addAudioQueueItemMutation] = useMutation(AddAudioQueueItemRefDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
+  const [addAudioQueueItemMutation] = useMutation(
+    AddAudioQueueItemRefDocument,
+    {
+      update: modifyApolloCacheWithUpdatedPlaylist,
+    },
+  )
   const [removeAudioQueueItemMutation] = useMutation(
     RemoveAudioQueueItemDocument,
     { update: updateCacheWithMinimalData },
@@ -306,7 +311,9 @@ const useAudioQueue = (): {
         AudioQueueItemRefFragmentDoc,
         data?.audioQueueItems || [],
       )
-      return refs.map((ref) => mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))))
+      return refs.map((ref) =>
+        mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))),
+      )
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
         id: uuid(),

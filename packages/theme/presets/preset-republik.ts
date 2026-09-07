@@ -194,6 +194,9 @@ export const presetRepublik = definePreset({
                 _dark: '#1F1F1F',
               },
             },
+            alert: {
+              value: { base: '#E4F5E1', _light: '#E4F5E1', _dark: '#144313' },
+            },
             marketing: {
               value: {
                 base: '#F2ECE6',

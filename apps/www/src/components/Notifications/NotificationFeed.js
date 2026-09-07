@@ -1,3 +1,6 @@
+import { useSanityArticles } from '@/lib/use-sanity-data'
+import { timeFormat } from '@/lib/utils/format'
+import withT from '@/lib/withT'
 import {
   A,
   Center,
@@ -14,12 +17,11 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Link from 'next/link'
 import { useMemo } from 'react'
-import { timeFormat } from '@/lib/utils/format'
-import withT from '@/lib/withT'
 import DateLabel from '../Feed/DateLabel'
 import InfiniteScroll from '../Frame/InfiniteScroll'
 import CommentNotification from './CommentNotification'
 import DocumentNotification from './DocumentNotification'
+import SanityDocumentNotification from './SanityDocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
@@ -108,6 +110,12 @@ export default compose(
     const hasNextPage = pageInfo && pageInfo.hasNextPage
     const [colorScheme] = useColorContext()
 
+    const articleRefs =
+      nodes
+        ?.filter((n) => n.object?.__typename === 'SanityDocumentRef')
+        .map((n) => n.object.id) ?? []
+    const articlesById = useSanityArticles(articleRefs)
+
     const linkStyleRule = useMemo(
       () =>
         css({
@@ -149,7 +157,7 @@ export default compose(
 
     const isNew = (node) => !node.readAt || loadedAt < new Date(node.readAt)
 
-    if (!nodes) return null
+    if (!nodes || Object.keys(articlesById).length === 0) return null
     const isEmpty = !nodes.length
 
     return (
@@ -240,10 +248,18 @@ export default compose(
                         </div>
                       )
                     }
+
                     return node.object.__typename === 'Document' ? (
                       <DocumentNotification
                         isNew={isNew(node)}
                         node={node}
+                        key={j}
+                      />
+                    ) : node.object.__typename === 'SanityDocumentRef' ? (
+                      <SanityDocumentNotification
+                        isNew={isNew(node)}
+                        node={node}
+                        article={articlesById[node.object.id]}
                         key={j}
                       />
                     ) : (
