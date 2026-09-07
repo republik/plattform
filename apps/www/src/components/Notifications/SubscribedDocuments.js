@@ -69,10 +69,6 @@ const styles = {
 function useCollections(ids /* : string[] */) {
   const [collections, setCollections] = useState([])
 
-  if (ids.length === 0) {
-    return []
-  }
-
   const params = JSON.stringify({ ids })
 
   useEffect(() => {
