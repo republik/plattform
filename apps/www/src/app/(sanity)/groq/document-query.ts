@@ -14,8 +14,11 @@ import type {
 } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
-type Equals<A, B> =
-  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
+type Equals<A, B> = (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B
+  ? 1
+  : 2
+  ? true
+  : false
 
 type Assert<T extends true> = T
 
@@ -96,6 +99,7 @@ const DOCUMENT_FIELDS = /* groq */ `{
       contributors[]{
         _id,
         kind,
+        "userId": contributor->userId,
         // Same profile slug as the byline links
         "slug": coalesce(contributor->slug.current, contributor->userId),
         "name": contributor->title,

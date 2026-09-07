@@ -15,7 +15,12 @@ export async function CallToAction({ cta }: { cta: CtaBlockFragmentType }) {
       {target._type === 'newsletter' ? (
         <NewsletterSubscribeButton newsletter={target} />
       ) : target._type === 'articleCollection' ? (
-        <FollowButton type={SubscriptionObjectType.Document} />
+        <FollowButton
+          objectId={`sanity:${target._id}`}
+          objectName={target.title}
+          // FIXME: how to provide subscriptionId?
+          type={SubscriptionObjectType.Document}
+        />
       ) : target._type === 'podcast' ? (
         <FollowPodcast podcast={target} />
       ) : null}

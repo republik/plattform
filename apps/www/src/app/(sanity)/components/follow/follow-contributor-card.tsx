@@ -64,7 +64,10 @@ function FollowContributorCard({
       <div
         className={css({ ml: 'auto', position: 'relative', zIndex: 10, pl: 2 })}
       >
-        <FollowButton type={SubscriptionObjectType.User} />
+        <FollowButton
+          objectId={contributor.userId}
+          type={SubscriptionObjectType.User}
+        />
       </div>
     </div>
   )
