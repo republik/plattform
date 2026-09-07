@@ -145,6 +145,21 @@ export const editorialContentRecipe = defineRecipe({
         orderedListItems: readerScaledText('editorialParagraph'),
         interviewQuestion: { fontWeight: 'bold' },
       }),
+      EDITORIAL_CENTERED: contentParts({
+        heading: { textStyle: 'editorialHeading', textAlign: 'center' },
+        title: { textStyle: 'editorialTitle', textAlign: 'center' },
+        lead: { ...readerScaledText('editorialLead'), textAlign: 'center' },
+        byline: { textStyle: 'editorialByline', textAlign: 'center' },
+        paragraphs: readerScaledText('editorialParagraph'),
+        subheadings: readerScaledText('editorialSubheading'),
+        smallheadings: {
+          ...readerScaledText('editorialParagraph'),
+          fontWeight: 'bold',
+        },
+        unorderedListItems: readerScaledText('editorialParagraph'),
+        orderedListItems: readerScaledText('editorialParagraph'),
+        interviewQuestion: { fontWeight: 'bold' },
+      }),
       META: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'metaTitle' },
