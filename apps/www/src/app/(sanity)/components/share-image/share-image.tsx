@@ -24,6 +24,7 @@ const PLACEHOLDER_TEXT = 'Text für Sharebild'
 // but Satori renders them as visible hyphens. Strip them so the generated image
 // matches the on-site look.
 const SOFT_HYPHEN = /­/g
+
 function sanitize(value?: string | null): string {
   return (value || '').replace(SOFT_HYPHEN, '')
 }
@@ -76,14 +77,28 @@ function TextSpanEl({ span }: { span: TextSpan }) {
   let node: ReactElement | string = span.text ?? ''
   if (marks.includes('sup')) {
     node = (
-      <span style={{ fontSize: '0.65em', position: 'relative', top: SUP_TOP, ...PRESERVE_WHITESPACE }}>
+      <span
+        style={{
+          fontSize: '0.65em',
+          position: 'relative',
+          top: SUP_TOP,
+          ...PRESERVE_WHITESPACE,
+        }}
+      >
         {node}
       </span>
     )
   }
   if (marks.includes('sub')) {
     node = (
-      <span style={{ fontSize: '0.65em', position: 'relative', top: SUB_TOP, ...PRESERVE_WHITESPACE }}>
+      <span
+        style={{
+          fontSize: '0.65em',
+          position: 'relative',
+          top: SUB_TOP,
+          ...PRESERVE_WHITESPACE,
+        }}
+      >
         {node}
       </span>
     )
@@ -91,7 +106,11 @@ function TextSpanEl({ span }: { span: TextSpan }) {
   // Satori (unlike a real DOM) throws on an explicit `undefined` style
   // value, so only set fontWeight/fontStyle when a mark actually calls for
   // one, rather than always setting a key with a possibly-undefined value.
-  const style: { fontWeight?: number; fontStyle?: 'italic'; whiteSpace: 'pre-wrap' } = {
+  const style: {
+    fontWeight?: number
+    fontStyle?: 'italic'
+    whiteSpace: 'pre-wrap'
+  } = {
     ...PRESERVE_WHITESPACE,
   }
   if (marks.includes('strong')) style.fontWeight = 700
@@ -99,7 +118,7 @@ function TextSpanEl({ span }: { span: TextSpan }) {
   return <span style={style}>{node}</span>
 }
 
-export type ThemeName = 'EDITORIAL' | 'META' | 'PAGE'
+export type ThemeName = 'EDITORIAL' | 'META' | 'PAGE' | 'EDITORIAL_CENTERED'
 export type Layout = 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
 export type TextPosition = 'top' | 'center' | 'bottom'
 

@@ -26,6 +26,9 @@ const teaserTitle = cva({
       EDITORIAL: {
         textStyle: 'editorialTitle',
       },
+      EDITORIAL_CENTERED: {
+        textStyle: 'editorialTitle',
+      },
       PAGE: {
         textStyle: 'metaTitle',
       },
