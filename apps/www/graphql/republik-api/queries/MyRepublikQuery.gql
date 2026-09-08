@@ -1,5 +1,11 @@
 query MyRepublik {
-  progress: userCollectionItems(collectionName: "progress", first: 2) {
+  progress: userCollectionItemsByNames(
+    names: ["progress", "bookmarks"]
+    progress: UNFINISHED
+    first: 2
+    uniqueDocuments: true
+    lastDays: 30
+  ) {
     nodes {
       id
       sanityId

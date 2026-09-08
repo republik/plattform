@@ -10,9 +10,21 @@ import { Suspense } from 'react'
 
 export function MyRepublik() {
   return (
-    <Suspense fallback={<Spinner />}>
-      <MyRepublikWithData />
-    </Suspense>
+    <div
+      className={css({
+        display: 'grid',
+        maxWidth:
+          'calc(token(sizes.editorial) + token(spacing.40) + token(spacing.40))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+        gap: '8',
+        p: '8',
+        mx: 'auto',
+      })}
+    >
+      <Suspense fallback={<Spinner size='full' />}>
+        <MyRepublikWithData />
+      </Suspense>
+    </div>
   )
 }
 
@@ -31,7 +43,7 @@ async function MyRepublikWithData() {
   const notificationIds =
     data.notifications?.nodes
       ?.filter((n) => n.object?.__typename === 'SanityDocumentRef')
-      .map((n) => n.object?.id) ?? []
+      .map((n) => (n.object as { id: string })?.id) ?? []
 
   const { data: teasers } = await sanityFetch({
     query: ARTICLES_BY_IDS_QUERY,
@@ -43,17 +55,7 @@ async function MyRepublikWithData() {
   const notificationTeasers = notificationIds.map((t) => teasersById[t])
 
   return (
-    <div
-      className={css({
-        display: 'grid',
-        maxWidth:
-          'calc(token(sizes.editorial) + token(spacing.40) + token(spacing.40))',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '8',
-        p: '8',
-        mx: 'auto',
-      })}
-    >
+    <>
       <div>
         <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
           <Link href='/lesezeichen'>Weiterlesen</Link>
@@ -67,9 +69,9 @@ async function MyRepublikWithData() {
           <Link href='/benachrichtigungen'>Abonnierte Beiträge</Link>
         </h2>
         {notificationTeasers.map((teaser, i) => (
-          <FeedTeaser key={teaser._id} teaser={teaser} />
+          <FeedTeaser key={i + teaser._id} teaser={teaser} />
         ))}
       </div>
-    </div>
+    </>
   )
 }
