@@ -1,141 +1,75 @@
-'use client'
+import { MyRepublikDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
+import { ARTICLES_BY_IDS_QUERY } from '@/app/(sanity)/groq/articles-by-ids-query'
+import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { Spinner } from '@/app/components/ui/spinner'
+import { getClient } from '@/app/lib/apollo/client'
+import { css } from '@republik/theme/css'
+import Link from 'next/link'
+import { Suspense } from 'react'
 
-import HrefLink from '@/components/Link/Href'
-import { gql } from '@apollo/client'
-import { graphql } from '@apollo/client/react/hoc'
-import {
-  Loader,
-  RootColorVariables,
-  TeaserMyMagazine,
-} from '@project-r/styleguide'
-import React from 'react'
-
-const teaserData = {
-  config: {
-    options: ({ first = 2 }) => ({
-      variables: {
-        first: +first,
-      },
-      ssr: false,
-    }),
-    props: ({ data }) => {
-      return {
-        data: {
-          loading: data.loading,
-          error: data.error,
-          latestSubscribedArticles: data.notifications?.nodes
-            .map((i) => i.object)
-            .filter(Boolean),
-          latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.nodes
-            .map((i) => i.document)
-            .filter(Boolean),
-        },
-      }
-    },
-  },
-  query: `
-    query getMyMagazineDocuments {
-      notifications(first: 2, filter: Document, lastDays: 30) {
-        nodes {
-          id
-          object {
-            ... on Document {
-              id
-              meta {
-                title
-                emailSubject
-                credits
-                prepublication
-                path
-                kind
-                template
-                color
-                publishDate
-                format {
-                  id
-                  meta {
-                    path
-                    title
-                    color
-                    kind
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      me {
-        id
-        bookmarkAndProgress: collectionItems(names: ["progress", "bookmarks"], first: 2, progress: UNFINISHED, uniqueDocuments: true, lastDays: 30) {
-          nodes {
-            id
-            document {
-              id
-              meta {
-                publishDate
-                title
-                path
-                template
-                kind
-                color
-                credits
-                estimatedConsumptionMinutes
-                estimatedReadingMinutes
-                format {
-                  id
-                  meta {
-                    path
-                    title
-                    color
-                    kind
-                  }
-                }
-              }
-              userBookmark: userCollectionItem(collectionName: "bookmarks") {
-                id
-                createdAt
-              }
-            }
-          }
-        }
-      }
-    }
-  `,
+export function MyRepublik() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <MyRepublikWithData />
+    </Suspense>
+  )
 }
 
-const withMyMagazineData = graphql(
-  gql`
-    ${teaserData.query}
-  `,
-  teaserData.config,
-)
+async function MyRepublikWithData() {
+  const gql = await getClient()
 
-export const MyRepublik = withMyMagazineData(({ data }) => {
+  const { data, error } = await gql.query({
+    query: MyRepublikDocument,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  const progressIds = data.progress?.nodes?.map((n) => n.sanityId) ?? []
+  const notificationIds =
+    data.notifications?.nodes
+      ?.filter((n) => n.object?.__typename === 'SanityDocumentRef')
+      .map((n) => n.object?.id) ?? []
+
+  const { data: teasers } = await sanityFetch({
+    query: ARTICLES_BY_IDS_QUERY,
+    params: { ids: [...progressIds, ...notificationIds] },
+  })
+  const teasersById = Object.fromEntries(teasers.map((t) => [t._id, t]))
+
+  const progressTeasers = progressIds.map((t) => teasersById[t])
+  const notificationTeasers = notificationIds.map((t) => teasersById[t])
+
   return (
-    <>
-      <RootColorVariables />
-      <Loader
-        error={null /* ignore error */}
-        loading={data.loading}
-        style={{ minHeight: 210 }}
-        render={() => {
-          return (
-            <TeaserMyMagazine
-              latestSubscribedArticles={data.latestSubscribedArticles}
-              latestProgressOrBookmarkedArticles={
-                data.latestProgressOrBookmarkedArticles
-              }
-              bookmarksLabel='Weiterlesen'
-              bookmarksUrl='/lesezeichen'
-              notificationsLabel='Abonnierte Beiträge'
-              notificationsUrl='/benachrichtigungen'
-              Link={HrefLink}
-              ActionBar={() => null}
-            />
-          )
-        }}
-      />
-    </>
+    <div
+      className={css({
+        display: 'grid',
+        maxWidth:
+          'calc(token(sizes.editorial) + token(spacing.40) + token(spacing.40))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+        gap: '8',
+        p: '8',
+        mx: 'auto',
+      })}
+    >
+      <div>
+        <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
+          <Link href='/lesezeichen'>Weiterlesen</Link>
+        </h2>
+        {progressTeasers.map((teaser, i) => (
+          <FeedTeaser key={teaser._id} teaser={teaser} />
+        ))}
+      </div>
+      <div>
+        <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
+          <Link href='/benachrichtigungen'>Abonnierte Beiträge</Link>
+        </h2>
+        {notificationTeasers.map((teaser, i) => (
+          <FeedTeaser key={teaser._id} teaser={teaser} />
+        ))}
+      </div>
+    </div>
   )
-})
+}
