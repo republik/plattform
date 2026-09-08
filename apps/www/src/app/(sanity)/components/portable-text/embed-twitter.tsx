@@ -25,6 +25,7 @@ const urlStyle = css({
   },
 })
 
+// TODO: migrate tweets to actual block quotes and get rid of this block
 export async function EmbedTwitter({ value }: { value: EmbedTwitterValue }) {
   const { text, url, userName } = value
 
