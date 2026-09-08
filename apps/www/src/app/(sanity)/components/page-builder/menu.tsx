@@ -2,14 +2,14 @@ import { MenuBlockFragmentType } from '@/app/(sanity)/groq/menu-block-fragment'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 
-function MenuItem({ href, title }) {
+function MenuItem({ href, title, color }) {
   return (
     <li className={css({ whiteSpace: 'nowrap' })}>
       <Link
         href={href}
+        style={{ color }}
         className={css({
           textStyle: 'airy',
-          color: 'var(--page-theme-accent-color)',
         })}
       >
         <b>{title}</b>
@@ -24,7 +24,7 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
   const headingHref = heading && heading?.page?.slug
   const headingLabel = heading?.title ?? heading?.page?.title
 
-  if (!pages.length && !headingLabel) {
+  if (!pages && !headingLabel) {
     return null
   }
 
@@ -69,6 +69,7 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
       >
         {pages?.map((item) => (
           <MenuItem
+            color={item._type === 'reference' && item.page.color}
             key={item._key}
             href={item._type === 'link' ? item.href : item.page.slug}
             title={

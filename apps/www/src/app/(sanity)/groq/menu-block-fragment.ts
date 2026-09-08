@@ -22,7 +22,8 @@ export const MENU_BLOCK_FRAGMENT = /* groq */ `
       "page": @->{
         _id,
         "title": pt::text(title),
-        "slug": slug.current
+        "slug": slug.current,
+        "color": theme.accentColor.hex
       }
     }
   }

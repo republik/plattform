@@ -102,6 +102,7 @@ const footerLinkStyle = css({
   color: 'primary',
 })
 
+// TODO: convert comment body to PT
 export async function EmbedComment({ value }: { value: EmbedCommentValue }) {
   const { id, content, createdAt, discussion } = value
 

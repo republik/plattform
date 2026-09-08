@@ -1,22 +1,20 @@
 'use client'
 
-import { useEffect } from 'react'
-
 import { trackEvent } from '@/app/lib/analytics/event-tracking'
-import { useSearchUrl } from './use-search-url'
-import { useSearchResults } from '../lib/use-search-results'
+import { useEffect } from 'react'
 import {
   DEFAULT_FILTER,
-  SUPPORTED_FILTERS,
-  isSameFilter,
   findAggregation,
+  isSameFilter,
+  SUPPORTED_FILTERS,
 } from '../lib/constants'
-import { Form } from './form'
+import { useSearchResults } from '../lib/use-search-results'
 import { Filters } from './filters'
-import { Sort } from './sort'
+import { Form } from './form'
 import { Results } from './results'
+import { Sort } from './sort'
+import { useSearchUrl } from './use-search-url'
 import { ZeroResults } from './zero-results'
-import { FeaturedSections } from '@/app/(sanity)/components/featured-sections'
 
 const hasResults = (aggregations, filter) =>
   !!findAggregation(aggregations, filter).count
@@ -25,7 +23,7 @@ const findFilterWithResults = (aggregations) =>
   SUPPORTED_FILTERS.find((filter) => hasResults(aggregations, filter)) ||
   DEFAULT_FILTER
 
-export function SearchClient() {
+export function SearchClient({ children }: { children: React.ReactNode }) {
   const {
     cleanupUrl,
     urlQuery = '',
@@ -108,7 +106,7 @@ export function SearchClient() {
           )}
         </>
       )}
-      {!hasQuery && <FeaturedSections />}
+      {!hasQuery && children}
     </>
   )
 }
