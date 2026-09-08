@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type LegacyAudioSrc = {
   mp4?: string
   hls?: string
@@ -1242,6 +1242,8 @@ export type Newsletter = {
     }
     _type: 'image'
   }
+  url?: string
+  order?: number
   archived?: boolean
   name: string
   replyTo?: string
@@ -1752,7 +1754,7 @@ export type ARTICLES_BY_IDS_QUERY_RESULT = Array<{
   } | null
   label: string | null
   theme: {
-    name: 'EDITORIAL' | 'META' | 'PAGE' | null
+    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
     accentColor: Color | null
   } | null
   color: Color | null

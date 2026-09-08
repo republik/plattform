@@ -30,6 +30,14 @@ const containerStyle = css({
   },
 })
 
+export function BlockQuoteContainer({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return <div className={containerStyle}>{children}</div>
+}
+
 export function BlockQuote({
   value,
 }: {
@@ -39,9 +47,9 @@ export function BlockQuote({
 
   return (
     <div className={css({})}>
-      <div className={containerStyle}>
+      <BlockQuoteContainer>
         <NestedPortableText value={body} />
-      </div>
+      </BlockQuoteContainer>
       {caption && <Caption caption={caption} />}
     </div>
   )

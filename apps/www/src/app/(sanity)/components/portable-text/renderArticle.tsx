@@ -6,6 +6,7 @@ import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-st
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedComment } from '@/app/(sanity)/components/portable-text/embed-comment'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
+import { EmbedTwitter } from '@/app/(sanity)/components/portable-text/embed-twitter'
 import { EmbedVideo } from '@/app/(sanity)/components/portable-text/embed-video'
 import { ExpandableLink } from '@/app/(sanity)/components/portable-text/expandable-link'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
@@ -48,6 +49,8 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     html: Html,
     // Wrap function because renderNode can't be passed to a client component
     embedVideo: ({ value }) => <EmbedVideo value={value} />,
+    embedComment: ({ value }) => <EmbedComment value={value} />,
+    embedTwitter: ({ value }) => <EmbedTwitter value={value} />,
     audio: ({ value }) => <AudioEmbed value={value} />,
     seriesNav: SeriesNav,
     // This is the web, we never render emailOnly/voiceTag/conditionals/author blocks :)
@@ -64,7 +67,6 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
     chart: ({ value }) => <LegacyChart value={value} />,
     toc: ({ value }) => <Toc value={value} />,
-    embedComment: ({ value }) => <EmbedComment value={value} />,
   },
   block: {
     heading: Heading,
