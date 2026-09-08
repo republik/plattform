@@ -1,24 +1,24 @@
 'use client'
 
 import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
-import { ACTION_ICON_SIZE } from './action-style'
-import { AddToPlaylistAction } from './add-to-playlist-action'
-import { useArticleActions } from './article-actions-context'
-import { BookmarkAction } from './bookmark-action'
-import { collectionsDocumentId } from './document-id'
-import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
-import { PdfDownloadAction } from './pdf-download-action'
-import { PlayAction } from './play-action'
-import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import { FontSizeStepper } from '@/app/components/ui/font-size-stepper'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { getAudioCoverImages } from '@/components/Audio/helpers/audioCoverImages'
 import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'
+import { css, cx } from '@republik/theme/css'
 import { AArrowUp, EllipsisVertical } from 'lucide-react'
-import { css } from '@republik/theme/css'
-import { DiscussionAction } from './discussion-action'
 import { useRef } from 'react'
+import { ACTION_ICON_SIZE } from './action-style'
+import { AddToPlaylistAction } from './add-to-playlist-action'
+import { useArticleActions } from './article-actions-context'
+import { BookmarkAction } from './bookmark-action'
+import { DiscussionAction } from './discussion-action'
+import { collectionsDocumentId } from './document-id'
+import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
+import { PdfDownloadAction } from './pdf-download-action'
+import { PlayAction } from './play-action'
+import { ShareAction } from './share-action'
 
 export type ArticleTopActionsProps = {
   article: ArticleDocumentType
@@ -48,13 +48,16 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   return (
     <div
       ref={ref}
-      className={css({
-        alignItems: 'center',
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '5',
-        '@media print': { display: 'none' },
-      })}
+      className={cx(
+        'article-top-actions',
+        css({
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '5',
+          '@media print': { display: 'none' },
+        }),
+      )}
     >
       <PlayAction
         documentId={documentId}
@@ -73,7 +76,10 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       />
 
       <Menu.Root modal={false}>
-        <Menu.Trigger aria-label='Weitere Aktionen' className={menuTriggerStyle}>
+        <Menu.Trigger
+          aria-label='Weitere Aktionen'
+          className={menuTriggerStyle}
+        >
           <EllipsisVertical size={ACTION_ICON_SIZE} />
         </Menu.Trigger>
         <Menu.Content

@@ -19,6 +19,7 @@ const contentParts = defineParts({
   titleAfterHeading: { selector: '& .page-heading + .page-title' },
   lead: { selector: '& .page-lead' },
   byline: { selector: '& .page-byline' },
+  actionBar: { selector: '& .article-top-actions' },
   unorderedLists: { selector: '& > ul' },
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
@@ -150,6 +151,7 @@ export const editorialContentRecipe = defineRecipe({
         title: { textStyle: 'editorialTitle', textAlign: 'center' },
         lead: { ...readerScaledText('editorialLead'), textAlign: 'center' },
         byline: { textStyle: 'editorialByline', textAlign: 'center' },
+        actionBar: { mx: 'auto' },
         paragraphs: readerScaledText('editorialParagraph'),
         subheadings: readerScaledText('editorialSubheading'),
         smallheadings: {
