@@ -1,8 +1,15 @@
-query UserBookmarks($collectionName: String!, $after: String) {
-  userCollectionItems(
-    collectionName: $collectionName
+query UserBookmarks(
+  $names: [String!]!
+  $progress: ProgressState
+  $after: String
+) {
+  collectionItems: userCollectionItemsByNames(
+    names: $names
+    progress: $progress
     first: 10
     after: $after
+    uniqueDocuments: true
+    lastDays: 30
   ) {
     pageInfo {
       hasNextPage
