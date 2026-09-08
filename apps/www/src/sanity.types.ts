@@ -882,7 +882,7 @@ export type Discussion = {
 
 export type Theme = {
   _type: 'theme'
-  name?: 'PAGE' | 'EDITORIAL' | 'EDITORIAL_CENTERED' | 'META'
+  name?: 'PAGE' | 'EDITORIAL' | 'META'
   accentColor?: Color
   darkMode?: boolean
 }
@@ -1630,7 +1630,7 @@ export type TEASER_LARGE_QUERY_RESULT = {
   targetId: string | null
   publishDate: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name: 'EDITORIAL' | 'META' | 'PAGE' | null
     accentColor: Color | null
   }
   heading: {
@@ -1826,7 +1826,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
   } | null
   label: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name: 'EDITORIAL' | 'META' | 'PAGE' | null
     accentColor: Color | null
   } | null
   color: Color | null
@@ -1995,7 +1995,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -2890,7 +2890,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             } | null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name: 'EDITORIAL' | 'META' | 'PAGE' | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -2955,7 +2955,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             articleCollection: null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name: 'EDITORIAL' | 'META' | 'PAGE' | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -2994,7 +2994,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -3533,7 +3533,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -4428,7 +4428,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             } | null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name: 'EDITORIAL' | 'META' | 'PAGE' | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -4493,7 +4493,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             articleCollection: null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name: 'EDITORIAL' | 'META' | 'PAGE' | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -4532,7 +4532,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -5059,7 +5059,7 @@ export type FRONT_FEED_QUERY_RESULT = Array<{
   targetId: string | null
   publishDate: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name: 'EDITORIAL' | 'META' | 'PAGE' | null
     accentColor: Color | null
   }
   heading: {
@@ -6435,7 +6435,7 @@ export type SEO_QUERY_RESULT =
       imageBuilder: SeoImageBuilder | null
       heading: string
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -6506,7 +6506,7 @@ export type OG_SHARE_IMAGE_QUERY_RESULT =
       imageBuilder: SeoImageBuilder | null
       heading: string
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -6593,7 +6593,7 @@ export type SERIES_MENU_QUERY_RESULT = {
           } | null
           label: string | null
           theme: {
-            name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+            name: 'EDITORIAL' | 'META' | 'PAGE' | null
             accentColor: Color | null
           } | null
           color: Color | null
@@ -6743,7 +6743,7 @@ export type SERIES_NAV_QUERY_RESULT = {
         } | null
         label: string | null
         theme: {
-          name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+          name: 'EDITORIAL' | 'META' | 'PAGE' | null
           accentColor: Color | null
         } | null
         color: Color | null
@@ -6845,7 +6845,7 @@ export type TEASER_LARGE_FRAGMENT_QUERY_RESULT = {
   targetId: string | null
   publishDate: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name: 'EDITORIAL' | 'META' | 'PAGE' | null
     accentColor: Color | null
   }
   heading: {
@@ -7045,7 +7045,7 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       } | null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7109,7 +7109,7 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       articleCollection: null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7176,7 +7176,7 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       } | null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7240,7 +7240,7 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       articleCollection: null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name: 'EDITORIAL' | 'META' | 'PAGE' | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7319,12 +7319,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       } | null
                       label: string | null
                       theme: {
-                        name:
-                          | 'EDITORIAL_CENTERED'
-                          | 'EDITORIAL'
-                          | 'META'
-                          | 'PAGE'
-                          | null
+                        name: 'EDITORIAL' | 'META' | 'PAGE' | null
                         accentColor: Color | null
                       } | null
                       color: Color | null
@@ -7391,12 +7386,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       articleCollection: null
                       label: string | null
                       theme: {
-                        name:
-                          | 'EDITORIAL_CENTERED'
-                          | 'EDITORIAL'
-                          | 'META'
-                          | 'PAGE'
-                          | null
+                        name: 'EDITORIAL' | 'META' | 'PAGE' | null
                         accentColor: Color | null
                       } | null
                       color: Color | null
@@ -7519,12 +7509,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       } | null
                       label: string | null
                       theme: {
-                        name:
-                          | 'EDITORIAL_CENTERED'
-                          | 'EDITORIAL'
-                          | 'META'
-                          | 'PAGE'
-                          | null
+                        name: 'EDITORIAL' | 'META' | 'PAGE' | null
                         accentColor: Color | null
                       } | null
                       color: Color | null
@@ -7674,12 +7659,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       } | null
                       label: string | null
                       theme: {
-                        name:
-                          | 'EDITORIAL_CENTERED'
-                          | 'EDITORIAL'
-                          | 'META'
-                          | 'PAGE'
-                          | null
+                        name: 'EDITORIAL' | 'META' | 'PAGE' | null
                         accentColor: Color | null
                       } | null
                       color: Color | null
@@ -7746,12 +7726,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       articleCollection: null
                       label: string | null
                       theme: {
-                        name:
-                          | 'EDITORIAL_CENTERED'
-                          | 'EDITORIAL'
-                          | 'META'
-                          | 'PAGE'
-                          | null
+                        name: 'EDITORIAL' | 'META' | 'PAGE' | null
                         accentColor: Color | null
                       } | null
                       color: Color | null
@@ -7818,12 +7793,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       } | null
                       label: string | null
                       theme: {
-                        name:
-                          | 'EDITORIAL_CENTERED'
-                          | 'EDITORIAL'
-                          | 'META'
-                          | 'PAGE'
-                          | null
+                        name: 'EDITORIAL' | 'META' | 'PAGE' | null
                         accentColor: Color | null
                       } | null
                       color: Color | null

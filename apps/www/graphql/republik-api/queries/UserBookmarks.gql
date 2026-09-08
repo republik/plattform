@@ -1,0 +1,16 @@
+query UserBookmarks($collectionName: String!, $after: String) {
+  userCollectionItems(
+    collectionName: $collectionName
+    first: 10
+    after: $after
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      sanityId
+    }
+  }
+}
