@@ -104,7 +104,7 @@ export function PageHeader({
         })}
       >
         <div
-          className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
+          className={css({ m: 'header.avatarMargin', md: { width: '100%' } })}
         >
           {isLoggedIn ? (
             <Link href='/meine-republik'>
@@ -147,6 +147,7 @@ export function PageHeader({
         </div>
         <div
           className={css({
+            m: 'header.avatarMargin',
             alignSelf: 'stretch',
             md: { width: '100%' },
             display: 'flex',
@@ -158,7 +159,6 @@ export function PageHeader({
             className={css({
               width: 'header.avatar',
               height: 'header.avatar',
-              m: 'header.avatarMargin',
               display: 'flex',
               placeContent: 'center center',
             })}

@@ -32,20 +32,19 @@ export default async function SearchPage() {
   })
 
   const page = data?._type === 'page' ? data : undefined
-
-  return (
-    <SearchClient>
-      <div
-        className={css({
-          mt: '12',
-          '& h3': { textAlign: 'left' },
-          '& ul': { justifyContent: 'left' },
-        })}
-      >
-        {page?.pageBuilder?.map((block) => (
-          <PageBlock key={block._key} block={block} documentId={page._id} />
-        ))}
-      </div>
-    </SearchClient>
+  const featuredCollections = (
+    <div
+      className={css({
+        mt: '12',
+        '& h3': { textAlign: 'left' },
+        '& ul': { justifyContent: 'left' },
+      })}
+    >
+      {page?.pageBuilder?.map((block) => (
+        <PageBlock key={block._key} block={block} documentId={page._id} />
+      ))}
+    </div>
   )
+
+  return <SearchClient>{featuredCollections}</SearchClient>
 }
