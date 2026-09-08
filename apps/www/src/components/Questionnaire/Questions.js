@@ -1,16 +1,14 @@
-import { createElement } from 'react'
-
 import compose from 'lodash/flowRight'
+import { createElement } from 'react'
+import ImageChoiceQuestion from '../Climatelab/Postcard/ImageChoiceQuestion'
+import ChoiceQuestion from './ChoiceQuestion'
+import { withAnswerMutation } from './enhancers'
+import RangeQuestion from './RangeQuestion'
 
 import TextQuestion from './TextQuestion'
-import ArticleQuestion from './ArticleQuestion'
-import RangeQuestion from './RangeQuestion'
-import ChoiceQuestion from './ChoiceQuestion'
-import ImageChoiceQuestion from '../Climatelab/Postcard/ImageChoiceQuestion'
-import { withAnswerMutation } from './enhancers'
 
 const QUESTION_TYPES = {
-  QuestionTypeDocument: ArticleQuestion,
+  QuestionTypeDocument: () => null,
   QuestionTypeText: TextQuestion,
   QuestionTypeChoice: ChoiceQuestion,
   QuestionTypeRange: RangeQuestion,
