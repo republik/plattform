@@ -1,7 +1,6 @@
 const { getObjectByIdAndType } = require('../../../lib/genericObject')
 const {
   getSubscriptionsForUserAndObject,
-  getSimulatedSubscriptionForUserAndObject,
 } = require('../../../lib/Subscriptions')
 
 // Root-level equivalent of Document.subscribedByMe/User.subscribedByMe, for
@@ -29,9 +28,5 @@ module.exports = async (_, { objectId, type }, context) => {
     return subs[0]
   }
 
-  return getSimulatedSubscriptionForUserAndObject(
-    me.id,
-    { type, id: resolvedId },
-    context,
-  )
+  return null
 }
