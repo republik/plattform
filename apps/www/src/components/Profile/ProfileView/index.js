@@ -1,5 +1,14 @@
-import FollowAuthorDropdown from '@/app/components/follow/follow-author-dropdown'
-import { FollowButton } from '@/app/components/follow/follow-button'
+import {
+  EventObjectType,
+  SubscriptionObjectType,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
+import FollowContributorDropdown from '@/app/(sanity)/components/follow/follow-contributor-dropdown'
+import { checkRoles } from '@/lib/apollo/withMe'
+import { ADMIN_BASE_URL, CDN_FRONTEND_BASE_URL } from '@/lib/constants'
+
+import { useMe } from '@/lib/context/MeContext'
+import { useTranslation } from '@/lib/withT'
 import {
   Container,
   fontStyles,
@@ -12,15 +21,6 @@ import { IconMailOutline, IconNoteAdd, IconVpnKey } from '@republik/icons'
 import { css } from 'glamor'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  EventObjectType,
-  SubscriptionObjectType,
-} from '#graphql/republik-api/__generated__/gql/graphql'
-import { checkRoles } from '@/lib/apollo/withMe'
-import { ADMIN_BASE_URL, CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-
-import { useMe } from '@/lib/context/MeContext'
-import { useTranslation } from '@/lib/withT'
 import Credential from '../../Credential'
 import ProfileCommentsAndDocuments from './ProfileCommentsAndDocuments'
 import ProfileUrls from './ProfileUrls'
@@ -249,7 +249,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
             </div>
             {isFollowable && !!user.documents.totalCount && (
               <div>
-                <FollowAuthorDropdown
+                <FollowContributorDropdown
                   subscriptionId={subscription?.id}
                   subscriptionFilters={subscription?.filters}
                   objectId={user.id}
