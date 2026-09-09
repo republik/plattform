@@ -4,6 +4,7 @@ import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
 import { FRONT_LATEST_QUERY } from '@/app/(sanity)/groq/front-latest-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { ForceOnboarding } from '@/app/components/onboarding/force-onboarding'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
@@ -31,10 +32,11 @@ export default async function FrontPage() {
 
   if (!front) notFound()
 
-  const { _id, title, pageBuilder = [] } = front
+  const { _id, pageBuilder = [] } = front
 
   return (
     <EventTrackingContext category='Front'>
+      <ForceOnboarding />
       <h1 className={css({ srOnly: true })}>Republik Magazin</h1>
 
       <div
