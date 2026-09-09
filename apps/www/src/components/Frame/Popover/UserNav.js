@@ -15,7 +15,7 @@ import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'
 import SignIn from '../../Auth/SignIn'
 import SignOut from '../../Auth/SignOut'
-import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
+// import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
 import { registerQueryVariables } from '../../Bookmarks/queries'
 import { HEADER_HEIGHT } from '../../constants'
 import Footer from '../../Footer'
@@ -84,12 +84,12 @@ const UserNav = () => {
                     {`${t('nav/bookmarks')}`}
                   </NavLink>
                 </div>
-                <BookmarkMiniFeed
+                {/* <BookmarkMiniFeed
                   style={{
                     marginTop: 10,
                   }}
                   variables={variables}
-                />
+                />*/}
                 <div {...styles.navSection}>
                   <div {...styles.navLinks}>
                     <NavLink href='/konto' currentPath={currentPath} large>
