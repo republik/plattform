@@ -5,12 +5,12 @@ import {
   OnboardingDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
-import { FollowButton } from '@/app/components/follow/follow-button'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import { Section, SectionH3 } from '@/app/components/ui/section'
+import { useTranslation } from '@/lib/withT'
+import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
-import { useTranslation } from '@/lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 
 function FormatCard({ format }: { format?: Document }) {
@@ -64,9 +64,7 @@ function FormatCard({ format }: { format?: Document }) {
         {' '}
         <FollowButton
           type={SubscriptionObjectType.Document}
-          subscriptionId={subscriptionId}
-          objectId={format.id}
-          objectName={format.meta.title}
+          objectId={`sanity:${format.id}`}
         />
         <Image
           className={css({ maxHeight: '160px', maxWidth: '120px' })}

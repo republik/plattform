@@ -4,13 +4,13 @@ import {
   FollowableAuthorDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
-import { FollowButton } from '@/app/components/follow/follow-button'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import { Section, SectionH3 } from '@/app/components/ui/section'
+import { useTranslation } from '@/lib/withT'
+import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
-import { useState } from 'react'
-import { useTranslation } from '@/lib/withT'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { AUTHORS_FEATURED, AuthorType } from './config'
 

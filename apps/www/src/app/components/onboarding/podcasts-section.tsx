@@ -5,11 +5,11 @@ import {
   OnboardingDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
-import { FollowButton } from '@/app/components/follow/follow-button'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import { Section, SectionH3 } from '@/app/components/ui/section'
-import { css } from '@republik/theme/css'
 import { useTranslation } from '@/lib/withT'
+import { useQuery } from '@apollo/client'
+import { css } from '@republik/theme/css'
 import { PODCASTS_FEATURED, PODCASTS_STYLE } from './config'
 
 function PodcastCard({ podcast }: { podcast?: Document }) {
@@ -70,9 +70,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
       <div className={css({ mt: 2 })}>
         <FollowButton
           type={SubscriptionObjectType.Document}
-          subscriptionId={subscriptionId}
-          objectId={podcast.id}
-          objectName={podcast.meta.title}
+          objectId={`sanity:${podcast.id}`}
         />
       </div>
     </div>

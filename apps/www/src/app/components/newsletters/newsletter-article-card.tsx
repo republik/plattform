@@ -1,15 +1,15 @@
 'use client'
 
-import FollowFormatContainer from '@/app/components/follow/follow-format-container'
+import FollowFormatContainer from '@/app/(sanity)/components/follow/follow-format-container'
 import {
   type NewsletterName,
   NL_STYLE,
 } from '@/app/components/newsletters/config'
 import { NewsletterSubscribeButton } from '@/app/components/newsletters/newsletter-subscribe'
+import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useTranslation } from '@/lib/withT'
 
 function NewsletterArticleCard({
   newsletter,

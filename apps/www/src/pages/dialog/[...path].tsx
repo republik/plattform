@@ -1,18 +1,6 @@
 import { DiscussionNotificationOption } from '#graphql/republik-api/__generated__/gql/graphql'
-import FollowDiscussionDropdown from '@/app/components/follow/follow-discussion-dropdown'
+import FollowDiscussionDropdown from '@/app/(sanity)/components/follow/follow-discussion-dropdown'
 import { DialogPaynote } from '@/app/components/paynotes/paynotes-in-trial/dialog'
-import {
-  Center,
-  Editorial,
-  inQuotes,
-  Interaction,
-  mediaQueries,
-} from '@project-r/styleguide'
-import { css } from 'glamor'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
-import { PUBLIC_BASE_URL } from '@/lib/constants'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 import ActionBar from '@/components/ActionBar'
 import DiscussionTitle from '@/components/Dialog/DiscussionTitle'
 import { useDiscussion } from '@/components/Discussion/context/DiscussionContext'
@@ -21,7 +9,19 @@ import Discussion from '@/components/Discussion/Discussion'
 import Frame from '@/components/Frame'
 import Meta from '@/components/Frame/Meta'
 import StatusError from '@/components/StatusError'
+import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { useTranslation } from '@/lib/withT'
+import {
+  Center,
+  Editorial,
+  inQuotes,
+  Interaction,
+  mediaQueries,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const styles = {
   container: css({
@@ -34,8 +34,8 @@ const styles = {
 }
 
 const DialogContent = () => {
-  const { t } = useTranslation()
-  const discussionContext = useDiscussion()
+  const { t } = useTranslation();
+  const discussionContext = useDiscussion();
 
   if (
     discussionContext &&
@@ -43,17 +43,17 @@ const DialogContent = () => {
     !discussionContext.error &&
     !discussionContext.discussion
   ) {
-    return <StatusError statusCode={404} />
+    return <StatusError statusCode={404} />;
   }
   // wait for loaded discussion object and skip if focus comment, handled by the provider
   const metaData = discussionContext?.discussion && {
-    title: t('discussion/meta/title', {
-      quotedDiscussionTitle: inQuotes(discussionContext.discussion.title),
+    title: t("discussion/meta/title", {
+      quotedDiscussionTitle: inQuotes(discussionContext.discussion.title)
     }),
-    url: `${PUBLIC_BASE_URL}/dialog${discussionContext.discussion.path}`,
-  }
+    url: `${PUBLIC_BASE_URL}/dialog${discussionContext.discussion.path}`
+  };
 
-  const isLoaded = !discussionContext.loading && !discussionContext.error
+  const isLoaded = !discussionContext.loading && !discussionContext.error;
 
   return (
     <>
@@ -61,13 +61,13 @@ const DialogContent = () => {
       <Center>
         <div {...styles.container}>
           <div style={{ marginBottom: 30 }}>
-            <Editorial.Format color='primary'>
+            <Editorial.Format color="primary">
               <Link
-                href='/dialog'
+                href="/dialog"
                 passHref
-                style={{ color: 'inherit', textDecoration: 'none' }}
+                style={{ color: "inherit", textDecoration: "none" }}
               >
-                {t('feedback/title')}
+                {t("feedback/title")}
               </Link>
             </Editorial.Format>
             <Interaction.H1>
@@ -80,10 +80,10 @@ const DialogContent = () => {
             )}
             <div
               style={{
-                display: 'flex',
+                display: "flex",
                 gap: 24,
-                alignItems: 'center',
-                marginTop: 30,
+                alignItems: "center",
+                marginTop: 30
               }}
             >
               <FollowDiscussionDropdown
@@ -103,20 +103,20 @@ const DialogContent = () => {
         </div>
       </Center>
     </>
-  )
-}
+  );
+};
 
 const DialogPage = () => {
-  const router = useRouter()
-  const { path } = router.query
-  const discussionPath = '/' + [].concat(path || []).join('/')
+  const router = useRouter();
+  const { path } = router.query;
+  const discussionPath = "/" + [].concat(path || []).join("/");
   return (
-    <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
+    <Frame hasOverviewNav raw formatColor="primary" stickySecondaryNav={true}>
       <DiscussionContextProvider discussionPath={discussionPath}>
         <DialogContent />
       </DiscussionContextProvider>
     </Frame>
-  )
-}
+  );
+};
 
-export default withDefaultSSR(DialogPage)
+export default withDefaultSSR(DialogPage);
