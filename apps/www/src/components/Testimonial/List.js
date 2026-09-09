@@ -1,18 +1,8 @@
-import { gql, useQuery } from '@apollo/client'
-import { max } from 'd3-array'
-import { css, merge } from 'glamor'
-import { Component, forwardRef, Fragment, useState } from 'react'
-
-import { useRouter } from 'next/navigation'
-import { useTranslation } from '@/lib/withT'
-import Meta from '../Frame/Meta'
-import Loader from '../Loader'
-
-import Detail from './Detail'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '@/lib/constants'
-
-import { screenshotUrl } from '@/app/lib/util/screenshot-api'
+import { useTranslation } from '@/lib/withT'
+import { gql, useQuery } from '@apollo/client'
 import {
   A,
   Field,
@@ -22,7 +12,16 @@ import {
   shouldIgnoreClick,
   useColorContext,
 } from '@project-r/styleguide'
+import { max } from 'd3-array'
+import { css, merge } from 'glamor'
+
+import { useRouter } from 'next/navigation'
+import { Component, forwardRef, Fragment, useState } from 'react'
 import ErrorMessage from '../ErrorMessage'
+import Meta from '../Frame/Meta'
+import Loader from '../Loader'
+
+import Detail from './Detail'
 
 const { P } = Interaction
 
@@ -291,6 +290,7 @@ export class List extends Component {
       }
     }
   }
+
   componentDidMount() {
     if (this.props.isPage) {
       window.addEventListener('scroll', this.onScroll)
@@ -298,20 +298,24 @@ export class List extends Component {
     window.addEventListener('resize', this.measure)
     this.measure()
   }
+
   componentDidUpdate() {
     this.measure()
   }
+
   componentWillUnmount() {
     if (this.props.isPage) {
       window.removeEventListener('scroll', this.onScroll)
     }
     window.removeEventListener('resize', this.measure)
   }
+
   getMaxColumns() {
     return (
       this.props.maxColumns || (this.props.singleRow ? this.props.first : 5)
     )
   }
+
   render() {
     const {
       loading,
@@ -367,12 +371,7 @@ export class List extends Component {
               )
               if (openItem) {
                 items.push(
-                  <Detail
-                    key={`detail${row - 1}`}
-                    share={share}
-                    t={t}
-                    data={openItem}
-                  />,
+                  <Detail key={`detail${row - 1}`} t={t} data={openItem} />,
                 )
               }
             }
@@ -512,18 +511,18 @@ export const testimonialFields = `
 `
 
 const query = gql`
-query statements($seed: Float, $search: String, $focus: String, $after: String, $first: Int!, $membershipAfter: DateTime) {
-  statements(seed: $seed, search: $search, focus: $focus, after: $after, first: $first, membershipAfter: $membershipAfter) {
-    totalCount
-    nodes {
-      ${testimonialFields}
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
+  query statements($seed: Float, $search: String, $focus: String, $after: String, $first: Int!, $membershipAfter: DateTime) {
+    statements(seed: $seed, search: $search, focus: $focus, after: $after, first: $first, membershipAfter: $membershipAfter) {
+      totalCount
+      nodes {
+        ${testimonialFields}
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-}
 `
 
 const ListWithQuery = (props) => {
@@ -595,7 +594,6 @@ const TestimonialList = ({
   singleRow = false,
   minColumns = 1,
   first = 50,
-  share = false,
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
@@ -647,7 +645,6 @@ const TestimonialList = ({
         singleRow={singleRow}
         minColumns={minColumns}
         first={first}
-        share={share}
       />
     </div>
   )
