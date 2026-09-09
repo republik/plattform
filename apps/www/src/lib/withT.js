@@ -1,4 +1,4 @@
-import { createFormatter } from '@project-r/styleguide'
+import { createFormatter } from './translate'
 import translations from './translations.json'
 
 export const t = createFormatter(translations.data)
