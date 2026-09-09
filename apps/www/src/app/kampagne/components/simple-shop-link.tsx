@@ -1,6 +1,6 @@
 'use client'
 
-import NativeCta from '@/app/components/paynotes/native-cta'
+import NativeCta from '@/app/(sanity)/components/paynotes/native-cta'
 import { Button } from '@/app/components/ui/button'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'

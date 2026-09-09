@@ -1,9 +1,9 @@
 'use client'
 
+import { useCampaign } from '@/app/(sanity)/components/paynotes/campaign/use-campaign'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import CampaignMembershipsCounter from '@/app/kampagne/components/campaign-memberships-counter'
 import { Dank } from '@/app/kampagne/components/handdrawn/dank'
-import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
-import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 
 import {
   EventTrackingContext,

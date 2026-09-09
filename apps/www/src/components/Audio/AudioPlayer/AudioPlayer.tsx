@@ -1,4 +1,4 @@
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import { useUserAgent } from '@/lib/context/UserAgentContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'

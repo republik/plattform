@@ -1,18 +1,18 @@
 'use client'
 
-import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
+import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
+import { useMe } from '@/lib/context/MeContext'
+import { useTranslation } from '@/lib/withT'
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
-import { useMe } from '@/lib/context/MeContext'
-import { useTranslation } from '@/lib/withT'
 import { useMotionValueEvent, useScroll } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

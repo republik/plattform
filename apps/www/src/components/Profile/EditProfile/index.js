@@ -1,29 +1,29 @@
-import { useState } from 'react'
+import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
+import { useMe } from '@/lib/context/MeContext'
+import { useTranslation } from '@/lib/withT'
+import {
+  Container,
+  Dropdown,
+  fontStyles,
+  mediaQueries,
+  useColorContext,
+} from '@project-r/styleguide'
 import { css } from 'glamor'
+import Link from 'next/link'
+import { useState } from 'react'
+import FieldSet from '../../FieldSet'
+import { PORTRAIT_SIZE } from '../ProfileView'
+import BiographyField from './BiographyField'
+import Credentials from './Credentials'
+import PgpPublicKeyField from './PgpPublicKeyField'
 
 import Portrait from './Portrait'
-import Submit from './Submit'
-import Credentials from './Credentials'
 import PrivacySettings from './PrivacySettings'
 import ProfileUrlFields from './ProfileUrlsFields'
 import ProlitterisIdField from './ProlitterisIdField'
-import PgpPublicKeyField from './PgpPublicKeyField'
-import BiographyField from './BiographyField'
 import StatementField from './StatementField'
+import Submit from './Submit'
 import UsernameField from './UsernameField'
-import {
-  mediaQueries,
-  Dropdown,
-  useColorContext,
-  fontStyles,
-  Container,
-} from '@project-r/styleguide'
-import Link from 'next/link'
-import { useMe } from '@/lib/context/MeContext'
-import { useTranslation } from '@/lib/withT'
-import FieldSet from '../../FieldSet'
-import { PORTRAIT_SIZE } from '../ProfileView'
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 
 const styles = {
   container: css({

@@ -1,5 +1,6 @@
 'use client'
 
+import CampaignPaywall from '@/app/(sanity)/components/paynotes/campaign/campaign-paywall'
 import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import Paywall from '@/app/(sanity)/components/paynotes/paywall'
 import Regwall from '@/app/(sanity)/components/paynotes/regwall'
@@ -53,6 +54,7 @@ export function ContentWall({
       <div className={css({ gridColumn: 'full' })}>
         <Regwall key={`regwall-${pathname}`} />
         <Paywall key={`paywall-${pathname}`} />
+        <CampaignPaywall key={`campaign-paywall-${pathname}`} />
       </div>
     </>
   )

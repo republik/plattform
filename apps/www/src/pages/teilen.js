@@ -1,5 +1,4 @@
-import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
-import { Interaction } from '@project-r/styleguide'
+import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import AccessCampaigns from '@/components/Access/Campaigns'
 import SignIn from '@/components/Auth/SignIn'
 import Frame from '@/components/Frame'
@@ -9,6 +8,7 @@ import { useMe } from '@/lib/context/MeContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 
 import { t, useTranslation } from '@/lib/withT'
+import { Interaction } from '@project-r/styleguide'
 
 const meta = {
   title: t('pages/access/title'),

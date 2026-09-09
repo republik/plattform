@@ -1,8 +1,8 @@
 'use client'
 
-import { OfferOptionLabelOnly } from '@/app/kampagne/components/campaign-offer-options'
-import NativeCta from '@/app/components/paynotes/native-cta'
+import NativeCta from '@/app/(sanity)/components/paynotes/native-cta'
 import { Button } from '@/app/components/ui/button'
+import { OfferOptionLabelOnly } from '@/app/kampagne/components/campaign-offer-options'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'

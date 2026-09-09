@@ -1,9 +1,9 @@
 'use client'
 
-import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
+import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
 import { useMe } from '@/lib/context/MeContext'
+import { css } from '@republik/theme/css'
 import { StructuredText } from 'react-datocms/structured-text'
 import { getMeteringData } from '../article-metering'
 import { usePaynotes } from '../paynotes-context'

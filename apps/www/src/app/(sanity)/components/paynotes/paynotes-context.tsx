@@ -1,15 +1,15 @@
 'use client'
 
-import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
+import { useCampaign } from '@/app/(sanity)/components/paynotes/campaign/use-campaign'
 
 import { useMe } from '@/lib/context/MeContext'
 import { useUserAgent } from '@/lib/context/UserAgentContext'
 import { Article } from '@/sanity.types'
 
 import {
+  type ReadonlyURLSearchParams,
   usePathname,
   useSearchParams,
-  type ReadonlyURLSearchParams,
 } from 'next/navigation'
 import { createContext, Suspense, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'

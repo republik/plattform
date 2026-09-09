@@ -1,9 +1,10 @@
-import { css } from '@republik/theme/css'
+'use client'
 
 import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 
 import { useTranslation } from '@/lib/withT'
 import { IconClose } from '@republik/icons'
+import { css } from '@republik/theme/css'
 import { useState } from 'react'
 
 export function WelcomeBanner() {
