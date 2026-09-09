@@ -1,8 +1,11 @@
 'use client'
 
 import { SetOnboardedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { NL_FEATURED, NL_MORE } from '@/app/components/newsletters/config'
-import NewslettersOverview from '@/app/components/newsletters/newsletters-overview'
+import {
+  NL_FEATURED,
+  NL_MORE,
+} from '@/app/(sanity)/components/newsletters/config'
+import NewslettersOverview from '@/app/(sanity)/components/newsletters/newsletters-overview'
 import { useMe } from '@/lib/context/MeContext'
 import { useTranslation } from '@/lib/withT'
 import { useMutation } from '@apollo/client'

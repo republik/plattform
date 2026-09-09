@@ -1,10 +1,10 @@
 import { NewsletterSettingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { type NewsletterName } from '@/app/components/newsletters/config'
+import { type NewsletterName } from '@/app/(sanity)/components/newsletters/config'
+import { NewslettersStatus } from '@/app/(sanity)/components/newsletters/newsletters-status'
 import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { NewsletterCourseCard } from './newsletters-card'
 import NewslettersSection from './newsletters-section'
-import { NewslettersStatus } from './newsletters-status'
 
 function NewslettersOverview({
   nlFeatured,
@@ -58,4 +58,4 @@ function NewslettersOverview({
   )
 }
 
-export default NewslettersOverview
+export default NewslettersOverview;

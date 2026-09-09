@@ -2,8 +2,8 @@ import {
   NL_COURSES,
   NL_FEATURED,
   NL_MORE,
-} from '@/app/components/newsletters/config'
-import NewslettersOverview from '@/app/components/newsletters/newsletters-overview'
+} from '@/app/(sanity)/components/newsletters/config'
+import NewslettersOverview from '@/app/(sanity)/components/newsletters/newsletters-overview'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 
 import AccountTabs from '@/components/Account/AccountTabs'

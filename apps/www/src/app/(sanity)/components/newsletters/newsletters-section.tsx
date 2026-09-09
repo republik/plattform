@@ -1,8 +1,8 @@
 'use client'
 
 import { NewsletterSettingsQuery } from '#graphql/republik-api/__generated__/gql/graphql'
-import { type NewsletterName } from '@/app/components/newsletters/config'
-import { isSubscribedToNewsletter } from '@/app/components/newsletters/helpers'
+import { type NewsletterName } from '@/app/(sanity)/components/newsletters/config'
+import { isSubscribedToNewsletter } from '@/app/(sanity)/components/newsletters/helpers'
 import { Section, SectionH3 } from '@/app/components/ui/section'
 import { css } from '@republik/theme/css'
 import NewsletterCard from './newsletters-card'

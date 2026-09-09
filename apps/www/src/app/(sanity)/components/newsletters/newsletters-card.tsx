@@ -1,22 +1,22 @@
 'use client'
 
 import { UpdateNewsletterSubscriptionDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation } from '@apollo/client'
 import {
   type NewsletterName,
   NL_COURSE_SLUG,
   NL_STYLE,
-} from '@/app/components/newsletters/config'
+} from '@/app/(sanity)/components/newsletters/config'
 import { Button } from '@/app/components/ui/button'
 import { Spinner } from '@/app/components/ui/spinner'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { useTranslation } from '@/lib/withT'
+import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Check, Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useTranslation } from '@/lib/withT'
 
 function MobileButton({
   toggleSubscription,
