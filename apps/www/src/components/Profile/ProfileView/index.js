@@ -2,6 +2,7 @@ import {
   EventObjectType,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useContributorArticleCount } from '@/app/(sanity)/components/contributor/use-contributor-article-count'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import FollowContributorDropdown from '@/app/(sanity)/components/follow/follow-contributor-dropdown'
 import { checkRoles } from '@/lib/apollo/withMe'
@@ -135,6 +136,12 @@ const makeLoadMore = (fetchMore, dataType, variables) => () =>
 
 const ProfileView = ({ data: { user }, fetchMore }) => {
   const { me } = useMe()
+
+  // Articles come from Sanity now, so the count for the tab label is asked
+  // for on its own — the feed below fetches its own pages.
+  const { count: articleCount, loading: articlesLoading } =
+    useContributorArticleCount(user.id, { enabled: !!me })
+
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
@@ -247,7 +254,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 />
               )}
             </div>
-            {isFollowable && !!user.documents.totalCount && (
+            {isFollowable && !!articleCount && (
               <div>
                 <FollowContributorDropdown
                   subscriptionId={subscription?.id}
@@ -257,7 +264,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 />
               </div>
             )}
-            {isFollowable && !user.documents.totalCount && (
+            {isFollowable && !articleCount && (
               <div>
                 <FollowButton
                   type={SubscriptionObjectType.User}
@@ -293,18 +300,13 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
           <ProfileCommentsAndDocuments
             isMe={isMe}
             user={user}
-            loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
-              firstComments: 0,
-              firstDocuments: 20,
-              afterDocument:
-                user.documents.pageInfo && user.documents.pageInfo.endCursor,
-            })}
             loadMoreComments={makeLoadMore(fetchMore, 'comments', {
               firstDocuments: 0,
               firstComments: 40,
               afterComment:
                 user.comments.pageInfo && user.comments.pageInfo.endCursor,
             })}
+            articleCount={articleCount}
           />
         </div>
       </div>

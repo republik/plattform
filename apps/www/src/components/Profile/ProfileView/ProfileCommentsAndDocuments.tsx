@@ -1,17 +1,16 @@
+// The loader variant, not the server component: this page is pages-router, so
+// there is nothing here that can await the first page.
 import {
-  IconButton,
-  Scroller,
-  TabButton,
-  useColorContext,
-} from '@project-r/styleguide'
+  ArticlesByContributorFeedClient,
+} from '@/app/(sanity)/components/contributor/articles-feed/articles-by-contributor-feed-client'
+import { useMe } from '@/lib/context/MeContext'
+import { useTranslation } from '@/lib/withT'
+import { IconButton, Scroller, TabButton, useColorContext } from '@project-r/styleguide'
 import { IconReport } from '@republik/icons'
 import { css } from 'glamor'
 import { useState } from 'react'
-import { useMe } from '@/lib/context/MeContext'
-import { useTranslation } from '@/lib/withT'
 import { useReportUserMutation } from '../graphql/useReportUserMutation'
 import ProfileCommentsFeed from './ProfileCommentsFeed'
-import ProifleDocumentsFeed from './ProifleDocumentsFeed'
 
 const styles = {
   tabsContainer: css({
@@ -32,14 +31,14 @@ const styles = {
 export default function ProfileCommentsAndDocuments({
   isMe,
   user,
-  loadMoreDocuments,
   loadMoreComments,
+  articleCount,
 }) {
   const [colorScheme] = useColorContext()
+  const { me } = useMe()
   const [activeChildIndex, setActiveChildIndex] = useState(0)
   const [reportUserMutation] = useReportUserMutation()
   const { t } = useTranslation()
-  const { me } = useMe()
 
   const reportUser = async () => {
     const reportReason = window.prompt(t('profile/report/confirm'))
@@ -78,18 +77,13 @@ export default function ProfileCommentsAndDocuments({
 
   // if user is not logged in, show only documents, if applicable
   if (!me) {
-    return (
-      <ProifleDocumentsFeed
-        documents={user.documents}
-        loadMore={loadMoreDocuments}
-        showTitle
-      />
-    )
+    return <ArticlesByContributorFeedLoader userId={user.id} />
   }
 
   // only show documents and tabs if user has documents (articles)
-  // else only show comments feed
-  if (!user.documents || !user.documents.totalCount) {
+  // else only show comments feed. While the count is still in flight the
+  // comments feed alone is shown, so the tabs appear once rather than flicker.
+  if (!articleCount) {
     return (
       <ProfileCommentsFeed
         comments={user.comments}
@@ -105,7 +99,7 @@ export default function ProfileCommentsAndDocuments({
         <Scroller activeChildIndex={activeChildIndex}>
           <TabButton
             text={t.pluralize('profile/documents/title', {
-              count: user.documents.totalCount,
+              count: articleCount,
             })}
             isActive={activeChildIndex === 0}
             onClick={() => {
@@ -128,7 +122,7 @@ export default function ProfileCommentsAndDocuments({
           {...colorScheme.set('borderColor', 'divider')}
           {...styles.tabFiller}
         >
-          {!!user.hasPublicProfile && !user.documents.totalCount && !isMe && (
+          {!!user.hasPublicProfile && !articleCount && !isMe && (
             <IconButton
               Icon={IconReport}
               title={t('profile/report/label')}
@@ -138,10 +132,7 @@ export default function ProfileCommentsAndDocuments({
         </div>
       </div>
       {activeChildIndex === 0 ? (
-        <ProifleDocumentsFeed
-          documents={user.documents}
-          loadMore={loadMoreDocuments}
-        />
+        <ArticlesByContributorFeedClient userId={user.id} />
       ) : (
         <ProfileCommentsFeed
           comments={user.comments}
