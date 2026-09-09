@@ -1,5 +1,4 @@
 import { NewsletterCourseDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { type NewsletterName } from '@/app/(sanity)/components/newsletters/config'
 import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
 import { ContainerNarrow } from '@/app/components/container'
 import { PageLayout } from '@/app/components/layout'
@@ -160,13 +159,7 @@ export default async function CoursePage({ params }: PageProps) {
                 </p>
               </div>
               <NewsletterSubscribeButton
-                newsletter={newsletterId as NewsletterName}
-                accentColor={accentColor?.hex ?? undefined}
-                accentTextColor={accentTextColor?.hex ?? undefined}
-                labels={{
-                  subscribe: 'Kostenlosen Kurs abonnieren',
-                  isSubscribed: 'Kurs abonniert',
-                }}
+                newsletter={{ name: newsletterId, title }}
               />
               <p className={css({ textAlign: 'center' })}>
                 Abmeldung jederzeit möglich.
@@ -360,11 +353,7 @@ export default async function CoursePage({ params }: PageProps) {
                   {title}
                 </h1>
                 <NewsletterSubscribeButton
-                  newsletter={newsletterId as NewsletterName}
-                  labels={{
-                    subscribe: 'Kostenlosen Kurs abonnieren',
-                    isSubscribed: 'Kurs abonniert',
-                  }}
+                  newsletter={{ name: newsletterId, title }}
                 />
                 <p className={css({ textAlign: 'center' })}>
                   Abmeldung jederzeit möglich.
