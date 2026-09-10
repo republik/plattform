@@ -5,6 +5,7 @@ export const COLLECTIONS_QUERY = defineQuery(`
   *[_type == "articleCollection" && _id in $ids]{
     _id,
     title,
+    description,
     image
   }
 `)

@@ -1,25 +1,17 @@
-'use client'
-
-import {
-  Document,
-  OnboardingDocumentsDocument,
-  SubscriptionObjectType,
-} from '#graphql/republik-api/__generated__/gql/graphql'
+import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
+import {
+  COLLECTIONS_QUERY,
+  type ArticleCollectionType,
+} from '@/app/(sanity)/groq/collections-query'
+import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { Section, SectionH3 } from '@/app/components/ui/section'
-import { useTranslation } from '@/lib/withT'
-import { useQuery } from '@apollo/client'
+import { t } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 
-function FormatCard({ format }: { format?: Document }) {
-  const { t } = useTranslation()
-
-  if (!format) return null
-
-  const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
-
+function FormatCard({ collection }: { collection: ArticleCollectionType }) {
   return (
     <div
       data-theme='light'
@@ -36,7 +28,7 @@ function FormatCard({ format }: { format?: Document }) {
           mx: 'initial',
         },
       })}
-      style={FORMATS_STYLE[format.repoId] || {}}
+      style={FORMATS_STYLE[collection._id]}
     >
       <h4
         className={css({
@@ -47,10 +39,10 @@ function FormatCard({ format }: { format?: Document }) {
           pb: 2,
         })}
       >
-        {format.meta.description}
+        {collection.description}
       </h4>
       <p className={css({ fontSize: 'l', letterSpacing: '-0.11' })}>
-        Von {t(`onboarding/formats/${format.repoId}/author`)}
+        Von {FORMATS_STYLE[collection._id]?.author}
       </p>
       <div
         style={{
@@ -61,15 +53,16 @@ function FormatCard({ format }: { format?: Document }) {
           alignItems: 'end',
         }}
       >
-        {' '}
         <FollowButton
           type={SubscriptionObjectType.Document}
-          objectId={`sanity:${format.id}`}
+          objectId={`sanity:${collection._id}`}
         />
         <Image
           className={css({ maxHeight: '160px', maxWidth: '120px' })}
-          src={FORMATS_STYLE[format.repoId]?.imageSrc}
+          src={FORMATS_STYLE[collection._id]?.imageSrc}
           unoptimized
+          height={160}
+          width={120}
           alt='' // Decorative images don't need alt text
         />
       </div>
@@ -77,13 +70,13 @@ function FormatCard({ format }: { format?: Document }) {
   )
 }
 
-function FormatsSection() {
-  const { t } = useTranslation()
-  const { data } = useQuery(OnboardingDocumentsDocument, {
-    variables: { repoIds: FORMATS_FEATURED },
+export async function FormatsSection() {
+  const { data } = await sanityFetch({
+    query: COLLECTIONS_QUERY,
+    params: { ids: FORMATS_FEATURED },
   })
 
-  const formats = data?.documents.nodes as Document[]
+  const formats = data
 
   if (!formats?.length) return null
 
@@ -103,15 +96,12 @@ function FormatsSection() {
           },
         })}
       >
-        {FORMATS_FEATURED.map((repoId) => (
-          <FormatCard
-            key={repoId}
-            format={formats.find((format) => format.repoId === repoId)}
-          />
-        ))}
+        {FORMATS_FEATURED.map((id) => {
+          const collection = formats.find((format) => format._id === id)
+          if (!collection) return null
+          return <FormatCard key={id} collection={collection} />
+        })}
       </div>
     </Section>
   )
 }
-
-export default FormatsSection

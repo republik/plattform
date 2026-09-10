@@ -2,6 +2,7 @@
 
 import {
   EventObjectType,
+  SubscribedByMeDocument,
   SubscribeDocument,
   SubscriptionObjectType,
   UnsubscribeDocument,
@@ -9,72 +10,79 @@ import {
 import { Button } from '@/app/components/ui/button'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { postMessage } from '@/lib/withInNativeApp'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { ButtonVariantProps } from '@republik/theme/recipes'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 
-// TODO: figure out subscribes with sanity
 export function FollowButton({
   type,
-  subscriptionId,
   objectId,
   objectName,
   size = 'small',
   filters = [EventObjectType.Document],
 }: {
   type: SubscriptionObjectType
-  subscriptionId?: string
   objectId?: string
   objectName?: string
   size?: ButtonVariantProps['size']
   filters?: EventObjectType[]
 }) {
+  const { data, refetch } = useQuery(SubscribedByMeDocument, {
+    variables: {
+      objectId,
+      type,
+    },
+  })
+
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
-  const [isPending, setIsPending] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const [showSpinner, setShowSpinner] = useState(false)
   const track = useTrackEvent()
   const trackingInfo = `${type}: ${objectName}`
 
-  async function toggleSubscription(e) {
+  const subscriptionId = data?.subscribedByMe?.id
+  const subscriptionActive = data?.subscribedByMe?.active ?? false
+
+  function toggleSubscription(e) {
     e.stopPropagation()
 
     if (isPending) return
+    startTransition(async () => {
+      // while we disable the button for the whole duration of the request,
+      // we only show the spinner if the request takes longer than 1s
+      const spinner = setTimeout(() => setShowSpinner(true), 1000)
 
-    setIsPending(true)
-    // while we disable the button for the whole duration of the request,
-    // we only show the spinner if the request takes longer than 1s
-    const spinner = setTimeout(() => setShowSpinner(true), 1000)
-
-    if (subscriptionId) {
-      await unsubscribe({
-        variables: {
-          subscriptionId,
-        },
-      })
-      track({
-        action: 'Unfollow',
-        name: trackingInfo,
-      })
-    } else {
-      await subscribe({
-        variables: {
-          objectId,
-          type,
-          filters,
-        },
-      })
-      track({
-        action: 'Follow',
-        name: trackingInfo,
-      })
-      // triggers the push permission popup in the app
-      postMessage({ type: 'isSignedIn', payload: true })
-    }
-    clearTimeout(spinner)
-    setShowSpinner(false)
-    setIsPending(false)
+      if (subscriptionId && subscriptionActive) {
+        await unsubscribe({
+          variables: {
+            subscriptionId,
+          },
+        })
+        track({
+          action: 'Unfollow',
+          name: trackingInfo,
+        })
+      } else {
+        await subscribe({
+          variables: {
+            objectId,
+            type,
+            filters,
+          },
+        })
+        track({
+          action: 'Follow',
+          name: trackingInfo,
+        })
+        // triggers the push permission popup in the app
+        postMessage({ type: 'isSignedIn', payload: true })
+      }
+      clearTimeout(spinner)
+      setShowSpinner(false)
+      refetch()
+    })
   }
 
   return (
@@ -87,10 +95,10 @@ export function FollowButton({
       disabled={isPending}
       type='button'
       size={size}
-      variant={subscriptionId ? 'outline' : 'default'}
+      variant={subscriptionActive ? 'outline' : 'default'}
       loading={showSpinner}
     >
-      {subscriptionId ? 'Gefolgt' : 'Folgen'}
+      {subscriptionActive ? 'Gefolgt' : 'Folgen'}
     </Button>
   )
 }

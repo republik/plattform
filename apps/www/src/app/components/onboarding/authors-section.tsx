@@ -30,8 +30,6 @@ function AuthorCard({
 
   if (!authorData) return null
 
-  const subscriptionId = authorData.subscribedBy.nodes.find((n) => n.active)?.id
-
   return (
     <div
       className={`${css({
@@ -67,7 +65,6 @@ function AuthorCard({
         >
           <FollowButton
             type={SubscriptionObjectType.User}
-            subscriptionId={subscriptionId}
             objectId={author.id}
             objectName={authorData.name}
           />
@@ -76,7 +73,6 @@ function AuthorCard({
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <FollowButton
           type={SubscriptionObjectType.User}
-          subscriptionId={subscriptionId}
           objectId={author.id}
           objectName={authorData.name}
         />
@@ -85,7 +81,7 @@ function AuthorCard({
   )
 }
 
-function AuthorsSection() {
+export function AuthorsSection() {
   const { t } = useTranslation()
   const [showAll, setShowAll] = useState(false)
 
@@ -140,5 +136,3 @@ function AuthorsSection() {
     </Section>
   )
 }
-
-export default AuthorsSection
