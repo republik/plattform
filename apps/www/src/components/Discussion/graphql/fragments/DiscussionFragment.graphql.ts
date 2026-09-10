@@ -57,26 +57,6 @@ export const DISCUSSION_FRAGMENT = gql`
   fragment Discussion on Discussion {
     id
     title
-    document {
-      id
-      meta {
-        title
-        path
-        twitterImage
-        template
-        publishDate
-        ownDiscussion {
-          id
-          path
-          closed
-        }
-        linkedDiscussion {
-          id
-          path
-          closed
-        }
-      }
-    }
     path
     closed
     userPreference {
