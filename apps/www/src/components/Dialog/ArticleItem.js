@@ -7,7 +7,6 @@ import {
 } from '@project-r/styleguide'
 import { IconDiscussion } from '@republik/icons'
 
-
 const styles = {
   container: css({
     display: 'flex',
@@ -62,42 +61,11 @@ const styles = {
   }),
 }
 
-const ArticleItem = ({ title, count, image }) => {
+const ArticleItem = ({ title, count }) => {
   const [colorScheme] = useColorContext()
 
   return (
     <div {...styles.container}>
-      {/* <div 
-        {...styles.imageContainer}
-        // {...colorScheme.set('backgroundColor', 'hover')}
-      >
-        {image ? (
-          <Image
-            src={image}
-            alt={title}
-            fill
-            sizes='(max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw'
-            style={{
-              objectFit: 'contain',
-              objectPosition: 'center',
-              transform: `scale(0.9))`,
-              transformOrigin: 'center',
-            }}
-          />
-        ) : (
-          <div
-            {...styles.fallbackContainer}
-            {...colorScheme.set('backgroundColor', 'hover')}
-          >
-            <div
-              {...styles.fallbackIcon}
-              {...colorScheme.set('color', 'primary')}
-            >
-              <IconDiscussion size={64} />
-            </div>
-          </div>
-        )}
-      </div> */}
       <div {...styles.textContainer}>
         <p {...styles.title}>{title}</p>
         {count && (

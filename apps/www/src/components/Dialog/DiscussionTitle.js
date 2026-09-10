@@ -7,8 +7,7 @@ const AutoDiscussionTitle = () => {
   const { discussion } = useDiscussion()
   const { t } = useTranslation()
 
-  const documentMeta = discussion?.document?.meta
-  if (!documentMeta) {
+  if (!discussion) {
     return null
   }
 
@@ -16,8 +15,8 @@ const AutoDiscussionTitle = () => {
     <>
       {t.elements('feedback/autoArticle/selected/headline', {
         link: (
-          <Link key='link' href={documentMeta.path} passHref>
-            <A href={documentMeta.path}>{inQuotes(documentMeta.title || '')}</A>
+          <Link key='link' href={discussion.path} passHref>
+            <A href={discussion.path}>{inQuotes(discussion.title || '')}</A>
           </Link>
         ),
       })}

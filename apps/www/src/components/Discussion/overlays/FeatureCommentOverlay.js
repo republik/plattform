@@ -150,10 +150,7 @@ export const FeatureCommentOverlay = ({ comment }) => {
                 {...{
                   ...comment,
                   featuredText: text,
-                  discussion: {
-                    ...discussion,
-                    image: discussion?.document?.meta?.twitterImage,
-                  },
+                  discussion,
                 }}
                 t={t}
               />

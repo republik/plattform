@@ -107,6 +107,7 @@ const DialogPage = () => {
   const router = useRouter()
   const { path } = router.query
   const discussionPath = '/' + [].concat(path || []).join('/')
+
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
       <DiscussionContextProvider discussionPath={discussionPath}>

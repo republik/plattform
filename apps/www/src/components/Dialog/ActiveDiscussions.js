@@ -66,17 +66,13 @@ const ActiveDiscussionItem = ({ discussion, label, count }) => {
     [colorScheme],
   )
   return (
-    <DiscussionLink discussion={discussion} passHref>
-      <a {...styles.item} {...itemRule} {...colorScheme.set('color', 'text')}>
-        <ArticleItem
-          title={label}
-          count={count}
-          image={
-            discussion.document?.meta?.image ||
-            discussion.document?.meta?.audioCover
-          }
-        />
-      </a>
+    <DiscussionLink
+      discussion={discussion}
+      {...styles.item}
+      {...itemRule}
+      {...colorScheme.set('color', 'text')}
+    >
+      <ArticleItem title={label} count={count} />
     </DiscussionLink>
   )
 }

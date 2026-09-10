@@ -101,7 +101,7 @@ export function createDiscussionForumPostingSchema(
   }
   const commentTree = makeCommentTree(discussion.comments)
   const comments = commentTree.nodes
-  const discussionPath = discussion.path || discussion.document?.meta?.path
+  const discussionPath = discussion.path
 
   // Return all top-level comments as DiscussionForumPosting entries
   if (comments.length === 0) {

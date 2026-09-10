@@ -5,15 +5,10 @@ import Link from 'next/link'
 
 export const getFocusHref = (discussion, comment) => {
   const focusParams = { focus: comment?.id }
-  if (discussion.document?.meta?.template === 'article') {
-    return {
-      pathname: `/dialog${discussion.path}`,
-      query: { ...focusParams },
-    }
-  } else if (discussion.path) {
+  if (discussion.path) {
     const { pathname, query } = parse(discussion.path, true)
     return {
-      pathname,
+      pathname: `/dialog${pathname}`,
       query: {
         ...query,
         ...focusParams,
