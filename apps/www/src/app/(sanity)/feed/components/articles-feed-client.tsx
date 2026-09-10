@@ -1,10 +1,21 @@
 'use client'
 
-import { groupByDate } from '@/app/(sanity)/feed/components/group-by-date'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
+import { groupByDate } from '@/app/(sanity)/feed/components/group-by-date'
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+export type FeedCursor = {
+  publishDate: string
+  id: string
+}
+
+export type FeedPage = {
+  teasers: TeaserSmallFragmentType[]
+  hasMore: boolean
+  cursor?: FeedCursor
+}
 
 const groupStyle = css({
   display: 'grid',
@@ -37,43 +48,53 @@ const teaserGroupStyle = css({
 })
 
 export function ArticlesFeedClient({
-  initialTeasers,
-  initialSize,
-  pageSize,
+  initialPage,
   loadMoreAction,
 }: {
-  initialTeasers: TeaserSmallFragmentType[]
-  initialSize: number
-  pageSize: number
-  loadMoreAction: (offset: number) => Promise<TeaserSmallFragmentType[]>
+  initialPage: FeedPage
+  loadMoreAction: (cursor?: FeedCursor) => Promise<FeedPage>
 }) {
-  const [teasers, setTeasers] = useState(initialTeasers)
-  // if the initial page came back short there is nothing more to load
-  const [hasMore, setHasMore] = useState(initialTeasers.length >= initialSize)
-  const [isPending, startTransition] = useTransition()
+  const [page, setPage] = useState(initialPage)
+  const [teasers, setTeasers] = useState(initialPage.teasers)
+  const [nextCursor, setNextCursor] = useState<FeedCursor>()
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  const loadMore = useCallback(() => {
-    startTransition(async () => {
-      const more = await loadMoreAction(teasers.length)
-      setTeasers((prev) => prev.concat(more))
-      if (more.length < pageSize) setHasMore(false)
-    })
-  }, [loadMoreAction, teasers.length, pageSize])
+  useEffect(() => {
+    if (!nextCursor) return
+
+    let cancelled = false
+
+    loadMoreAction(nextCursor)
+      .then((next) => {
+        if (cancelled) return
+        setTeasers((prev) => prev.concat(next.teasers))
+        setPage(next)
+        setNextCursor(undefined)
+      })
+      .catch((error) => {
+        console.error(error)
+        if (!cancelled) setNextCursor(undefined)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [loadMoreAction, nextCursor])
 
   useEffect(() => {
     const sentinel = sentinelRef.current
-    if (!sentinel || !hasMore) return
+    const cursor = page.cursor
+    if (!sentinel || !page.hasMore || !cursor) return
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isPending) loadMore()
+        if (entry.isIntersecting) setNextCursor(cursor)
       },
       { rootMargin: '600px' },
     )
     observer.observe(sentinel)
     return () => observer.disconnect()
-  }, [hasMore, isPending, loadMore])
+  }, [page.hasMore, page.cursor])
 
   const groups = groupByDate(teasers)
 
@@ -104,7 +125,7 @@ export function ArticlesFeedClient({
           </div>
         </section>
       ))}
-      {hasMore && <div ref={sentinelRef} aria-hidden />}
+      {page.hasMore && <div ref={sentinelRef} aria-hidden />}
     </>
   )
 }

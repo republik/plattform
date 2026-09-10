@@ -4,6 +4,7 @@ import {
   ARTICLES_BY_AUTHOR_QUERY,
 } from '@/app/(sanity)/groq/articles-by-author-query'
 import type { ARTICLES_BY_AUTHOR_QUERY_RESULT } from '@/sanity.types'
+import { stegaClean } from 'next-sanity'
 
 /** Where the next page resumes: the sort key of the last item shown. */
 export type ContributorArticlesCursor = {
@@ -52,8 +53,10 @@ export function toContributorArticlesPage(
     // Both halves are required, so an article without a publishDate ends the
     // feed rather than restarting it from the top. The query filters those out
     // anyway; this only satisfies the nullable generated type.
+    // In preview the value carries stega characters, which no GROQ
+    // comparison would match.
     cursor: last?.publishDate
-      ? { publishDate: last.publishDate, id: last._id }
+      ? { publishDate: stegaClean(last.publishDate), id: last._id }
       : undefined,
   }
 }
