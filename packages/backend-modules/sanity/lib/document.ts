@@ -25,6 +25,7 @@ export interface GenericDocument {
   _type: string
   title?: string
   slug?: { current: string }
+  publishDate?: string
 }
 
 // Publikator ids reach the Document loader through an Elasticsearch query
@@ -55,7 +56,7 @@ export const isCollectableType = (type?: string) =>
 export const fetchDocumentById = (id: string) =>
   sanityClient().fetch<GenericDocument | null>(
     // No `drafts.` companion lookup: under `published` such an id can never match.
-    `*[_id == $id][0]{ _id, _type, title, slug }`,
+    `*[_id == $id][0]{ _id, _type, title, slug, publishDate }`,
     { id: publishedId(id) },
     { perspective: 'published' },
   )
@@ -67,7 +68,7 @@ export const fetchDocumentById = (id: string) =>
 export const fetchDocumentsByIds = (ids: string[]) =>
   ids.length
     ? sanityClient().fetch<GenericDocument[]>(
-        `*[_id in $ids]{ _id, _type, title, slug }`,
+        `*[_id in $ids]{ _id, _type, title, slug, publishDate }`,
         { ids: ids.map(publishedId) },
         { perspective: 'published' },
       )
@@ -95,3 +96,24 @@ export const fetchDocumentByLegacyRepoId = (repoId: string) => {
   const sanityId = legacySanityId(repoId)
   return sanityId ? fetchDocumentById(sanityId) : Promise.resolve(null)
 }
+
+export interface DiscussionRef {
+  _id: string
+  discussionId?: string
+}
+
+// A Sanity `article` references a Sanity `discussion` document, which itself
+// carries `backendDiscussionId` -- the Postgres `discussions.id` for that
+// thread (see search-typesense/lib/sanity/fetchArticles.ts, which resolves
+// the same field). There is no column on the Postgres side pointing the
+// other way, so this reverse lookup is the only way to find an article's
+// discussion. Batched for callers (e.g. next-reads' worker) resolving many
+// articles' discussion ids at once.
+export const fetchDiscussionRefsByIds = (ids: string[]) =>
+  ids.length
+    ? sanityClient().fetch<DiscussionRef[]>(
+        `*[_id in $ids]{ _id, "discussionId": discussion->backendDiscussionId }`,
+        { ids: ids.map(publishedId) },
+        { perspective: 'published' },
+      )
+    : Promise.resolve([])

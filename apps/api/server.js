@@ -42,6 +42,8 @@ const {
   graphql: nextReads,
   ReadingPositionRefreshWorker,
   NextReadsFeedRefreshWorker,
+  SanityReadingPositionRefreshWorker,
+  SanityNextReadsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
 const {
   graphql: contributors,
@@ -143,6 +145,8 @@ function setupQueue(context, monitorQueueState = undefined) {
     CockpitWorker,
     ReadingPositionRefreshWorker,
     NextReadsFeedRefreshWorker,
+    SanityReadingPositionRefreshWorker,
+    SanityNextReadsFeedRefreshWorker,
     SlackNotifierWorker,
     // port of old schedulers
 
@@ -444,6 +448,14 @@ const runOnce = async () => {
     )
     await queue.schedule(
       'next_reads:feed:refresh',
+      '*/60 * * * *', // every 60 minutes
+    )
+    await queue.schedule(
+      'next_reads_sanity:reading_position',
+      '*/45 * * * *', // every 45 minutes
+    )
+    await queue.schedule(
+      'next_reads_sanity:feed:refresh',
       '*/60 * * * *', // every 60 minutes
     )
   }

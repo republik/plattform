@@ -18,10 +18,11 @@ export {
   fetchDocumentById,
   fetchDocumentsByIds,
   fetchDocumentByLegacyRepoId,
+  fetchDiscussionRefsByIds,
   isCollectableType,
   COLLECTABLE_TYPES,
 } from './lib/document'
-export type { GenericDocument } from './lib/document'
+export type { GenericDocument, DiscussionRef } from './lib/document'
 export { sanityAudioMediaId } from './lib/mediaId'
 export { repoIdToSanityId } from './lib/legacyId'
 export { PublishNotificationWorker } from './lib/workers/PublishNotificationWorker'

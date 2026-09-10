@@ -12,6 +12,7 @@
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
     "@orbiting/backend-modules-job-queue": "*",
+    "@orbiting/backend-modules-sanity": "*",
     "apollo-modules-node": "*",
     "pogi": "^2.11.1"
   }
