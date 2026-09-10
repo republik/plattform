@@ -77,7 +77,7 @@ export default function ProfileCommentsAndDocuments({
 
   // if user is not logged in, show only documents, if applicable
   if (!me) {
-    return <ArticlesByContributorFeedLoader userId={user.id} />
+    return <ArticlesByContributorFeedClient userId={user.id} />
   }
 
   // only show documents and tabs if user has documents (articles)
