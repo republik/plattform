@@ -22,6 +22,18 @@ const groupStyle = css({
   gridTemplateColumns: { base: '1fr', lg: '120px 1fr' },
   columnGap: '8',
   alignItems: 'start',
+  '&:first-child > h2': {
+    lg: {
+      borderTopWidth: 0,
+      pt: 0,
+    },
+  },
+  '&:first-child > div': {
+    lg: {
+      borderTopWidth: 0,
+      pt: 0,
+    },
+  },
 })
 
 const dateHeaderStyle = css({
