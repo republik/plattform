@@ -1,14 +1,13 @@
+import { Breakout, Center, slug } from '@project-r/styleguide'
 import { useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
 
-import { Center, slug, Breakout } from '@project-r/styleguide'
-
-import ShareImage from '../../Article/ShareImage'
-
 import CardsOverview from './Cards'
-import QuestionScroll from './QuestionScroll'
 
 import { localColors } from './config'
+import QuestionScroll from './QuestionScroll'
+
+import ShareImage from './ShareImage'
 
 export type Mdast = {
   identifier?: string

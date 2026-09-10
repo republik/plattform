@@ -103,7 +103,7 @@ const QuestionnaireSubmissions = dynamic(
   },
 )
 
-const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
+const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion'), {
   loading: LoadingComponent,
 })
 

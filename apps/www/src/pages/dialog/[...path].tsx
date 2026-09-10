@@ -1,7 +1,7 @@
 import { DiscussionNotificationOption } from '#graphql/republik-api/__generated__/gql/graphql'
 import FollowDiscussionDropdown from '@/app/(sanity)/components/follow/follow-discussion-dropdown'
 import { DialogPaynote } from '@/app/(sanity)/components/paynotes/paynotes-in-trial/dialog'
-import ActionBar from '@/components/ActionBar'
+import ActionBar from '@/components/ActionBar/Discussion'
 import DiscussionTitle from '@/components/Dialog/DiscussionTitle'
 import { useDiscussion } from '@/components/Discussion/context/DiscussionContext'
 import DiscussionContextProvider from '@/components/Discussion/context/DiscussionContextProvider'
@@ -93,10 +93,7 @@ const DialogContent = () => {
                     ?.notifications as DiscussionNotificationOption
                 }
               />
-              <ActionBar
-                discussion={discussionContext?.discussion?.id}
-                fontSize
-              />
+              <ActionBar />
             </div>
           </div>
           <Discussion />

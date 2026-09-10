@@ -1,7 +1,7 @@
 'use client'
 import { ContentErrorBoundary } from '@/app/(sanity)/components/content-error-boundary'
 import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
-import { dynamicComponentIdentifiers } from '@/components/Article/DynamicComponents'
+import { dynamicComponentIdentifiers } from '@/components/DynamicComponents'
 import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
 import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import {
@@ -18,7 +18,6 @@ import {
 } from '@project-r/styleguide'
 import { cva } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
-import { ErrorBoundary } from 'react-error-boundary'
 
 const dynamicComponentRequire = createRequire().alias({
   'react-apollo': {

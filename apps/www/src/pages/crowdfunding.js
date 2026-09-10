@@ -1,3 +1,17 @@
+import ContainerWithSidebar from '@/components/Crowdfunding/ContainerWithSidebar'
+
+import Frame from '@/components/Frame'
+import Box from '@/components/Frame/Box'
+import List, { Highlight } from '@/components/List'
+import TestimonialList from '@/components/Testimonial/List'
+import VideoCover from '@/components/VideoCover'
+import { withDefaultSSR } from '@/lib/apollo/helpers'
+
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '@/lib/constants'
+
+import { thousandSeparator } from '@/lib/utils/format'
+import withInNativeApp from '@/lib/withInNativeApp'
+import withT from '@/lib/withT'
 import {
   A,
   Button,
@@ -15,21 +29,6 @@ import {
 import { css } from 'glamor'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
-import ActionBar from '@/components/ActionBar'
-import ContainerWithSidebar from '@/components/Crowdfunding/ContainerWithSidebar'
-
-import Frame from '@/components/Frame'
-import Box from '@/components/Frame/Box'
-import List, { Highlight } from '@/components/List'
-import TestimonialList from '@/components/Testimonial/List'
-import VideoCover from '@/components/VideoCover'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
-
-import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '@/lib/constants'
-
-import { thousandSeparator } from '@/lib/utils/format'
-import withInNativeApp from '@/lib/withInNativeApp'
-import withT from '@/lib/withT'
 
 const styles = {
   mediaDiversity: css({
@@ -111,11 +110,6 @@ export const Page = ({ router, t, inNativeApp }) => {
     },
   ]
 
-  const shareObject = {
-    url: PUBLIC_BASE_URL + router.pathname,
-    emailSubject: 'Es ist Zeit.',
-  }
-
   return (
     <Frame
       raw
@@ -170,7 +164,6 @@ export const Page = ({ router, t, inNativeApp }) => {
           <Label style={{ display: 'block', marginBottom: 5 }}>
             Teilen Sie diese Seite mit Ihren Freunden:
           </Label>
-          <ActionBar share={shareObject} />
         </div>
 
         <div {...styles.stretchLead}>
@@ -629,7 +622,6 @@ export const Page = ({ router, t, inNativeApp }) => {
           <Label style={{ display: 'block', marginBottom: 5 }}>
             Jetzt andere auf die Republik aufmerksam machen:
           </Label>
-          <ActionBar share={shareObject} />
         </div>
 
         <H1>Community</H1>

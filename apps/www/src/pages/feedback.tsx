@@ -1,17 +1,17 @@
-import Link from 'next/link'
+import ActionBar from '@/components/ActionBar/Discussion'
+import DiscussionContextProvider from '@/components/Discussion/context/DiscussionContextProvider'
+import Discussion from '@/components/Discussion/Discussion'
 import Frame from '@/components/Frame'
+import Meta from '@/components/Frame/Meta'
+import { withDefaultSSR } from '@/lib/apollo/helpers'
 import {
   CDN_FRONTEND_BASE_URL,
   GENERAL_FEEDBACK_DISCUSSION_ID,
   PUBLIC_BASE_URL,
 } from '@/lib/constants'
-import DiscussionContextProvider from '@/components/Discussion/context/DiscussionContextProvider'
-import Discussion from '@/components/Discussion/Discussion'
-import { Center, Editorial, Interaction } from '@project-r/styleguide'
 import { useTranslation } from '@/lib/withT'
-import ActionBar from '@/components/ActionBar'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
-import Meta from '@/components/Frame/Meta'
+import { Center, Editorial, Interaction } from '@project-r/styleguide'
+import Link from 'next/link'
 
 const FeedbackDialogPage = () => {
   const { t } = useTranslation()
@@ -46,7 +46,7 @@ const FeedbackDialogPage = () => {
                 {t('feedback/general/lead')}
               </Interaction.P>
               <br />
-              <ActionBar discussion={activeDiscussionId} fontSize />
+              <ActionBar />
             </div>
             <Discussion />
           </Center>
