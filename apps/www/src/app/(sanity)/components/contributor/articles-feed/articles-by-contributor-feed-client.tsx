@@ -89,11 +89,11 @@ function ArticlesByContributorFeedWithPages({
   }, [page.hasMore, page.cursor])
 
   return (
-    <>
+    <div>
       {teasers.map((teaser) => (
         <FeedTeaser key={teaser._id} teaser={teaser} />
       ))}
       {page.hasMore && <div ref={sentinelRef} aria-hidden />}
-    </>
+    </div>
   )
 }
