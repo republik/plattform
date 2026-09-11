@@ -94,16 +94,6 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS cockpit_membership_evolution_v2 AS (
       ON pm."membershipId" = lpm."membershipId"
       AND pm."createdAt" = lpm."createdAt"
     GROUP BY pm."membershipId", pm.donation
-  ), range AS (
-    SELECT
-      unit at time zone (SELECT tz from query_variables) "first",
-      (unit + '1 month'::interval - '1 second'::interval) at time zone (SELECT tz from query_variables) "last"
-
-    FROM generate_series(
-      (SELECT min from query_variables)::timestamp,
-      (SELECT max from query_variables)::timestamp,
-      '1 month'
-    ) unit
   )
 
   SELECT
@@ -261,24 +251,54 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS cockpit_membership_evolution_v2 AS (
   LEFT JOIN "membershipDonation"
     ON "membershipDonation"."membershipId" = "minMaxDates".id
 
+  -- Generates only the month rows each membership can actually affect,
+  -- instead of cross joining every membership against a fixed 128-row
+  -- month series and filtering afterward. Two disjoint parts, UNION ALL'd:
   JOIN LATERAL (
-    SELECT r."first", r."last"
-    FROM range r
-    WHERE
-      -- point-in-time fields: membership's active period overlaps this month
-      (r."last" >= "minMaxDates"."minBeginDate" AND r."first" <= "minMaxDates"."maxEndDate")
-      -- still-owes-a-renewal fields (overdue/pending/pendingSubscriptionsOnly):
-      -- an active, auto-renewing membership counts toward every month from
-      -- its start onward, not just the month it expires in
-      OR ("minMaxDates".active AND "minMaxDates".renew AND r."last" >= "minMaxDates"."minBeginDate")
-      -- "frozen at now" fields (active/activeCrowdfunders/activeLoyalists):
-      -- a currently active membership is replayed identically into every
-      -- future month bucket beyond its own overlap window
-      OR (
-        "minMaxDates"."maxEndDate" >= now()
-        AND "minMaxDates"."minBeginDate" < now()
-        AND r."first" > now()
-      )
+    -- 1) point-in-time fields: every month the membership's own active
+    --    period overlaps (this is exactly the calendar months between the
+    --    month containing minBeginDate and the month containing maxEndDate)
+    SELECT
+      gs at time zone (SELECT tz from query_variables) "first",
+      (gs + '1 month'::interval - '1 second'::interval) at time zone (SELECT tz from query_variables) "last"
+    FROM generate_series(
+      GREATEST(
+        date_trunc('month', "minMaxDates"."minBeginDate" at time zone (SELECT tz from query_variables)),
+        (SELECT min from query_variables)::timestamp
+      ),
+      LEAST(
+        date_trunc('month', "minMaxDates"."maxEndDate" at time zone (SELECT tz from query_variables)),
+        (SELECT max from query_variables)::timestamp
+      ),
+      '1 month'
+    ) gs
+
+    UNION ALL
+
+    -- 2) beyond its own overlap window: months needed only by the
+    --    still-owes-a-renewal fields (overdue/pending/pendingSubscriptionsOnly,
+    --    for active+auto-renewing memberships) and the "frozen at now" fields
+    --    (active/activeCrowdfunders/activeLoyalists, for currently active
+    --    memberships, replayed into every future month). The CASE collapses
+    --    the range to empty (end < start) when neither applies, so
+    --    generate_series produces zero rows for the large majority of
+    --    memberships that need no tail at all.
+    SELECT
+      gs at time zone (SELECT tz from query_variables) "first",
+      (gs + '1 month'::interval - '1 second'::interval) at time zone (SELECT tz from query_variables) "last"
+    FROM generate_series(
+      GREATEST(
+        date_trunc('month', "minMaxDates"."maxEndDate" at time zone (SELECT tz from query_variables)) + '1 month'::interval,
+        (SELECT min from query_variables)::timestamp
+      ),
+      CASE
+        WHEN ("minMaxDates".active AND "minMaxDates".renew)
+          OR ("minMaxDates"."maxEndDate" >= now() AND "minMaxDates"."minBeginDate" < now())
+        THEN (SELECT max from query_variables)::timestamp
+        ELSE (SELECT min from query_variables)::timestamp - '1 month'::interval
+      END,
+      '1 month'
+    ) gs
   ) r ON true
 
   GROUP BY 1
