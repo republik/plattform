@@ -64,7 +64,7 @@ const upsert = async (
 }
 
 const create = async (
-  { title, maxLength, anonymity, tags, tagRequired, closed },
+  { title, maxLength, anonymity, tags, tagRequired, closed, path },
   { pgdb, t },
 ) => {
   if (tagRequired && (!tags || tags.length === 0)) {
@@ -72,13 +72,21 @@ const create = async (
   }
 
   return pgdb.public.discussions.insertAndGet(
-    { title, maxLength, anonymity, tags, tagRequired: !!tagRequired, closed },
+    {
+      title,
+      maxLength,
+      anonymity,
+      tags,
+      tagRequired: !!tagRequired,
+      closed,
+      path,
+    },
     { skipUndefined: true },
   )
 }
 
 const update = async (
-  { id, title, maxLength, anonymity, tags, tagRequired, closed },
+  { id, title, maxLength, anonymity, tags, tagRequired, closed, path },
   { pgdb, t },
 ) => {
   const discussion = await pgdb.public.discussions.findOne({ id })
@@ -92,7 +100,7 @@ const update = async (
 
   return pgdb.public.discussions.updateAndGetOne(
     { id },
-    { title, maxLength, anonymity, tags, tagRequired, closed },
+    { title, maxLength, anonymity, tags, tagRequired, closed, path },
     { skipUndefined: true },
   )
 }

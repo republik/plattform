@@ -25,18 +25,20 @@ const {
   GENERAL_FEEDBACK_DISCUSSION_ID,
 } = process.env
 
-const getDiscussionUrl = async (discussion, context) => {
+// Every comment notification links into the /dialog overlay by discussion
+// id -- it used to fall back to `${FRONTEND_BASE_URL}${discussion.path}` for
+// non-article discussions, but `path` is only ever set by the Publikator
+// commit flow (Discussion.upsert's `settings.path`); a discussion created
+// for a Sanity article via sanity/express/discussions.ts's Discussion.create
+// has neither `repoId` nor `path`, so that fallback produced a 404. `/dialog`
+// only needs the discussion id to resolve, so there's no need to special-case
+// article vs. non-article (or Publikator vs. Sanity) here at all.
+const getDiscussionUrl = (discussion) => {
   const communityUrl = `${FRONTEND_BASE_URL}/dialog?id=${discussion.id}`
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return `${communityUrl}&t=general`
   }
-  const document =
-    discussion.repoId &&
-    (await context.loaders.Document.byRepoId.load(discussion.repoId))
-  if (document && document.meta && document.meta.template === 'article') {
-    return `${communityUrl}&t=article`
-  }
-  return `${FRONTEND_BASE_URL}${discussion.path}`
+  return `${communityUrl}&t=article`
 }
 
 const getDisplayAuthor = (comment, context) => {
@@ -48,7 +50,7 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
 
   const { preview, discussionUrl, contentMdast } = await Promise.props({
     preview: getPreview(comment, { length: 128 }, context),
-    discussionUrl: getDiscussionUrl(discussion, context),
+    discussionUrl: getDiscussionUrl(discussion),
     contentMdast: getContent(comment, { strip: false }, context),
   })
 

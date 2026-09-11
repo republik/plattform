@@ -7,17 +7,17 @@ const {
 
 export const discussionsHandler =
   (pgdb: any, t: any) => async (req: Request, res: Response) => {
-    const { id, title, maxLength, anonymity, tags, tagRequired, closed } =
+    const { id, title, maxLength, anonymity, tags, tagRequired, closed, path } =
       req.body || {}
 
     try {
       const discussion = id
         ? await Discussion.update(
-            { id, title, maxLength, anonymity, tags, tagRequired, closed },
+            { id, title, maxLength, anonymity, tags, tagRequired, closed, path },
             { pgdb, t },
           )
         : await Discussion.create(
-            { title, maxLength, anonymity, tags, tagRequired, closed },
+            { title, maxLength, anonymity, tags, tagRequired, closed, path },
             { pgdb, t },
           )
 
