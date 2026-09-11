@@ -13,6 +13,7 @@ import { WelcomeBanner } from '@/app/(sanity)/components/paynotes/paynotes-in-tr
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { ProlitterisTracking } from '@/app/(sanity)/components/prolitteris-tracking'
 import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/renderArticle'
 import { SeriesMenu } from '@/app/(sanity)/components/series-menu'
 import { TeaserSmallPreviewLink } from '@/app/(sanity)/components/teaser-small-preview-link'
@@ -39,6 +40,7 @@ export default function ArticleDocument({
     byline,
     articleCollection,
     readingAccess,
+    repoId,
   } = article
   const seriesId = articleCollection?.series && articleCollection?._id
   const documentId = collectionsDocumentId(article)
@@ -48,6 +50,7 @@ export default function ArticleDocument({
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
       <WelcomeBanner />
+      {repoId && <ProlitterisTracking repoId={repoId} path={slug} />}
       <ArticleActionsProvider>
         <article
           // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
