@@ -1,5 +1,5 @@
 import { sanityClient } from './client'
-import { toSanityRef } from './document'
+import { toSanityRef, legacySanityId } from './document'
 import type { PortableTextBlocks } from './audio'
 
 export interface ArticleForNotification {
@@ -36,6 +36,39 @@ export const fetchArticleForNotification = (documentId: string) =>
 
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
 
+// Existing subscriptions to a migrated Format are still keyed on its
+// pre-migration Publikator repoId, not the `sanity:`-prefixed ref its
+// migrated `articleCollection` counterpart resolves to elsewhere. Rather
+// than depend on the one-off, manually-run migrate-legacy-subscriptions.ts
+// script having already rewritten those rows, resolve them here the same
+// way next-reads' SanityNextReadsFeedRefreshWorker resolves legacy
+// discussion refs: hash every candidate legacy repoId still on file and
+// keep the ones matching a collection this article actually references.
+const resolveLegacyRepoIdsForSanityIds = async (
+  sanityIds: string[],
+  pgdb: any,
+): Promise<string[]> => {
+  if (!sanityIds.length) {
+    return []
+  }
+
+  const candidateIds = new Set(sanityIds)
+  const rows: { objectDocumentId: string }[] = await pgdb.query(`
+    SELECT DISTINCT "objectDocumentId"
+    FROM subscriptions
+    WHERE "objectType" = 'Document'
+      AND "objectDocumentId" IS NOT NULL
+      AND "objectDocumentId" NOT LIKE 'sanity:%';
+  `)
+
+  return rows
+    .map((row) => row.objectDocumentId)
+    .filter((repoId) => {
+      const sanityId = legacySanityId(repoId)
+      return !!sanityId && candidateIds.has(sanityId)
+    })
+}
+
 // Who a publish notification for this article reaches: subscribers of its
 // articleCollections (topics/series — see that field's own description,
 // "Abonnenten dieser Sammlungen erhalten eine Benachrichtigung") plus
@@ -54,10 +87,22 @@ export const resolveNotificationRecipients = async (
   // published-id form — see toSanityRef. Without this, a bare Sanity _id
   // here never matches the stored objectDocumentId and collection followers
   // are silently invisible to both the notification send and the count.
-  const articleCollectionIds = (article.articleCollections ?? [])
+  const collectionSanityIds = (article.articleCollections ?? [])
     .map((entry) => entry.collection?._id)
     .filter((id): id is string => Boolean(id))
-    .map(toSanityRef)
+
+  // A migrated Format's existing subscribers are still keyed on its old
+  // repoId until migrate-legacy-subscriptions.ts rewrites them (a manual,
+  // never-automatically-run step) -- match on both forms so notifications
+  // work regardless of whether that's happened yet.
+  const legacyRepoIds = await resolveLegacyRepoIdsForSanityIds(
+    collectionSanityIds,
+    context.pgdb,
+  )
+  const articleCollectionIds = [
+    ...collectionSanityIds.map(toSanityRef),
+    ...legacyRepoIds,
+  ]
   const authorUserIds = (article.contributors ?? [])
     .map((entry) => entry.contributor?.userId)
     .filter((id): id is string => Boolean(id))

@@ -65,7 +65,7 @@ const inputToColumns = (value) => {
   //    content has moved to Sanity. Its Sanity `_id` was minted from the repoId
   //    by the one-time import, so we can *compute* it — no round trip. Without
   //    this, a client still holding a legacy repoId stops finding its own row
-  //    the moment migrate-legacy-references.ts rewrites that row to "sanityId",
+  //    the moment migrate-legacy-collection-items.ts rewrites that row to "sanityId",
   //    i.e. the bookmark or progress silently disappears.
   //  - `value` is already a bare Sanity `_id`, in which case it is the candidate.
   const sanityId = (repoId && legacySanityId(repoId)) || publishedId(value)

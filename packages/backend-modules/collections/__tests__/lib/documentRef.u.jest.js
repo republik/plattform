@@ -79,7 +79,7 @@ describe('refToFilterColumns', () => {
 
 describe('inputToColumns', () => {
   test('derives the Sanity id from a legacy repoId', () => {
-    // The regression this guards: once migrate-legacy-references.ts rewrites a
+    // The regression this guards: once migrate-legacy-collection-items.ts rewrites a
     // row from "repoId" to "sanityId", a client still holding the legacy repoId
     // must keep finding it. Previously the sanityId candidate was the github
     // path itself, which can never match a uuid column.

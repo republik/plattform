@@ -20,7 +20,8 @@
     "dev": "tsc -w",
     "build": "tsc",
     "test": "jest",
-    "migrate-legacy-references": "ts-node script/migrate-legacy-references.ts"
+    "migrate-legacy-subscriptions": "ts-node script/migrate-legacy-subscriptions.ts",
+    "migrate-legacy-collection-items": "ts-node script/migrate-legacy-collection-items.ts"
   },
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
