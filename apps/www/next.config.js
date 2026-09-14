@@ -102,13 +102,6 @@ const nextConfig = {
   },
   async rewrites() {
     return {
-      beforeFiles: [
-        // _ssr routes are only accessible via rewrites
-        {
-          source: '/_ssr/:path*',
-          destination: '/404',
-        },
-      ],
       afterFiles: [
         // Rewrite to new Sanity front
         {
@@ -119,31 +112,6 @@ const nextConfig = {
         {
           source: '/~:slug',
           destination: '/~/:slug',
-        },
-        // Avoid SSG for extract urls used for image rendering
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [{ type: 'query', key: 'extract' }],
-        },
-        // Avoid SSG for share urls, e.g. meta.fromQuery
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [{ type: 'query', key: 'share' }],
-        },
-        // Rewrite for crawlers when a comment is focused inside a debate on the article-site
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [
-            { type: 'query', key: 'focus' },
-            {
-              type: 'header',
-              key: 'User-Agent',
-              value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
-            },
-          ],
         },
         {
           source: '/pgp/:userSlug',
