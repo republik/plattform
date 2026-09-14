@@ -26,17 +26,23 @@ const {
 } = process.env
 
 // Every comment notification links into the /dialog overlay by discussion
-// id -- it used to fall back to `${FRONTEND_BASE_URL}${discussion.path}` for
-// non-article discussions, but `path` is only ever set by the Publikator
-// commit flow (Discussion.upsert's `settings.path`); a discussion created
-// for a Sanity article via sanity/express/discussions.ts's Discussion.create
-// has neither `repoId` nor `path`, so that fallback produced a 404. `/dialog`
-// only needs the discussion id to resolve, so there's no need to special-case
-// article vs. non-article (or Publikator vs. Sanity) here at all.
-const getDiscussionUrl = (discussion) => {
+// id, except standalone (non-article) Publikator discussions -- e.g.
+// template: 'discussion' "Diskussion" pages -- which still link to their own
+// canonical `discussion.path`. A discussion created for a Sanity article via
+// sanity/express/discussions.ts's Discussion.create has neither `repoId` nor
+// `path`, so it (and anything else without a resolvable non-article
+// Publikator document) falls through to `/dialog`, avoiding the 404 that
+// motivated dropping this fallback in the first place.
+const getDiscussionUrl = async (discussion, context) => {
   const communityUrl = `${FRONTEND_BASE_URL}/dialog?id=${discussion.id}`
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return `${communityUrl}&t=general`
+  }
+  const document =
+    discussion.repoId &&
+    (await context.loaders.Document.byRepoId.load(discussion.repoId))
+  if (document && document.meta && document.meta.template !== 'article') {
+    return `${FRONTEND_BASE_URL}${discussion.path}`
   }
   return `${communityUrl}&t=article`
 }
@@ -50,7 +56,7 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
 
   const { preview, discussionUrl, contentMdast } = await Promise.props({
     preview: getPreview(comment, { length: 128 }, context),
-    discussionUrl: getDiscussionUrl(discussion),
+    discussionUrl: getDiscussionUrl(discussion, context),
     contentMdast: getContent(comment, { strip: false }, context),
   })
 
