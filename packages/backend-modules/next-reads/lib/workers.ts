@@ -1,6 +1,6 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job } from 'pg-boss'
-import { fetchDiscussionRefsByIds } from '@orbiting/backend-modules-sanity'
+import { fetchDiscussionRefsByIds, legacySanityId } from '@orbiting/backend-modules-sanity'
 
 export class ReadingPositionRefreshWorker extends BaseWorker<object> {
   readonly queue = 'next_reads:reading_position'
@@ -39,13 +39,24 @@ export class SanityReadingPositionRefreshWorker extends BaseWorker<object> {
   }
 }
 
-// The only step in this feature that talks to Sanity: resolving each
-// candidate article's discussion id (a reverse reference stored on the
-// Sanity document, not a Postgres column -- see
-// sanity/lib/document.ts#fetchDiscussionRefsByIds). Cached in
-// next_reads_sanity.discussion_refs so the aggregate views below can join to
-// `comments` in plain SQL; a short staleness window on new discussions is
-// acceptable.
+// Resolves candidate articles' discussion ids two ways, cheapest first:
+//
+// 1. Migrated (ex-Publikator) articles already have a `discussions` row keyed
+//    by their old `repoId`, which hashes deterministically to the same
+//    Sanity `_id` (see sanity/lib/legacyId.ts) -- so these are resolved
+//    straight from Postgres, no Sanity round trip needed. This also sidesteps
+//    a real gap: `discussion.backendDiscussionId` (see below) only gets set
+//    when Studio calls back to /webhooks/sanity/discussions, which it never
+//    does for already-migrated content, so relying on that alone leaves these
+//    articles' discussion refs permanently unresolved.
+// 2. Anything left over -- genuinely Sanity-native articles with no legacy
+//    repoId -- falls back to the existing reverse-reference lookup
+//    (sanity/lib/document.ts#fetchDiscussionRefsByIds), the only step in this
+//    feature that talks to Sanity.
+//
+// Both are cached in next_reads_sanity.discussion_refs so the aggregate views
+// below can join to `comments` in plain SQL; a short staleness window on new
+// discussions is acceptable.
 export class SanityNextReadsFeedRefreshWorker extends BaseWorker<object> {
   readonly queue = 'next_reads_sanity:feed:refresh'
 
@@ -55,12 +66,33 @@ export class SanityNextReadsFeedRefreshWorker extends BaseWorker<object> {
     `)
 
     if (rows.length) {
-      const refs = await fetchDiscussionRefsByIds(rows.map((row) => row.sanityId))
-      const resolved = refs.filter(
-        (ref): ref is { _id: string; discussionId: string } => !!ref.discussionId,
-      )
+      const candidateIds = new Set(rows.map((row) => row.sanityId))
+      const resolved = new Map<string, string>()
 
-      if (resolved.length) {
+      const legacyDiscussions: { id: string; repoId: string }[] =
+        await this.context.pgdb.public.discussions.find(
+          { 'repoId !=': null },
+          { fields: ['id', 'repoId'] },
+        )
+      for (const discussion of legacyDiscussions) {
+        const sanityId = legacySanityId(discussion.repoId)
+        if (sanityId && candidateIds.has(sanityId)) {
+          resolved.set(sanityId, discussion.id)
+        }
+      }
+
+      const remainingIds = rows
+        .map((row) => row.sanityId)
+        .filter((sanityId) => !resolved.has(sanityId))
+
+      const refs = await fetchDiscussionRefsByIds(remainingIds)
+      for (const ref of refs) {
+        if (ref.discussionId) {
+          resolved.set(ref._id, ref.discussionId)
+        }
+      }
+
+      if (resolved.size) {
         await this.context.pgdb.query(
           `
           INSERT INTO next_reads_sanity.discussion_refs ("sanityId", "discussionId", "updatedAt")
@@ -71,8 +103,8 @@ export class SanityNextReadsFeedRefreshWorker extends BaseWorker<object> {
             "updatedAt" = now();
           `,
           {
-            sanityIds: resolved.map((ref) => ref._id),
-            discussionIds: resolved.map((ref) => ref.discussionId),
+            sanityIds: [...resolved.keys()],
+            discussionIds: [...resolved.values()],
           },
         )
       }
