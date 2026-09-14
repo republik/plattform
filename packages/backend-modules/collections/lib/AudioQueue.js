@@ -252,22 +252,34 @@ const reorderItems = async (input, context) => {
     .map((id) => items.find((item) => item.id === id))
     .filter(Boolean)
 
-  // Items the caller didn't mention are appended after the reordered ones,
-  // keeping their prior relative order — they are NOT deleted.
+  // Plain (repoId) items the caller didn't mention are deleted, exactly as
+  // before this queue also had to handle Sanity-backed items — existing
+  // clients rely on "send a subset to prune the rest".
   //
-  // This used to delete them, which is unsafe for any client that knows only
-  // part of the queue. The web player filters items it can't render (see
-  // useAudioQueue's `audioSource` filter) and then reorders what's left, so a
-  // single drag would silently wipe every Sanity-backed item. Deleting stays
-  // the job of removeAudioQueueItem / clearAudioQueue, which is what clients
-  // already use.
+  // Sanity-backed items the caller didn't mention are appended after the
+  // reordered ones instead, keeping their prior relative order. The web
+  // player filters items it can't render (see useAudioQueue's `audioSource`
+  // filter) and then reorders what's left, so treating omission as deletion
+  // for those would let a single legacy-client drag silently wipe every
+  // Sanity-backed item it doesn't know about. Deleting them stays the job of
+  // removeAudioQueueItem / clearAudioQueue, which is what clients already use.
   //
   // Appending rather than leaving their sequence untouched keeps the column
   // collision-free: nothing enforces uniqueness, and the queue's sort would
   // otherwise fall back on Postgres row order for tied values.
-  const appended = items
-    .filter((item) => !reordered.includes(item))
+  const omitted = items.filter((item) => !reordered.includes(item))
+  const appended = omitted
+    .filter((item) => item.sanityId)
     .sort((a, b) => (a.data?.sequence ?? 0) - (b.data?.sequence ?? 0))
+  const toDelete = omitted.filter((item) => item.repoId)
+
+  if (toDelete.length) {
+    await pgdb.public.collectionDocumentItems.delete({
+      collectionId: collection.id,
+      userId: me.id,
+      id: toDelete.map((item) => item.id),
+    })
+  }
 
   // Only rows whose sequence actually moves are written — a client submitting
   // the whole queue leaves the appended tail exactly where it already was — and
