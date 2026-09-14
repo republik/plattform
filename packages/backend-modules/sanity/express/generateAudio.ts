@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { logger } from '@orbiting/backend-modules-logger'
 import {
   fetchArticle,
   reportAudioGenerationSuccess,
@@ -20,6 +21,17 @@ import {
 } from '../tts'
 import { errorBody } from './respond'
 
+// SANITY_AUDIO_GENERATION_ENABLED (pre-launch kill-switch, removable once
+// Sanity audio generation is live for real).
+//
+// A billed Huebsch TTS job starts the moment this proceeds past the check
+// below. Defaults to disabled; skipping happens before any state is written
+// (fetchArticle, claimAudioGeneration, reportAudioGeneration*), so there's
+// nothing left half-done for a later real generation to clean up once this
+// is switched on — an editor's next content change re-triggers it normally.
+export const isAudioGenerationEnabled = () =>
+  process.env.SANITY_AUDIO_GENERATION_ENABLED === 'true'
+
 // Handles the request sent by the studio repo's functions/sync-audio
 // Blueprint Function: POST { documentId }.
 //
@@ -33,6 +45,14 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
   const documentId = req.body?.documentId
   if (!documentId || typeof documentId !== 'string') {
     return res.status(400).json(errorBody('missing documentId'))
+  }
+
+  if (!isAudioGenerationEnabled()) {
+    logger.info(
+      { documentId },
+      'sanity generate-audio received while disabled, skipping',
+    )
+    return res.json({ success: true, disabled: true })
   }
 
   const article = await fetchArticle(documentId)
