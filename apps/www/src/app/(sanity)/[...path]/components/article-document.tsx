@@ -4,6 +4,7 @@ import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/
 import { ArticleFloatingActions } from '@/app/(sanity)/components/article-actions/article-floating-actions'
 import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
 import { JumpToReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
+import { CoverAudioButton } from '@/app/(sanity)/components/article-actions/cover-audio-button'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { ReadingPositionTracker } from '@/app/(sanity)/components/article-actions/reading-position-tracker'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
@@ -13,8 +14,8 @@ import { WelcomeBanner } from '@/app/(sanity)/components/paynotes/paynotes-in-tr
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { ProlitterisTracking } from '@/app/(sanity)/components/prolitteris-tracking'
 import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/renderArticle'
+import { ProlitterisTracking } from '@/app/(sanity)/components/prolitteris-tracking'
 import { SeriesMenu } from '@/app/(sanity)/components/series-menu'
 import { TeaserSmallPreviewLink } from '@/app/(sanity)/components/teaser-small-preview-link'
 import { Theme } from '@/app/(sanity)/components/theme'
@@ -23,6 +24,7 @@ import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-f
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
+import { toPlainText } from 'next-sanity'
 import Link from 'next/link'
 
 export default function ArticleDocument({
@@ -41,6 +43,7 @@ export default function ArticleDocument({
     articleCollection,
     readingAccess,
     repoId,
+    podcast,
   } = article
   const seriesId = articleCollection?.series && articleCollection?._id
   const documentId = collectionsDocumentId(article)
@@ -59,8 +62,20 @@ export default function ArticleDocument({
             theme: theme?.name,
           })}
         >
-          {/* TITLE BLOCK */}
-          {cover && <EditorialImage value={cover} />}
+          {cover && (
+            <EditorialImage value={cover}>
+              {podcast?._id && (
+                <CoverAudioButton
+                  targetId={article._id}
+                  durationMs={article.audioDurationMs ?? undefined}
+                  mp3={article.audioSourceMp3 ?? undefined}
+                  path={slug}
+                  title={toPlainText(title)}
+                  publishDate={article.publishDate}
+                />
+              )}
+            </EditorialImage>
+          )}
 
           {heading && (
             <p className='page-heading'>

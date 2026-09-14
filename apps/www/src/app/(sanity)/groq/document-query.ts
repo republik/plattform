@@ -95,6 +95,9 @@ const DOCUMENT_FIELDS = /* groq */ `{
         image,
         name,
       },
+      podcast->{
+        _id
+      },
       ${PORTABLE_TEXT_CONTENT_FRAGMENT},
       contributors[]{
         _id,

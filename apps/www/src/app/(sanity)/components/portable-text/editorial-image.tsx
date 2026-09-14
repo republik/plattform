@@ -1,6 +1,6 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import type { EditorialImage, GroupedEditorialImage } from '@/sanity.types'
-import { cva } from '@republik/theme/css'
+import { css, cva, cx } from '@republik/theme/css'
 import {
   getImageDimensions,
   type SanityImageDimensions,
@@ -57,8 +57,10 @@ const imageStyle = cva({
 
 export function EditorialImage({
   value,
+  children,
 }: {
   value: EditorialImage | GroupedEditorialImage
+  children?: React.ReactNode
 }) {
   const captionId = useId()
   const { _type, asset, imageDark, alt, caption } = value
@@ -103,7 +105,7 @@ export function EditorialImage({
 
   return (
     <figure
-      className={figureStyle({ size })}
+      className={cx(figureStyle({ size }), css({ position: 'relative' }))}
       // role=group signals the grouping to legacy screen readers and browsers that don't understand the <figure> semantics
       role='group'
       aria-labelledby={captionId}
@@ -138,6 +140,7 @@ export function EditorialImage({
         />
       )}
 
+      {children}
       {caption && <Caption id={captionId} caption={caption} />}
     </figure>
   )
