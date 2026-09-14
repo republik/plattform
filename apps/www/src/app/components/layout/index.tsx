@@ -26,7 +26,7 @@ export async function PageLayout({
 }: LayoutProps) {
   const { isNativeApp } = await getPlatformInformation()
   const draftModeEnabled = (await draftMode()).isEnabled
-  const { me, hasActiveMembership } = await getMe()
+  const { me } = await getMe()
 
   return (
     <div
@@ -40,7 +40,6 @@ export async function PageLayout({
       {showHeader && (
         <PageHeader
           isLoggedIn={!!me}
-          hasActiveMembership={hasActiveMembership}
           portrait={{
             portrait: me?.portrait,
             name: me?.name,

@@ -57,15 +57,10 @@ const MAX_HEADER_HEIGHT = 100
 
 type PageHeaderProps = {
   isLoggedIn: boolean
-  hasActiveMembership: boolean
   portrait?: ComponentPropsWithoutRef<typeof Avatar>
 }
 
-export function PageHeader({
-  isLoggedIn,
-  hasActiveMembership,
-  portrait,
-}: PageHeaderProps) {
+export function PageHeader({ isLoggedIn, portrait }: PageHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null)
   const scrollDirection = useScrollDirection({
     upThreshold: 25,
@@ -107,12 +102,18 @@ export function PageHeader({
           className={css({ m: 'header.avatarMargin', md: { width: '100%' } })}
         >
           {isLoggedIn ? (
-            <Link href='/meine-republik'>
+            <Link
+              href='/meine-republik'
+              // FIXME: disable prefetching because links to /pages will result in 404
+              prefetch={false}
+            >
               <Avatar {...portrait} />
             </Link>
           ) : (
             <Link
               href='/anmelden'
+              // FIXME: disable prefetching because links to /pages will result in 404
+              prefetch={false}
               className={css({
                 display: 'flex',
                 flexDirection: 'row',
@@ -211,23 +212,20 @@ export function PageHeader({
           </div>
         </div>
       </div>
-
-      {hasActiveMembership ? (
-        <div
-          className={hstack({
-            gap: '0',
-            justifyContent: 'center',
-            borderTop: '1px solid',
-            borderTopColor: 'divider',
-          })}
-        >
-          {navLinks.map(({ href, label, icon }) => (
-            <NavLink key={href} href={href}>
-              {icon || label}
-            </NavLink>
-          ))}
-        </div>
-      ) : null}
+      <div
+        className={hstack({
+          gap: '0',
+          justifyContent: 'center',
+          borderTop: '1px solid',
+          borderTopColor: 'divider',
+        })}
+      >
+        {navLinks.map(({ href, label, icon }) => (
+          <NavLink key={href} href={href}>
+            {icon || label}
+          </NavLink>
+        ))}
+      </div>
       <hr
         className={css({
           left: 0,
