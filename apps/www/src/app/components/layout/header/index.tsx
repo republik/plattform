@@ -107,12 +107,18 @@ export function PageHeader({
           className={css({ m: 'header.avatarMargin', md: { width: '100%' } })}
         >
           {isLoggedIn ? (
-            <Link href='/meine-republik'>
+            <Link
+              href='/meine-republik'
+              // FIXME: disable prefetching because links to /pages will result in 404
+              prefetch={false}
+            >
               <Avatar {...portrait} />
             </Link>
           ) : (
             <Link
               href='/anmelden'
+              // FIXME: disable prefetching because links to /pages will result in 404
+              prefetch={false}
               className={css({
                 display: 'flex',
                 flexDirection: 'row',
