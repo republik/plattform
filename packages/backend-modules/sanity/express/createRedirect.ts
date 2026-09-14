@@ -1,7 +1,20 @@
 import { Request, Response } from 'express'
+import { logger } from '@orbiting/backend-modules-logger'
 import { errorBody } from './respond'
 
 const { Redirections } = require('@orbiting/backend-modules-redirections')
+
+// SANITY_REDIRECTS_ENABLED (pre-launch kill-switch, removable once Sanity
+// redirects are live for real).
+//
+// A redirect written here immediately affects live routing for real
+// visitors (301s a real path to another real path) — same class of risk as
+// SANITY_PUBLISH_NOTIFICATIONS_ENABLED, and for the same reason: a slug
+// change made in Studio while content is still being prepared ahead of
+// launch shouldn't be able to redirect a currently-live path away before
+// the agreed cutover. Defaults to disabled.
+export const isRedirectsEnabled = () =>
+  process.env.SANITY_REDIRECTS_ENABLED === 'true'
 
 // Handles the request sent by the studio repo's functions/redirect-slug-change
 // Blueprint Function: POST { documentId, documentType, previousPath, newPath }
@@ -23,6 +36,14 @@ export const createRedirectHandler =
       return res
         .status(400)
         .json(errorBody('missing documentId/previousPath/newPath'))
+    }
+
+    if (!isRedirectsEnabled()) {
+      logger.info(
+        { documentId, previousPath, newPath },
+        'sanity create-redirect received while disabled, skipping',
+      )
+      return res.json({ success: true })
     }
 
     try {
