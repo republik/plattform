@@ -7,7 +7,7 @@ import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 import { nextReadHeader, nextReadsSection } from './styles'
 
-export function ArticleRecommendations({
+export function EditorsRecommendations({
   recommendations,
 }: {
   recommendations: TeaserSmallFragmentType[]

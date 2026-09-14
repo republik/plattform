@@ -9,7 +9,8 @@ import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions
 import { ReadingPositionTracker } from '@/app/(sanity)/components/article-actions/reading-position-tracker'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
-import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
+import { AutomaticRecommendations } from '@/app/(sanity)/components/next-reads/automatic-recommendations'
+import { EditorsRecommendations } from '@/app/(sanity)/components/next-reads/editors-recommendations'
 import { WelcomeBanner } from '@/app/(sanity)/components/paynotes/paynotes-in-trial/welcome'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
@@ -136,11 +137,13 @@ export default async function ArticleDocument({
             newsletter={article.newsletter}
           />
 
-          <ArticleRecommendations
+          <EditorsRecommendations
             recommendations={
               article.articleRecommendations as TeaserSmallFragmentType[]
             }
           />
+
+          <AutomaticRecommendations />
         </article>
 
         {/* Rendered outside the article: the `editorialContent` grid applies a
