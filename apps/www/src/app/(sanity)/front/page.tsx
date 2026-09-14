@@ -1,6 +1,5 @@
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { FrontBlock } from '@/app/(sanity)/front/components/front-block'
-import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
 import { FRONT_LATEST_QUERY } from '@/app/(sanity)/groq/front-latest-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
@@ -9,7 +8,6 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 
 // Static SEO metadata: the Sanity front document has no metadata fields
 const title = 'Republik Magazin - Ohne Journalismus keine Demokratie'
@@ -73,11 +71,11 @@ export default async function FrontPage() {
 
       {/*
         FIXME: The Front feed query is extremely slow and blocks the whole page load
-        So we wrap it in a Suspense boundary
+        So we disable it for now
         */}
-      <Suspense>
+      {/*<Suspense>
         <FrontFeed />
-      </Suspense>
+      </Suspense>*/}
     </EventTrackingContext>
   )
 }
