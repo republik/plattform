@@ -4,19 +4,16 @@ import { useMe } from '@/lib/context/MeContext'
 import { reportError } from '@/lib/errors/reportError'
 import { useEffect, useRef } from 'react'
 
-/**
- * Reports a read to ProLitteris, the Swiss reprographic rights society, which
- * distributes royalties by counted accesses.
- *
- * `repoId` identifies the article to them and the path becomes the Referer —
- * see pages/api/prolitteris.ts, which proxies the call so the reader's IP is
- * truncated before it leaves us. Readers who opted out are not counted.
- */
+// the ID cannot change over time. articles who have a (legacy) repoId
+// keep using it for prolitteris articles. Newer articles lack the repoId.
+// There, we start fresh and use the sanityId.
 export function ProlitterisTracking({
   repoId,
+  sanityId,
   path,
 }: {
-  repoId: string
+  repoId?: string
+  sanityId: string
   path: string
 }) {
   const { me, meLoading, hasActiveMembership } = useMe()
@@ -33,12 +30,14 @@ export function ProlitterisTracking({
 
     reported.current = true
 
+    const uuid = repoId ?? sanityId
+
     fetch(
       `/api/prolitteris?paid=${
         hasActiveMembership ? 'pw' : 'na'
-      }&uid=${repoId}&path=${path}`,
+      }&uid=${uuid}&path=${path}`,
     ).catch((error) => reportError('prolitterisApiError', error))
-  }, [me, meLoading, hasActiveMembership, repoId, path])
+  }, [me, meLoading, hasActiveMembership, repoId, sanityId, path])
 
   return null
 }

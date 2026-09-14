@@ -143,6 +143,7 @@ export const presetRepublik = definePreset({
           slideDown: { value: 'slideDown 300ms ease-in-out' },
           fadeIn: { value: 'fadeIn 300ms ease-in-out' },
           fadeOut: { value: 'fadeOut 300ms ease-in-out' },
+          pulse: { value: 'pulse 2s 3' },
         },
       },
       semanticTokens: {
@@ -668,6 +669,11 @@ export const presetRepublik = definePreset({
       slideDown: {
         from: { transform: 'translateY(0%)' },
         to: { transform: 'translateY(100%)' },
+      },
+      pulse: {
+        '0%': { boxShadow: `0 0 0 0 rgba(255, 255, 255, 0.3)` },
+        '70%': { boxShadow: `0 0 0 10px transparent` },
+        '100%': { boxShadow: `0 0 0 0 transparent` },
       },
     },
   },

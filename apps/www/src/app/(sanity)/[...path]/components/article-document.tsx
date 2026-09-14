@@ -25,9 +25,10 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { toPlainText } from 'next-sanity'
+import { draftMode } from 'next/headers'
 import Link from 'next/link'
 
-export default function ArticleDocument({
+export default async function ArticleDocument({
   article,
 }: {
   article: ArticleDocumentType
@@ -48,12 +49,20 @@ export default function ArticleDocument({
   const seriesId = articleCollection?.series && articleCollection?._id
   const documentId = collectionsDocumentId(article)
 
+  const isDraftMode = (await draftMode()).isEnabled
+
   return (
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
       <WelcomeBanner />
-      {repoId && <ProlitterisTracking repoId={repoId} path={slug} />}
+      {!isDraftMode && (
+        <ProlitterisTracking
+          sanityId={article._id}
+          repoId={repoId}
+          path={slug}
+        />
+      )}
       <ArticleActionsProvider>
         <article
           // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
