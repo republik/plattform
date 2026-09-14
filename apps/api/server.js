@@ -37,7 +37,8 @@ const {
 const {
   graphql: nextReads,
   ReadingPositionRefreshWorker,
-  NextReadsFeedRefreshWorker,
+  Next7DaysFeedRefreshWorker,
+  Next20DaysCommentsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
 const {
   graphql: contributors,
@@ -133,7 +134,8 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpEndedWorker,
     CockpitWorker,
     ReadingPositionRefreshWorker,
-    NextReadsFeedRefreshWorker,
+    Next7DaysFeedRefreshWorker,
+    Next20DaysCommentsFeedRefreshWorker,
     SlackNotifierWorker,
     // port of old schedulers
 
@@ -415,11 +417,11 @@ const runOnce = async () => {
     )
     await queue.schedule(
       'next_reads:reading_position',
-      '*/45 * * * *', // every 45 minutes
+      '7 2,14 * * *', // twice daily: 02:07 and 14:07 UTC (night + midday/afternoon)
     )
     await queue.schedule(
-      'next_reads:feed:refresh',
-      '*/60 * * * *', // every 60 minutes
+      'next_reads:feed:20days:refresh',
+      '37 */3 * * *', // every 3 hours, independent of reading_position
     )
   }
 
