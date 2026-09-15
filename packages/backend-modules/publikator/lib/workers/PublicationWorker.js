@@ -10,6 +10,13 @@ const {
 } = require('../postgres')
 const { finalizePublication } = require('../Publication')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+} = require('@orbiting/backend-modules-sanity')
+
 const MAX_DOCS_PER_RUN = 60
 
 const getScheduledDocuments = async (elastic) => {
@@ -130,6 +137,22 @@ class PublicationWorker extends BaseWorker {
       meta: !prepublication ? doc.meta : null,
       context,
     })
+
+    // SANITY_SYNC (transition period, removable): this is the moment a
+    // scheduled publish actually goes live in Publikator — publish.js's own
+    // inline sync deliberately skips scheduled publishes (see its own
+    // SANITY_SYNC comment) precisely so the Sanity mirror only flips to
+    // "published" here, at real go-live time, not when the editor merely
+    // scheduled it. No local eligibility pre-filter here (unlike
+    // commit.js/publish.js) — PublikatorSyncWorker re-verifies against
+    // Postgres before writing anything, same as unpublish.js relies on it.
+    if (isSyncFromPublikatorEnabled()) {
+      await enqueueSyncFromPublikator({
+        repoId,
+        commitId: milestone.commitId,
+        action: 'publish',
+      })
+    }
 
     debug('published', {
       repoId: doc.meta.repoId,

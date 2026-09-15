@@ -1,5 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { upsertItem } = require('../../../lib/AudioQueue')
+const {
+  upsertItem,
+  publikatorOnly,
+} = require('../../../lib/AudioQueue')
 
 module.exports = async (_, args, context) => {
   const { id, sequence } = args
@@ -9,5 +12,8 @@ module.exports = async (_, args, context) => {
 
   await upsertItem({ id, sequence }, context)
 
-  return loaders.AudioQueue.byUserId.load(me.id)
+  // publikator items only, like `User.audioQueue` — this returns the whole
+  // queue as `AudioQueueItem`, which cannot represent a Sanity-backed one.
+  // Clients read the full queue via the `userAudioQueue` query.
+  return publikatorOnly(await loaders.AudioQueue.byUserId.load(me.id))
 }

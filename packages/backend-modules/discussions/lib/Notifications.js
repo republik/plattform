@@ -25,6 +25,14 @@ const {
   GENERAL_FEEDBACK_DISCUSSION_ID,
 } = process.env
 
+// Every comment notification links into the /dialog overlay by discussion
+// id, except standalone (non-article) Publikator discussions -- e.g.
+// template: 'discussion' "Diskussion" pages -- which still link to their own
+// canonical `discussion.path`. A discussion created for a Sanity article via
+// sanity/express/discussions.ts's Discussion.create has neither `repoId` nor
+// `path`, so it (and anything else without a resolvable non-article
+// Publikator document) falls through to `/dialog`, avoiding the 404 that
+// motivated dropping this fallback in the first place.
 const getDiscussionUrl = async (discussion, context) => {
   const communityUrl = `${FRONTEND_BASE_URL}/dialog?id=${discussion.id}`
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
@@ -33,10 +41,10 @@ const getDiscussionUrl = async (discussion, context) => {
   const document =
     discussion.repoId &&
     (await context.loaders.Document.byRepoId.load(discussion.repoId))
-  if (document && document.meta && document.meta.template === 'article') {
-    return `${communityUrl}&t=article`
+  if (document && document.meta && document.meta.template !== 'article') {
+    return `${FRONTEND_BASE_URL}${discussion.path}`
   }
-  return `${FRONTEND_BASE_URL}${discussion.path}`
+  return `${communityUrl}&t=article`
 }
 
 const getDisplayAuthor = (comment, context) => {

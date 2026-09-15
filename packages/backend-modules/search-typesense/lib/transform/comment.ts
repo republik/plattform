@@ -1,0 +1,200 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- untyped JS packages */
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
+const { remark, naming } = require('@orbiting/backend-modules-utils')
+/* eslint-enable @typescript-eslint/no-require-imports */
+
+import { PgDb } from '@orbiting/backend-modules-types'
+
+import { TypesenseCommentDocument } from '../collections'
+import { getPortraitUrl, toUnixMs } from './fields'
+
+/**
+ * Minimal shape of a public.comments row needed to build a Typesense
+ * comment document. Reference:
+ * @orbiting/backend-modules-search/lib/inserts/comment.js
+ */
+export interface CommentRow {
+  id: string
+  content: string
+  userId: string
+  discussionId: string
+  published: boolean
+  adminUnpublished: boolean
+  createdAt: Date | string | number
+  tags: string[] | null
+}
+
+/**
+ * The `fields` every reader of a comments row must select, so lib/listener.ts
+ * (real-time) and script/reindex.ts (bulk backfill) can't drift from
+ * `CommentRow` or from each other.
+ */
+export const COMMENT_ROW_FIELDS = [
+  'id',
+  'content',
+  'userId',
+  'discussionId',
+  'published',
+  'adminUnpublished',
+  'createdAt',
+  'tags',
+]
+
+export interface DiscussionRow {
+  id: string
+  anonymity: string | null
+  hidden: boolean
+  /** Path of the article/document the discussion is attached to, if any. */
+  path: string | null
+}
+
+export interface DiscussionPreferencesRow {
+  anonymous: boolean | null
+  credentialId: string | null
+}
+
+/**
+ * The slice of a public.users row a comment document needs for its author
+ * block -- narrower than lib/transform/user.ts's UserRow, which describes a
+ * whole indexable profile.
+ */
+export interface CommentAuthorRow {
+  id: string
+  firstName: string | null
+  lastName: string | null
+  username: string | null
+  portraitUrl: string | null
+}
+
+export interface CredentialRow {
+  description: string | null
+  verified: boolean | null
+}
+
+export interface CommentTransformDeps {
+  getUser: (userId: string) => Promise<CommentAuthorRow | null>
+  getDiscussion: (discussionId: string) => Promise<DiscussionRow | null>
+  getDiscussionPreferences: (
+    userId: string,
+    discussionId: string,
+  ) => Promise<DiscussionPreferencesRow | null>
+  getCredential: (credentialId: string) => Promise<CredentialRow | null>
+}
+
+/**
+ * Builds `CommentTransformDeps` backed by live Postgres reads. Shared
+ * between lib/listener.ts (real-time) and script/reindex.ts (bulk backfill)
+ * so both query the exact same fields.
+ */
+export const makeCommentDeps = (pgdb: PgDb): CommentTransformDeps => ({
+  getUser: async (userId) =>
+    pgdb.public.users.findOne(
+      { id: userId },
+      { fields: ['id', 'firstName', 'lastName', 'username', 'portraitUrl'] },
+    ),
+  getDiscussion: async (discussionId) =>
+    pgdb.public.discussions.findOne(
+      { id: discussionId },
+      { fields: ['id', 'anonymity', 'hidden', 'path'] },
+    ),
+  getDiscussionPreferences: async (userId, discussionId) =>
+    pgdb.public.discussionPreferences.findOne(
+      { userId, discussionId },
+      { fields: ['anonymous', 'credentialId'] },
+    ),
+  getCredential: async (credentialId) =>
+    pgdb.public.credentials.findOne(
+      { id: credentialId },
+      { fields: ['description', 'verified'] },
+    ),
+})
+
+/**
+ * A comment must never be present in the Typesense index if its discussion
+ * is hidden, or if it is adminUnpublished, or if it isn't published.
+ */
+export const isCommentIndexable = (
+  row: Pick<CommentRow, 'published' | 'adminUnpublished'>,
+  discussion: Pick<DiscussionRow, 'hidden'> | null,
+): boolean => {
+  if (!row.published) {
+    return false
+  }
+  if (row.adminUnpublished) {
+    return false
+  }
+  if (!discussion || discussion.hidden) {
+    return false
+  }
+  return true
+}
+
+/**
+ * Transforms a public.comments row into a flat Typesense comment document,
+ * or returns null if the comment must not be indexed (see
+ * isCommentIndexable). Callers must delete any existing Typesense document
+ * for this id when null is returned.
+ */
+export const transformComment = async (
+  row: CommentRow,
+  deps: CommentTransformDeps,
+): Promise<TypesenseCommentDocument | null> => {
+  const discussion = await deps.getDiscussion(row.discussionId)
+
+  if (!isCommentIndexable(row, discussion)) {
+    return null
+  }
+
+  const [user, discussionPreferences] = await Promise.all([
+    deps.getUser(row.userId),
+    deps.getDiscussionPreferences(row.userId, row.discussionId),
+  ])
+
+  const isAnonymityEnforced = discussion?.anonymity === 'ENFORCED'
+  const isAnonymous = !!discussionPreferences?.anonymous
+
+  const doc: TypesenseCommentDocument = {
+    id: row.id,
+    contentString: stringifyNode(remark.parse(row.content)),
+    discussionId: row.discussionId,
+    createdAt: toUnixMs(row.createdAt),
+  }
+
+  if (user && !isAnonymityEnforced && !isAnonymous) {
+    // `.trim()` because getName trims each part but not the join: a row with a
+    // blank firstName would otherwise index a leading space.
+    const authorName = naming.getName(user).trim()
+
+    if (authorName) {
+      doc.authorName = authorName
+      doc.authorId = user.id
+      doc.authorSlug = user.username || user.id
+
+      const portraitUrl = getPortraitUrl(user.portraitUrl)
+      if (portraitUrl) {
+        doc.authorPortrait = portraitUrl
+      }
+
+      const credential = discussionPreferences?.credentialId
+        ? await deps.getCredential(discussionPreferences.credentialId)
+        : null
+      const credentialDescription = credential?.description?.trim()
+      if (credentialDescription) {
+        doc.authorCredential = credentialDescription
+        doc.authorCredentialVerified = !!credential?.verified
+      }
+    }
+  }
+
+  if (discussion?.path) {
+    doc.articlePath = discussion.path
+  }
+
+  if (row.tags?.[0]) {
+    doc.tag = row.tags[0]
+  }
+
+  return doc
+}

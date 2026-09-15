@@ -47,6 +47,14 @@ const {
 const { finalizePublication } = require('../../../lib/Publication')
 const { document: getDocument } = require('../Commit')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+  isArticleLikeMeta,
+} = require('@orbiting/backend-modules-sanity')
+
 const { FRONTEND_BASE_URL, DISABLE_PUBLISH } = process.env
 
 module.exports = async (_, args, context) => {
@@ -414,6 +422,41 @@ module.exports = async (_, args, context) => {
       milestone: publication,
     },
   })
+
+  // SANITY_SYNC (transition period, removable): mirror this publish into
+  // Sanity. Only for article-shaped repos (see isArticleLikeMeta). Enqueue
+  // never throws, so a queue hiccup can't turn this already-successful
+  // publish into a reported failure.
+  //
+  // Two different actions depending on scheduledAt:
+  //
+  // - Unset (publishing now): the draft becomes the published document
+  //   immediately, action 'publish'.
+  // - Set (a scheduled publish): this resolver doesn't make the article go
+  //   live now — Elasticsearch keeps `__state.published: false` until the
+  //   scheduled time (search's `publishScheduled`/`prepublishScheduled`).
+  //   Enqueueing 'publish' here would flip Sanity to "published" hours or
+  //   days early; the real go-live sync for that happens later, in
+  //   PublicationWorker.js's doPublish. But prepareMetaForPublish (above,
+  //   via getPath()) just persisted the effective publishDate — the
+  //   scheduled time itself — onto the repo record, and the *draft*
+  //   currently sitting in Sanity has no way to pick that up on its own: it
+  //   only gets refreshed on the next commit, which may not happen before
+  //   the scheduled time arrives. So refresh the draft now too (action
+  //   'commit', not 'publish') purely so its publishDate stops being stale
+  //   while it waits — worker.ts's buildDraftArticleDoc reads
+  //   repos.meta.publishDate before commit.meta.publishDate for exactly
+  //   this reason.
+  if (
+    isSyncFromPublikatorEnabled() &&
+    isArticleLikeMeta({ ...doc.content.meta, isTemplate: repoMeta?.isTemplate })
+  ) {
+    await enqueueSyncFromPublikator(
+      scheduledAt
+        ? { repoId, action: 'commit' }
+        : { repoId, commitId, action: 'publish' },
+    )
+  }
 
   return {
     unresolvedRepoIds,

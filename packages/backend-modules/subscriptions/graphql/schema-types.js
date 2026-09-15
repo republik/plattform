@@ -5,13 +5,27 @@ enum EventObjectType {
   Document
   ReadAloud
 }
-union EventObject = Comment | Document
+union EventObject = Comment | Document | SanityDocumentRef
 
 enum SubscriptionObjectType {
   User
   Document
 }
-union SubscriptionObject = Document | User | Discussion
+union SubscriptionObject = Document | SanityDocumentRef | User | Discussion
+
+"""
+A reference to a Sanity-backed document that has no full GraphQL \`Document\`
+representation (no mdast/content resolved) — the frontend fetches display
+data from Sanity directly using \`id\`. Carries no content of its own,
+so it is not access-gated server-side; the frontend is responsible for
+gating display based on the viewer's membership state.
+"""
+type SanityDocumentRef {
+  "Sanity \`_id\`"
+  id: ID!
+  "Sanity \`_type\`"
+  type: String
+}
 
 extend type User {
   # subject: this.user
