@@ -1,4 +1,6 @@
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { useSanityCollections } from '@/lib/use-sanity-data'
+import withT from '@/lib/withT'
 import { graphql } from '@apollo/client/react/hoc'
 import {
   A,
@@ -8,9 +10,6 @@ import {
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
-import withT from '@/lib/withT'
 import Image from 'next/image'
 import { withMembership } from '../Auth/checkRoles'
 import Loader from '../Loader'
@@ -74,7 +73,7 @@ const SubscribedDocuments = ({
   const subscriptions = myDocumentSubscriptions?.subscribedTo.nodes.filter(
     (subscription) =>
       subscription.active &&
-      subscription.documentDetails.__typename === 'SanityDocumentRef' &&
+      subscription.documentDetails?.__typename === 'SanityDocumentRef' &&
       subscription.documentDetails?.id,
   )
 

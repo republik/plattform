@@ -26,6 +26,7 @@ const figureStyle = cva({
       NORMAL: {},
       BREAKOUT: {
         gridColumn: 'breakout',
+        my: '8',
       },
       FULL: {
         gridColumn: 'full',
