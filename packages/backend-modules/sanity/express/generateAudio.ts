@@ -20,6 +20,7 @@ import {
   deriveSlug,
 } from '../tts'
 import { errorBody } from './respond'
+import { isKillSwitchEnabled } from './killSwitch'
 
 // SANITY_AUDIO_GENERATION_ENABLED (pre-launch kill-switch, removable once
 // Sanity audio generation is live for real).
@@ -30,7 +31,7 @@ import { errorBody } from './respond'
 // nothing left half-done for a later real generation to clean up once this
 // is switched on — an editor's next content change re-triggers it normally.
 export const isAudioGenerationEnabled = () =>
-  process.env.SANITY_AUDIO_GENERATION_ENABLED === 'true'
+  isKillSwitchEnabled('SANITY_AUDIO_GENERATION_ENABLED')
 
 // Handles the request sent by the studio repo's functions/sync-audio
 // Blueprint Function: POST { documentId }.

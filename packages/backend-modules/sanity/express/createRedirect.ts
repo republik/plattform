@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { logger } from '@orbiting/backend-modules-logger'
 import { errorBody } from './respond'
+import { isKillSwitchEnabled } from './killSwitch'
 
 const { Redirections } = require('@orbiting/backend-modules-redirections')
 
@@ -14,7 +15,7 @@ const { Redirections } = require('@orbiting/backend-modules-redirections')
 // launch shouldn't be able to redirect a currently-live path away before
 // the agreed cutover. Defaults to disabled.
 export const isRedirectsEnabled = () =>
-  process.env.SANITY_REDIRECTS_ENABLED === 'true'
+  isKillSwitchEnabled('SANITY_REDIRECTS_ENABLED')
 
 // Handles the request sent by the studio repo's functions/redirect-slug-change
 // Blueprint Function: POST { documentId, documentType, previousPath, newPath }

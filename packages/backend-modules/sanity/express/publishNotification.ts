@@ -3,6 +3,7 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { logger } from '@orbiting/backend-modules-logger'
 
 import { errorBody } from './respond'
+import { isKillSwitchEnabled } from './killSwitch'
 
 // SANITY_PUBLISH_NOTIFICATIONS_ENABLED (pre-launch kill-switch, removable
 // once Sanity publish notifications are live for real).
@@ -14,7 +15,7 @@ import { errorBody } from './respond'
 // Mirrors the SANITY_SYNC_FROM_PUBLIKATOR_ENABLED pattern in
 // publikatorSync/index.ts.
 export const isPublishNotificationsEnabled = () =>
-  process.env.SANITY_PUBLISH_NOTIFICATIONS_ENABLED === 'true'
+  isKillSwitchEnabled('SANITY_PUBLISH_NOTIFICATIONS_ENABLED')
 
 // Handles the request sent by the studio repo's functions/sync-notifications
 // Blueprint Function: POST { documentId }. Just enqueues the work and

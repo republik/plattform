@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { logger } from '@orbiting/backend-modules-logger'
 import { errorBody } from './respond'
+import { isKillSwitchEnabled } from './killSwitch'
 
 const {
   Discussion,
@@ -18,7 +19,7 @@ const {
 // this responds with an explicit error while disabled instead of pretending
 // to succeed.
 export const isDiscussionsEnabled = () =>
-  process.env.SANITY_DISCUSSIONS_ENABLED === 'true'
+  isKillSwitchEnabled('SANITY_DISCUSSIONS_ENABLED')
 
 export const discussionsHandler =
   (pgdb: any, t: any) => async (req: Request, res: Response) => {
