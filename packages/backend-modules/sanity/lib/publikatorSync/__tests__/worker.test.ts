@@ -21,8 +21,13 @@ jest.mock('../assets', () => ({
   resolveAssetMarkers: (doc: unknown) => Promise.resolve(doc),
 }))
 
+const linkLegacySyntheticAudio = jest
+  .fn()
+  .mockImplementation((doc: unknown) => Promise.resolve(doc))
+
 jest.mock('../legacyAudio', () => ({
-  linkLegacySyntheticAudio: (doc: unknown) => Promise.resolve(doc),
+  linkLegacySyntheticAudio: (...args: unknown[]) =>
+    linkLegacySyntheticAudio(...args),
 }))
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -32,19 +37,15 @@ const { repoIdToSanityId } = require('../../legacyId')
 
 function makeWorker(pgdb: Record<string, unknown>, isTemplate = false) {
   const findOne = jest.fn().mockResolvedValue({ meta: { isTemplate } })
-  return new PublikatorSyncWorker(
-    {},
-    { error: jest.fn(), warn: jest.fn() },
-    {
-      pgdb: {
-        ...pgdb,
-        publikator: {
-          ...(pgdb.publikator as Record<string, unknown>),
-          repos: { findOne },
-        },
+  return new PublikatorSyncWorker({}, { error: jest.fn(), warn: jest.fn() }, {
+    pgdb: {
+      ...pgdb,
+      publikator: {
+        ...(pgdb.publikator as Record<string, unknown>),
+        repos: { findOne },
       },
-    } as never,
-  )
+    },
+  } as never)
 }
 
 describe('PublikatorSyncWorker', () => {
@@ -52,12 +53,17 @@ describe('PublikatorSyncWorker', () => {
     createOrReplace.mockReset()
     deleteDoc.mockReset().mockResolvedValue(undefined)
     getDocument.mockReset()
+    linkLegacySyntheticAudio
+      .mockReset()
+      .mockImplementation((doc: unknown) => Promise.resolve(doc))
   })
 
   it('commit: syncs the latest commit for the repo, not the one in the payload', async () => {
-    const findOne = jest.fn().mockResolvedValue(
-      { id: 'newest', repoId: 'republik/foo', meta: { template: 'article' } },
-    )
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'newest',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
     const worker = makeWorker({ publikator: { commits: { findOne } } })
 
     await worker.perform([
@@ -76,11 +82,11 @@ describe('PublikatorSyncWorker', () => {
   })
 
   it('commit: skips a format/section/page/front/template commit', async () => {
-    const findOne = jest
-      .fn()
-      .mockResolvedValue(
-        { id: 'c1', repoId: 'republik/format-x', meta: { template: 'format' } },
-      )
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/format-x',
+      meta: { template: 'format' },
+    })
     const worker = makeWorker({ publikator: { commits: { findOne } } })
 
     await worker.perform([
@@ -96,11 +102,11 @@ describe('PublikatorSyncWorker', () => {
     // isTemplate lives on publikator.repos.meta, not on the commit row —
     // this is the case publish.js can't gate on itself (no isTemplate arg),
     // so the worker must catch it.
-    const findOne = jest
-      .fn()
-      .mockResolvedValue(
-        { id: 'c1', repoId: 'republik/vorlage-x', meta: { template: 'article' } },
-      )
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/vorlage-x',
+      meta: { template: 'article' },
+    })
     const worker = makeWorker(
       { publikator: { commits: { findOne } } },
       /* isTemplate */ true,
@@ -108,7 +114,11 @@ describe('PublikatorSyncWorker', () => {
 
     await worker.perform([
       {
-        data: { $version: 'v1', repoId: 'republik/vorlage-x', action: 'commit' },
+        data: {
+          $version: 'v1',
+          repoId: 'republik/vorlage-x',
+          action: 'commit',
+        },
       },
     ])
 
@@ -178,7 +188,13 @@ describe('PublikatorSyncWorker', () => {
     const worker = makeWorker({})
 
     await worker.perform([
-      { data: { $version: 'v1', repoId: 'republik/some-page', action: 'unpublish' } },
+      {
+        data: {
+          $version: 'v1',
+          repoId: 'republik/some-page',
+          action: 'unpublish',
+        },
+      },
     ])
 
     expect(createOrReplace).not.toHaveBeenCalled()
@@ -206,5 +222,27 @@ describe('PublikatorSyncWorker', () => {
     expect(draft._id).toBe(`drafts.${publishedId}`)
     expect(draft.title).toBe('Hello')
     expect(deleteDoc).toHaveBeenCalledWith(publishedId)
+  })
+
+  it('commit: still syncs the article when legacy audio linking throws', async () => {
+    // A transient Sanity/Postgres hiccup in the audio side-channel must
+    // never block the article's own text/content from syncing.
+    linkLegacySyntheticAudio.mockRejectedValueOnce(new Error('sanity down'))
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await expect(
+      worker.perform([
+        { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+      ]),
+    ).resolves.toBeUndefined()
+
+    expect(createOrReplace).toHaveBeenCalledTimes(1)
+    const [written] = createOrReplace.mock.calls[0]
+    expect(written._syncedFromCommitId).toBe('c1')
   })
 })

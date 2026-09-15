@@ -4,7 +4,11 @@ import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { SendOptions } from 'pg-boss'
 import { sanityClient } from '../client'
 import { repoIdToSanityId } from '../legacyId'
-import { buildDraftArticleDoc, PublikatorCommit } from './articleDoc'
+import {
+  buildDraftArticleDoc,
+  DraftArticleDoc,
+  PublikatorCommit,
+} from './articleDoc'
 import { resolveAssetMarkers } from './assets'
 import { isArticleLikeMeta } from './eligibility'
 import { linkLegacySyntheticAudio } from './legacyAudio'
@@ -114,7 +118,7 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     )
 
     if (data.action === 'commit') {
-      const draftDoc = await linkLegacySyntheticAudio(
+      const draftDoc = await this.linkLegacyAudioSafely(
         doc,
         commit.id,
         draftId,
@@ -137,7 +141,7 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // meta.discussionClosed is deliberately not forwarded (out of scope for
     // now) — create-discussion's own buildDiscussionDoc always creates the
     // discussion open regardless.
-    const publishedDoc = await linkLegacySyntheticAudio(
+    const publishedDoc = await this.linkLegacyAudioSafely(
       doc,
       commit.id,
       id,
@@ -145,6 +149,28 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     )
     await sanityClient().createOrReplace({ _id: id, ...publishedDoc })
     await this.deleteIfExists(draftId)
+  }
+
+  // Best-effort, same reasoning as deleteIfExists below: a transient
+  // Sanity/Postgres hiccup in this audio side-channel (fetchAudioContentHash,
+  // the derivatives lookup) must never fail the whole sync job and block the
+  // article's own text/content from mirroring for a reason that has nothing
+  // to do with that content.
+  private async linkLegacyAudioSafely(
+    doc: DraftArticleDoc,
+    commitId: string | undefined,
+    sanityDocId: string,
+    pgdb: ConnectionContext['pgdb'],
+  ): Promise<DraftArticleDoc> {
+    try {
+      return await linkLegacySyntheticAudio(doc, commitId, sanityDocId, pgdb)
+    } catch (error) {
+      this.logger.warn(
+        { error, sanityDocId },
+        'sanity sync: legacy audio link failed (article content still synced)',
+      )
+      return doc
+    }
   }
 
   // A plain delete() mutation is normally idempotent against a missing
