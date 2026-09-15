@@ -6,7 +6,7 @@ import { InlinePortableText } from '@/app/(sanity)/components/portable-text/rend
 import { Theme } from '@/app/(sanity)/components/theme'
 import type { PageDocumentType } from '@/app/(sanity)/groq/document-query'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import Link from 'next/link'
 
@@ -24,9 +24,12 @@ export default async function PageDocument({
       <div
         // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
         data-force-theme={theme?.darkMode ? 'dark' : undefined}
-        className={editorialContent({
-          theme: theme?.name,
-        })}
+        className={cx(
+          editorialContent({
+            theme: theme?.name,
+          }),
+          css({ pb: '16-32' }),
+        )}
       >
         {cover && <EditorialImage value={cover} />}
 
