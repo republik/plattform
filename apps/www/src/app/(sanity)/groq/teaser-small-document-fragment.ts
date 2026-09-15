@@ -20,6 +20,7 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
     defined(target[0].href) => target[0].href
   ),
   "image": teaserSmallConfig.image,
+  "audioDurationMs": target[0]->audioDurationMs,
   publishDate,
   upcomingOnly,
   "targetPublishDate": target[0]->publishDate,

@@ -9,7 +9,7 @@ query UserBookmarks(
     first: 10
     after: $after
     uniqueDocuments: true
-    lastDays: 30
+    lastDays: 300
   ) {
     pageInfo {
       hasNextPage

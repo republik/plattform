@@ -17,16 +17,13 @@ export default async function BookmarksPage({
 
   const { me } = await getMe()
 
-  // Bookmarks are per-user; there is nothing to show a signed-out reader.
   if (!me) {
     return redirect(`/anmelden?redirect=${encodeURIComponent('/lesezeichen')}`)
   }
 
-  // "Weiterlesen" filters on reading progress, which an opted-out reader has
-  // none of — the API returns nothing for that filter, so the tab would always
-  // be empty. Leave them with "Gemerkt" as the only (and so unlabelled) view.
   const progressOptOut = me.progressOptOut === true
 
+  // progress filter return a blank page
   if (progressOptOut && collection !== 'bookmarks') {
     return redirect('/lesezeichen?view=bookmarks')
   }

@@ -27,6 +27,17 @@ function teaserHref(teaser: TeaserListItemType): string | undefined {
   return href ?? undefined
 }
 
+// Audio duration, not reading time: `audioDurationMs` is the only duration
+// TEASER_SMALL_FRAGMENT carries, so this renders on articles with audio and is
+// absent everywhere else. Rounds to the nearest minute, as PlayAction does.
+function TeaserDuration({ teaser }: { teaser: TeaserListItemType }) {
+  const durationMs = teaser.audioDurationMs
+
+  if (!durationMs) return null
+
+  return <p className='duration'>{Math.round(durationMs / 60_000)} min</p>
+}
+
 export function BookmarkedFeed({ teasers }: { teasers: TeaserListItemType[] }) {
   if (!teasers.length) return null
 
@@ -164,10 +175,7 @@ const FirstBookmarkItem = ({
           <InlinePortableText value={teaser.byline} />
         </p>
       )}
-      {/* TODO: reading duration. The legacy feed showed
-          `estimatedReadingMinutes`/`estimatedConsumptionMinutes`, which
-          TEASER_SMALL_FRAGMENT does not project. `audioDurationMs` is the only
-          duration available and covers audio only, so it is not a substitute. */}
+      <TeaserDuration teaser={teaser} />
       {hasContent(teaser.description) && (
         <p
           className={css({
@@ -226,7 +234,7 @@ const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
         <h4>
           <LinkOverlay teaser={teaser} />
         </h4>
-        {/* TODO: reading duration — see FirstBookmarkItem. */}
+        <TeaserDuration teaser={teaser} />
       </div>
       <TeaserImage
         image={teaser.image}

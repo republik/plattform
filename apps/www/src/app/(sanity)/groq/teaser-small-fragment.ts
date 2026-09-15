@@ -37,10 +37,14 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
   "headingColor": teaserSmall.headingColor,
+  // Top level rather than under the _type == "article" condition below: teaser
+  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a
+  // field only present on one branch can't be read without narrowing first.
+  // Null for pages, which have no audio.
+  audioDurationMs,
   _type == "article" => {
     "plainTitle": pt::text(coalesce(teaserSmall.title, title)),
     audioSourceMp3,
-    audioDurationMs,
     discussion->{
       backendDiscussionId,
     },
