@@ -17,7 +17,6 @@ export default async function RootLayout({
       <div
         className={css({
           color: 'text',
-          pb: '16-32',
         })}
       >
         {children}
