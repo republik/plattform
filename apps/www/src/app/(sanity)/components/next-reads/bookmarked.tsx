@@ -11,6 +11,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useTranslation } from '@/lib/withT'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
+import logo from '@republik/theme/logo.json'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import {
@@ -23,14 +24,6 @@ function teaserHref(teaser: TeaserListItemType): string | undefined {
   const href =
     teaser._type === 'teaserSmall' ? stegaClean(teaser.href) : teaser.slug
   return href ?? undefined
-}
-
-function TeaserDuration({ teaser }: { teaser: TeaserListItemType }) {
-  const durationMs = teaser.audioDurationMs
-
-  if (!durationMs) return null
-
-  return <p className='duration'>{Math.round(durationMs / 60_000)} min</p>
 }
 
 export function BookmarkedFeed({ teasers }: { teasers: TeaserListItemType[] }) {
@@ -215,6 +208,9 @@ const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
           md: {
             display: 'flex',
             flex: 1,
+            // Without this, a long title's min-content width beats the
+            // flex-basis of 0 and that item ends up wider than its siblings.
+            minWidth: 0,
             maxWidth: '312px',
             flexDirection: 'column-reverse',
             justifyContent: 'flex-start',
@@ -231,14 +227,68 @@ const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
         </h4>
         <TeaserDuration teaser={teaser} />
       </div>
-      <TeaserImage
-        image={teaser.image}
-        alt=''
-        width={624}
-        height={624}
-        sizes='312px'
-        className={css({ width: '312px', maxWidth: '100%' })}
-      />
+      <TeaserCover teaser={teaser} size={312} />
+    </div>
+  )
+}
+
+function TeaserDuration({ teaser }: { teaser: TeaserListItemType }) {
+  const durationMs = teaser.audioDurationMs
+
+  if (!durationMs) return null
+
+  return <p className='duration'>{Math.round(durationMs / 60_000)} min</p>
+}
+
+function TeaserCover({
+  teaser,
+  size,
+}: {
+  teaser: TeaserListItemType
+  size: number
+}) {
+  return (
+    <div
+      className={css({
+        aspectRatio: '1 / 1',
+        width: '100%',
+        flexShrink: 0,
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      })}
+      style={{ maxWidth: size }}
+    >
+      {teaser.image?.asset ? (
+        <TeaserImage
+          image={teaser.image}
+          alt=''
+          width={size * 2}
+          height={size * 2}
+          sizes={`${size}px`}
+          className={css({ width: '100%', height: '100%', objectFit: 'cover' })}
+        />
+      ) : (
+        <div
+          className={css({
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#000',
+          })}
+        >
+          <svg
+            viewBox={logo.BRAND_MARK_VIEWBOX}
+            role='presentation'
+            className={css({ width: '40%', fill: '#fff' })}
+          >
+            <path d={logo.BRAND_MARK_PATH} />
+          </svg>
+        </div>
+      )}
     </div>
   )
 }
