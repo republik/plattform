@@ -1,3 +1,3 @@
 -- No-op: the constraint itself (validated or not) is dropped by the paired
--- up migration's down script (20260915100000-...-down.sql). There's no
+-- up migration's down script (20260909120000-...-down.sql). There's no
 -- "un-validate" operation to run here.

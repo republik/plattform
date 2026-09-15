@@ -1,5 +1,5 @@
 -- Validates the CHECK constraint added NOT VALID in
--- 20260915100000-add-sanity-id-to-collection-document-items-up.sql, as its
+-- 20260909120000-add-sanity-id-to-collection-document-items-up.sql, as its
 -- own migration so it runs in its own transaction: only this way does the
 -- scan run under SHARE UPDATE EXCLUSIVE (allows concurrent reads/writes on
 -- this heavily-written table) instead of inheriting the ACCESS EXCLUSIVE

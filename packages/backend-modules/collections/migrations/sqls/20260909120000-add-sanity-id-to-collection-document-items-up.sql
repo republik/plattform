@@ -15,6 +15,15 @@
 -- db-migrate only knows a migration by its filename, so from its perspective
 -- this file has never run anywhere, and must produce the right end state
 -- whether the table already has this column/constraint/index or not.
+--
+-- Timestamp is load-bearing: next-reads' 20260910120000-next-reads-sanity-views
+-- selects "sanityId" from this table in a materialized view definition, so
+-- this migration (and its paired validate-* migration, both dated
+-- 20260909*) must keep sorting before it. Moving this later once broke a
+-- from-scratch `migrate up` run (this file hadn't run yet, so the column
+-- didn't exist when that later migration's view definition referenced it) --
+-- staging never caught it because it already had the column from a much
+-- earlier, since-replaced version of this same migration.
 ALTER TABLE "collectionDocumentItems"
   ADD COLUMN IF NOT EXISTS "sanityId" text,
   ALTER COLUMN "repoId" DROP NOT NULL;
