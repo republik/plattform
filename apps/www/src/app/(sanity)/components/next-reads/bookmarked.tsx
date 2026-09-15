@@ -19,17 +19,12 @@ import {
   nextReadsSection,
 } from './styles'
 
-// Same resolution as LinkOverlay, which can't expose it: article/page teasers
-// carry a slug, standalone teaser documents an arbitrary href.
 function teaserHref(teaser: TeaserListItemType): string | undefined {
   const href =
     teaser._type === 'teaserSmall' ? stegaClean(teaser.href) : teaser.slug
   return href ?? undefined
 }
 
-// Audio duration, not reading time: `audioDurationMs` is the only duration
-// TEASER_SMALL_FRAGMENT carries, so this renders on articles with audio and is
-// absent everywhere else. Rounds to the nearest minute, as PlayAction does.
 function TeaserDuration({ teaser }: { teaser: TeaserListItemType }) {
   const durationMs = teaser.audioDurationMs
 

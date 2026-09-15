@@ -1,7 +1,10 @@
-query MyRepublik {
+query MyRepublik(
+  $names: [String!]!
+  $progress: ProgressState
+) {
   progress: userCollectionItemsByNames(
-    names: ["progress", "bookmarks"]
-    progress: UNFINISHED
+    names: $names
+    progress: $progress
     first: 2
     uniqueDocuments: true
     lastDays: 30
