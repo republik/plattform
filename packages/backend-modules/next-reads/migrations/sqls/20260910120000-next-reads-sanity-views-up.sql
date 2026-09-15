@@ -1,7 +1,7 @@
 -- migrate up here: CREATE TABLE...
 
 -- Sanity-backed reading progress lives in "collectionDocumentItems"."sanityId"
--- (see collections' 20260729120000-add-sanity-id-to-collection-document-items),
+-- (see collections' 20260915100000-add-sanity-id-to-collection-document-items),
 -- not "repoId" -- the existing next_reads schema only ever selects "repoId",
 -- so a Sanity article's progress rows are invisible to it. This is a
 -- separate, Sanity-only mirror of that schema rather than a dual-mode

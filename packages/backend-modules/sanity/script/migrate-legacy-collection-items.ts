@@ -1,16 +1,17 @@
 #!/usr/bin/env ts-node
-// One-off, idempotent (safe-to-rerun) tool for moving bookmarks/audio-queue/
-// progress rows (collectionDocumentItems) that still key on a legacy
-// publikator repoId onto the migrated Sanity document's id, once that
-// content has moved to Sanity.
+// One-off, idempotent (safe-to-rerun) tool for backfilling "sanityId" onto
+// bookmarks/audio-queue/progress rows (collectionDocumentItems) that still
+// key on a legacy publikator repoId, once that content has moved to Sanity.
 //
-// Unlike subscriptions.objectDocumentId (a bare text column), this table
-// keys publikator documents via a FK to publikator.repos — so migrating a
-// row means moving the id from "repoId" to the separate "sanityId" column,
-// not rewriting it in place. Running this is what makes migrated content's
-// bookmarks/queue/progress visible to the Sanity-oriented queries
-// (userCollectionItems, userDocumentProgress, userAudioQueue), which only
-// look at "sanityId"-populated rows.
+// Deliberately a dual-write, not a move: "repoId" is kept, not cleared.
+// findDocumentItemsByCollectionNames's default (includeSanity: false) query
+// -- what the currently-deployed frontend's User.collectionItems uses --
+// filters to `repoId IS NOT NULL`, so clearing it the moment this runs would
+// make every migrated bookmark/progress/queue item silently disappear from
+// old clients. Keeping repoId set means old queries keep seeing the row
+// exactly as before, while adding sanityId alongside it makes it visible to
+// the new Sanity-oriented queries too (userCollectionItems,
+// userDocumentProgress, userAudioQueue).
 //
 // Dry-run by default: it reports every change it would make and rolls the
 // transaction back. Pass --confirm to actually commit.
@@ -41,30 +42,35 @@ const migrateCollectionItems = async (pgdb: PgDb) => {
 
     const sanityId = doc._id.replace(/^drafts\./, '')
 
-    // A user may already hold a Sanity-keyed row for the same document in the
-    // same collection (e.g. they re-bookmarked it after the content moved).
-    // The partial unique index would reject the update, so drop the redundant
-    // legacy row instead.
+    // A user may already hold a separate, Sanity-only row for the same
+    // document in the same collection (e.g. they re-bookmarked it after the
+    // content moved, before this backfill ran). The partial unique index
+    // would reject setting the same sanityId on the legacy row too, so
+    // resolve the conflict by keeping the legacy row -- it's the one old
+    // clients still see via repoId -- and dropping the redundant Sanity-only
+    // one instead.
     const conflicting = await pgdb.public.collectionDocumentItems.find({
       sanityId,
     })
-    const conflictKeys = new Set(
-      conflicting.map((row: any) => `${row.collectionId}:${row.userId}`),
-    )
 
     for (const row of rows.filter((r: any) => r.repoId === repoId)) {
-      const key = `${row.collectionId}:${row.userId}`
-      if (conflictKeys.has(key)) {
-        await pgdb.public.collectionDocumentItems.delete({ id: row.id })
-        console.log(`collectionDocumentItems: ${row.id} dropped (duplicate)`)
-        continue
+      const conflict = conflicting.find(
+        (c: any) =>
+          c.collectionId === row.collectionId && c.userId === row.userId,
+      )
+      if (conflict) {
+        await pgdb.public.collectionDocumentItems.delete({ id: conflict.id })
+        console.log(
+          `collectionDocumentItems: dropped Sanity-only duplicate ${conflict.id} in favor of legacy row ${row.id}`,
+        )
       }
-      conflictKeys.add(key)
       await pgdb.public.collectionDocumentItems.update(
         { id: row.id },
-        { repoId: null, sanityId },
+        { sanityId },
       )
-      console.log(`collectionDocumentItems: ${repoId} -> sanityId ${sanityId}`)
+      console.log(
+        `collectionDocumentItems: ${repoId} -> sanityId ${sanityId} (repoId kept)`,
+      )
     }
   }
 }
