@@ -1,6 +1,9 @@
 import { BaseWorker, Queue } from '@orbiting/backend-modules-job-queue'
 import { Job } from 'pg-boss'
-import { fetchDiscussionRefsByIds, legacySanityId } from '@orbiting/backend-modules-sanity'
+import {
+  fetchDiscussionRefsByIds,
+  legacySanityId,
+} from '@orbiting/backend-modules-sanity'
 
 export class ReadingPositionRefreshWorker extends BaseWorker<object> {
   readonly queue = 'next_reads:reading_position'
@@ -40,12 +43,37 @@ export class Next20DaysCommentsFeedRefreshWorker extends BaseWorker<object> {
   }
 }
 
+// Mirrors ReadingPositionRefreshWorker/Next7DaysFeedRefreshWorker/
+// Next20DaysCommentsFeedRefreshWorker's split above: refreshing
+// reading_progress_last_6_months and the two feed views it feeds on
+// independent, unordered cron schedules let a dependent refresh run against
+// a stale or mid-refresh base view, and was a contributor to a recurring
+// nightly DB pool exhaustion incident on the legacy (Publikator) side (see
+// that split's own history). Same fix here, before the Sanity side ever
+// carries real traffic: reading_position chains into the 7-day feed refresh
+// on success; the 20-day-comments feed (slower-changing base data, but
+// comment activity itself moves faster) stays on its own independent
+// schedule instead of being bundled into the same refresh call.
 export class SanityReadingPositionRefreshWorker extends BaseWorker<object> {
   readonly queue = 'next_reads_sanity:reading_position'
 
   async perform(_jobs: Job<unknown>[]): Promise<void> {
     await this.context.pgdb.run(`
       REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads_sanity.reading_progress_last_6_months;
+    `)
+
+    await Queue.getInstance().send('next_reads_sanity:feed:7days:refresh', {})
+
+    return
+  }
+}
+
+export class SanityNext7DaysFeedRefreshWorker extends BaseWorker<object> {
+  readonly queue = 'next_reads_sanity:feed:7days:refresh'
+
+  async perform(_jobs: Job<unknown>[]): Promise<void> {
+    await this.context.pgdb.run(`
+      REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads_sanity.readings_in_the_last_7_days;
     `)
 
     return
@@ -67,11 +95,11 @@ export class SanityReadingPositionRefreshWorker extends BaseWorker<object> {
 //    (sanity/lib/document.ts#fetchDiscussionRefsByIds), the only step in this
 //    feature that talks to Sanity.
 //
-// Both are cached in next_reads_sanity.discussion_refs so the aggregate views
+// Both are cached in next_reads_sanity.discussion_refs so the aggregate view
 // below can join to `comments` in plain SQL; a short staleness window on new
 // discussions is acceptable.
-export class SanityNextReadsFeedRefreshWorker extends BaseWorker<object> {
-  readonly queue = 'next_reads_sanity:feed:refresh'
+export class SanityNext20DaysCommentsFeedRefreshWorker extends BaseWorker<object> {
+  readonly queue = 'next_reads_sanity:feed:20days:refresh'
 
   async perform(_jobs: Job<unknown>[]): Promise<void> {
     const rows: { sanityId: string }[] = await this.context.pgdb.query(`
@@ -124,7 +152,6 @@ export class SanityNextReadsFeedRefreshWorker extends BaseWorker<object> {
     }
 
     await this.context.pgdb.run(`
-      REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads_sanity.readings_in_the_last_7_days;
       REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads_sanity.readings_and_comments_20_days;
     `)
 

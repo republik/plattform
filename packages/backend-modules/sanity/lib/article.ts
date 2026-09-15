@@ -41,7 +41,7 @@ const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
 // migrated `articleCollection` counterpart resolves to elsewhere. Rather
 // than depend on the one-off, manually-run migrate-legacy-subscriptions.ts
 // script having already rewritten those rows, resolve them here the same
-// way next-reads' SanityNextReadsFeedRefreshWorker resolves legacy
+// way next-reads' SanityNext20DaysCommentsFeedRefreshWorker resolves legacy
 // discussion refs: hash every candidate legacy repoId still on file and
 // keep the ones matching a collection this article actually references.
 const resolveLegacyRepoIdsForSanityIds = async (
