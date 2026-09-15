@@ -109,6 +109,7 @@ module.exports = async (_, args, context) => {
 
   const tx = await pgdb.transactionBegin()
 
+  let commit
   try {
     if (isTemplate && !meta.title) {
       throw new Error(t('api/commit/templateTitle/required'))
@@ -182,7 +183,7 @@ module.exports = async (_, args, context) => {
       email: user.email,
     }
 
-    const commit = await tx.publikator.commits.insertAndGet({
+    commit = await tx.publikator.commits.insertAndGet({
       repoId,
       type,
       content,
@@ -211,21 +212,6 @@ module.exports = async (_, args, context) => {
         commit,
       },
     })
-
-    // SANITY_SYNC (transition period, removable): mirror this commit into
-    // Sanity as a draft — only for article-shaped repos (see
-    // isArticleLikeMeta), never for format/section/page/front/template
-    // repos, which need Sanity types this hook doesn't build. Enqueue never
-    // throws, so a queue hiccup can't turn this already-successful commit
-    // into a reported failure.
-    if (
-      isSyncFromPublikatorEnabled() &&
-      isArticleLikeMeta({ ...meta, isTemplate })
-    ) {
-      await enqueueSyncFromPublikator({ repoId, action: 'commit' })
-    }
-
-    return toCommit(commit)
   } catch (e) {
     await tx.transactionRollback()
 
@@ -233,4 +219,22 @@ module.exports = async (_, args, context) => {
 
     throw e
   }
+
+  // SANITY_SYNC (transition period, removable): mirror this commit into
+  // Sanity as a draft — only for article-shaped repos (see
+  // isArticleLikeMeta), never for format/section/page/front/template
+  // repos, which need Sanity types this hook doesn't build. Placed after the
+  // try/catch above (which is done once it reaches this point — a thrown
+  // error there returns before here), not inside it: enqueueSyncFromPublikator
+  // never throws, but keeping this entirely outside the transaction's own
+  // try/catch means it structurally can't trigger transactionRollback() on
+  // an already-committed transaction, whatever runs here in the future.
+  if (
+    isSyncFromPublikatorEnabled() &&
+    isArticleLikeMeta({ ...meta, isTemplate })
+  ) {
+    await enqueueSyncFromPublikator({ repoId, action: 'commit' })
+  }
+
+  return toCommit(commit)
 }
