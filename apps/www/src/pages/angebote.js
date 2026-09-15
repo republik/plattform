@@ -8,61 +8,25 @@ import PledgeForm from '@/components/Pledge/Form'
 import PledgeReceivePayment from '@/components/Pledge/ReceivePayment'
 
 import { PSP_PLEDGE_ID_QUERY_KEYS } from '@/components/Payment/constants'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import {
+  createGetServerSideProps,
+  providedUserAgentProps,
+} from '@/lib/apollo/helpers'
+
+// `goto` is set by campaign links and payment slips handed out externally
+const GOTO_DESTINATIONS = {
+  cockpit: '/cockpit',
+  crowdfunding2: '/maerzkampagne',
+  account: '/konto',
+}
 
 class PledgePage extends Component {
   render() {
-    const { router, serverContext } = this.props
+    const { router } = this.props
 
     const { query } = router
     const queryKey = PSP_PLEDGE_ID_QUERY_KEYS.find((key) => query[key])
     const pledgeId = queryKey && query[queryKey].split('_')[0]
-
-    if (query.goto === 'cockpit') {
-      if (serverContext) {
-        serverContext.res.redirect(
-          302,
-          `/cockpit${query.token ? `?token=${query.token}` : ''}${
-            query.hash ? `#${query.hash}` : ''
-          }`,
-        )
-        throw new Error('redirect')
-      } else if (process.browser) {
-        // SSR does two two-passes: data (with serverContext) & render (without)
-        router.replace({ pathname: '/cockpit', query: { token: query.token } })
-      }
-    }
-    if (query.goto === 'crowdfunding2') {
-      if (serverContext) {
-        serverContext.res.redirect(
-          302,
-          `/maerzkampagne${query.token ? `?token=${query.token}` : ''}${
-            query.hash ? `#${query.hash}` : ''
-          }`,
-        )
-        throw new Error('redirect')
-      } else if (process.browser) {
-        // SSR does two two-passes: data (with serverContext) & render (without)
-        router.replace({
-          pathname: '/maerzkampagne',
-          query: { token: query.token },
-        })
-      }
-    }
-    if (query.goto === 'account') {
-      if (serverContext) {
-        serverContext.res.redirect(
-          302,
-          `/konto${query.token ? `?token=${query.token}` : ''}${
-            query.hash ? `#${query.hash}` : ''
-          }`,
-        )
-        throw new Error('redirect')
-      } else if (process.browser) {
-        // SSR does two two-passes: data (with serverContext) & render (without)
-        router.replace({ pathname: '/konto', query: { token: query.token } })
-      }
-    }
 
     return (
       <Frame raw>
@@ -80,4 +44,22 @@ class PledgePage extends Component {
   }
 }
 
-export default withDefaultSSR(withRouter(PledgePage))
+export default withRouter(PledgePage)
+
+export const getServerSideProps = createGetServerSideProps(async ({ ctx }) => {
+  const { query, req } = ctx
+  const destination = GOTO_DESTINATIONS[query.goto]
+
+  if (destination) {
+    return {
+      redirect: {
+        destination: `${destination}${
+          query.token ? `?token=${query.token}` : ''
+        }${query.hash ? `#${query.hash}` : ''}`,
+        permanent: false,
+      },
+    }
+  }
+
+  return { props: providedUserAgentProps(req) }
+})

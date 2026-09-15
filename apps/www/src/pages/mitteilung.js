@@ -25,7 +25,7 @@ import {
   LOGO_WIDTH_MOBILE,
 } from '@/components/constants'
 
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 import withMe from '@/lib/apollo/withMe'
 
@@ -173,6 +173,6 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
   )
 }
 
-export default withDefaultSSR(
-  compose(withRouter, withMe, withInNativeApp)(Page),
-)
+export default compose(withRouter, withMe, withInNativeApp)(Page)
+
+export const getServerSideProps = defaultServerSideProps

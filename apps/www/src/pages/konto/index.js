@@ -8,7 +8,7 @@ import UpdateEmail, { UserEmail } from '@/components/Account/UserInfo/Email'
 import NameAddress from '@/components/Account/UserInfo/NameAddress'
 import Frame from '@/components/Frame'
 import Merci from '@/components/Pledge/Merci'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import { useMe } from '@/lib/context/MeContext'
 import { useTranslation } from '@/lib/withT'
 import { A, Interaction, mediaQueries } from '@project-r/styleguide'
@@ -105,4 +105,6 @@ const AccountPage = () => {
   )
 }
 
-export default withDefaultSSR(AccountPage)
+export default AccountPage
+
+export const getServerSideProps = defaultServerSideProps

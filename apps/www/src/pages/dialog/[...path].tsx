@@ -9,7 +9,7 @@ import Discussion from '@/components/Discussion/Discussion'
 import Frame from '@/components/Frame'
 import Meta from '@/components/Frame/Meta'
 import StatusError from '@/components/StatusError'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { useTranslation } from '@/lib/withT'
 import {
@@ -117,4 +117,6 @@ const DialogPage = () => {
   )
 }
 
-export default withDefaultSSR(DialogPage)
+export default DialogPage
+
+export const getServerSideProps = defaultServerSideProps

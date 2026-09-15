@@ -1,7 +1,7 @@
 import AccountTabs from '@/components/Account/AccountTabs'
 import { AccountEnforceMe } from '@/components/Account/Elements'
 import Frame from '@/components/Frame'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import withT from '@/lib/withT'
 // import PledgeList from '@/components/Account/PledgeList'
 import { Transactions } from '@/components/Account/Transactions'
@@ -22,4 +22,6 @@ const TransactionPage = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(withT(TransactionPage))
+export default withT(TransactionPage)
+
+export const getServerSideProps = defaultServerSideProps

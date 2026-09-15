@@ -5,7 +5,7 @@ import withT from '@/lib/withT'
 import AccountTabs from '@/components/Account/AccountTabs'
 import { AccountEnforceMe } from '@/components/Account/Elements'
 
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 const NotificationsSettingsPage = ({ t }) => {
   return (
@@ -23,4 +23,6 @@ const NotificationsSettingsPage = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(withT(NotificationsSettingsPage))
+export default withT(NotificationsSettingsPage)
+
+export const getServerSideProps = defaultServerSideProps
