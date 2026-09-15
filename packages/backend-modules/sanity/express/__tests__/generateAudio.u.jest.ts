@@ -60,6 +60,8 @@ const baseArticle = {
 }
 
 describe('generateAudioHandler concurrency guard', () => {
+  const OLD_ENV = process.env
+
   beforeEach(() => {
     fetchArticle.mockReset()
     reportAudioGenerationSuccess.mockReset().mockResolvedValue(undefined)
@@ -68,7 +70,19 @@ describe('generateAudioHandler concurrency guard', () => {
     claimAudioGeneration.mockReset().mockResolvedValue(true)
     markPendingVersionError.mockReset().mockResolvedValue(undefined)
     uploadToHuebsch.mockReset().mockResolvedValue(undefined)
-    process.env.PUBLIC_URL = 'https://api.example.com'
+    // SANITY_AUDIO_GENERATION_ENABLED defaults to disabled (pre-launch
+    // kill-switch, see ../killSwitch.ts) -- these tests exercise the real
+    // generation path, so enable it here; the dedicated test below covers
+    // the disabled path.
+    process.env = {
+      ...OLD_ENV,
+      PUBLIC_URL: 'https://api.example.com',
+      SANITY_AUDIO_GENERATION_ENABLED: 'true',
+    }
+  })
+
+  afterAll(() => {
+    process.env = OLD_ENV
   })
 
   it('proceeds to Huebsch when nothing else is in progress and the claim succeeds', async () => {
@@ -159,5 +173,16 @@ describe('generateAudioHandler concurrency guard', () => {
       failure,
     )
     expect(reportAudioGenerationError).toHaveBeenCalledWith('drafts.doc-1', failure)
+  })
+
+  it('skips generation and reports success while SANITY_AUDIO_GENERATION_ENABLED is disabled', async () => {
+    process.env.SANITY_AUDIO_GENERATION_ENABLED = 'false'
+    const { req, res } = mockReqRes({ documentId: 'drafts.doc-1' })
+
+    await generateAudioHandler(req, res)
+
+    expect(fetchArticle).not.toHaveBeenCalled()
+    expect(uploadToHuebsch).not.toHaveBeenCalled()
+    expect(res.json).toHaveBeenCalledWith({ success: true, disabled: true })
   })
 })
