@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type LegacyAudioSrc = {
   mp4?: string
   hls?: string
@@ -982,9 +982,9 @@ export type InfoBox = {
 export type AuthorBlock = {
   _type: 'authorBlock'
   contributor: ContributorReference
-  role?: string
+  displayName?: string
+  credentialText?: string
   large?: boolean
-  greeting?: string
 }
 
 export type Contributor = {
@@ -1001,7 +1001,7 @@ export type Contributor = {
     _type: 'image'
   }
   title: string
-  role?: string
+  shortBio?: string
   gender?: 'm' | 'f' | 'd' | 'na'
   prolitterisId?: string
   prolitterisFirstname?: string
@@ -1240,13 +1240,6 @@ export type Newsletter = {
       crop?: SanityImageCrop
       _type: 'image'
     }
-    _type: 'image'
-  }
-  headerImage?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
     _type: 'image'
   }
   url?: string
@@ -2200,16 +2193,16 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                 _type: 'image'
               }
               title: string
-              role?: string
+              shortBio?: string
               gender?: 'd' | 'f' | 'm' | 'na'
               prolitterisId?: string
               prolitterisFirstname?: string
               prolitterisLastname?: string
               userId?: string
             }
-            role?: string
+            displayName?: string
+            credentialText?: string
             large?: boolean
-            greeting?: string
             markDefs: null
             body: null
           }
@@ -3741,16 +3734,16 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                 _type: 'image'
               }
               title: string
-              role?: string
+              shortBio?: string
               gender?: 'd' | 'f' | 'm' | 'na'
               prolitterisId?: string
               prolitterisFirstname?: string
               prolitterisLastname?: string
               userId?: string
             }
-            role?: string
+            displayName?: string
+            credentialText?: string
             large?: boolean
-            greeting?: string
             markDefs: null
             body: null
           }
@@ -5780,16 +5773,16 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
             _type: 'image'
           }
           title: string
-          role?: string
+          shortBio?: string
           gender?: 'd' | 'f' | 'm' | 'na'
           prolitterisId?: string
           prolitterisFirstname?: string
           prolitterisLastname?: string
           userId?: string
         }
-        role?: string
+        displayName?: string
+        credentialText?: string
         large?: boolean
-        greeting?: string
         markDefs: null
         body: null
       }

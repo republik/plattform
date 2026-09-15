@@ -1,29 +1,35 @@
-import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
+'use client'
+
+import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
-import {
-  EventTrackingContext,
-  useTrackEvent,
-} from '@/app/lib/analytics/event-tracking'
+import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
+import { Button } from '@/app/components/ui/button'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useTranslation } from '@/lib/withT'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
+import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
-import { SquareCover } from '../assets/SquareCover'
-import { Button } from '../ui/button'
-import {
-  CategoryLabel,
-  NextReadAuthor,
-  NextReadDuration,
-  NextReadLink,
-} from './helpers'
 import {
   nextReadHeader,
   nextReadItemTypography,
   nextReadsSection,
 } from './styles'
 
+// Same resolution as LinkOverlay, which can't expose it: article/page teasers
+// carry a slug, standalone teaser documents an arbitrary href.
+function teaserHref(teaser: TeaserListItemType): string | undefined {
+  const href =
+    teaser._type === 'teaserSmall' ? stegaClean(teaser.href) : teaser.slug
+  return href ?? undefined
+}
+
 export function BookmarkedFeed({ teasers }: { teasers: TeaserListItemType[] }) {
+  if (!teasers.length) return null
+
   return (
     <EventTrackingContext category='NextReads:BookmarkedFeed'>
       <BookmarkedGrid teasers={teasers} />
@@ -33,13 +39,8 @@ export function BookmarkedFeed({ teasers }: { teasers: TeaserListItemType[] }) {
 
 function BookmarkedGrid({ teasers }: { teasers: TeaserListItemType[] }) {
   const { t } = useTranslation()
-  const trackEvent = useTrackEvent()
 
-  useEffect(() => {
-    trackEvent({
-      action: 'is showing',
-    })
-  }, [trackEvent])
+  const [first, ...rest] = teasers
 
   return (
     <div
@@ -60,26 +61,25 @@ function BookmarkedGrid({ teasers }: { teasers: TeaserListItemType[] }) {
           md: { pb: 16 },
         })}
       >
-        <FirstBookmarkItem
-          document={documents[0]}
-          numberOfDocuments={documents.length}
-        />
-        <BookmarkItems documents={documents.slice(1)} />
-        <Link href='/lesezeichen'>
-          <Button className={css({ mt: 8, md: { mt: 16 } })} variant='outline'>
+        <FirstBookmarkItem teaser={first} numberOfTeasers={teasers.length} />
+        <BookmarkItems teasers={rest} />
+        <Button
+          asChild
+          className={css({ mt: 8, md: { mt: 16 } })}
+          variant='outline'
+        >
+          <Link href='/lesezeichen'>
             {t('nextReads/bookmarkedFeed/manageBookmarks')}
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   )
 }
 
-const BookmarkItems = ({
-  documents,
-}: {
-  documents: NextReadDocumentFieldsFragment[]
-}) => {
+const BookmarkItems = ({ teasers }: { teasers: TeaserListItemType[] }) => {
+  if (!teasers.length) return null
+
   return (
     <div
       className={css({
@@ -98,21 +98,22 @@ const BookmarkItems = ({
         },
       })}
     >
-      {documents.map((document, index) => (
-        <BookmarkItem key={document.id} document={document} index={index + 1} />
+      {teasers.map((teaser) => (
+        <BookmarkItem key={teaser._id} teaser={teaser} />
       ))}
     </div>
   )
 }
 
 const FirstBookmarkItem = ({
-  document,
-  numberOfDocuments,
+  teaser,
+  numberOfTeasers,
 }: {
-  document: NextReadDocumentFieldsFragment
-  numberOfDocuments: number
+  teaser: TeaserListItemType
+  numberOfTeasers: number
 }) => {
   const { t } = useTranslation()
+  const href = teaserHref(teaser)
 
   return (
     <div
@@ -138,57 +139,63 @@ const FirstBookmarkItem = ({
     >
       <h4>
         <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
-          <NextReadLink document={document} index={0} />
+          <LinkOverlay teaser={teaser} />
         </span>
       </h4>
-      {document.meta.image && (
-        <img
-          src={`${document.meta.image}&resize=1300x`}
-          alt={`Cover for ${document.meta.title}`}
-          className={css({
-            width: '100%',
-            maxWidth: '400px',
-            aspectRatio: '3/4',
-            objectFit: 'cover',
-            md: {
-              aspectRatio: '4/3',
-              maxWidth: '650px',
-            },
-          })}
-        />
+      <TeaserImage
+        image={teaser.image}
+        alt=''
+        width={650}
+        height={488}
+        sizes='(max-width: 640px) 100vw, 650px'
+        className={css({
+          width: '100%',
+          maxWidth: '400px',
+          aspectRatio: '3/4',
+          objectFit: 'cover',
+          md: {
+            aspectRatio: '4/3',
+            maxWidth: '650px',
+          },
+        })}
+      />
+      {hasContent(teaser.byline) && (
+        <p className='author'>
+          <InlinePortableText value={teaser.byline} />
+        </p>
       )}
-      <NextReadAuthor document={document} />
-      <NextReadDuration document={document} />
-      <p
-        className={css({
-          fontFamily: 'rubis',
-          fontSize: 18,
-          lineHeight: 1.8,
-          textAlign: 'left',
-        })}
-      >
-        {document.meta.description}
-      </p>
-      <Link
-        href={document.meta.path}
-        className={css({
-          alignSelf: numberOfDocuments < 1 && 'flex-start',
-          justifySelf: 'center',
-        })}
-      >
-        {t('nextReads/bookmarkedFeed/readMore')} <IconArrowRight size={20} />
-      </Link>
+      {/* TODO: reading duration. The legacy feed showed
+          `estimatedReadingMinutes`/`estimatedConsumptionMinutes`, which
+          TEASER_SMALL_FRAGMENT does not project. `audioDurationMs` is the only
+          duration available and covers audio only, so it is not a substitute. */}
+      {hasContent(teaser.description) && (
+        <p
+          className={css({
+            fontFamily: 'rubis',
+            fontSize: 18,
+            lineHeight: 1.8,
+            textAlign: 'left',
+          })}
+        >
+          <InlinePortableText value={teaser.description} />
+        </p>
+      )}
+      {href && (
+        <Link
+          href={href}
+          className={css({
+            alignSelf: numberOfTeasers <= 1 ? 'flex-start' : undefined,
+            justifySelf: 'center',
+          })}
+        >
+          {t('nextReads/bookmarkedFeed/readMore')} <IconArrowRight size={20} />
+        </Link>
+      )}
     </div>
   )
 }
 
-const BookmarkItem = ({
-  document,
-  index,
-}: {
-  document: NextReadDocumentFieldsFragment
-  index: number
-}) => {
+const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
   return (
     <div
       className={cx(
@@ -205,7 +212,6 @@ const BookmarkItem = ({
           md: {
             display: 'flex',
             flex: 1,
-            direction: 'column-reverse',
             maxWidth: '312px',
             flexDirection: 'column-reverse',
             justifyContent: 'flex-start',
@@ -216,18 +222,19 @@ const BookmarkItem = ({
       )}
     >
       <div>
-        <CategoryLabel document={document} />
+        <Heading teaser={teaser} />
         <h4>
-          <NextReadLink document={document} index={index} />
+          <LinkOverlay teaser={teaser} />
         </h4>
-        <NextReadDuration document={document} />
+        {/* TODO: reading duration — see FirstBookmarkItem. */}
       </div>
-      <SquareCover
-        size={312}
-        title={document.meta.title}
-        cover={document.meta.audioCover}
-        crop={document.meta.audioCoverCrop}
-        image={document.meta.image}
+      <TeaserImage
+        image={teaser.image}
+        alt=''
+        width={624}
+        height={624}
+        sizes='312px'
+        className={css({ width: '312px', maxWidth: '100%' })}
       />
     </div>
   )

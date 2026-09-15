@@ -148,6 +148,11 @@ const nextConfig = {
         destination: '/komplizin',
         permanent: true,
       },
+      {
+        source: '/dialog/feedback',
+        destination: '/feedback',
+        permanent: true,
+      },
       // Redirect /angebote to shop if no query params are set
       // {value: undefined} matchaes any value provided to that query param
       process.env.NEXT_PUBLIC_SHOP_BASE_URL && {

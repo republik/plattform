@@ -28,6 +28,7 @@ import { editorialContent } from '@republik/theme/recipes'
 import { toPlainText } from 'next-sanity'
 import { draftMode } from 'next/headers'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 export default async function ArticleDocument({
   article,
@@ -142,12 +143,12 @@ export default async function ArticleDocument({
               article.articleRecommendations as TeaserSmallFragmentType[]
             }
           />
-
-          <AutomaticRecommendations />
         </article>
 
-        {/* Rendered outside the article: the `editorialContent` grid applies a
-            top margin to every direct child, fixed elements included. */}
+        <Suspense>
+          <AutomaticRecommendations currentDocumentId={article._id} />
+        </Suspense>
+
         <ArticleFloatingActions article={article} />
       </ArticleActionsProvider>
     </EventTrackingContext>
