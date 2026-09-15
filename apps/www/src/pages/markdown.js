@@ -21,7 +21,7 @@ import {
 } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 const { P, A, Emphasis, Cursive, StrikeThrough } = Editorial
 
@@ -189,4 +189,6 @@ const Page = ({ router, t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT, withRouter)(Page))
+export default compose(withT, withRouter)(Page)
+
+export const getServerSideProps = defaultServerSideProps

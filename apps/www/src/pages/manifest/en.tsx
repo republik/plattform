@@ -7,7 +7,7 @@ import {
 } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import Frame from '@/components/Frame'
 
 const Page = ({ router }) => {
@@ -96,4 +96,6 @@ const Page = ({ router }) => {
   )
 }
 
-export default withDefaultSSR(withRouter(Page))
+export default withRouter(Page)
+
+export const getServerSideProps = defaultServerSideProps

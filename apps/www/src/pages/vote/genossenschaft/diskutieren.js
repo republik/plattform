@@ -2,8 +2,8 @@ import ElectionDiscussionPage from '@/components/Vote/Legacy/ElectionDiscussionP
 import compose from 'lodash/flowRight'
 import { enforceMembership } from '@/components/Auth/withMembership'
 import withMe from '@/lib/apollo/withMe'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
-export default withDefaultSSR(
-  compose(enforceMembership(), withMe)(ElectionDiscussionPage),
-)
+export default compose(enforceMembership(), withMe)(ElectionDiscussionPage)
+
+export const getServerSideProps = defaultServerSideProps

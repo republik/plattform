@@ -8,7 +8,7 @@ import Table from '@/components/Shareholder/Table'
 import Sunburst, { radius } from '@/components/Shareholder/Sunburst'
 
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 const ShareholderPage = ({ t }) => {
   const meta = {
@@ -45,4 +45,6 @@ const ShareholderPage = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT)(ShareholderPage))
+export default compose(withT)(ShareholderPage)
+
+export const getServerSideProps = defaultServerSideProps

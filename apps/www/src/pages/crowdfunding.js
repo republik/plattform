@@ -5,7 +5,7 @@ import Box from '@/components/Frame/Box'
 import List, { Highlight } from '@/components/List'
 import TestimonialList from '@/components/Testimonial/List'
 import VideoCover from '@/components/VideoCover'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '@/lib/constants'
 
@@ -654,4 +654,6 @@ export const Page = ({ router, t, inNativeApp }) => {
   )
 }
 
-export default withDefaultSSR(withRouter(withT(withInNativeApp(Page))))
+export default withRouter(withT(withInNativeApp(Page)))
+
+export const getServerSideProps = defaultServerSideProps
