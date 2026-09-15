@@ -71,6 +71,7 @@ function FormatCard({ format }: { format?: Document }) {
         <Image
           className={css({ maxHeight: '160px', maxWidth: '120px' })}
           src={FORMATS_STYLE[format.repoId]?.imageSrc}
+          unoptimized
           alt='' // Decorative images don't need alt text
         />
       </div>

@@ -189,9 +189,7 @@ export default async function Page() {
               </p>
             </JournalismPromise>
             <JournalismPromise count={2}>
-              <h3>
-                Journalismus für Schulen
-              </h3>
+              <h3>Journalismus für Schulen</h3>
               <p>
                 Wir stellen die Republik an Schweizer Oberstufenschulen,
                 Gymnasien und Berufsschulen kostenlos zur Verfügung.
@@ -216,7 +214,7 @@ export default async function Page() {
                 Wer bis zum 14.&nbsp;April an Bord kommt, darf eine Freundin
                 kostenlos für drei Monate neu zur Republik einladen.
               </p>
-              <p className='status'>Status: in Arbeit</p>
+              <p className='status'>Status: umgesetzt</p>
             </JournalismPromise>
           </div>
         </ArticleSection>

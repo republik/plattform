@@ -1,3 +1,5 @@
+const userAgent = require('../userAgent')
+
 const { CHROMIUM_LAMBDA_URL } = process.env
 
 if (!CHROMIUM_LAMBDA_URL) {
@@ -18,7 +20,11 @@ const render = (params) => {
     }
   }
 
-  return fetch(url.toString()).then((res) => {
+  return fetch(url.toString(), {
+    headers: {
+      'User-Agent': userAgent,
+    },
+  }).then((res) => {
     if (!res.ok) {
       throw new Error(
         `render failed with status ${res.status} - ${res.statusText}`,

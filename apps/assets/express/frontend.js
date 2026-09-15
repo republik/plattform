@@ -1,4 +1,4 @@
-const { returnImage } = require('@orbiting/backend-modules-assets/lib')
+const { returnImage, userAgent } = require('@orbiting/backend-modules-assets/lib')
 const {
   FRONTEND_BASE_URL,
   FRONTEND_BASIC_AUTH_USER,
@@ -29,6 +29,7 @@ module.exports = (server) => {
     const result = await fetch(encodeURI(frontendUrl), {
       method: 'GET',
       headers: {
+        'User-Agent': userAgent,
         Authorization:
           FRONTEND_BASIC_AUTH_USER && FRONTEND_BASIC_AUTH_PASS
             ? `Basic ${Buffer.from(

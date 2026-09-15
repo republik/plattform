@@ -7,10 +7,17 @@ import { sum } from 'd3-array'
 const data = [
   {
     Kategorie: 'Project R Gen',
-    Aktionärin: 'Project R',
+    Aktionärin: 'Project R (Typ A)',
     Typ: 'A',
     'Nominal CHF': '0.10',
     Anzahl: '490000',
+  },
+  {
+    Kategorie: 'Project R Gen',
+    Aktionärin: 'Project R (Typ B)',
+    Typ: 'B',
+    'Nominal CHF': '0.40',
+    Anzahl: '3334',
   },
   {
     Kategorie: 'Gründerteam',
@@ -130,13 +137,6 @@ const data = [
     Typ: 'B',
     'Nominal CHF': '0.40',
     Anzahl: '4445',
-  },
-  {
-    Kategorie: 'Geldgeber',
-    Aktionärin: 'Georg und Bertha Schwyzer-Winiker-Stiftung',
-    Typ: 'B',
-    'Nominal CHF': '0.40',
-    Anzahl: '3334',
   },
   {
     Kategorie: 'Geldgeber',

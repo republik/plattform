@@ -8,7 +8,7 @@ import { createAppWorkerLink } from './appWorkerLink'
 
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
   name: '@orbiting/www-app',
-  version: process.env.BUILD_ID,
+  version: process.env.DEPLOYMENT_ID,
   apiUrl: isClient ? '/graphql' : API_URL,
   wsUrl: API_WS_URL,
   headers: isClient
