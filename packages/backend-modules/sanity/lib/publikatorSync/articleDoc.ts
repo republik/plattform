@@ -15,6 +15,11 @@ import {
 } from './mdastToPortableText'
 
 export interface PublikatorCommit {
+  // Optional: buildDraftArticleDoc itself never reads it, only worker.ts's
+  // legacy-audio linking step does (see ./legacyAudio.ts) -- kept optional
+  // here rather than widening every test fixture that builds a commit
+  // object without one.
+  id?: string
   content: { children?: unknown[] }
   meta: Record<string, unknown>
 }
@@ -28,6 +33,11 @@ export interface DraftArticleDoc {
   slug?: { _type: 'slug'; current: string }
   slugAuto: boolean
   publishDate?: string
+  // Linked (not generated) from a legacy Publikator SyntheticReadAloud
+  // derivative — see ./legacyAudio.ts.
+  audioSourceMp3?: string
+  audioDurationMs?: number
+  estimatedConsumptionMinutes?: number
 }
 
 // Sanity's article schema has its own, near-identical automatic/manual slug
@@ -75,7 +85,9 @@ function resolveSlug(
   // segment) — a manually-entered "custom/nested/slug" shouldn't produce a
   // multi-segment path.
   const segment = (
-    rawSlug.includes('/') ? rawSlug.slice(rawSlug.lastIndexOf('/') + 1) : rawSlug
+    rawSlug.includes('/')
+      ? rawSlug.slice(rawSlug.lastIndexOf('/') + 1)
+      : rawSlug
   ).trim()
   if (!segment) return { slugAuto: false }
 
@@ -114,7 +126,8 @@ function resolvePublishDate(
   repoMeta: Record<string, unknown> | undefined,
 ): string | undefined {
   if (typeof repoMeta?.publishDate === 'string') return repoMeta.publishDate
-  if (typeof commit.meta?.publishDate === 'string') return commit.meta.publishDate
+  if (typeof commit.meta?.publishDate === 'string')
+    return commit.meta.publishDate
   return undefined
 }
 

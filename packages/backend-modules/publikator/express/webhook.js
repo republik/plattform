@@ -1,5 +1,12 @@
 const bodyParser = require('body-parser')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+} = require('@orbiting/backend-modules-sanity')
+
 // await middleware(server, pgdb, t, redis, createGraphqlContext())
 module.exports = (server, pgdb, t, redis, context) => {
   // Callback for assets which are ready
@@ -9,7 +16,13 @@ module.exports = (server, pgdb, t, redis, context) => {
     async (req, res) => {
       const { pgdb, loaders } = context
       const { body } = req
-      const { derivativeId, error, s3, duration: audioDuration, id: huebschId } = body
+      const {
+        derivativeId,
+        error,
+        s3,
+        duration: audioDuration,
+        id: huebschId,
+      } = body
 
       res.status(200).json({ ok: true })
 
@@ -42,6 +55,43 @@ module.exports = (server, pgdb, t, redis, context) => {
             commit,
           },
         })
+
+        // Generation is async against this old TTS server, so at the time
+        // of the original commit/publish sync this derivative was still
+        // Pending — articleDoc.ts's mirror had no audio to link yet
+        // (see ./legacyAudio.ts). Now that it's actually ready, re-sync so
+        // that audio reaches the Sanity mirror without waiting on some
+        // unrelated future edit.
+        if (!error && isSyncFromPublikatorEnabled()) {
+          // Refreshes the draft mirror unconditionally -- a no-op unless
+          // this derivative's commit is still the latest one (the 'commit'
+          // action always re-derives "latest", same as every other sync).
+          await enqueueSyncFromPublikator({
+            repoId: commit.repoId,
+            action: 'commit',
+          })
+
+          // Only refresh the *published* mirror if this derivative's
+          // commit is still the currently live publication -- otherwise
+          // the article has been republished since this generation was
+          // kicked off, and blindly re-syncing the old commitId would
+          // overwrite newer live content with stale text. Same "current
+          // publication" lookup already used by
+          // script/migrateAudioSources.ts.
+          const publication = await pgdb.publikator.milestones.findOne({
+            repoId: commit.repoId,
+            scope: 'publication',
+            'publishedAt !=': null,
+            revokedAt: null,
+          })
+          if (publication?.commitId === derivative.commitId) {
+            await enqueueSyncFromPublikator({
+              repoId: commit.repoId,
+              commitId: derivative.commitId,
+              action: 'publish',
+            })
+          }
+        }
       }
     },
   )

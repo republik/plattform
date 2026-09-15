@@ -21,6 +21,10 @@ jest.mock('../assets', () => ({
   resolveAssetMarkers: (doc: unknown) => Promise.resolve(doc),
 }))
 
+jest.mock('../legacyAudio', () => ({
+  linkLegacySyntheticAudio: (doc: unknown) => Promise.resolve(doc),
+}))
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { PublikatorSyncWorker } = require('../worker')
 // eslint-disable-next-line @typescript-eslint/no-var-requires

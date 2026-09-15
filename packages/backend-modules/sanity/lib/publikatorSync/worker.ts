@@ -7,6 +7,7 @@ import { repoIdToSanityId } from '../legacyId'
 import { buildDraftArticleDoc, PublikatorCommit } from './articleDoc'
 import { resolveAssetMarkers } from './assets'
 import { isArticleLikeMeta } from './eligibility'
+import { linkLegacySyntheticAudio } from './legacyAudio'
 
 export type PublikatorSyncPayload =
   | { $version: 'v1'; repoId: string; action: 'commit' }
@@ -93,7 +94,9 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
       { fields: ['meta'] },
     )
 
-    if (!isArticleLikeMeta({ ...commit.meta, isTemplate: repo?.meta?.isTemplate })) {
+    if (
+      !isArticleLikeMeta({ ...commit.meta, isTemplate: repo?.meta?.isTemplate })
+    ) {
       // Not an article-shaped repo (format/section/page/front/series
       // overview/template) — out of scope for this transition mirror, and
       // writing `_type: 'article'` at its id would permanently collide with
@@ -106,10 +109,18 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // each one and rewrites it into a real asset reference. See the header
     // comment in ./assets.ts for why this can't be skipped: the plain
     // content API doesn't understand that marker the way @sanity/import does.
-    const doc = await resolveAssetMarkers(buildDraftArticleDoc(commit, repo?.meta))
+    const doc = await resolveAssetMarkers(
+      buildDraftArticleDoc(commit, repo?.meta),
+    )
 
     if (data.action === 'commit') {
-      await sanityClient().createOrReplace({ _id: draftId, ...doc })
+      const draftDoc = await linkLegacySyntheticAudio(
+        doc,
+        commit.id,
+        draftId,
+        pgdb,
+      )
+      await sanityClient().createOrReplace({ _id: draftId, ...draftDoc })
       return
     }
 
@@ -126,7 +137,13 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // meta.discussionClosed is deliberately not forwarded (out of scope for
     // now) — create-discussion's own buildDiscussionDoc always creates the
     // discussion open regardless.
-    await sanityClient().createOrReplace({ _id: id, ...doc })
+    const publishedDoc = await linkLegacySyntheticAudio(
+      doc,
+      commit.id,
+      id,
+      pgdb,
+    )
+    await sanityClient().createOrReplace({ _id: id, ...publishedDoc })
     await this.deleteIfExists(draftId)
   }
 
