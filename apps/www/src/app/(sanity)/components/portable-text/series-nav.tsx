@@ -31,6 +31,7 @@ export async function SeriesNav({
       </Infobox>
       <div
         className={css({
+          mt: '4',
           gridColumn: 'full',
           display: 'flex',
           justifyContent: 'center',

@@ -46,7 +46,7 @@ function FollowContributors({
   return (
     <div
       className={css({
-        mt: 8,
+        mt: 4,
         mb: 12,
         md: { mb: 16 },
         '@media print': { display: 'none' },

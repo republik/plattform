@@ -1,16 +1,19 @@
 'use client'
 
-import { ACTION_ICON_SIZE } from './action-style'
-import { AddToPlaylistAction, useAddToPlaylistAllowed } from './add-to-playlist-action'
-import { BookmarkAction } from './bookmark-action'
-import { collectionsDocumentId } from './document-id'
-import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
-import { ShareAction } from './share-action'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
+import { ACTION_ICON_SIZE } from './action-style'
+import {
+  AddToPlaylistAction,
+  useAddToPlaylistAllowed,
+} from './add-to-playlist-action'
+import { BookmarkAction } from './bookmark-action'
 import { DiscussionAction } from './discussion-action'
+import { collectionsDocumentId } from './document-id'
+import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
+import { ShareAction } from './share-action'
 
 export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
@@ -32,6 +35,9 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
         display: 'flex',
         flexWrap: 'wrap',
         gap: '5',
+        _last: {
+          mb: '8',
+        },
         '@media print': { display: 'none' },
       })}
     >
@@ -46,7 +52,10 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
 
       {showAddToPlaylist && (
         <Menu.Root modal={false}>
-          <Menu.Trigger aria-label='Weitere Aktionen' className={menuTriggerStyle}>
+          <Menu.Trigger
+            aria-label='Weitere Aktionen'
+            className={menuTriggerStyle}
+          >
             <EllipsisVertical size={ACTION_ICON_SIZE} />
           </Menu.Trigger>
           <Menu.Content
