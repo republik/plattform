@@ -59,8 +59,8 @@ const reindexComments = async (
   pgdb: PgDb,
   client: Client,
   collectionName: string,
-): Promise<{ indexed: number; skipped: number }> => {
-  const stats = { indexed: 0, skipped: 0 }
+): Promise<{ indexed: number; skipped: number; failed: number }> => {
+  const stats = { indexed: 0, skipped: 0, failed: 0 }
   const deps = makeCommentDeps(pgdb)
 
   let offset = 0
@@ -88,12 +88,23 @@ const reindexComments = async (
     }
 
     if (docs.length > 0) {
+      // throwOnFail: false -- the typesense client's default (true) throws
+      // an ImportError for the WHOLE batch the moment any single document
+      // in it fails, discarding every other document's result along with
+      // it. That made the failure-handling below dead code: this call
+      // never actually returned once anything failed. false restores the
+      // documented behavior -- a batch with one bad document still
+      // indexes the rest, and each failure's own `error` reason (from
+      // Typesense's per-document validation, e.g. "Field `x` must be an
+      // array of string") is preserved in `results` instead of being
+      // collapsed into one generic thrown message.
       const results = await client
         .collections<TypesenseCommentDocument>(collectionName)
         .documents()
-        .import(docs, { action: 'upsert' })
+        .import(docs, { action: 'upsert', throwOnFail: false })
       stats.indexed += results.filter((r) => r.success).length
       const failures = results.filter((r) => !r.success)
+      stats.failed += failures.length
       if (failures.length > 0) {
         console.error('comment import failures', failures.slice(0, 5))
       }
@@ -110,8 +121,8 @@ const reindexUsers = async (
   pgdb: PgDb,
   client: Client,
   collectionName: string,
-): Promise<{ indexed: number; skipped: number }> => {
-  const stats = { indexed: 0, skipped: 0 }
+): Promise<{ indexed: number; skipped: number; failed: number }> => {
+  const stats = { indexed: 0, skipped: 0, failed: 0 }
   const deps = makeUserDeps(pgdb)
 
   let offset = 0
@@ -141,12 +152,15 @@ const reindexUsers = async (
     stats.skipped += transformed.length - docs.length
 
     if (docs.length > 0) {
+      // throwOnFail: false -- see the matching comment in reindexComments
+      // above.
       const results = await client
         .collections<TypesenseUserDocument>(collectionName)
         .documents()
-        .import(docs, { action: 'upsert' })
+        .import(docs, { action: 'upsert', throwOnFail: false })
       stats.indexed += results.filter((r) => r.success).length
       const failures = results.filter((r) => !r.success)
+      stats.failed += failures.length
       if (failures.length > 0) {
         console.error('user import failures', failures.slice(0, 5))
       }
@@ -168,8 +182,8 @@ const ARTICLE_BATCH_SIZE = 200
 const reindexArticles = async (
   client: Client,
   collectionName: string,
-): Promise<{ indexed: number; skipped: number }> => {
-  const stats = { indexed: 0, skipped: 0 }
+): Promise<{ indexed: number; skipped: number; failed: number }> => {
+  const stats = { indexed: 0, skipped: 0, failed: 0 }
 
   let offset = 0
   let page: TypesenseArticleDocument[]
@@ -178,12 +192,15 @@ const reindexArticles = async (
     page = await fetchSearchableArticlesPage(offset, ARTICLE_BATCH_SIZE)
 
     if (page.length > 0) {
+      // throwOnFail: false -- see the matching comment in reindexComments
+      // above.
       const results = await client
         .collections<TypesenseArticleDocument>(collectionName)
         .documents()
-        .import(page, { action: 'upsert' })
+        .import(page, { action: 'upsert', throwOnFail: false })
       stats.indexed += results.filter((r) => r.success).length
       const failures = results.filter((r) => !r.success)
+      stats.failed += failures.length
       if (failures.length > 0) {
         console.error('article import failures', failures.slice(0, 5))
       }
@@ -205,7 +222,7 @@ const reindexKind = async (
   pgdb: PgDb | undefined,
   client: Client,
   kind: CollectionKind,
-) => {
+): Promise<number> => {
   const aliasName = getAliasName(kind)
   const collectionName = getDatedCollectionName(kind)
   const previousCollectionName = await resolveAlias(client, aliasName)
@@ -236,6 +253,8 @@ const reindexKind = async (
         ),
       )
   }
+
+  return stats.failed
 }
 
 const parseOnly = (): CollectionKind[] => {
@@ -251,7 +270,7 @@ const parseOnly = (): CollectionKind[] => {
   return kinds.length > 0 ? kinds : DEFAULT_KINDS
 }
 
-const main = async () => {
+const main = async (): Promise<number> => {
   const kinds = parseOnly()
   // An articles-only run needs no Postgres connectivity at all -- only
   // connect when comments/users are actually being reindexed.
@@ -263,19 +282,32 @@ const main = async () => {
     : undefined
   const client = getClient()
 
+  let totalFailed = 0
   try {
     for (const kind of kinds) {
-      await reindexKind(pgdb, client, kind)
+      totalFailed += await reindexKind(pgdb, client, kind)
     }
   } finally {
     if (pgdb) {
       await PgDbConnector.disconnect(pgdb)
     }
   }
+
+  return totalFailed
 }
 
 main()
-  .then(() => process.exit(0))
+  .then((totalFailed) => {
+    // A partial failure still completes the run and swaps the alias (each
+    // successfully-imported document is live) -- but a non-zero exit here
+    // is what makes ops actually notice via the job's exit code, rather
+    // than the failure only ever showing up in scrollback.
+    if (totalFailed > 0) {
+      console.error(`reindex finished with ${totalFailed} failed document(s)`)
+      process.exit(1)
+    }
+    process.exit(0)
+  })
   .catch((err) => {
     console.error(err)
     process.exit(1)
