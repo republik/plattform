@@ -1,7 +1,6 @@
 import {
   makeSSGDataFetchingHelpers,
   makeSSRDataFetchingHelpers,
-  makeWithDefaultSSR,
 } from '@republik/nextjs-apollo-client'
 import { IncomingMessage } from 'http'
 import { initializeApollo } from '.'
@@ -21,15 +20,6 @@ export const createGetServerSideProps =
     })
     return me
   })
-
-export const withDefaultSSR = makeWithDefaultSSR(
-  initializeApollo,
-  async (client) => {
-    await client.query({
-      query: MeDocument,
-    })
-  },
-)
 
 export type ProvidedUserAgentProps = { providedUserAgent?: string }
 
