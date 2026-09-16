@@ -7,7 +7,7 @@ import Loader from '@/components/Loader'
 import { PageCenter } from '@/components/Auth/withAuthorization'
 
 import { useTranslation } from '@/lib/withT'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import { useMe } from '@/lib/context/MeContext'
 import { Interaction } from '@project-r/styleguide'
 
@@ -79,4 +79,6 @@ const SigninPage = () => {
   )
 }
 
-export default withDefaultSSR(SigninPage)
+export default SigninPage
+
+export const getServerSideProps = defaultServerSideProps

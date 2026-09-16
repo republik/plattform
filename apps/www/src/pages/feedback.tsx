@@ -3,7 +3,11 @@ import DiscussionContextProvider from '@/components/Discussion/context/Discussio
 import Discussion from '@/components/Discussion/Discussion'
 import Frame from '@/components/Frame'
 import Meta from '@/components/Frame/Meta'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { prefetchDiscussion } from '@/components/Discussion/graphql/prefetchDiscussion'
+import {
+  createGetServerSideProps,
+  providedUserAgentProps,
+} from '@/lib/apollo/helpers'
 import {
   CDN_FRONTEND_BASE_URL,
   GENERAL_FEEDBACK_DISCUSSION_ID,
@@ -12,6 +16,8 @@ import {
 import { useTranslation } from '@/lib/withT'
 import { Center, Editorial, Interaction } from '@project-r/styleguide'
 import Link from 'next/link'
+
+const DISCUSSION_PATH = '/feedback'
 
 const FeedbackDialogPage = () => {
   const { t } = useTranslation()
@@ -29,7 +35,7 @@ const FeedbackDialogPage = () => {
       <Frame hasOverviewNav raw formatColor='primary'>
         <Meta data={metaData} />
 
-        <DiscussionContextProvider discussionPath={'/feedback'}>
+        <DiscussionContextProvider discussionPath={DISCUSSION_PATH}>
           <Center>
             <div style={{ marginBottom: 30 }}>
               <Editorial.Format color='primary'>
@@ -56,4 +62,15 @@ const FeedbackDialogPage = () => {
   )
 }
 
-export default withDefaultSSR(FeedbackDialogPage)
+export default FeedbackDialogPage
+
+export const getServerSideProps = createGetServerSideProps(
+  async ({ client, ctx }) => {
+    await prefetchDiscussion(client, {
+      query: ctx.query,
+      discussionPath: DISCUSSION_PATH,
+    })
+
+    return { props: providedUserAgentProps(ctx.req) }
+  },
+)

@@ -2,7 +2,7 @@ import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offer
 import AccessCampaigns from '@/components/Access/Campaigns'
 import SignIn from '@/components/Auth/SignIn'
 import Frame from '@/components/Frame'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 import { useMe } from '@/lib/context/MeContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'
@@ -44,4 +44,6 @@ const Page = () => {
   )
 }
 
-export default withDefaultSSR(Page)
+export default Page
+
+export const getServerSideProps = defaultServerSideProps

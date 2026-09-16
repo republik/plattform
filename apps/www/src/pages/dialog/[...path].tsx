@@ -9,8 +9,13 @@ import Discussion from '@/components/Discussion/Discussion'
 import Frame from '@/components/Frame'
 import Meta from '@/components/Frame/Meta'
 import StatusError from '@/components/StatusError'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { prefetchDiscussion } from '@/components/Discussion/graphql/prefetchDiscussion'
+import {
+  createGetServerSideProps,
+  providedUserAgentProps,
+} from '@/lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
+import { getServerSideRedirection } from '@/lib/redirections'
 import { useTranslation } from '@/lib/withT'
 import {
   Center,
@@ -103,10 +108,12 @@ const DialogContent = () => {
   )
 }
 
+const getDiscussionPath = (path: string | string[]): string =>
+  '/' + (Array.isArray(path) ? path : [path]).filter(Boolean).join('/')
+
 const DialogPage = () => {
   const router = useRouter()
-  const { path } = router.query
-  const discussionPath = '/' + [].concat(path || []).join('/')
+  const discussionPath = getDiscussionPath(router.query.path)
 
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
@@ -117,4 +124,31 @@ const DialogPage = () => {
   )
 }
 
-export default withDefaultSSR(DialogPage)
+export default DialogPage
+
+export const getServerSideProps = createGetServerSideProps(
+  async ({ client, ctx }) => {
+    const data = await prefetchDiscussion(client, {
+      query: ctx.query,
+      discussionPath: getDiscussionPath(ctx.params?.path),
+    })
+
+    // Only a loaded-but-empty result means the discussion is gone. If the
+    // prefetch itself failed we render the page and let the client retry.
+    if (data && !data.discussion) {
+      const redirection = await getServerSideRedirection(client, ctx)
+
+      if (redirection.type === 'redirect') {
+        return { redirect: redirection.redirect }
+      }
+
+      if (redirection.type === 'none') {
+        // `DialogContent` renders the 404 screen, this gives it the matching
+        // status code — which `StatusError` used to set through `serverContext`
+        ctx.res.statusCode = 404
+      }
+    }
+
+    return { props: providedUserAgentProps(ctx.req) }
+  },
+)
