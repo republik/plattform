@@ -6,6 +6,7 @@ import { css } from '@republik/theme/css'
 import { NewsletterCourseCard } from './newsletters-card'
 import NewslettersSection from './newsletters-section'
 
+// TOODO: refactor to use Sanity NL config data once Courses are also migrated to Sanity
 function NewslettersOverview({
   nlFeatured,
   nlMore,
@@ -58,4 +59,4 @@ function NewslettersOverview({
   )
 }
 
-export default NewslettersOverview;
+export default NewslettersOverview

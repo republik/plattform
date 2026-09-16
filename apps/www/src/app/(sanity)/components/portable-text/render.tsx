@@ -1,4 +1,5 @@
 import { Button } from '@/app/(sanity)/components/portable-text/button'
+import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
 import {
   Em,
   ExternalLink,
@@ -49,6 +50,8 @@ const nestedComponents: Partial<PortableTextReactComponents> = {
     variable: ({ value }) => <Variable value={value} />,
     button: ({ value }) => <Button value={value} />,
     voiceTag: () => null,
+    divider: () => <hr />,
+    dividerStars: DividerStars,
   },
 
   block: {
@@ -68,6 +71,7 @@ export function NestedPortableText({ value }: { value: NestedEditor }) {
   return <PortableText components={nestedComponents} value={value} />
 }
 
+// for comment embed
 const nestedComponentsWithoutLinks: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
 
@@ -75,6 +79,8 @@ const nestedComponentsWithoutLinks: Partial<PortableTextReactComponents> = {
     variable: ({ value }) => <Variable value={value} />,
     button: ({ value }) => null,
     voiceTag: () => null,
+    divider: () => <hr />,
+    dividerStars: DividerStars,
   },
 
   block: {
