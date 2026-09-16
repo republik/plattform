@@ -11,7 +11,7 @@ import { Logo } from './logo'
 import { NavLink } from './nav-link'
 import { Avatar } from '@/app/components/layout/header/avatar'
 
-const MAX_HEADER_HEIGHT = 100
+const MAX_HEADER_HEIGHT = 102
 
 export function PageHeader() {
   const headerRef = useRef<HTMLDivElement>(null)
@@ -40,7 +40,7 @@ export function PageHeader() {
       })}
       style={{
         transform: `translateY(${
-          scrollDirection === 'down' ? -(MAX_HEADER_HEIGHT - 1) : 0
+          scrollDirection === 'down' ? -MAX_HEADER_HEIGHT : 0
         }px)`,
       }}
     >
