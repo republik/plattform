@@ -4,6 +4,7 @@ import { css } from '@republik/theme/css'
 import { CTABanner } from '../cta-banner'
 import Footer from './footer'
 import { PullToRefresh } from './pull-to-refresh'
+import { Suspense } from 'react'
 
 type LayoutProps = {
   showHeader?: boolean
@@ -34,7 +35,9 @@ export async function PageLayout({
     >
       {showHeader && <PageHeader />}
 
-      <CTABanner />
+      <Suspense>
+        <CTABanner />
+      </Suspense>
 
       {isNativeApp ? (
         <PullToRefresh
@@ -54,7 +57,11 @@ export async function PageLayout({
         </div>
       )}
 
-      {!isNativeApp && showFooter && <Footer />}
+      {!isNativeApp && showFooter && (
+        <Suspense>
+          <Footer />
+        </Suspense>
+      )}
     </div>
   )
 }
