@@ -26,7 +26,6 @@ function NewsletterArticleCard({
           gap: 4,
           height: '100%',
           width: '100%',
-          mb: 6,
           flexDirection: 'column',
         })}
       >

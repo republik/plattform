@@ -11,7 +11,7 @@ function FollowCollectionContainer({
   return (
     <div
       className={css({
-        my: 8,
+        mt: 8,
         pt: 8,
         borderTopWidth: '1px',
         borderTopStyle: 'solid',
