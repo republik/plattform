@@ -79,8 +79,8 @@ export function CarouselTeaser({
           <TeaserImage
             image={teaser.image}
             alt=''
-            width={400}
-            height={400}
+            width={smallImage ? 160 : 320}
+            height={smallImage ? 120 : 240}
             style={{
               width: smallImage ? '50%' : '100%',
               margin: smallImage ? '40px auto 0' : 0,
