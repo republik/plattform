@@ -146,7 +146,6 @@ const FirstBookmarkItem = ({
         alt=''
         width={650}
         height={488}
-        sizes='(max-width: 640px) 100vw, 650px'
         className={css({
           width: '100%',
           maxWidth: '400px',
@@ -264,9 +263,8 @@ function TeaserCover({
         <TeaserImage
           image={teaser.image}
           alt=''
-          width={size * 2}
-          height={size * 2}
-          sizes={`${size}px`}
+          width={size}
+          height={size}
           className={css({ width: '100%', height: '100%', objectFit: 'cover' })}
         />
       ) : (
