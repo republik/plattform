@@ -1,6 +1,8 @@
 import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
 
-export const getInitials = (me: MeQuery['me']): string =>
+export const getInitials = (
+  me: Pick<MeQuery['me'], 'name' | 'email'>,
+): string =>
   (me.name && me.name.trim()
     ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
     : me.email

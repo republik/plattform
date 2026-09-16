@@ -1,9 +1,6 @@
 import { PageHeader } from '@/app/components/layout/header'
-import { DraftModeIndicator } from '@/app/components/layout/header/draft-mode-indicator'
-import { getMe } from '@/app/lib/auth/me'
 import { getPlatformInformation } from '@/app/lib/util/useragent/platform-information'
 import { css } from '@republik/theme/css'
-import { draftMode } from 'next/headers'
 import { CTABanner } from '../cta-banner'
 import Footer from './footer'
 import { PullToRefresh } from './pull-to-refresh'
@@ -25,8 +22,6 @@ export async function PageLayout({
   children,
 }: LayoutProps) {
   const { isNativeApp } = await getPlatformInformation()
-  const draftModeEnabled = (await draftMode()).isEnabled
-  const { me } = await getMe()
 
   return (
     <div
@@ -37,19 +32,10 @@ export async function PageLayout({
         flexDirection: 'column',
       })}
     >
-      {showHeader && (
-        <PageHeader
-          isLoggedIn={!!me}
-          portrait={{
-            portrait: me?.portrait,
-            name: me?.name,
-            email: me?.email,
-          }}
-        />
-      )}
+      {showHeader && <PageHeader />}
 
       <CTABanner />
-      {draftModeEnabled && <DraftModeIndicator />}
+
       {isNativeApp ? (
         <PullToRefresh
           className={css({

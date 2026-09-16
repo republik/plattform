@@ -320,7 +320,6 @@ export const presetRepublik = definePreset({
           '32-64': { value: { base: '8rem', md: '16rem' } },
           header: {
             height: { value: '{sizes.header.height}' },
-            avatarMargin: { value: '0.6875rem  1rem' },
             logoMargin: { value: { base: '12px 0', md: '15px 0' } },
           },
         },
