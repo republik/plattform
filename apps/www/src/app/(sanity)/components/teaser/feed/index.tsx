@@ -48,7 +48,13 @@ export default function FeedTeaser({
         className={css({ display: 'flex', flexDirection: 'column', gap: 2 })}
       >
         <Heading teaser={teaser} />
-        <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
+        <h4
+          className={
+            ['EDITORIAL', 'EDITORIAL_CENTERED'].includes(teaser.theme?.name)
+              ? ''
+              : 'meta'
+          }
+        >
           <LinkOverlay teaser={teaser} />
         </h4>
         {hasContent(teaser.description) && (
