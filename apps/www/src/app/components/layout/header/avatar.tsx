@@ -51,8 +51,6 @@ const UserAvatar = ({
     bg: 'hover',
   })
 
-  console.log(portrait)
-
   return portrait ? (
     <Image
       src={portrait}
