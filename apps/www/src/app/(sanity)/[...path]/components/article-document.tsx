@@ -121,7 +121,7 @@ export default async function ArticleDocument({
           <ContentWall
             readingAccess={readingAccess}
             excerpt={
-              <ArticlePortableText value={article.content?.slice(0, 5)} />
+              <ArticlePortableText value={article.content?.slice(0, 3)} />
             }
             fullContent={<ArticlePortableText value={article.content} />}
           />
