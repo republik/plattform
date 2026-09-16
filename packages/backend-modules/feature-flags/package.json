@@ -1,0 +1,15 @@
+{
+  "name": "@orbiting/backend-modules-feature-flags",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "ts-jest": "^29.1.5"
+  }
+}

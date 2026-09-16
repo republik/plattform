@@ -119,6 +119,9 @@ const {
   PublikatorSyncWorker,
   isSyncFromPublikatorEnabled,
 } = require('@orbiting/backend-modules-sanity')
+const {
+  parseFeatureHeader,
+} = require('@orbiting/backend-modules-feature-flags')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -306,10 +309,14 @@ const run = async (workerId, config) => {
     const clientIp = forwardedFor
       ? forwardedFor.split(',')[0].trim()
       : defaultContext.req?.connection?.remoteAddress
+    const requestFeatures = parseFeatureHeader(
+      defaultContext.req?.headers['x-republik-features'],
+    )
     const context = {
       ...connectionContext,
       ...defaultContext,
       clientIp,
+      requestFeatures,
       t,
       signInHooks,
       mail,

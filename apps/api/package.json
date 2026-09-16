@@ -29,6 +29,7 @@
     "@orbiting/backend-modules-documents": "*",
     "@orbiting/backend-modules-embeds": "*",
     "@orbiting/backend-modules-env": "*",
+    "@orbiting/backend-modules-feature-flags": "*",
     "@orbiting/backend-modules-formats": "*",
     "@orbiting/backend-modules-invoices": "*",
     "@orbiting/backend-modules-job-queue": "*",
