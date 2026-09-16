@@ -10,6 +10,7 @@ import {
   PublikatorCommit,
 } from './articleDoc'
 import { resolveAssetMarkers } from './assets'
+import { DiscussionRef, linkLegacyDiscussion } from './discussionRef'
 import { isArticleLikeMeta } from './eligibility'
 import { linkLegacySyntheticAudio } from './legacyAudio'
 
@@ -132,22 +133,33 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // Deliberately two separate calls, not one atomic transaction — see
     // deleteIfExists below for why.
     //
-    // No separate write for the linked discussion here: Sanity's own
-    // create-discussion Blueprint Function already auto-creates and links
-    // one for any published article that doesn't have one yet (filter:
-    // `_type == "article" && (!defined(discussion) || ...)`, on
-    // create/update) — this createOrReplace already puts the article in
-    // exactly the state that triggers it, no help needed. Publikator's own
-    // meta.discussionClosed is deliberately not forwarded (out of scope for
-    // now) — create-discussion's own buildDiscussionDoc always creates the
-    // discussion open regardless.
+    // The discussion is linked synchronously, here, rather than left to
+    // Sanity's own create-discussion Blueprint Function: that function
+    // creates a BRAND NEW discussion doc for any published article with no
+    // `discussion` ref yet, with no awareness of a pre-existing legacy
+    // Postgres discussion for this repoId (upserted by publikator's publish
+    // resolver before this job's enqueue — see publish.js's
+    // prepareMetaForPublish). Left to that function, migrated content ends
+    // up with two competing discussions: the real one (existing comments,
+    // settings) and an orphaned empty one. Linking it here, before this
+    // createOrReplace, means `discussion` is already defined by the time
+    // that function's trigger condition would be checked.
     const publishedDoc = await this.linkLegacyAudioSafely(
       doc,
       commit.id,
       id,
       pgdb,
     )
-    await sanityClient().createOrReplace({ _id: id, ...publishedDoc })
+    const discussionRef = await this.linkLegacyDiscussionSafely(
+      data.repoId,
+      id,
+      pgdb,
+    )
+    await sanityClient().createOrReplace({
+      _id: id,
+      ...publishedDoc,
+      ...(discussionRef ? { discussion: discussionRef } : {}),
+    })
     await this.deleteIfExists(draftId)
   }
 
@@ -170,6 +182,29 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
         'sanity sync: legacy audio link failed (article content still synced)',
       )
       return doc
+    }
+  }
+
+  // Best-effort, same reasoning as linkLegacyAudioSafely above: a transient
+  // Sanity/Postgres hiccup while linking the legacy discussion must never
+  // fail the whole sync job and block the article's own content from
+  // mirroring for a reason that has nothing to do with that content. Falls
+  // through to Sanity's own create-discussion Function (which may then
+  // create an orphaned discussion) only on failure — self-heals on the next
+  // publish, same as every other best-effort step in this file.
+  private async linkLegacyDiscussionSafely(
+    repoId: string,
+    articleSanityId: string,
+    pgdb: ConnectionContext['pgdb'],
+  ): Promise<DiscussionRef | undefined> {
+    try {
+      return await linkLegacyDiscussion(pgdb, repoId, articleSanityId)
+    } catch (error) {
+      this.logger.warn(
+        { error, articleSanityId },
+        'sanity sync: legacy discussion link failed (article content still synced)',
+      )
+      return undefined
     }
   }
 
