@@ -20,11 +20,13 @@ import { getClient } from './client'
  * is deprecated. Privacy for user profiles is now enforced at WRITE time
  * instead: non-public profiles are never indexed (see lib/transform/user.ts).
  *
- * All three tiers currently resolve to the same parent key, because there is
- * currently only one set of collections. That is deliberate, not an
- * oversight: minting several identical parent keys would be ops burden for no
- * security difference. The tier -> parent-key indirection is the seam for the
- * admin-only collection that is expected later.
+ * `public` resolves to a narrower parent key that excludes the `comments`
+ * collection entirely -- comments are not public. `member` and `admin`
+ * currently share the same, wider parent key, because there is currently no
+ * reason to further separate them; minting a third identical parent key would
+ * be ops burden for no security difference. The tier -> parent-key
+ * indirection is the seam for the admin-only collection that is expected
+ * later.
  *
  * No `exclude_fields` is embedded either. That is deliberate and worth
  * preserving:
@@ -38,10 +40,12 @@ import { getClient } from './client'
  * `exclude_fields`. This is why the user document carries no email; see
  * TypesenseUserDocument in lib/collections.ts.
  *
- * Expects one pre-created parent search-only key (see
+ * Expects the pre-created parent search-only keys (see
  * script/create-search-keys.ts, a one-time ops step -- Typesense never
- * returns a key's secret again after creation, so the value must be copied
- * into an env var once and kept there): TYPESENSE_SEARCH_KEY.
+ * returns a key's secret again after creation, so each value must be copied
+ * into an env var once and kept there): TYPESENSE_SEARCH_KEY (comments
+ * included, for `member`/`admin`) and TYPESENSE_SEARCH_KEY_PUBLIC (no
+ * comments, for `public`).
  */
 
 const DEFAULT_TTL_SECONDS = 5 * 60
@@ -59,12 +63,12 @@ export interface ScopedSearchKey {
  * the parent key.
  *
  * When an admin-only collection lands, script/create-search-keys.ts mints a
- * second parent key over the wider collection list into
+ * third parent key over the wider collection list into
  * TYPESENSE_SEARCH_KEY_ADMIN, and the `admin` entry here points at it. That is
  * the only change needed; nothing else in this module has to move.
  */
 const PARENT_KEY_ENV_BY_TIER: Record<SearchCallerTier, string> = {
-  public: 'TYPESENSE_SEARCH_KEY',
+  public: 'TYPESENSE_SEARCH_KEY_PUBLIC',
   member: 'TYPESENSE_SEARCH_KEY',
   admin: 'TYPESENSE_SEARCH_KEY',
 }

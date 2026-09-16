@@ -23,7 +23,11 @@ describe('generateScopedSearchKey', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    process.env = { ...originalEnv, TYPESENSE_SEARCH_KEY: 'parent-key' }
+    process.env = {
+      ...originalEnv,
+      TYPESENSE_SEARCH_KEY: 'parent-key',
+      TYPESENSE_SEARCH_KEY_PUBLIC: 'public-parent-key',
+    }
   })
 
   afterAll(() => {
@@ -43,8 +47,14 @@ describe('generateScopedSearchKey', () => {
     },
   )
 
-  it.each(['public', 'member', 'admin'] as const)(
-    'derives the %s tier from TYPESENSE_SEARCH_KEY today',
+  it('derives the public tier from TYPESENSE_SEARCH_KEY_PUBLIC (no comments access)', () => {
+    generateScopedSearchKey('public')
+
+    expect(lastParentKey()).toBe('public-parent-key')
+  })
+
+  it.each(['member', 'admin'] as const)(
+    'derives the %s tier from TYPESENSE_SEARCH_KEY (comments included)',
     (tier) => {
       generateScopedSearchKey(tier)
 
@@ -67,6 +77,14 @@ describe('generateScopedSearchKey', () => {
 
     expect(() => generateScopedSearchKey('admin')).toThrow(
       /TYPESENSE_SEARCH_KEY is not set/,
+    )
+  })
+
+  it('names the missing env var when the public parent key is unset', () => {
+    delete process.env.TYPESENSE_SEARCH_KEY_PUBLIC
+
+    expect(() => generateScopedSearchKey('public')).toThrow(
+      /TYPESENSE_SEARCH_KEY_PUBLIC is not set/,
     )
   })
 })
