@@ -29,5 +29,8 @@ export async function sanityClientFetch<const QueryString extends string>(
     return data
   }
 
-  return publishedClient.fetch(query, params, options)
+  return publishedClient.fetch(query, params, {
+    next: { revalidate: 60 },
+    ...options,
+  })
 }
