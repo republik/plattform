@@ -61,6 +61,8 @@ const styles = {
     flex: 1,
     minHeight: 0,
     overflowY: 'auto',
+    overflowX: 'hidden',
+    scrollbarGutter: 'stable',
     scrollbarWidth: 'thin',
     WebkitOverflowScrolling: 'touch',
     position: 'relative',
