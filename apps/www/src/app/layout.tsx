@@ -21,8 +21,6 @@ import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
 
-export const fetchCache = 'default-no-store'
-
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
   title: {

@@ -2,7 +2,7 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { FrontBlock } from '@/app/(sanity)/front/components/front-block'
 import { FRONT_LATEST_QUERY } from '@/app/(sanity)/groq/front-latest-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { ForceOnboarding } from '@/app/components/onboarding/force-onboarding'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
@@ -28,10 +28,7 @@ export const metadata: Metadata = {
 }
 
 export default async function FrontPage() {
-  const { data: front } = await sanityFetch({
-    query: FRONT_LATEST_QUERY,
-    requestTag: 'front',
-  })
+  const front = await client.fetch(FRONT_LATEST_QUERY, {}, { tag: 'front' })
 
   if (!front) notFound()
 

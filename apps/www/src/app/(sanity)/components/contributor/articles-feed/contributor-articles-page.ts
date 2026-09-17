@@ -66,8 +66,7 @@ export function toContributorArticlesPage(
  * browser can query it without a token and no API route has to stand in the
  * middle — which is what lets the pages-router profile use this feed at all.
  *
- * Server components should use `sanityFetch` instead: it carries the draft
- * perspective and live-content tags this does not.
+ * Server components should use `client.fetch` instead.
  */
 export async function fetchContributorArticlesPage(
   userId: string,

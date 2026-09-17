@@ -8,7 +8,7 @@ import {
   TEASERS_SMALL_QUERY_ASC,
   TEASERS_SMALL_QUERY_DESC,
 } from '@/app/(sanity)/groq/teasers-small-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { css } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import type { CSSProperties } from 'react'
@@ -52,15 +52,16 @@ export async function Carousel({
   // We display series in chronological order, starting with the first episode
   const QUERY = series ? TEASERS_SMALL_QUERY_ASC : TEASERS_SMALL_QUERY_DESC
 
-  const { data } = await sanityFetch({
-    query: QUERY,
-    params: {
+  const data = await client.fetch(
+    QUERY,
+    {
       documentId,
       blockKey,
       start: 0,
       end: maxItems ?? DEFAULT_TEASERS_LIMIT,
     },
-  })
+    { tag: 'carousel' },
+  )
 
   const teasers = (data?.block?.teasers ?? []).filter(
     (teaser): teaser is TeaserListItemType =>

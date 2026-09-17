@@ -1,5 +1,5 @@
 import { ARTICLES_QUERY } from '@/app/(sanity)/groq/articles-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { stegaClean } from 'next-sanity'
 import {
   ArticlesFeedClient,
@@ -13,14 +13,15 @@ export async function ArticlesFeed() {
   async function fetchPage(cursor?: FeedCursor): Promise<FeedPage> {
     'use server'
 
-    const { data } = await sanityFetch({
-      query: ARTICLES_QUERY,
-      params: {
+    const data = await client.fetch(
+      ARTICLES_QUERY,
+      {
         lastPublishDate: cursor?.publishDate ?? null,
         lastId: cursor?.id ?? null,
         limit: SIZE + 1,
       },
-    })
+      { tag: 'articles-feed' },
+    )
 
     const rows = data ?? []
     const teasers = rows.slice(0, SIZE)

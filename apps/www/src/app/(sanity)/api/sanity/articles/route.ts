@@ -1,5 +1,5 @@
 import { ARTICLES_BY_IDS_QUERY } from '@/app/(sanity)/groq/articles-by-ids-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { draftMode } from 'next/headers'
 import { NextResponse } from 'next/server'
 
@@ -26,11 +26,10 @@ export async function POST(req: Request) {
     return NextResponse.json([])
   }
 
-  const { data } = await sanityFetch({
-    query: ARTICLES_BY_IDS_QUERY,
-    params: { ids },
-    perspective: (await draftMode()) ? 'drafts' : 'published',
-    stega: false,
-  })
+  const data = await client.fetch(
+    ARTICLES_BY_IDS_QUERY,
+    { ids },
+    { stega: false, tag: 'articles-route' },
+  )
   return NextResponse.json(data)
 }

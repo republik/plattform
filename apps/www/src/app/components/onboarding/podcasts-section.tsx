@@ -4,7 +4,7 @@ import {
   COLLECTIONS_QUERY,
   type ArticleCollectionType,
 } from '@/app/(sanity)/groq/collections-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { Section, SectionH3 } from '@/app/components/ui/section'
 import { t } from '@/lib/withT'
 import { css } from '@republik/theme/css'
@@ -70,10 +70,13 @@ function PodcastCard({ collection }: { collection: ArticleCollectionType }) {
 }
 
 export async function PodcastsSection() {
-  const { data } = await sanityFetch({
-    query: COLLECTIONS_QUERY,
-    params: { ids: PODCASTS_FEATURED },
-  })
+  const data = await client.fetch(
+    COLLECTIONS_QUERY,
+    {
+      ids: PODCASTS_FEATURED,
+    },
+    { tag: 'podcasts-section' },
+  )
 
   const podcasts = data
 

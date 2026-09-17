@@ -7,7 +7,7 @@ import {
   BookmarksFeedClient,
   type TeaserFeedData,
 } from '@/app/(sanity)/lesezeichen/components/bookmarks-feed-client'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { getClient } from '@/app/lib/apollo/client'
 
 export async function BookmarksFeed({ collection }: { collection: string }) {
@@ -32,10 +32,13 @@ export async function BookmarksFeed({ collection }: { collection: string }) {
 
     const items = data.collectionItems?.nodes ?? []
 
-    const { data: teasers } = await sanityFetch({
-      query: ARTICLES_BY_IDS_QUERY,
-      params: { ids: items.map((b) => b.sanityId) },
-    })
+    const teasers = await client.fetch(
+      ARTICLES_BY_IDS_QUERY,
+      {
+        ids: items.map((b) => b.sanityId),
+      },
+      { tag: 'bookmarks-feed' },
+    )
 
     return {
       hasMore: data.collectionItems?.pageInfo?.hasNextPage ?? false,

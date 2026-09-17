@@ -1,5 +1,5 @@
 import { COLLECTIONS_QUERY } from '@/app/(sanity)/groq/collections-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { draftMode } from 'next/headers'
 import { NextResponse } from 'next/server'
 
@@ -26,10 +26,10 @@ export async function POST(req: Request) {
     return NextResponse.json([])
   }
 
-  const { data } = await sanityFetch({
-    query: COLLECTIONS_QUERY,
-    params: { ids },
-    perspective: (await draftMode()).isEnabled ? 'drafts' : 'published',
-  })
+  const data = await client.fetch(
+    COLLECTIONS_QUERY,
+    { ids },
+    { tag: 'collections-route', stega: false },
+  )
   return NextResponse.json(data)
 }

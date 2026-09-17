@@ -4,7 +4,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { BookmarkedFeed } from '@/app/(sanity)/components/next-reads/bookmarked'
 import { ARTICLES_BY_IDS_QUERY } from '@/app/(sanity)/groq/articles-by-ids-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { getClient } from '@/app/lib/apollo/client'
 import { getMe } from '@/app/lib/auth/me'
 
@@ -42,10 +42,13 @@ export async function AutomaticRecommendations({
 
   if (!bookmarkIds.length) return null
 
-  const { data: teasers } = await sanityFetch({
-    query: ARTICLES_BY_IDS_QUERY,
-    params: { ids: bookmarkIds },
-  })
+  const teasers = await client.fetch(
+    ARTICLES_BY_IDS_QUERY,
+    {
+      ids: bookmarkIds,
+    },
+    { tag: 'next-reads' },
+  )
 
   // ARTICLES_BY_IDS_QUERY returns documents in Sanity's own order; restore the
   // order the API returned them in (most recently bookmarked first).

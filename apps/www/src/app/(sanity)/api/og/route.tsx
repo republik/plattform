@@ -1,5 +1,5 @@
 import { OG_SHARE_IMAGE_QUERY } from '@/app/(sanity)/groq/seo-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { client, metadataClient } from '@/app/(sanity)/lib/client'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { ImageResponse } from 'next/og'
 import type { NextRequest } from 'next/server'
@@ -23,10 +23,13 @@ export async function GET(req: NextRequest) {
   // renders this same component via satori client-side instead of calling
   // this route — see the studio repo's shareImagePreview/renderShareImage.ts
   // — so this route only ever needs to serve the public og:image.
-  const data = await client.fetch(
+  const data = await metadataClient.fetch(
     OG_SHARE_IMAGE_QUERY,
-    { slug: slug ?? null, id: documentId ?? null },
-    { stega: false },
+    {
+      slug: slug ?? null,
+      id: documentId ?? null,
+    },
+    { tag: 'og' },
   )
 
   if (!data) {

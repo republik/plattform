@@ -1,6 +1,6 @@
 import { PageBlock } from '@/app/(sanity)/[...path]/components/page-block'
 import { DOCUMENT_BY_SLUG_QUERY } from '@/app/(sanity)/groq/document-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 
 import { getMe } from '@/app/lib/auth/me'
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
@@ -26,10 +26,11 @@ export default async function SearchPage() {
     return <SearchGate />
   }
 
-  const { data } = await sanityFetch({
-    query: DOCUMENT_BY_SLUG_QUERY,
-    params: { slug: '/suche' },
-  })
+  const data = await client.fetch(
+    DOCUMENT_BY_SLUG_QUERY,
+    { slug: '/suche' },
+    { tag: 'suche' },
+  )
 
   const page = data?._type === 'page' ? data : undefined
   const featuredCollections = (

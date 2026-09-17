@@ -3,7 +3,7 @@ import PageDocument from '@/app/(sanity)/[...path]/components/page-document'
 import { DOCUMENT_BY_SLUG_QUERY } from '@/app/(sanity)/groq/document-query'
 import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { getArticleJsonLd } from '@/app/(sanity)/lib/json-ld'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client, metadataClient } from '@/app/(sanity)/lib/client'
 import { getSocialImage } from '@/app/(sanity)/lib/social-image'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -15,11 +15,11 @@ export async function generateMetadata({
   const { path } = await params
   const slug = `/${path.join('/')}`
 
-  const { data } = await sanityFetch({
-    query: SEO_QUERY,
-    params: { slug },
-    stega: false,
-  })
+  const data = await metadataClient.fetch(
+    SEO_QUERY,
+    { slug },
+    { tag: 'article-page' },
+  )
 
   if (!data) {
     return { title: 'Artikel nicht gefunden' }
@@ -43,10 +43,7 @@ export default async function DocumentPage({
   const { path } = await params
   const slug = `/${path.join('/')}`
 
-  const { data } = await sanityFetch({
-    query: DOCUMENT_BY_SLUG_QUERY,
-    params: { slug },
-  })
+  const data = await client.fetch(DOCUMENT_BY_SLUG_QUERY, { slug })
 
   if (!data) {
     notFound()

@@ -4,7 +4,7 @@ import {
   COLLECTIONS_QUERY,
   type ArticleCollectionType,
 } from '@/app/(sanity)/groq/collections-query'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { client } from '@/app/(sanity)/lib/client'
 import { Section, SectionH3 } from '@/app/components/ui/section'
 import { t } from '@/lib/withT'
 import { css } from '@republik/theme/css'
@@ -71,10 +71,13 @@ function FormatCard({ collection }: { collection: ArticleCollectionType }) {
 }
 
 export async function FormatsSection() {
-  const { data } = await sanityFetch({
-    query: COLLECTIONS_QUERY,
-    params: { ids: FORMATS_FEATURED },
-  })
+  const data = await client.fetch(
+    COLLECTIONS_QUERY,
+    {
+      ids: FORMATS_FEATURED,
+    },
+    { tag: 'formats-section' },
+  )
 
   const formats = data
 
