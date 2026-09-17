@@ -1,3 +1,5 @@
+import CampaignPaynote from '@/app/(sanity)/components/paynotes/campaign/campaign-paynote'
+import { PaynoteOverlay } from '@/app/(sanity)/components/paynotes/paynote/paynote-overlay'
 import { PaynotesProvider } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import { NativeAppMessageSync } from '@/app/components/native-app'
 import '@republik/theme/fonts.css'
@@ -73,7 +75,8 @@ export default async function RootLayout({
                           <NativeAppMessageSync />
                           <AudioPlayerOrchestrator />
                           <SyncUTMToSessionStorage />
-                          {/* <PaynoteOverlay /> */}
+                          <PaynoteOverlay />
+                          <CampaignPaynote />
                         </PaynotesProvider>
                       </AudioProvider>
                     </AudioQueueProvider>

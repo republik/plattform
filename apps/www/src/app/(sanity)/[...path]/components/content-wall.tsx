@@ -29,7 +29,7 @@ export function ContentWall({
     // reset when navigating away
     return () => {
       setDocumentTypeForPaynotes(null)
-      setReadingAccess('OPEN')
+      setReadingAccess('REGWALL')
     }
   }, [readingAccess, pathname, setDocumentTypeForPaynotes, setReadingAccess])
 

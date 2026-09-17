@@ -113,16 +113,23 @@ export const PaynotesProvider = ({ children }) => {
     useState<DocumentType>(null)
 
   const [readingAccess, setReadingAccess] =
-    useState<Article['readingAccess']>('OPEN')
+    useState<Article['readingAccess']>('REGWALL')
 
   const isCampaignActive = campaign?.isActive
 
   useEffect(() => {
+    // console.log({ meLoading, searchParams, pathname })
     if (meLoading || !searchParams || !pathname) {
       return
     }
 
-    // console.log({ template, trialStatus, pathname, searchParams })
+    /* console.log({
+      readingAccess,
+      documentType,
+      trialStatus,
+      pathname,
+      searchParams,
+    }) */
 
     if (trialStatus === 'MEMBER' && isCampaignActive) {
       return setPaynoteKind('CAMPAIGN_BANNER')
