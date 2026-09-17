@@ -30,6 +30,12 @@ jest.mock('../legacyAudio', () => ({
     linkLegacySyntheticAudio(...args),
 }))
 
+const linkLegacyDiscussion = jest.fn().mockResolvedValue(undefined)
+
+jest.mock('../discussionRef', () => ({
+  linkLegacyDiscussion: (...args: unknown[]) => linkLegacyDiscussion(...args),
+}))
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { PublikatorSyncWorker } = require('../worker')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -56,6 +62,7 @@ describe('PublikatorSyncWorker', () => {
     linkLegacySyntheticAudio
       .mockReset()
       .mockImplementation((doc: unknown) => Promise.resolve(doc))
+    linkLegacyDiscussion.mockReset().mockResolvedValue(undefined)
   })
 
   it('commit: syncs the latest commit for the repo, not the one in the payload', async () => {
@@ -244,5 +251,100 @@ describe('PublikatorSyncWorker', () => {
     expect(createOrReplace).toHaveBeenCalledTimes(1)
     const [written] = createOrReplace.mock.calls[0]
     expect(written._syncedFromCommitId).toBe('c1')
+  })
+
+  it('publish: merges the linked discussion reference into the published doc', async () => {
+    linkLegacyDiscussion.mockResolvedValueOnce({
+      _type: 'reference',
+      _ref: 'discussion-1',
+    })
+    const findOne = jest
+      .fn()
+      .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: {} })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      {
+        data: {
+          $version: 'v1',
+          repoId: 'republik/foo',
+          commitId: 'c42',
+          action: 'publish',
+        },
+      },
+    ])
+
+    expect(linkLegacyDiscussion).toHaveBeenCalledWith(
+      expect.anything(),
+      'republik/foo',
+      expect.any(String),
+    )
+    const [published] = createOrReplace.mock.calls[0]
+    expect(published.discussion).toEqual({
+      _type: 'reference',
+      _ref: 'discussion-1',
+    })
+  })
+
+  it('publish: omits the discussion field entirely when no legacy discussion exists', async () => {
+    linkLegacyDiscussion.mockResolvedValueOnce(undefined)
+    const findOne = jest
+      .fn()
+      .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: {} })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      {
+        data: {
+          $version: 'v1',
+          repoId: 'republik/foo',
+          commitId: 'c42',
+          action: 'publish',
+        },
+      },
+    ])
+
+    const [published] = createOrReplace.mock.calls[0]
+    expect('discussion' in published).toBe(false)
+  })
+
+  it('publish: still syncs the article when legacy discussion linking throws', async () => {
+    linkLegacyDiscussion.mockRejectedValueOnce(new Error('sanity down'))
+    const findOne = jest
+      .fn()
+      .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: {} })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await expect(
+      worker.perform([
+        {
+          data: {
+            $version: 'v1',
+            repoId: 'republik/foo',
+            commitId: 'c42',
+            action: 'publish',
+          },
+        },
+      ]),
+    ).resolves.toBeUndefined()
+
+    expect(createOrReplace).toHaveBeenCalledTimes(1)
+    const [published] = createOrReplace.mock.calls[0]
+    expect('discussion' in published).toBe(false)
+  })
+
+  it('commit: never attempts to link a discussion (publish-only)', async () => {
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'newest',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+    ])
+
+    expect(linkLegacyDiscussion).not.toHaveBeenCalled()
   })
 })

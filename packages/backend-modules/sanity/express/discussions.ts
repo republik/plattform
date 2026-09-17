@@ -23,8 +23,21 @@ export const isDiscussionsEnabled = () =>
 
 export const discussionsHandler =
   (pgdb: any, t: any) => async (req: Request, res: Response) => {
-    const { id, title, maxLength, anonymity, tags, tagRequired, closed, path } =
-      req.body || {}
+    const {
+      id,
+      title,
+      maxLength,
+      anonymity,
+      tags,
+      tagRequired,
+      closed,
+      path,
+      hidden,
+      disableTopLevelComments,
+      collapsable,
+      defaultOrder,
+      allowedRoles,
+    } = req.body || {}
 
     if (!isDiscussionsEnabled()) {
       logger.info(
@@ -37,24 +50,42 @@ export const discussionsHandler =
     }
 
     try {
+      const settings = {
+        title,
+        maxLength,
+        anonymity,
+        tags,
+        tagRequired,
+        closed,
+        path,
+        hidden,
+        disableTopLevelComments,
+        collapsable,
+        defaultOrder,
+        allowedRoles,
+      }
+
+      // Safety net for content published before publikatorSync's own
+      // synchronous discussion-linking existed (see
+      // ../lib/publikatorSync/discussionRef.ts), or any other case that
+      // slips through it: without this, a `Discussion.create` call arriving
+      // with no `id` would insert a brand-new, orphaned row even when a
+      // legacy discussion already exists for this path. The Sanity
+      // discussion schema's own comment states "the backend identifies a
+      // discussion by its path" -- this is a documented, intentional shared
+      // key, not an incidental match. No loaders are available in this
+      // Express handler (only pgdb), so this is a direct query.
+      const existingByPath =
+        !id && path ? await pgdb.public.discussions.findOne({ path }) : undefined
+
       const discussion = id
-        ? await Discussion.update(
-            {
-              id,
-              title,
-              maxLength,
-              anonymity,
-              tags,
-              tagRequired,
-              closed,
-              path,
-            },
-            { pgdb, t },
-          )
-        : await Discussion.create(
-            { title, maxLength, anonymity, tags, tagRequired, closed, path },
-            { pgdb, t },
-          )
+        ? await Discussion.update({ id, ...settings }, { pgdb, t })
+        : existingByPath
+          ? await Discussion.update(
+              { id: existingByPath.id, ...settings },
+              { pgdb, t },
+            )
+          : await Discussion.create(settings, { pgdb, t })
 
       res.json({ id: discussion.id })
     } catch (error: any) {
