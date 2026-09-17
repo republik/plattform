@@ -1,7 +1,7 @@
 'use client'
 
 import { useAudioContext } from '@/components/Audio/AudioProvider'
-import useAudioQueue from '@/components/Audio/hooks/useAudioQueue'
+import { useIsAudioQueueAvailable } from '@/components/Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { IconAudio } from '@republik/icons'
@@ -32,7 +32,7 @@ export function CoverAudioButton({
     checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
 
   if (!isAudioQueueAvailable || !mp3) {
     return null

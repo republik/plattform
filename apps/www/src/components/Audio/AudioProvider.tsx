@@ -15,7 +15,7 @@ import { useInNativeApp, postMessage } from '@/lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
-import useAudioQueue from './hooks/useAudioQueue'
+import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
 
@@ -124,7 +124,7 @@ const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>(null)
 
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (

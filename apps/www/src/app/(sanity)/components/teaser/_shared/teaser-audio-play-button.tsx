@@ -1,7 +1,7 @@
 'use client'
 
 import { useAudioContext } from '@/components/Audio/AudioProvider'
-import useAudioQueue from '@/components/Audio/hooks/useAudioQueue'
+import { useIsAudioQueueAvailable } from '@/components/Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { useMe } from '@/lib/context/MeContext'
@@ -46,7 +46,7 @@ export function TeaserAudioPlayButton({
     checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { isMember } = useMe()
 
   if (!isAudioQueueAvailable || !isMember) {

@@ -1,7 +1,9 @@
 'use client'
 
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
-import useAudioQueue from '@/components/Audio/hooks/useAudioQueue'
+import useAudioQueue, {
+  useIsAudioQueueAvailable,
+} from '@/components/Audio/hooks/useAudioQueue'
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
 import { useMe } from '@/lib/context/MeContext'
 import { cx } from '@republik/theme/css'
@@ -16,7 +18,7 @@ import { ACTION_ICON_SIZE, actionStyle } from './action-style'
  */
 export function useAddToPlaylistAllowed(mp3?: string): boolean {
   const { isMember } = useMe()
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
   return !!mp3 && isAudioQueueAvailable && isMember
 }
 
@@ -98,7 +100,9 @@ export function AddToPlaylistAction({
       ) : (
         <ListMusic size={ACTION_ICON_SIZE} />
       )}
-      {queueItem ? 'Von Wiedergabeliste entfernen' : 'Zur Wiedergabeliste hinzufügen'}
+      {queueItem
+        ? 'Von Wiedergabeliste entfernen'
+        : 'Zur Wiedergabeliste hinzufügen'}
     </button>
   )
 }

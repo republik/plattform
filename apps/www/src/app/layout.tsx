@@ -9,6 +9,7 @@ import { ApolloWrapper } from '@/app/lib/apollo/provider'
 
 import AudioPlayerOrchestrator from '@/components/Audio/AudioPlayerOrchestrator'
 import AudioProvider from '@/components/Audio/AudioProvider'
+import AudioQueueProvider from '@/components/Audio/AudioQueueProvider'
 import MediaProgressContext from '@/components/Audio/MediaProgress'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import MeContextProvider from '@/lib/context/MeContext'
@@ -65,15 +66,17 @@ export default async function RootLayout({
               <AnalyticsProvider>
                 <UserAgentProvider>
                   <MediaProgressContext>
-                    <AudioProvider>
-                      <PaynotesProvider>
-                        {children}
-                        <NativeAppMessageSync />
-                        <AudioPlayerOrchestrator />
-                        <SyncUTMToSessionStorage />
-                        {/* <PaynoteOverlay /> */}
-                      </PaynotesProvider>
-                    </AudioProvider>
+                    <AudioQueueProvider>
+                      <AudioProvider>
+                        <PaynotesProvider>
+                          {children}
+                          <NativeAppMessageSync />
+                          <AudioPlayerOrchestrator />
+                          <SyncUTMToSessionStorage />
+                          {/* <PaynoteOverlay /> */}
+                        </PaynotesProvider>
+                      </AudioProvider>
+                    </AudioQueueProvider>
                   </MediaProgressContext>
                 </UserAgentProvider>
               </AnalyticsProvider>

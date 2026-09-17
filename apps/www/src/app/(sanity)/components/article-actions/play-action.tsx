@@ -1,14 +1,14 @@
 'use client'
 
-import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
 import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
-import { CirclePlay, CirclePause } from 'lucide-react'
+import { useMe } from '@/lib/context/MeContext'
 import { css, cx } from '@republik/theme/css'
+import { CirclePause, CirclePlay } from 'lucide-react'
 import { useState } from 'react'
-import { actionStyle, ACTION_ICON_SIZE, pillStyle } from './action-style'
+import { ACTION_ICON_SIZE, actionStyle, pillStyle } from './action-style'
 
 export function PlayAction({
   documentId,
@@ -28,13 +28,16 @@ export function PlayAction({
   cover?: string
   coverDark?: string
 }) {
+  // Inactive until membership is known or for non-members
+  const { isMember, hasActiveMembership } = useMe()
+  const canPlay = isMember && hasActiveMembership
+
   const {
     toggleAudioPlayer,
     toggleAudioPlayback,
     checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { hasPaywall } = usePaynotes()
   const trackEvent = useTrackEvent()
   const [failed, setFailed] = useState(false)
 
@@ -62,7 +65,8 @@ export function PlayAction({
   } as unknown as AudioPlayerItem
 
   const onClick = async () => {
-    if (hasPaywall) return
+    if (!canPlay) return
+
     trackEvent({ action: isActive ? 'audioToggle' : 'audioPlay', name: path })
     setFailed(false)
     try {
@@ -81,16 +85,16 @@ export function PlayAction({
     <button
       className={cx(actionStyle, pillStyle)}
       data-active={isActive || undefined}
-      disabled={hasPaywall}
+      disabled={!canPlay}
       onClick={onClick}
       title={
-        hasPaywall
+        !canPlay
           ? 'Nur für Mitglieder'
           : failed
-            ? 'Wiedergabe fehlgeschlagen'
-            : isActive && isPlaying
-              ? 'Pausieren'
-              : 'Anhören'
+          ? 'Wiedergabe fehlgeschlagen'
+          : isActive && isPlaying
+          ? 'Pausieren'
+          : 'Anhören'
       }
       type='button'
     >

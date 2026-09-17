@@ -11,6 +11,7 @@ import { AnalyticsProvider } from '@/app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 import AudioPlayerOrchestrator from '@/components/Audio/AudioPlayerOrchestrator'
 import AudioProvider from '@/components/Audio/AudioProvider'
+import AudioQueueProvider from '@/components/Audio/AudioQueueProvider'
 import MediaProgressContext from '@/components/Audio/MediaProgress'
 import { ThemeProvider } from '@/components/ColorScheme/ThemeProvider'
 import MessageSync from '@/components/NativeApp/MessageSync'
@@ -49,37 +50,39 @@ const WebApp = ({
         <AnalyticsProvider>
           <UserAgentProvider providedValue={providedUserAgent}>
             <MediaProgressContext>
-              <AudioProvider>
-                <ThemeProvider>
-                  <RootColorVariables />
-                  <ColorContextProvider colorSchemeKey='auto'>
-                    <PaynotesProvider>
-                      <MessageSync />
-                      <Head>
-                        <meta
-                          name='viewport'
-                          content='width=device-width, initial-scale=1, viewport-fit=cover'
+              <AudioQueueProvider>
+                <AudioProvider>
+                  <ThemeProvider>
+                    <RootColorVariables />
+                    <ColorContextProvider colorSchemeKey='auto'>
+                      <PaynotesProvider>
+                        <MessageSync />
+                        <Head>
+                          <meta
+                            name='viewport'
+                            content='width=device-width, initial-scale=1, viewport-fit=cover'
+                          />
+                          <link
+                            rel='alternate'
+                            type='application/rss+xml'
+                            title='RSS Feed'
+                            href='/feed.xml'
+                          />
+                        </Head>
+                        <IpAllowlistBanner />
+                        <Component
+                          serverContext={serverContext}
+                          {...otherPageProps}
                         />
-                        <link
-                          rel='alternate'
-                          type='application/rss+xml'
-                          title='RSS Feed'
-                          href='/feed.xml'
-                        />
-                      </Head>
-                      <IpAllowlistBanner />
-                      <Component
-                        serverContext={serverContext}
-                        {...otherPageProps}
-                      />
-                      <AudioPlayerOrchestrator />
-                      <SyncUTMToSessionStorage />
-                      <PaynoteOverlay />
-                      <CampaignPaynote />
-                    </PaynotesProvider>
-                  </ColorContextProvider>
-                </ThemeProvider>
-              </AudioProvider>
+                        <AudioPlayerOrchestrator />
+                        <SyncUTMToSessionStorage />
+                        <PaynoteOverlay />
+                        <CampaignPaynote />
+                      </PaynotesProvider>
+                    </ColorContextProvider>
+                  </ThemeProvider>
+                </AudioProvider>
+              </AudioQueueProvider>
             </MediaProgressContext>
           </UserAgentProvider>
         </AnalyticsProvider>

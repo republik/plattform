@@ -1,6 +1,6 @@
 import { plainButtonRule } from '@project-r/styleguide'
 
-import useAudioQueue from '../hooks/useAudioQueue'
+import { useIsAudioQueueAvailable } from '../hooks/useAudioQueue'
 import { useAudioContext } from '../AudioProvider'
 import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
@@ -29,7 +29,7 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
     toggleAudioPlayer,
     checkIfActivePlayerItem,
   } = useAudioContext()
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { isMember } = useMe()
   // This button renders inside the legacy MDAST schema (front page / article
   // teasers), which only ever sees publikator documents and doesn't have the

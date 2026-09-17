@@ -1,15 +1,28 @@
+'use client'
+
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import compareVersion from '@/lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from '../constants'
 import { useMe } from '@/lib/context/MeContext'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
-import { rememberAudioItem, getKnownAudioItem } from '../helpers/audioItemCache'
+import {
+  rememberAudioItem,
+  getKnownAudioItem,
+  getAudioItemsVersion,
+  hydrateAudioItems,
+  subscribeToAudioItems,
+} from '../helpers/audioItemCache'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { getAudioCoverImages } from '../helpers/audioCoverImages'
 import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
 import { reportError } from '@/lib/errors/reportError'
-import { useEffect, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useSyncExternalStore,
+} from 'react'
 import { v4 as uuid } from 'uuid'
 import {
   AddAudioQueueItemRefDocument,
@@ -132,7 +145,7 @@ function mergeQueueItem(
  * For users without an active membership, the queue is persisted in local storage.
  * The local storage however doesn't allow for more than one item to be saved.
  */
-const useAudioQueue = (): {
+export type AudioQueueContextValue = {
   audioQueue: AudioQueueItem[]
   audioQueueIsLoading: boolean
   audioQueueHasError?: ApolloError | null
@@ -149,7 +162,16 @@ const useAudioQueue = (): {
   checkIfHeadOfQueue: (documentId: string) => AudioQueueItem
   checkIfInQueue: (audioItemId: string) => AudioQueueItem
   getAudioQueueItemIndex: (documentId: string) => number
-} => {
+}
+
+/**
+ * The queue's actual implementation: one Apollo watch, one persisted-state
+ * instance, one hydration effect. Only `AudioQueueProvider` may call it —
+ * everything else goes through `useAudioQueue` below, so the cost is paid
+ * once per app rather than once per component. A feed page mounts dozens of
+ * consumers (one per teaser, see components/teaser/feed/teaser-actions.tsx).
+ */
+export const useAudioQueueState = (): AudioQueueContextValue => {
   const { inNativeApp, inNativeAppVersion } = useInNativeApp()
   const { meLoading, me } = useMe()
   const {
@@ -172,46 +194,37 @@ const useAudioQueue = (): {
   // reloaded queue still renders. Legacy repoId items have no such lookup
   // (only `document(path:)`, singular) and stay session-only — an accepted
   // gap, since that content is being migrated to Sanity regardless.
-  const [hydratedSanityItems, setHydratedSanityItems] = useState<
-    Map<string, AudioPlayerItem>
-  >(new Map())
+  //
+  // Both the cache and the in-flight bookkeeping live in the module, not in
+  // this hook: a feed page mounts one instance per teaser, and per-instance
+  // state meant each of them issued the same hydration request.
+  useSyncExternalStore(
+    subscribeToAudioItems,
+    getAudioItemsVersion,
+    () => 0, // never hydrated during SSR
+  )
 
   const missingSanityIds = audioQueueRefs
-    .filter(
-      (ref) =>
-        ref.sanityId &&
-        !getKnownAudioItem(refDocumentId(ref)) &&
-        !hydratedSanityItems.has(ref.sanityId),
-    )
+    .filter((ref) => ref.sanityId && !getKnownAudioItem(refDocumentId(ref)))
     .map((ref) => ref.sanityId)
 
   useEffect(() => {
     if (missingSanityIds.length === 0) return
-    let cancelled = false
-    getAudioQueueItemsByIds(missingSanityIds)
-      .then((items) => {
-        if (cancelled || items.length === 0) return
-        setHydratedSanityItems((previous) => {
-          const next = new Map(previous)
-          items.forEach((item) => next.set(item._id, toAudioPlayerItem(item)))
-          return next
-        })
-      })
-      .catch((error) =>
-        reportError('useAudioQueue: hydrate from Sanity', error),
-      )
-    return () => {
-      cancelled = true
-    }
+
+    hydrateAudioItems(missingSanityIds, async (ids) => {
+      const items = await getAudioQueueItemsByIds(ids)
+      return items.map((item) => [
+        `sanity:${item._id}`,
+        toAudioPlayerItem(item),
+      ])
+    })?.catch((error) =>
+      reportError('useAudioQueue: hydrate from Sanity', error),
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [missingSanityIds.join(',')])
 
   const audioQueueItems = audioQueueRefs.map((ref) =>
-    mergeQueueItem(
-      ref,
-      getKnownAudioItem(refDocumentId(ref)) ??
-        (ref.sanityId ? hydratedSanityItems.get(ref.sanityId) : undefined),
-    ),
+    mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))),
   )
   const isLoading = meLoading || audioQueueIsLoading
 
@@ -438,5 +451,46 @@ const useAudioQueue = (): {
     getAudioQueueItemIndex,
   }
 }
+
+export const AudioQueueContext = createContext<AudioQueueContextValue | null>(
+  null,
+)
+
+/**
+ * Availability is split off deliberately. It's a boolean derived from the
+ * native-app version and membership, so it changes almost never — while the
+ * queue value next to it changes on every mutation. Most consumers want only
+ * this (see `useAddToPlaylistAllowed`, which a feed page calls once per
+ * teaser); keeping them on their own context stops a queue change from
+ * re-rendering all of them.
+ */
+export const AudioQueueAvailabilityContext = createContext<boolean | null>(null)
+
+const useAudioQueueContext = <T,>(
+  context: React.Context<T | null>,
+  name: string,
+): T => {
+  const value = useContext(context)
+
+  if (value === null) {
+    throw new Error(`${name} must be used inside an AudioQueueProvider`)
+  }
+
+  return value
+}
+
+/** Whether the queue is usable at all. Cheap: see the context above. */
+export const useIsAudioQueueAvailable = (): boolean =>
+  useAudioQueueContext(
+    AudioQueueAvailabilityContext,
+    'useIsAudioQueueAvailable',
+  )
+
+/**
+ * The full queue. Re-renders on every queue change — prefer
+ * `useIsAudioQueueAvailable` if that's all you need.
+ */
+const useAudioQueue = (): AudioQueueContextValue =>
+  useAudioQueueContext(AudioQueueContext, 'useAudioQueue')
 
 export default useAudioQueue
