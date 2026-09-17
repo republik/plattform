@@ -129,11 +129,13 @@ export function CarouselTeaser({
             </p>
           )}
 
-          {teaser._type !== 'page' && !skipDescription && (
-            <p className='time'>
-              {timeFormat('%d.%m.%Y')(new Date(teaser.publishDate))}
-            </p>
-          )}
+          {teaser._type !== 'page' &&
+            teaser.publishDate &&
+            !skipDescription && (
+              <p className='time'>
+                {timeFormat('%d.%m.%Y')(new Date(teaser.publishDate))}
+              </p>
+            )}
         </div>
       </div>
     </div>
