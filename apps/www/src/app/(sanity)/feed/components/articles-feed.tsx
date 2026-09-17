@@ -7,31 +7,28 @@ import {
   type FeedPage,
 } from './articles-feed-client'
 
-const INITIAL_SIZE = 40
-const PAGE_SIZE = 20
+const SIZE = 20
 
 export async function ArticlesFeed() {
   async function fetchPage(cursor?: FeedCursor): Promise<FeedPage> {
     'use server'
-
-    const size = cursor ? PAGE_SIZE : INITIAL_SIZE
 
     const { data } = await sanityFetch({
       query: ARTICLES_QUERY,
       params: {
         lastPublishDate: cursor?.publishDate ?? null,
         lastId: cursor?.id ?? null,
-        limit: size + 1,
+        limit: SIZE + 1,
       },
     })
 
     const rows = data ?? []
-    const teasers = rows.slice(0, size)
+    const teasers = rows.slice(0, SIZE)
     const last = teasers.at(-1)
 
     return {
       teasers,
-      hasMore: rows.length > size,
+      hasMore: rows.length > SIZE,
       cursor: last?.publishDate
         ? { publishDate: stegaClean(last.publishDate), id: last._id }
         : undefined,
