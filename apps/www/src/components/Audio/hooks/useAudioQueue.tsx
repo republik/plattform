@@ -191,6 +191,8 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     setKnownItems((previous) => new Map(previous).set(documentId, item))
   }
 
+  const [pendingFetches, setPendingFetches] = useState(0)
+
   const sanityIds = audioQueueRefs
     .filter((ref) => ref.sanityId)
     .map((ref) => ref.sanityId)
@@ -199,14 +201,12 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     const pending = sanityIds.filter((id) => !fetchedIds.current.has(id))
     if (pending.length === 0) return
 
-    let cancelled = false
+    setPendingFetches((count) => count + 1)
 
     getAudioQueueItemsByIds(pending)
       .then((items) => {
-        // Mark the whole batch, not just what came back: an id with no
-        // matching article would otherwise be refetched on every queue change.
         pending.forEach((id) => fetchedIds.current.add(id))
-        if (cancelled || items.length === 0) return
+        if (items.length === 0) return
 
         setKnownItems((previous) => {
           const next = new Map(previous)
@@ -220,10 +220,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
       .catch((error) =>
         reportError('useAudioQueue: hydrate from Sanity', error),
       )
-
-    return () => {
-      cancelled = true
-    }
+      .finally(() => setPendingFetches((count) => count - 1))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sanityIds.join(',')])
 
@@ -234,7 +231,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
       documentId ? knownItems.get(documentId) : undefined,
     )
   })
-  const isLoading = meLoading || audioQueueIsLoading
+  const isLoading = meLoading || audioQueueIsLoading || pendingFetches > 0
 
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
