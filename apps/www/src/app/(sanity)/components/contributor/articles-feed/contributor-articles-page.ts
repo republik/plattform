@@ -1,8 +1,8 @@
 import {
-    ARTICLES_BY_AUTHOR_PAGE_SIZE,
-    ARTICLES_BY_AUTHOR_QUERY,
+  ARTICLES_BY_AUTHOR_PAGE_SIZE,
+  ARTICLES_BY_AUTHOR_QUERY,
 } from '@/app/(sanity)/groq/articles-by-author-query'
-import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
+import { client } from '@/app/(sanity)/lib/client'
 import type { ARTICLES_BY_AUTHOR_QUERY_RESULT } from '@/sanity.types'
 import { stegaClean } from 'next-sanity'
 
@@ -72,7 +72,7 @@ export async function fetchContributorArticlesPage(
   userId: string,
   cursor?: ContributorArticlesCursor,
 ): Promise<ContributorArticlesPage> {
-  const data = await sanityClientFetch(
+  const data = await client.fetch(
     ARTICLES_BY_AUTHOR_QUERY,
     contributorArticlesParams(userId, cursor),
   )
