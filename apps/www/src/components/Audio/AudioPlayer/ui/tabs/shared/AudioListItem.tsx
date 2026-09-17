@@ -55,6 +55,7 @@ const styles = {
   }),
   actions: css({
     alignSelf: 'stretch',
+    marginRight: 20,
   }),
   dragControl: css({
     padding: 8,

@@ -44,15 +44,12 @@ const usePersistedAudioState = createPersistedState<AudioQueueItem>(
 const MAX_QUEUE_SIZE = 20
 
 /**
- * The audio queue API stores refs (`repoId` XOR `sanityId`, no content) — the
- * same join key `document-id.ts` produces for bookmarks. Recomputing it here
- * from a ref lets us look up whatever metadata `handleAddQueueItem` cached
- * for that id when it was added.
+ * The audio queue API stores refs (a `sanityId`, no content) — the same join
+ * key `document-id.ts` produces for bookmarks. Recomputing it here from a ref
+ * is what lets the cache be looked up by it.
  */
 function refDocumentId(ref: AudioQueueItemRefFragment): string | null {
-  if (ref.repoId) return btoa(ref.repoId)
-  if (ref.sanityId) return `sanity:${ref.sanityId}`
-  return null
+  return ref.sanityId ? `sanity:${ref.sanityId}` : null
 }
 
 /**
@@ -187,31 +184,28 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     AudioQueueItemRefFragmentDoc,
     audioQueueData?.userAudioQueue || [],
   )
-  // `audioItemCache` only lives for the current page session — a reload
-  // loses it, since nothing was added/played yet to repopulate it. For
-  // Sanity-backed refs (which, unlike legacy repoIds, have a real batch
-  // content lookup) fetch whatever the cache doesn't already know, so a
-  // reloaded queue still renders. Legacy repoId items have no such lookup
-  // (only `document(path:)`, singular) and stay session-only — an accepted
-  // gap, since that content is being migrated to Sanity regardless.
-  //
-  // Both the cache and the in-flight bookkeeping live in the module, not in
-  // this hook: a feed page mounts one instance per teaser, and per-instance
-  // state meant each of them issued the same hydration request.
+  // `audioItemCache` only lives for the current page session, so the queue's
+  // content is fetched from Sanity on every load. Both the cache and the
+  // in-flight bookkeeping live in the module rather than in this hook: before
+  // AudioQueueProvider existed, a feed page mounted one instance per teaser
+  // and each issued the same hydration request.
   useSyncExternalStore(
     subscribeToAudioItems,
     getAudioItemsVersion,
     () => 0, // never hydrated during SSR
   )
 
-  const missingSanityIds = audioQueueRefs
-    .filter((ref) => ref.sanityId && !getKnownAudioItem(refDocumentId(ref)))
+  // Every ref, not just the ones nothing is known about: a locally remembered
+  // item may be a stub built from whatever props the play button happened to
+  // have. `hydrateAudioItems` skips ids it has already fetched.
+  const sanityIds = audioQueueRefs
+    .filter((ref) => ref.sanityId)
     .map((ref) => ref.sanityId)
 
   useEffect(() => {
-    if (missingSanityIds.length === 0) return
+    if (sanityIds.length === 0) return
 
-    hydrateAudioItems(missingSanityIds, async (ids) => {
+    hydrateAudioItems(sanityIds, async (ids) => {
       const items = await getAudioQueueItemsByIds(ids)
       return items.map((item) => [
         `sanity:${item._id}`,
@@ -221,7 +215,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
       reportError('useAudioQueue: hydrate from Sanity', error),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [missingSanityIds.join(',')])
+  }, [sanityIds.join(',')])
 
   const audioQueueItems = audioQueueRefs.map((ref) =>
     mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))),
