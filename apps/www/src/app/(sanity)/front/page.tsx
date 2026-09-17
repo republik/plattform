@@ -9,7 +9,7 @@ import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 60
+export const revalidate = 0
 
 // Static SEO metadata: the Sanity front document has no metadata fields
 const title = 'Republik Magazin - Ohne Journalismus keine Demokratie'
