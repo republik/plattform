@@ -27,7 +27,7 @@ const STEGA_SKIP_FIELDS: ContentSourceMapParsedPath = [
  *
  * DO NOT use this to fetch content directly, only to build other, more specific clients.
  */
-export const baseClient = createClient({
+export const client = createClient({
   projectId,
   dataset,
   apiVersion: '2026-09-17',
@@ -44,21 +44,4 @@ export const baseClient = createClient({
       return props.filterDefault(props)
     },
   },
-})
-
-/**
- * A client for fetching published content without stega encoding.
- */
-export const client = baseClient.withConfig({
-  perspective: 'published',
-  stega: false,
-})
-
-/**
- * A client for fetching metadata without stega encoding.
- */
-export const metadataClient = baseClient.withConfig({
-  perspective: 'published',
-  stega: false,
-  requestTagPrefix: 'metadata',
 })

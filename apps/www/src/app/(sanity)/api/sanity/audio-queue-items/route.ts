@@ -1,6 +1,5 @@
 import { AUDIO_QUEUE_ITEMS_QUERY } from '@/app/(sanity)/groq/audio-queue-items-query'
-import { client } from '@/app/(sanity)/lib/client'
-import { draftMode } from 'next/headers'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { NextResponse } from 'next/server'
 
 /**
@@ -8,7 +7,7 @@ import { NextResponse } from 'next/server'
  * hook reachable from both the App Router and the legacy Pages Router, and
  * only App Router pages get the RSC compilation that strips a server
  * action's real (server-only) implementation out of the client bundle. A
- * Pages Router page importing a `client.fetch`-based server action bundles
+ * Pages Router page importing a `sanityClientFetch`-based server action bundles
  * `defineLive` itself into clienthrows at runtime. A `fetch()`
  * call to a no such coupling.
  */
@@ -35,7 +34,7 @@ export async function POST(req: Request) {
     return NextResponse.json([])
   }
 
-  const data = await client.fetch(
+  const data = await sanityClientFetch(
     AUDIO_QUEUE_ITEMS_QUERY,
     { ids },
     { stega: false, tag: 'audio-queue-items-route' },

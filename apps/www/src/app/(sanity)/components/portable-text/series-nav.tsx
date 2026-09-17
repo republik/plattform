@@ -1,7 +1,7 @@
 import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { InlineTeaser } from '@/app/(sanity)/components/teaser/inline'
 import { SERIES_NAV_QUERY } from '@/app/(sanity)/groq/series-nav-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { Infobox } from '@/app/components/ui/infobox'
 import type { SeriesNav } from '@/sanity.types'
 import { css } from '@republik/theme/css'
@@ -13,7 +13,7 @@ export async function SeriesNav({
   value: SeriesNav
   compact?: boolean
 }) {
-  const series = await client.fetch(
+  const series = await sanityClientFetch(
     SERIES_NAV_QUERY,
     { id: value.series._ref },
     { tag: 'series-nav' },

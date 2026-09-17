@@ -3,7 +3,7 @@
 import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import { TEASERS_SMALL_QUERY_DESC } from '@/app/(sanity)/groq/teasers-small-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { TeaserFeedClient } from './teaser-feed-client'
 
 const MAX_TEASERS = 20
@@ -17,7 +17,7 @@ export async function TeaserFeedServer({
   documentId: string
   blockKey: string
 }) {
-  const data = await client.fetch(
+  const data = await sanityClientFetch(
     TEASERS_SMALL_QUERY_DESC,
     {
       documentId,
@@ -36,7 +36,7 @@ export async function TeaserFeedServer({
   // we only offer this option when: list has > 20 teasers
   async function loadMore() {
     'use server'
-    const data = await client.fetch(
+    const data = await sanityClientFetch(
       TEASERS_SMALL_QUERY_DESC,
       {
         blockKey,

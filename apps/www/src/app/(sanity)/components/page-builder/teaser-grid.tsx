@@ -1,16 +1,15 @@
 import {
-  getNotExpiredTeasers,
-  TeaserListItemType,
+    getNotExpiredTeasers,
+    TeaserListItemType,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import {
-  TEASERS_SMALL_QUERY_ASC,
-  TEASERS_SMALL_QUERY_DESC,
+    TEASERS_SMALL_QUERY_ASC,
+    TEASERS_SMALL_QUERY_DESC,
 } from '@/app/(sanity)/groq/teasers-small-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { css } from '@republik/theme/css'
-import React from 'react'
 
 const gridStyle = css({
   gridColumn: 'breakout',
@@ -40,7 +39,7 @@ export async function TeaserGrid({
   // We display series in chronological order, starting with the first episode
   const QUERY = series ? TEASERS_SMALL_QUERY_ASC : TEASERS_SMALL_QUERY_DESC
 
-  const data = await client.fetch(
+  const data = await sanityClientFetch(
     QUERY,
     {
       documentId,

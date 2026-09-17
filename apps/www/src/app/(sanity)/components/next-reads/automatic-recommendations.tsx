@@ -1,10 +1,10 @@
 import {
-  ProgressState,
-  UserBookmarksDocument,
+    ProgressState,
+    UserBookmarksDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { BookmarkedFeed } from '@/app/(sanity)/components/next-reads/bookmarked'
 import { ARTICLES_BY_IDS_QUERY } from '@/app/(sanity)/groq/articles-by-ids-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { getClient } from '@/app/lib/apollo/client'
 import { getMe } from '@/app/lib/auth/me'
 
@@ -42,7 +42,7 @@ export async function AutomaticRecommendations({
 
   if (!bookmarkIds.length) return null
 
-  const teasers = await client.fetch(
+  const teasers = await sanityClientFetch(
     ARTICLES_BY_IDS_QUERY,
     {
       ids: bookmarkIds,

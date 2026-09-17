@@ -4,7 +4,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { ARTICLES_BY_IDS_QUERY } from '@/app/(sanity)/groq/articles-by-ids-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { Spinner } from '@/app/components/ui/spinner'
 import { getClient } from '@/app/lib/apollo/client'
 import { getMe } from '@/app/lib/auth/me'
@@ -55,7 +55,7 @@ async function MyRepublikWithData() {
       ?.filter((n) => n.object?.__typename === 'SanityDocumentRef')
       .map((n) => (n.object as { id: string })?.id) ?? []
 
-  const teasers = await client.fetch(ARTICLES_BY_IDS_QUERY, {
+  const teasers = await sanityClientFetch(ARTICLES_BY_IDS_QUERY, {
     ids: [...progressIds, ...notificationIds],
   })
   const teasersById = new Map(teasers.map((t) => [t._id, t]))

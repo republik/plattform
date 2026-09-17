@@ -1,8 +1,8 @@
-import { client } from '@/app/(sanity)/lib/client'
 import {
-  ARTICLES_BY_AUTHOR_PAGE_SIZE,
-  ARTICLES_BY_AUTHOR_QUERY,
+    ARTICLES_BY_AUTHOR_PAGE_SIZE,
+    ARTICLES_BY_AUTHOR_QUERY,
 } from '@/app/(sanity)/groq/articles-by-author-query'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import type { ARTICLES_BY_AUTHOR_QUERY_RESULT } from '@/sanity.types'
 import { stegaClean } from 'next-sanity'
 
@@ -66,13 +66,13 @@ export function toContributorArticlesPage(
  * browser can query it without a token and no API route has to stand in the
  * middle — which is what lets the pages-router profile use this feed at all.
  *
- * Server components should use `client.fetch` instead.
+ * Server components should use `sanityClientFetch` instead.
  */
 export async function fetchContributorArticlesPage(
   userId: string,
   cursor?: ContributorArticlesCursor,
 ): Promise<ContributorArticlesPage> {
-  const data = await client.fetch<ARTICLES_BY_AUTHOR_QUERY_RESULT>(
+  const data = await sanityClientFetch(
     ARTICLES_BY_AUTHOR_QUERY,
     contributorArticlesParams(userId, cursor),
   )

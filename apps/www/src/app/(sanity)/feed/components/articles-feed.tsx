@@ -1,10 +1,10 @@
 import { ARTICLES_QUERY } from '@/app/(sanity)/groq/articles-query'
-import { client } from '@/app/(sanity)/lib/client'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { stegaClean } from 'next-sanity'
 import {
-  ArticlesFeedClient,
-  type FeedCursor,
-  type FeedPage,
+    ArticlesFeedClient,
+    type FeedCursor,
+    type FeedPage,
 } from './articles-feed-client'
 
 const SIZE = 20
@@ -13,7 +13,7 @@ export async function ArticlesFeed() {
   async function fetchPage(cursor?: FeedCursor): Promise<FeedPage> {
     'use server'
 
-    const data = await client.fetch(
+    const data = await sanityClientFetch(
       ARTICLES_QUERY,
       {
         lastPublishDate: cursor?.publishDate ?? null,
