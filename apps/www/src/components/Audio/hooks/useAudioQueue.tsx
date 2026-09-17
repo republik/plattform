@@ -1,29 +1,6 @@
 'use client'
 
-import { useInNativeApp } from '@/lib/withInNativeApp'
-import compareVersion from '@/lib/react-native/CompareVersion'
-import { NEW_AUDIO_API_VERSION } from '../constants'
-import { useMe } from '@/lib/context/MeContext'
-import createPersistedState from '@/lib/hooks/use-persisted-state'
-import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
-import {
-  rememberAudioItem,
-  getKnownAudioItem,
-  getAudioItemsVersion,
-  hydrateAudioItems,
-  subscribeToAudioItems,
-} from '../helpers/audioItemCache'
-import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
-import { getAudioCoverImages } from '../helpers/audioCoverImages'
-import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
-import { reportError } from '@/lib/errors/reportError'
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useSyncExternalStore,
-} from 'react'
-import { v4 as uuid } from 'uuid'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import {
   AddAudioQueueItemRefDocument,
   AudioQueueEntityType,
@@ -35,7 +12,18 @@ import {
   RemoveAudioQueueItemDocument,
   ReorderAudioQueueDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { getFragmentData } from '#graphql/cms/__generated__/gql'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { useMe } from '@/lib/context/MeContext'
+import { reportError } from '@/lib/errors/reportError'
+import createPersistedState from '@/lib/hooks/use-persisted-state'
+import compareVersion from '@/lib/react-native/CompareVersion'
+import { useInNativeApp } from '@/lib/withInNativeApp'
+import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+import { NEW_AUDIO_API_VERSION } from '../constants'
+import { getAudioCoverImages } from '../helpers/audioCoverImages'
+import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -184,42 +172,68 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     AudioQueueItemRefFragmentDoc,
     audioQueueData?.userAudioQueue || [],
   )
-  // `audioItemCache` only lives for the current page session, so the queue's
-  // content is fetched from Sanity on every load. Both the cache and the
-  // in-flight bookkeeping live in the module rather than in this hook: before
-  // AudioQueueProvider existed, a feed page mounted one instance per teaser
-  // and each issued the same hydration request.
-  useSyncExternalStore(
-    subscribeToAudioItems,
-    getAudioItemsVersion,
-    () => 0, // never hydrated during SSR
+  // The queue API returns bare refs, so each item's title/cover/publishDate is
+  // fetched from Sanity.
+  // Items are also remembered when a caller adds or plays one, so the player
+  // can render before the fetch lands. Those are stubs built from whatever
+  // props the play button had (`PlayAction` has no publishDate, and none of
+  // the feed teasers pass a cover), which is why the fetch below runs for
+  // every ref rather than only unknown ones, and why its result overwrites.
+  const [knownItems, setKnownItems] = useState<Map<string, AudioPlayerItem>>(
+    new Map(),
   )
+  // Ids already fetched, so a queue change doesn't refetch them. A ref, not
+  // state: updating it must not trigger a render of its own.
+  const fetchedIds = useRef<Set<string>>(new Set())
 
-  // Every ref, not just the ones nothing is known about: a locally remembered
-  // item may be a stub built from whatever props the play button happened to
-  // have. `hydrateAudioItems` skips ids it has already fetched.
+  const rememberItem = (documentId: string, item: AudioPlayerItem) => {
+    if (!documentId || !item?.meta?.audioSource) return
+    setKnownItems((previous) => new Map(previous).set(documentId, item))
+  }
+
   const sanityIds = audioQueueRefs
     .filter((ref) => ref.sanityId)
     .map((ref) => ref.sanityId)
 
   useEffect(() => {
-    if (sanityIds.length === 0) return
+    const pending = sanityIds.filter((id) => !fetchedIds.current.has(id))
+    if (pending.length === 0) return
 
-    hydrateAudioItems(sanityIds, async (ids) => {
-      const items = await getAudioQueueItemsByIds(ids)
-      return items.map((item) => [
-        `sanity:${item._id}`,
-        toAudioPlayerItem(item),
-      ])
-    })?.catch((error) =>
-      reportError('useAudioQueue: hydrate from Sanity', error),
-    )
+    let cancelled = false
+
+    getAudioQueueItemsByIds(pending)
+      .then((items) => {
+        // Mark the whole batch, not just what came back: an id with no
+        // matching article would otherwise be refetched on every queue change.
+        pending.forEach((id) => fetchedIds.current.add(id))
+        if (cancelled || items.length === 0) return
+
+        setKnownItems((previous) => {
+          const next = new Map(previous)
+          items.forEach((item) =>
+            next.set(`sanity:${item._id}`, toAudioPlayerItem(item)),
+          )
+          return next
+        })
+      })
+      // Failures stay unmarked, so the next queue change retries them.
+      .catch((error) =>
+        reportError('useAudioQueue: hydrate from Sanity', error),
+      )
+
+    return () => {
+      cancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sanityIds.join(',')])
 
-  const audioQueueItems = audioQueueRefs.map((ref) =>
-    mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))),
-  )
+  const audioQueueItems = audioQueueRefs.map((ref) => {
+    const documentId = refDocumentId(ref)
+    return mergeQueueItem(
+      ref,
+      documentId ? knownItems.get(documentId) : undefined,
+    )
+  })
   const isLoading = meLoading || audioQueueIsLoading
 
   const [localAudioItem, setLocalAudioItem] =
@@ -296,7 +310,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     item: AudioPlayerItem,
     position?: number,
   ): Promise<AudioQueueItem[]> => {
-    rememberAudioItem(item.id, item)
+    rememberItem(item.id, item)
 
     if (me) {
       // Enforce queue limit by removing oldest item (end of queue) before adding
@@ -319,7 +333,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
         data?.audioQueueItems || [],
       )
       return refs.map((ref) =>
-        mergeQueueItem(ref, getKnownAudioItem(refDocumentId(ref))),
+        mergeQueueItem(ref, knownItems.get(refDocumentId(ref) ?? '')),
       )
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
@@ -421,10 +435,10 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     : null
 
   return {
-    // Items without cached metadata (queued elsewhere, not seen locally yet),
+    // Items without metadata (queued elsewhere, not fetched yet),
     // or whose audio has since been removed/unpublished in Sanity (mp3 gone,
     // ref still lingering in userAudioQueue), are hidden rather than
-    // rendered broken — see `helpers/audioItemCache.ts`.
+    // rendered broken.
     audioQueue: resolvedQueue?.filter(
       (item) => item.document?.meta?.audioSource?.mp3,
     ),
