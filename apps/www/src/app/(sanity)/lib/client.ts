@@ -26,7 +26,7 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion: '2026-02-01',
-  useCdn: true,
+  useCdn: false,
   stega: {
     studioUrl,
     filter: (props) => {
