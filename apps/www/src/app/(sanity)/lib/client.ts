@@ -25,8 +25,8 @@ const STEGA_SKIP_FIELDS: ContentSourceMapParsedPath = [
 export const client = createClient({
   projectId,
   dataset,
-  apiVersion: '2026-02-01',
-  useCdn: false,
+  apiVersion: '2026-09-17',
+  useCdn: true,
   stega: {
     studioUrl,
     filter: (props) => {

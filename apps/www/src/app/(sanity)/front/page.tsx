@@ -9,7 +9,7 @@ import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 0
+export const revalidate = 60
 
 // Static SEO metadata: the Sanity front document has no metadata fields
 const title = 'Republik Magazin - Ohne Journalismus keine Demokratie'
@@ -28,7 +28,10 @@ export const metadata: Metadata = {
 }
 
 export default async function FrontPage() {
-  const { data: front } = await sanityFetch({ query: FRONT_LATEST_QUERY })
+  const { data: front } = await sanityFetch({
+    query: FRONT_LATEST_QUERY,
+    requestTag: 'front',
+  })
 
   if (!front) notFound()
 
