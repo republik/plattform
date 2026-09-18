@@ -1,9 +1,13 @@
 'use client'
 
 import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
+import {
+  HERBST26_HEADLINE,
+  isHerbst26Active,
+} from '@/app/(sanity)/components/paynotes/herbst26'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useMe } from '@/lib/context/MeContext'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import { StructuredText } from 'react-datocms/structured-text'
 import { getMeteringData } from '../article-metering'
 import { usePaynotes } from '../paynotes-context'
@@ -14,18 +18,29 @@ function PaynoteInline() {
   const { paynoteKind } = usePaynotes()
   const paynotes = usePaynoteVariants()
   const { trialStatus } = useMe()
+  const isHerbst26 = isHerbst26Active()
 
-  if (paynoteKind !== 'PAYNOTE_INLINE') {
+  // During the Herbst-26 special the inline paynote runs alongside the overlay.
+  if (paynoteKind !== 'PAYNOTE_INLINE' && paynoteKind !== 'HERBST26') {
     return null
   }
 
-  if (!paynotes) {
+  // Outside the window this is exactly the previous `if (!paynotes)` guard.
+  if (!isHerbst26 && !paynotes) {
     return null
   }
 
-  const { paynote } = paynotes
+  const paynote = paynotes?.paynote
 
-  const paynoteVariantForAnalytics = paynote.title
+  // Herbst-26 special: fixed copy, the CMS paynote is not used and we don't
+  // wait for it either.
+  const showCmsPaynote = !isHerbst26 && !!paynote
+  const title = isHerbst26 ? HERBST26_HEADLINE : paynote?.title
+
+  // Both branches are literal css() calls so Panda can extract them statically.
+  const accentBackground = isHerbst26
+    ? css({ backgroundColor: 'text.marketingAccent' })
+    : css({ backgroundColor: 'background.marketingAccent' })
 
   return (
     <EventTrackingContext category='PaynoteInline'>
@@ -49,7 +64,7 @@ function PaynoteInline() {
             gap: '4',
           })}
         >
-          <PaynoteAuthor author={paynote.author} />
+          {showCmsPaynote && <PaynoteAuthor author={paynote.author} />}
 
           <h2
             className={css({
@@ -58,34 +73,43 @@ function PaynoteInline() {
             })}
           >
             <span
-              className={css({
-                boxDecorationBreak: 'clone',
-                px: '1',
-                backgroundColor: 'background.marketingAccent',
-                ml: '-0.5',
-                position: 'relative',
-              })}
+              className={cx(
+                accentBackground,
+                css({
+                  boxDecorationBreak: 'clone',
+                  px: '1',
+                  ml: '-0.5',
+                  position: 'relative',
+                }),
+              )}
             >
-              {paynote?.title}
+              {title}
             </span>
           </h2>
 
-          <div
-            className={css({
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4',
-              pb: '4',
-              fontSize: 18,
-            })}
-          >
-            <StructuredText data={paynote?.message.value}></StructuredText>
-          </div>
+          {showCmsPaynote ? (
+            <div
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4',
+                pb: '4',
+                fontSize: 18,
+              })}
+            >
+              <StructuredText data={paynote?.message.value}></StructuredText>
+            </div>
+          ) : null}
 
           <Offers
             additionalShopParams={{
-              rep_ui_component: 'paynote-overlay',
-              rep_paynote_title: paynoteVariantForAnalytics,
+              // NOTE: the non-special value below is a pre-existing
+              // copy-paste bug; during the special both surfaces are live at
+              // once, so they have to be distinguishable.
+              rep_ui_component: isHerbst26
+                ? 'paynote-inline'
+                : 'paynote-overlay',
+              rep_paynote_title: title,
               rep_trial_status: trialStatus,
               ...getMeteringData('rep_'),
             }}

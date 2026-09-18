@@ -1,6 +1,10 @@
 'use client'
 
 import { OfferOptionRadio } from '@/app/kampagne/components/campaign-offer-options'
+import {
+  HERBST26_PROMO_CODE,
+  isHerbst26Active,
+} from '@/app/(sanity)/components/paynotes/herbst26'
 import { Button } from '@/app/components/ui/button'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
@@ -19,6 +23,7 @@ export function Offers({
 }) {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
   const utmParams = getUTMSessionStorage()
+  const isHerbst26 = isHerbst26Active()
   const trackEvent = useTrackEvent()
 
   const { isNativeApp } = usePlatformInformation()
@@ -37,7 +42,14 @@ export function Offers({
         })
       }}
     >
-      <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
+      <input
+        type='hidden'
+        hidden
+        name='promo_code'
+        value={
+          isHerbst26 && option === 'YEARLY' ? HERBST26_PROMO_CODE : 'EINSTIEG'
+        }
+      />
       {Object.entries(utmParams).map(([k, v]) => {
         return <input type='hidden' hidden key={k} name={k} value={v} />
       })}
@@ -116,7 +128,7 @@ export function Offers({
                   240.–
                 </del>
                 <span className={css({ fontWeight: 'bold' })}>
-                  222.– für ein Jahr
+                  {isHerbst26 ? '160.– für ein Jahr' : '222.– für ein Jahr'}
                 </span>
               </span>
               <span
@@ -129,7 +141,7 @@ export function Offers({
                   fontSize: 's',
                 })}
               >
-                12&thinsp;% günstiger als ein Monats-Abo
+                {isHerbst26 ? '39' : '12'}&thinsp;% günstiger als ein Monats-Abo
               </span>
             </span>
           </OfferOptionRadio>
