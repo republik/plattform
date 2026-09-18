@@ -36,9 +36,10 @@
 // document exists at, and the import is still ongoing, so "doesn't exist
 // yet" is an expected, temporary state for plenty of repoIds. The existence
 // check itself is unavoidable; only the "one call per repoId" part was the
-// bottleneck, fixed by using fetchDocumentsByIds' batch form. This step
-// also runs with no open transaction -- the Sanity round trips happen
-// before any row lock is taken (see runOneOffMigration.ts).
+// bottleneck, fixed by batching via fetchExistingSanityDocsById (shared with
+// migrate-legacy-subscriptions.ts, which has the same shape of problem).
+// This step also runs with no open transaction -- the Sanity round trips
+// happen before any row lock is taken (see runOneOffMigration.ts).
 //
 // Each repoId's write is its own short-lived transaction (runInScopedTransaction),
 // not part of one transaction spanning the whole run: this table is written
@@ -52,23 +53,9 @@
 
 import { PgDb } from '@orbiting/backend-modules-types'
 
-import { fetchDocumentsByIds, legacySanityId } from '../lib/document'
+import { legacySanityId } from '../lib/document'
 import { runInScopedTransaction, runOneOffMigration } from './lib/runOneOffMigration'
-
-// Sanity's `_id in $ids` filter has no problem with large arrays (the client
-// switches to POST once the query would exceed a GET URL's length), but
-// chunking keeps any one request/response modest and matches the batching
-// idiom already used elsewhere in this codebase (e.g.
-// search-typesense/script/reindex.ts's ARTICLE_BATCH_SIZE).
-const SANITY_LOOKUP_BATCH_SIZE = 500
-
-const chunk = <T,>(items: T[], size: number): T[][] => {
-  const chunks: T[][] = []
-  for (let i = 0; i < items.length; i += size) {
-    chunks.push(items.slice(i, i + size))
-  }
-  return chunks
-}
+import { fetchExistingSanityDocsById } from './lib/sanityExistence'
 
 const migrateCollectionItems = async (pgdb: PgDb, confirmed: boolean) => {
   // `sanityId IS NULL` -- not just `repoId IS NOT NULL` -- so a re-run only
@@ -94,14 +81,9 @@ const migrateCollectionItems = async (pgdb: PgDb, confirmed: boolean) => {
     if (sanityId) sanityIdByRepoId.set(repoId, sanityId)
   }
 
-  const existingDocsById = new Map<string, { _id: string }>()
-  for (const idsBatch of chunk(
-    [...sanityIdByRepoId.values()],
-    SANITY_LOOKUP_BATCH_SIZE,
-  )) {
-    const docs = await fetchDocumentsByIds(idsBatch)
-    for (const doc of docs) existingDocsById.set(doc._id, doc)
-  }
+  const existingDocsById = await fetchExistingSanityDocsById([
+    ...sanityIdByRepoId.values(),
+  ])
 
   for (const [repoId, mappedSanityId] of sanityIdByRepoId) {
     const doc = existingDocsById.get(mappedSanityId)
