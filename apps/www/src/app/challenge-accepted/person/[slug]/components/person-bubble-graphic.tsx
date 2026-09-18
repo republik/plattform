@@ -254,7 +254,7 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
       d.fy = d.y
       d.hovered = true
 
-      select(event.currentTarget).attr('data-hover', true)
+      select(event.currentTarget as HTMLElement).attr('data-hover', true)
 
       simulation.force(
         'hovercollide',
@@ -271,7 +271,7 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
       d.fy = null
       d.hovered = false
 
-      select(event.currentTarget).attr('data-hover', undefined)
+      select(event.currentTarget as HTMLElement).attr('data-hover', undefined)
 
       simulation.force('hovercollide', null)
     })
