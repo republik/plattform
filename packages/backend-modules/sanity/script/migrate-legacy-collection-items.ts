@@ -26,13 +26,39 @@
 // thousands of rows, and Postgres doing the matching/writing itself avoids
 // a DB round trip per row for work it can do in two statements.
 //
+// Existence is checked in batches, not one Sanity API call per repoId.
+// repoIdToSanityId's mapping is a pure computation (no API needed to know
+// WHERE a repo's document would live), but it does NOT mean that document
+// was ever created: studio's one-time import is publish-state-gated and
+// excludes dossiers, duplicate-of-series formats, and all fronts but the
+// main magazine one -- so a repoId can deterministically map to an id no
+// document exists at, and the import is still ongoing, so "doesn't exist
+// yet" is an expected, temporary state for plenty of repoIds. The existence
+// check itself is unavoidable; only the "one call per repoId" part was the
+// bottleneck, fixed by using fetchDocumentsByIds' batch form.
+//
 // Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items
 //        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items --confirm
 
 import { PgDb } from '@orbiting/backend-modules-types'
 
-import { fetchDocumentByLegacyRepoId } from '../lib/document'
+import { fetchDocumentsByIds, legacySanityId } from '../lib/document'
 import { runOneOffMigration } from './lib/runOneOffMigration'
+
+// Sanity's `_id in $ids` filter has no problem with large arrays (the client
+// switches to POST once the query would exceed a GET URL's length), but
+// chunking keeps any one request/response modest and matches the batching
+// idiom already used elsewhere in this codebase (e.g.
+// search-typesense/script/reindex.ts's ARTICLE_BATCH_SIZE).
+const SANITY_LOOKUP_BATCH_SIZE = 500
+
+const chunk = <T,>(items: T[], size: number): T[][] => {
+  const chunks: T[][] = []
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size))
+  }
+  return chunks
+}
 
 const migrateCollectionItems = async (pgdb: PgDb) => {
   // `sanityId IS NULL` -- not just `repoId IS NOT NULL` -- so a re-run only
@@ -49,8 +75,26 @@ const migrateCollectionItems = async (pgdb: PgDb) => {
     `collectionDocumentItems: ${legacyRepoIds.length} distinct un-migrated legacy repoIds`,
   )
 
+  // repoIdToSanityId is deterministic and needs no API call -- compute the
+  // whole mapping up front, then check which of those ids actually exist in
+  // one batch of requests instead of one request per repoId.
+  const sanityIdByRepoId = new Map<string, string>()
   for (const repoId of legacyRepoIds) {
-    const doc = await fetchDocumentByLegacyRepoId(repoId)
+    const sanityId = legacySanityId(repoId)
+    if (sanityId) sanityIdByRepoId.set(repoId, sanityId)
+  }
+
+  const existingDocsById = new Map<string, { _id: string }>()
+  for (const idsBatch of chunk(
+    [...sanityIdByRepoId.values()],
+    SANITY_LOOKUP_BATCH_SIZE,
+  )) {
+    const docs = await fetchDocumentsByIds(idsBatch)
+    for (const doc of docs) existingDocsById.set(doc._id, doc)
+  }
+
+  for (const [repoId, mappedSanityId] of sanityIdByRepoId) {
+    const doc = existingDocsById.get(mappedSanityId)
     if (!doc) continue
 
     const sanityId = doc._id.replace(/^drafts\./, '')
