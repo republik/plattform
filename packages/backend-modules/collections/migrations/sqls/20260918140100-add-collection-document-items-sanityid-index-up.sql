@@ -1,0 +1,31 @@
+-- The only existing index touching "sanityId" is the partial unique
+-- constraint on ("collectionId", "userId", "sanityId") WHERE "sanityId" IS
+-- NOT NULL -- "sanityId" sits in third position there, so a plain
+-- `WHERE "sanityId" = $1` filter (what migrate-legacy-collection-items.ts's
+-- conflict-check DELETE does, see script/migrate-legacy-collection-items.ts)
+-- can't seek directly to a match; Postgres instead scans that whole partial
+-- index checking every entry.
+--
+-- That's cheap today only because almost nothing has "sanityId" set yet (20
+-- rows on production, pre-migration) -- confirmed via EXPLAIN ANALYZE, an
+-- Index Scan over the existing partial index at ~0.07ms. As
+-- migrate-legacy-collection-items.ts runs and backfills "sanityId" on
+-- potentially millions of rows, that same lookup (run once per distinct
+-- legacy repoId, ~10k times on production) would get progressively slower
+-- as the run progresses, proportional to how much of the table has already
+-- been migrated by that point -- the same class of problem
+-- ...-add-collection-document-items-repoid-index-up.sql fixes for "repoId",
+-- just for the other column this migration filters on.
+--
+-- A dedicated partial index with "sanityId" as the sole/leading column keeps
+-- that lookup a true O(log n) seek regardless of how large the migrated set
+-- grows. Partial (WHERE "sanityId" IS NOT NULL), not full: rows still
+-- awaiting migration (the vast majority, always, since "repoId" is dual-kept
+-- forever) have no "sanityId" to seek by, so indexing them here would be
+-- pure overhead.
+--
+-- CONCURRENTLY: same reasoning as the paired repoId index migration -- this
+-- table is written on essentially every article view.
+CREATE INDEX CONCURRENTLY IF NOT EXISTS "collectionDocumentItems_sanityId_idx"
+  ON "collectionDocumentItems" ("sanityId")
+  WHERE "sanityId" IS NOT NULL;
