@@ -1,4 +1,5 @@
 import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
+import { isHerbst26Active } from '@/app/components/paynotes/herbst26'
 
 import { useMe } from '@/lib/context/MeContext'
 import { useUserAgent } from '@/lib/context/UserAgentContext'
@@ -17,6 +18,7 @@ export type PaynoteKindType =
   | 'BANNER'
   | 'PAYNOTE_INLINE'
   | 'WELCOME_BANNER'
+  | 'HERBST26' // overlay *and* inline paynote, for the Herbst-26 special
   | 'CAMPAIGN_PAYNOTE'
   | 'CAMPAIGN_PAYWALL'
   | 'CAMPAIGN_BANNER' // not a paynote per se, but logic depends on the same params
@@ -151,6 +153,12 @@ export const PaynotesProvider = ({ children }) => {
 
     // ARTICLES:
     //
+    // Herbst-26 special: articles are open to everyone, we only show a paynote.
+    // Deliberately above the metering call, so we don't burn the free read.
+    if (isHerbst26Active()) {
+      return setPaynoteKind('HERBST26')
+    }
+
     // search bots: no paywall (we want texts to be indexed)
     // but we show the overlay (in case someone is
     // spoofing the user agent to read our content, we still
