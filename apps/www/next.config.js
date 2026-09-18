@@ -225,9 +225,9 @@ const nextConfig = {
           '/politik-in-26-fragen-ihre-antworten?share=submission-:id',
         permanent: true,
       },
-      // Redirect overview pages to 1st month
-      // TODO: fix and use sanity for the overview
-      /*{
+      // Redirect overview pages to 1st month. The single-segment pattern can't
+      // collide with an article slug, which always carries /year/month/day/name.
+      {
         source: '/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
@@ -236,7 +236,7 @@ const nextConfig = {
         source: '/archiv/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
-      },*/
+      },
       { source: '/en', destination: '/manifest/en', permanent: false },
     ].filter(Boolean)
   },
