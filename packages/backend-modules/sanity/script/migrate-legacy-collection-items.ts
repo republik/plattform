@@ -13,8 +13,9 @@
 // the new Sanity-oriented queries too (userCollectionItems,
 // userDocumentProgress, userAudioQueue).
 //
-// Dry-run by default: it reports every change it would make and rolls the
-// transaction back. Pass --confirm to actually commit.
+// Dry-run by default: it reports every change it would make, rolling back
+// each repoId's own scoped transaction as it goes (see below). Pass
+// --confirm to actually commit.
 //
 // Reads narrowly on purpose: this table is large (millions of rows across
 // all users' bookmarks/audio-queue/progress), but the ~thousands of
@@ -35,7 +36,16 @@
 // document exists at, and the import is still ongoing, so "doesn't exist
 // yet" is an expected, temporary state for plenty of repoIds. The existence
 // check itself is unavoidable; only the "one call per repoId" part was the
-// bottleneck, fixed by using fetchDocumentsByIds' batch form.
+// bottleneck, fixed by using fetchDocumentsByIds' batch form. This step
+// also runs with no open transaction -- the Sanity round trips happen
+// before any row lock is taken (see runOneOffMigration.ts).
+//
+// Each repoId's write is its own short-lived transaction (runInScopedTransaction),
+// not part of one transaction spanning the whole run: this table is written
+// on essentially every article view, and holding thousands of repoIds'
+// worth of row locks for the full run duration would block concurrent
+// application writes to any row already touched -- see
+// runOneOffMigration.ts for why.
 //
 // Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items
 //        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items --confirm
@@ -43,7 +53,7 @@
 import { PgDb } from '@orbiting/backend-modules-types'
 
 import { fetchDocumentsByIds, legacySanityId } from '../lib/document'
-import { runOneOffMigration } from './lib/runOneOffMigration'
+import { runInScopedTransaction, runOneOffMigration } from './lib/runOneOffMigration'
 
 // Sanity's `_id in $ids` filter has no problem with large arrays (the client
 // switches to POST once the query would exceed a GET URL's length), but
@@ -60,7 +70,7 @@ const chunk = <T,>(items: T[], size: number): T[][] => {
   return chunks
 }
 
-const migrateCollectionItems = async (pgdb: PgDb) => {
+const migrateCollectionItems = async (pgdb: PgDb, confirmed: boolean) => {
   // `sanityId IS NULL` -- not just `repoId IS NOT NULL` -- so a re-run only
   // does work for repoIds that still have at least one un-migrated row.
   // Idempotent already meant "safe to rerun"; this also makes rerunning
@@ -107,29 +117,39 @@ const migrateCollectionItems = async (pgdb: PgDb) => {
     // drop the redundant Sanity-only one instead. dup/legacy can never be
     // the same row here: dup requires sanityId = :sanityId, legacy requires
     // sanityId IS NULL. Runs before the update below so the join still finds
-    // the not-yet-migrated legacy rows.
-    const droppedDuplicates: { id: string }[] = await pgdb.query(
-      `
-        DELETE FROM "collectionDocumentItems" AS dup
-        USING "collectionDocumentItems" AS legacy
-        WHERE dup."sanityId" = :sanityId
-          AND legacy."repoId" = :repoId
-          AND legacy."sanityId" IS NULL
-          AND dup."collectionId" = legacy."collectionId"
-          AND dup."userId" = legacy."userId"
-        RETURNING dup."id"
-      `,
-      { sanityId, repoId },
-    )
+    // the not-yet-migrated legacy rows. Both statements share one scoped
+    // transaction so a dry run's rollback undoes the delete too -- but that
+    // transaction is scoped to just this repoId, not the whole run.
+    const { droppedDuplicates, updated } = await runInScopedTransaction(
+      pgdb,
+      confirmed,
+      async (tx) => {
+        const droppedDuplicates: { id: string }[] = await tx.query(
+          `
+            DELETE FROM "collectionDocumentItems" AS dup
+            USING "collectionDocumentItems" AS legacy
+            WHERE dup."sanityId" = :sanityId
+              AND legacy."repoId" = :repoId
+              AND legacy."sanityId" IS NULL
+              AND dup."collectionId" = legacy."collectionId"
+              AND dup."userId" = legacy."userId"
+            RETURNING dup."id"
+          `,
+          { sanityId, repoId },
+        )
 
-    const updated: { id: string }[] = await pgdb.query(
-      `
-        UPDATE "collectionDocumentItems"
-        SET "sanityId" = :sanityId
-        WHERE "repoId" = :repoId AND "sanityId" IS NULL
-        RETURNING "id"
-      `,
-      { sanityId, repoId },
+        const updated: { id: string }[] = await tx.query(
+          `
+            UPDATE "collectionDocumentItems"
+            SET "sanityId" = :sanityId
+            WHERE "repoId" = :repoId AND "sanityId" IS NULL
+            RETURNING "id"
+          `,
+          { sanityId, repoId },
+        )
+
+        return { droppedDuplicates, updated }
+      },
     )
 
     console.log(

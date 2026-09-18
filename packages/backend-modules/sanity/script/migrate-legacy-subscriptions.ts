@@ -9,8 +9,11 @@
 // legacy repoId and its Sanity ref. This script exists to actually
 // normalize the stored rows for that eventual ES retirement.
 //
-// Dry-run by default: it reports every change it would make and rolls the
-// transaction back. Pass --confirm to actually commit.
+// Dry-run by default: it reports every change it would make, rolling back
+// each repoId's own scoped transaction as it goes (see runOneOffMigration.ts
+// -- each repoId's write gets its own short-lived transaction rather than
+// the whole run sharing one, so a long run doesn't hold locks on rows it
+// already finished writing to). Pass --confirm to actually commit.
 //
 // Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-subscriptions
 //        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-subscriptions --confirm
@@ -18,9 +21,9 @@
 import { PgDb } from '@orbiting/backend-modules-types'
 
 import { fetchDocumentByLegacyRepoId, toSanityRef, isSanityRef } from '../lib/document'
-import { runOneOffMigration } from './lib/runOneOffMigration'
+import { runInScopedTransaction, runOneOffMigration } from './lib/runOneOffMigration'
 
-const migrateSubscriptions = async (pgdb: PgDb) => {
+const migrateSubscriptions = async (pgdb: PgDb, confirmed: boolean) => {
   const rows = await pgdb.public.subscriptions.find({
     objectType: 'Document',
   })
@@ -39,9 +42,11 @@ const migrateSubscriptions = async (pgdb: PgDb) => {
     if (!doc) continue
 
     const sanityRef = toSanityRef(doc._id)
-    await pgdb.public.subscriptions.update(
-      { objectType: 'Document', objectDocumentId: repoId },
-      { objectDocumentId: sanityRef },
+    await runInScopedTransaction(pgdb, confirmed, (tx) =>
+      tx.public.subscriptions.update(
+        { objectType: 'Document', objectDocumentId: repoId },
+        { objectDocumentId: sanityRef },
+      ),
     )
     console.log(`subscriptions: ${repoId} -> ${sanityRef}`)
   }
