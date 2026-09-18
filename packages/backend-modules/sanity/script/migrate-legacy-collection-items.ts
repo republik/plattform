@@ -20,9 +20,11 @@
 // all users' bookmarks/audio-queue/progress), but the ~thousands of
 // *distinct* repoIds is what actually drives the work -- loading every row
 // up front just to dedupe repoIds in JS previously OOM-killed a one-off
-// dyno before it could even log a count. DISTINCT is computed in SQL, and
-// each repoId's own rows are fetched (with only the columns this migration
-// touches) one repoId at a time inside the loop below.
+// dyno before it could even log a count. DISTINCT is computed in SQL. The
+// per-repoId write is set-based SQL too (a DELETE + an UPDATE, each scoped
+// to that repoId), not a JS loop over its rows -- a repoId can have
+// thousands of rows, and Postgres doing the matching/writing itself avoids
+// a DB round trip per row for work it can do in two statements.
 //
 // Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items
 //        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items --confirm
@@ -31,12 +33,6 @@ import { PgDb } from '@orbiting/backend-modules-types'
 
 import { fetchDocumentByLegacyRepoId } from '../lib/document'
 import { runOneOffMigration } from './lib/runOneOffMigration'
-
-interface CollectionItemRow {
-  id: string
-  collectionId: string
-  userId: string
-}
 
 const migrateCollectionItems = async (pgdb: PgDb) => {
   // `sanityId IS NULL` -- not just `repoId IS NOT NULL` -- so a re-run only
@@ -59,47 +55,43 @@ const migrateCollectionItems = async (pgdb: PgDb) => {
 
     const sanityId = doc._id.replace(/^drafts\./, '')
 
-    // sanityId: null -- a repoId can reappear here across runs if a new row
-    // was added to it since the last migration (e.g. a fresh bookmark), even
-    // though most of its rows are already migrated; only touch the ones that
-    // still need it.
-    const rows: CollectionItemRow[] =
-      await pgdb.public.collectionDocumentItems.find(
-        { repoId, sanityId: null },
-        { fields: ['id', 'collectionId', 'userId'] },
-      )
-
     // A user may already hold a separate, Sanity-only row for the same
     // document in the same collection (e.g. they re-bookmarked it after the
     // content moved, before this backfill ran). The partial unique index
-    // would reject setting the same sanityId on the legacy row too, so
-    // resolve the conflict by keeping the legacy row -- it's the one old
-    // clients still see via repoId -- and dropping the redundant Sanity-only
-    // one instead.
-    const conflicting: CollectionItemRow[] =
-      await pgdb.public.collectionDocumentItems.find(
-        { sanityId },
-        { fields: ['id', 'collectionId', 'userId'] },
-      )
+    // would reject setting the same sanityId on the legacy row too, so keep
+    // the legacy row -- it's the one old clients still see via repoId -- and
+    // drop the redundant Sanity-only one instead. dup/legacy can never be
+    // the same row here: dup requires sanityId = :sanityId, legacy requires
+    // sanityId IS NULL. Runs before the update below so the join still finds
+    // the not-yet-migrated legacy rows.
+    const droppedDuplicates: { id: string }[] = await pgdb.query(
+      `
+        DELETE FROM "collectionDocumentItems" AS dup
+        USING "collectionDocumentItems" AS legacy
+        WHERE dup."sanityId" = :sanityId
+          AND legacy."repoId" = :repoId
+          AND legacy."sanityId" IS NULL
+          AND dup."collectionId" = legacy."collectionId"
+          AND dup."userId" = legacy."userId"
+        RETURNING dup."id"
+      `,
+      { sanityId, repoId },
+    )
 
-    for (const row of rows) {
-      const conflict = conflicting.find(
-        (c) => c.collectionId === row.collectionId && c.userId === row.userId,
-      )
-      if (conflict) {
-        await pgdb.public.collectionDocumentItems.delete({ id: conflict.id })
-        console.log(
-          `collectionDocumentItems: dropped Sanity-only duplicate ${conflict.id} in favor of legacy row ${row.id}`,
-        )
-      }
-      await pgdb.public.collectionDocumentItems.update(
-        { id: row.id },
-        { sanityId },
-      )
-      console.log(
-        `collectionDocumentItems: ${repoId} -> sanityId ${sanityId} (repoId kept)`,
-      )
-    }
+    const updated: { id: string }[] = await pgdb.query(
+      `
+        UPDATE "collectionDocumentItems"
+        SET "sanityId" = :sanityId
+        WHERE "repoId" = :repoId AND "sanityId" IS NULL
+        RETURNING "id"
+      `,
+      { sanityId, repoId },
+    )
+
+    console.log(
+      `collectionDocumentItems: ${repoId} -> sanityId ${sanityId} ` +
+        `(dropped ${droppedDuplicates.length} Sanity-only duplicate(s), updated ${updated.length} row(s), repoId kept)`,
+    )
   }
 }
 
