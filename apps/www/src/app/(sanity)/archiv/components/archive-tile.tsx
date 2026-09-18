@@ -5,9 +5,14 @@ import { css } from '@republik/theme/css'
 
 const tileStyle = css({
   position: 'relative',
-  display: 'inline-block',
+  // Block rather than inline-block: an inline-block sits on a text baseline and
+  // picks up the line box's leading, which would add a few stray pixels to the
+  // vertical gutter only. `break-inside` keeps the column from splitting a tile,
+  // which is what inline-block was otherwise buying us.
+  display: 'block',
+  breakInside: 'avoid',
   width: 'full',
-  mb: '6',
+  mb: '4',
   overflow: 'hidden',
   transition: 'transform 0.2s ease-in-out',
   _hover: { transform: 'scale(0.97)', zIndex: 1 },

@@ -5,6 +5,7 @@ import { css } from '@republik/theme/css'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const mosaicStyle = css({
+  // Kept equal to the tiles' bottom margin so the gutters are even.
   columnGap: '4',
   columns: '1 auto',
   md: { columns: '2 auto' },
@@ -40,7 +41,10 @@ export function ArchiveMosaic({ children }: { children: React.ReactNode }) {
         continue
       }
 
-      const scale = tile.getBoundingClientRect().width / RENDER_WIDTH
+      // offsetWidth, not getBoundingClientRect(): the latter reports the
+      // transformed width, so re-measuring while a tile is hovered would
+      // fold the hover's scale into the stored one and shrink it for good.
+      const scale = tile.offsetWidth / RENDER_WIDTH
       inner.style.width = `${RENDER_WIDTH}px`
       inner.style.transform = `scale(${scale})`
       tile.style.height = `${inner.scrollHeight * scale}px`
