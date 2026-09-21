@@ -3,24 +3,32 @@
 // Assembles a Sanity `article`-shaped document body from one publikator
 // commit row (repos.publikator.commits: {content, meta, ...}). Deliberately
 // narrow: only what's derivable from THIS commit's own data (title/
-// description/byline/body/slug/cover/heading/teaserSmall.image) — not
-// articleCollections, cross-repo carousel/series teaser overrides, or
-// section wiring — see the "Scope decision" in the plan this module
-// implements. That structural web (which formats/sections a document is
-// teased in elsewhere) is built once, correctly, by the real cutover
-// migration (studio/import/publikator/src/transform.ts); duplicating it here
-// would be a second, drifting implementation of a migration that's going
-// away. `heading` and `teaserSmall.image` are the exception: both resolve
-// from data this hook already has (meta.format) or can cheaply look up
-// (the format's own already-published commit, see ./formatTeaserImage.ts),
-// not from a cross-dump pre-scan.
+// description/byline/body/slug/cover/heading/teaserSmall.image/
+// articleCollections) — not cross-repo carousel/series teaser overrides,
+// series/section-membership collections, or the "featured"/multi-collection
+// wiring a series episode gets — see the "Scope decision" in the plan this
+// module implements. That richer structural web is built once, correctly,
+// by the real cutover migration (studio/import/publikator/src/transform.ts);
+// duplicating it here would be a second, drifting implementation of a
+// migration that's going away. `heading`, `teaserSmall.image` and the
+// format's own `articleCollections` entry are the exception: all three
+// resolve from data this hook already has (meta.format) or can cheaply look
+// up (the format's own already-published commit, see
+// ./formatTeaserImage.ts), not from a cross-dump pre-scan — a format must
+// already be published before an article can reference it, so its
+// (batch-migrated) articleCollection id is always resolvable, deterministically,
+// right now.
 import {
   assetRef,
   bodyChildren,
   extractTitleZoneData,
   mdastToPortableText,
 } from './mdastToPortableText'
-import { normalizeGithubPath, repoIdToPageId } from '../legacyId'
+import {
+  normalizeGithubPath,
+  repoIdToPageId,
+  repoIdToSanityId,
+} from '../legacyId'
 
 export interface PublikatorCommit {
   // Optional: buildDraftArticleDoc itself never reads it, only worker.ts's
@@ -50,6 +58,18 @@ export interface DraftArticleDoc {
   // by the batch import just leaves this field empty rather than pointing at
   // a page that doesn't exist yet.
   heading?: { _type: 'reference'; _ref: string; _weak: true }
+  // The format's own articleCollection — a STRONG reference (unlike
+  // `heading`), matching the schema (sharedFields.ts's articleCollectionEntry
+  // marks `collection` required, not weak) and transform.ts's own repoRef()
+  // usage. `featured: true` mirrors transform.ts marking the format/series
+  // collection as the article's primary one. Left unset (not an empty array)
+  // when meta.format is missing/invalid, same as `heading`.
+  articleCollections?: Array<{
+    _key: string
+    _type: 'articleCollectionEntry'
+    collection: { _type: 'reference'; _ref: string }
+    featured: true
+  }>
   content: unknown[]
   slug?: { _type: 'slug'; current: string }
   slugAuto: boolean
@@ -217,6 +237,17 @@ export function buildDraftArticleDoc(
             _ref: repoIdToPageId(formatRepoId),
             _weak: true,
           },
+          articleCollections: [
+            {
+              _key: crypto.randomUUID(),
+              _type: 'articleCollectionEntry',
+              collection: {
+                _type: 'reference',
+                _ref: repoIdToSanityId(formatRepoId),
+              },
+              featured: true,
+            },
+          ],
         }
       : {}),
     content: mdastToPortableText(

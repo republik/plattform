@@ -1,5 +1,5 @@
 import { buildDraftArticleDoc, resolveFormatRepoId } from '../articleDoc'
-import { repoIdToPageId } from '../../legacyId'
+import { repoIdToPageId, repoIdToSanityId } from '../../legacyId'
 
 const TITLE_ZONE = {
   type: 'zone',
@@ -162,6 +162,40 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
           content: { children: [] },
           meta: { format: 'https://example.com/not-a-repo' },
         }).heading,
+      ).toBeUndefined()
+    })
+  })
+
+  describe('articleCollections (format collection linking)', () => {
+    it('links the featured articleCollection entry to the format when meta.format is set', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { format: 'https://github.com/republik/format-binswanger' },
+      })
+
+      expect(doc.articleCollections).toEqual([
+        {
+          _key: expect.any(String),
+          _type: 'articleCollectionEntry',
+          collection: {
+            _type: 'reference',
+            _ref: repoIdToSanityId('republik/format-binswanger'),
+          },
+          featured: true,
+        },
+      ])
+    })
+
+    it('is left unset when meta.format is missing or not a republik repo', () => {
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+          .articleCollections,
+      ).toBeUndefined()
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { format: 'https://example.com/not-a-repo' },
+        }).articleCollections,
       ).toBeUndefined()
     })
   })
