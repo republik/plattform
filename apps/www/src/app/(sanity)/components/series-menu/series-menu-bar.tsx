@@ -42,6 +42,7 @@ const menuStyle = css({
   zIndex: 1,
   overflow: 'auto',
   WebkitOverflowScrolling: 'touch',
+  overscrollBehavior: 'contain',
   background: 'background',
   color: 'text',
   visibility: 'hidden',
@@ -84,15 +85,10 @@ export function SeriesMenuBar({
     (e) => 'slug' in e && e.slug === currentSlug,
   )
 
-  // position the panel right below the bar, and lock body scroll while open
+  // position the panel right below the bar
   useEffect(() => {
     if (!expanded) return
     setMenuTop(barRef.current?.getBoundingClientRect().bottom ?? 0)
-    const { overflow } = document.body.style
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = overflow
-    }
   }, [expanded])
 
   const Icon = expanded ? IconKeyboardArrowUp : IconKeyboardArrowDown
