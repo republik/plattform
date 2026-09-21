@@ -1,5 +1,14 @@
-import { buildDraftArticleDoc, resolveFormatRepoId } from '../articleDoc'
-import { repoIdToPageId, repoIdToSanityId } from '../../legacyId'
+import {
+  buildDraftArticleDoc,
+  resolveFormatDerivedFields,
+  resolveFormatRepoId,
+} from '../articleDoc'
+import {
+  repoIdToNewsletterId,
+  repoIdToPageId,
+  repoIdToPodcastId,
+  repoIdToSanityId,
+} from '../../legacyId'
 
 const TITLE_ZONE = {
   type: 'zone',
@@ -336,6 +345,397 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
       } finally {
         process.env = OLD_ENV
       }
+    })
+  })
+
+  describe('articleCollections — Vorgelesen entry', () => {
+    it('adds the Vorgelesen collection when audioSourceKind is readAloud', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { audioSourceKind: 'readAloud' },
+      })
+
+      expect(doc.articleCollections).toEqual([
+        {
+          _key: expect.any(String),
+          _type: 'articleCollectionEntry',
+          collection: {
+            _type: 'reference',
+            _ref: repoIdToSanityId('republik/format-vorgelesen'),
+          },
+        },
+      ])
+    })
+
+    it('adds both the format entry (featured) and the Vorgelesen entry', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: {
+          format: 'https://github.com/republik/format-binswanger',
+          audioSourceKind: 'readAloud',
+        },
+      })
+
+      expect(doc.articleCollections).toHaveLength(2)
+      expect(doc.articleCollections?.[0].featured).toBe(true)
+      expect(doc.articleCollections?.[1].featured).toBeUndefined()
+    })
+
+    it('is left unset when neither a format nor readAloud audio applies', () => {
+      const doc = buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+      expect(doc.articleCollections).toBeUndefined()
+    })
+  })
+
+  describe('theme', () => {
+    it('defaults to EDITORIAL with no accentColor/darkMode', () => {
+      const doc = buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+      expect(doc.theme).toEqual({ _type: 'theme', name: 'EDITORIAL' })
+    })
+
+    it('is EDITORIAL_CENTERED when the TITLE zone is marked centered', () => {
+      const doc = buildDraftArticleDoc({
+        content: {
+          children: [{ ...TITLE_ZONE, data: { center: true } }],
+        },
+        meta: {},
+      })
+      expect(doc.theme.name).toBe('EDITORIAL_CENTERED')
+    })
+
+    it('includes accentColor from the article’s own meta.color', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { color: '#ff0000' },
+      })
+      expect((doc.theme.accentColor as any)?.hex).toBe('#FF0000')
+    })
+
+    it('includes darkMode only when meta.darkMode is true', () => {
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { darkMode: true },
+        }).theme.darkMode,
+      ).toBe(true)
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} }).theme
+          .darkMode,
+      ).toBeUndefined()
+    })
+  })
+
+  describe('seo', () => {
+    it('is left unset when nothing seo-related is present', () => {
+      const doc = buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+      expect(doc.seo).toBeUndefined()
+    })
+
+    it('uses seoTitle/seoDescription, falling back to facebookTitle/facebookDescription', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: {
+          facebookTitle: 'FB Titel',
+          facebookDescription: 'FB Beschreibung',
+        },
+      })
+      expect((doc.seo?.title?.[0] as any).children[0].text).toBe('FB Titel')
+      expect((doc.seo?.description?.[0] as any).children[0].text).toBe(
+        'FB Beschreibung',
+      )
+    })
+
+    it('prefers seoTitle/seoDescription over the facebook fallback', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { seoTitle: 'SEO Titel', facebookTitle: 'FB Titel' },
+      })
+      expect((doc.seo?.title?.[0] as any).children[0].text).toBe('SEO Titel')
+    })
+
+    it('builds the share image from facebookImage, falling back to twitterImage', () => {
+      const doc = buildDraftArticleDoc({
+        repoId: 'republik/foo',
+        content: { children: [] },
+        meta: { twitterImage: 'https://cdn.repub.ch/s3/bucket/twitter.jpg' },
+      })
+      expect((doc.seo?.image as any)._sanityAsset).toMatch(/twitter\.jpg$/)
+    })
+
+    it('builds an imageBuilder with layout BACKGROUND_IMAGE when shareBackgroundImage is set', () => {
+      const doc = buildDraftArticleDoc({
+        repoId: 'republik/foo',
+        content: { children: [] },
+        meta: {
+          shareText: 'Teile diesen Beitrag',
+          shareBackgroundImage: 'https://cdn.repub.ch/s3/bucket/bg.jpg',
+        },
+      })
+      expect(doc.seo?.useImageBuilder).toBe(true)
+      expect(doc.seo?.imageBuilder?.layout).toBe('BACKGROUND_IMAGE')
+      expect((doc.seo?.imageBuilder?.backgroundImage as any)._sanityAsset).toMatch(
+        /bg\.jpg$/,
+      )
+      expect((doc.seo?.imageBuilder?.text?.[0] as any).children[0].text).toBe(
+        'Teile diesen Beitrag',
+      )
+    })
+
+    it('falls back to layout LOGO when there is a shareLogo but no shareBackgroundImage', () => {
+      const doc = buildDraftArticleDoc({
+        repoId: 'republik/foo',
+        content: { children: [] },
+        meta: { shareLogo: 'https://cdn.repub.ch/s3/bucket/logo.jpg' },
+      })
+      expect(doc.seo?.imageBuilder?.layout).toBe('LOGO')
+      expect((doc.seo?.imageBuilder?.logo as any)._sanityAsset).toMatch(
+        /logo\.jpg$/,
+      )
+    })
+  })
+
+  describe('trivial own-commit fields', () => {
+    it('sets showInFeed from meta.feed when it is a boolean', () => {
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { feed: true },
+        }).showInFeed,
+      ).toBe(true)
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+          .showInFeed,
+      ).toBeUndefined()
+    })
+
+    it('derives readingAccess from isPaynoteExcluded/isPaywallExcluded, defaulting to REGWALL', () => {
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { isPaynoteExcluded: true },
+        }).readingAccess,
+      ).toBe('OPEN')
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { isPaywallExcluded: true },
+        }).readingAccess,
+      ).toBe('PAYNOTE')
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+          .readingAccess,
+      ).toBe('REGWALL')
+    })
+
+    it('inverts disableTextProgress into showTextProgress', () => {
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { disableTextProgress: true },
+        }).showTextProgress,
+      ).toBe(false)
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+          .showTextProgress,
+      ).toBe(true)
+    })
+
+    it('builds pushNotificationText from meta.shortTitle', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { shortTitle: 'Kurztitel' },
+      })
+      expect((doc.pushNotificationText?.[0] as any).children[0].text).toBe(
+        'Kurztitel',
+      )
+    })
+
+    it('builds emailSubject from meta.emailSubject', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { emailSubject: 'Betreff' },
+      })
+      expect((doc.emailSubject?.[0] as any).children[0].text).toBe('Betreff')
+    })
+  })
+
+  describe('resolveFormatDerivedFields', () => {
+    const baseDoc = buildDraftArticleDoc({
+      content: { children: [] },
+      meta: { format: 'https://github.com/republik/format-x' },
+    })
+
+    it('upgrades theme.name to META when the format has kind "meta"', () => {
+      const result = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        { kind: 'meta', hasNewsletter: false, hasPodcast: false },
+      )
+      expect(result.theme.name).toBe('META')
+    })
+
+    it('upgrades theme.name to META when the format\'s section is a META_SECTION_REPOS entry', () => {
+      const result = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        {
+          sectionRepoId: 'republik/section-meta',
+          hasNewsletter: false,
+          hasPodcast: false,
+        },
+      )
+      expect(result.theme.name).toBe('META')
+    })
+
+    it("fills accentColor from the format's color only when the article has none of its own", () => {
+      const withoutOwnColor = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        { color: '#00ff00', hasNewsletter: false, hasPodcast: false },
+      )
+      expect((withoutOwnColor.theme.accentColor as any)?.hex).toBe('#00FF00')
+
+      const ownColorDoc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { format: 'https://github.com/republik/format-x', color: '#ff0000' },
+      })
+      const withOwnColor = resolveFormatDerivedFields(
+        ownColorDoc,
+        { format: 'republik/format-x', color: '#ff0000' },
+        undefined,
+        'republik/format-x',
+        { color: '#00ff00', hasNewsletter: false, hasPodcast: false },
+      )
+      expect((withOwnColor.theme.accentColor as any)?.hex).toBe('#FF0000')
+    })
+
+    it("adds the format's section as a second, non-featured articleCollections entry", () => {
+      const result = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        {
+          sectionRepoId: 'republik/section-politik',
+          hasNewsletter: false,
+          hasPodcast: false,
+        },
+      )
+      expect(result.articleCollections).toHaveLength(2)
+      const sectionEntry = result.articleCollections?.[1]
+      expect(sectionEntry?.featured).toBeUndefined()
+      expect(sectionEntry?.collection._ref).toBe(
+        repoIdToSanityId('republik/section-politik'),
+      )
+    })
+
+    it('does not duplicate the section entry if it already matches the format entry', () => {
+      const result = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        {
+          sectionRepoId: 'republik/format-x',
+          hasNewsletter: false,
+          hasPodcast: false,
+        },
+      )
+      expect(result.articleCollections).toHaveLength(1)
+    })
+
+    it('sets newsletter/podcast references only when the format has them', () => {
+      const withBoth = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        { hasNewsletter: true, hasPodcast: true },
+      )
+      expect(withBoth.newsletter).toEqual({
+        _type: 'reference',
+        _ref: repoIdToNewsletterId('republik/format-x'),
+      })
+      expect(withBoth.podcast).toEqual({
+        _type: 'reference',
+        _ref: repoIdToPodcastId('republik/format-x'),
+      })
+
+      const withNeither = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        { hasNewsletter: false, hasPodcast: false },
+      )
+      expect(withNeither.newsletter).toBeUndefined()
+      expect(withNeither.podcast).toBeUndefined()
+    })
+
+    it("falls back to the format's own shareBackgroundImage when the article has no share image of its own", () => {
+      const result = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        'republik/foo',
+        'republik/format-x',
+        {
+          shareBackgroundImage: 'https://cdn.repub.ch/s3/bucket/format-bg.jpg',
+          hasNewsletter: false,
+          hasPodcast: false,
+        },
+      )
+      expect(result.seo?.imageBuilder?.layout).toBe('BACKGROUND_IMAGE')
+      expect(
+        (result.seo?.imageBuilder?.backgroundImage as any)?._sanityAsset,
+      ).toMatch(/format-bg\.jpg$/)
+    })
+
+    it("fills teaserSmall.image from the format's image when the article has none of its own", () => {
+      const result = resolveFormatDerivedFields(
+        baseDoc,
+        { format: 'republik/format-x' },
+        undefined,
+        'republik/format-x',
+        {
+          image: 'https://cdn.repub.ch/s3/bucket/format-teaser.jpg',
+          hasNewsletter: false,
+          hasPodcast: false,
+        },
+      )
+      expect((result.teaserSmall?.image as any)?._sanityAsset).toMatch(
+        /format-teaser\.jpg$/,
+      )
+    })
+
+    it("never overrides an article's own teaserSmall.image", () => {
+      const docWithOwnImage = buildDraftArticleDoc({
+        repoId: 'republik/foo',
+        content: { children: [] },
+        meta: {
+          format: 'https://github.com/republik/format-x',
+          image: 'https://cdn.repub.ch/s3/bucket/own.jpg',
+        },
+      })
+      const result = resolveFormatDerivedFields(
+        docWithOwnImage,
+        { format: 'republik/format-x', image: 'https://cdn.repub.ch/s3/bucket/own.jpg' },
+        'republik/foo',
+        'republik/format-x',
+        {
+          image: 'https://cdn.repub.ch/s3/bucket/format-teaser.jpg',
+          hasNewsletter: false,
+          hasPodcast: false,
+        },
+      )
+      expect((result.teaserSmall?.image as any)?._sanityAsset).toMatch(
+        /own\.jpg$/,
+      )
     })
   })
 })

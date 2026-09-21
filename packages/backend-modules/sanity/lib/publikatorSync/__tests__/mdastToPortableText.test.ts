@@ -3,6 +3,7 @@ import {
   bodyChildren,
   extractTitleZoneData,
   mdastToPortableText,
+  multilineEditorFromString,
   toDirectS3Url,
 } from '../mdastToPortableText'
 
@@ -104,6 +105,28 @@ describe('publikatorSync/mdastToPortableText', () => {
     ) as Array<Record<string, unknown>>
     expect(body).toHaveLength(1)
     expect(((body[0].children as any[])[0] as any).text).toBe('Body text')
+  })
+
+  it('flags centered when the TITLE zone carries data.center', () => {
+    const centered = extractTitleZoneData([
+      { type: 'zone', identifier: 'TITLE', data: { center: true }, children: [] },
+    ])
+    expect(centered.centered).toBe(true)
+
+    const notCentered = extractTitleZoneData([
+      { type: 'zone', identifier: 'TITLE', children: [] },
+    ])
+    expect(notCentered.centered).toBeUndefined()
+  })
+
+  it('multilineEditorFromString: one block per non-empty line', () => {
+    const blocks = multilineEditorFromString(
+      '  Erste Zeile  \n\n  Zweite Zeile\n',
+    ) as Array<Record<string, unknown>>
+
+    expect(blocks).toHaveLength(2)
+    expect(((blocks[0].children as any[])[0] as any).text).toBe('Erste Zeile')
+    expect(((blocks[1].children as any[])[0] as any).text).toBe('Zweite Zeile')
   })
 
   describe('assetRef', () => {

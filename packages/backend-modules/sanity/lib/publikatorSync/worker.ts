@@ -8,12 +8,13 @@ import {
   buildDraftArticleDoc,
   DraftArticleDoc,
   PublikatorCommit,
+  resolveFormatDerivedFields,
   resolveFormatRepoId,
 } from './articleDoc'
 import { resolveAssetMarkers } from './assets'
 import { DiscussionRef, linkLegacyDiscussion } from './discussionRef'
 import { isArticleLikeMeta } from './eligibility'
-import { resolveFormatTeaserImage } from './formatTeaserImage'
+import { fetchFormatFields } from './formatFields'
 import { linkLegacySyntheticAudio } from './legacyAudio'
 
 export type PublikatorSyncPayload =
@@ -117,15 +118,19 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // comment in ./assets.ts for why this can't be skipped: the plain
     // content API doesn't understand that marker the way @sanity/import does.
     //
-    // The format-image fallback runs before resolveAssetMarkers so any
-    // `_sanityAsset` marker it adds still gets uploaded in the same sweep.
+    // The format-derived fields (teaserSmall.image fallback, theme upgrade,
+    // section collection, seo share-image fallback, newsletter/podcast) run
+    // before resolveAssetMarkers so any `_sanityAsset` marker they add still
+    // gets uploaded in the same sweep.
     const draft = buildDraftArticleDoc(commit, repo?.meta)
-    const withFormatImage = await this.resolveFormatTeaserImageSafely(
+    const withFormatFields = await this.resolveFormatDerivedFieldsSafely(
       draft,
+      commit.meta,
+      commit.repoId,
       resolveFormatRepoId(commit.meta),
       pgdb,
     )
-    const doc = await resolveAssetMarkers(withFormatImage)
+    const doc = await resolveAssetMarkers(withFormatFields)
 
     if (data.action === 'commit') {
       const draftDoc = await this.linkLegacyAudioSafely(
@@ -176,19 +181,30 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
   // unpublished format, or a transient Postgres hiccup in this lookup, must
   // never fail the whole sync job and block the article's own text/content
   // from mirroring for a reason that has nothing to do with that content —
-  // the article just keeps whatever teaserSmall.image it already had (its
-  // own, or none).
-  private async resolveFormatTeaserImageSafely(
+  // the article just keeps whatever of these fields it could build from its
+  // own commit alone.
+  private async resolveFormatDerivedFieldsSafely(
     doc: DraftArticleDoc,
+    meta: Record<string, unknown>,
+    repoId: string | undefined,
     formatRepoId: string | undefined,
     pgdb: ConnectionContext['pgdb'],
   ): Promise<DraftArticleDoc> {
+    if (!formatRepoId) return doc
     try {
-      return await resolveFormatTeaserImage(doc, formatRepoId, pgdb)
+      const formatFields = await fetchFormatFields(formatRepoId, pgdb)
+      if (!formatFields) return doc
+      return resolveFormatDerivedFields(
+        doc,
+        meta,
+        repoId,
+        formatRepoId,
+        formatFields,
+      )
     } catch (error) {
       this.logger.warn(
         { error, formatRepoId },
-        'sanity sync: format teaser-image fallback failed (article content still synced)',
+        'sanity sync: format-derived fields failed (article content still synced)',
       )
       return doc
     }

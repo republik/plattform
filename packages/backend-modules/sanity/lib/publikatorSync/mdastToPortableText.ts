@@ -1675,11 +1675,26 @@ export function inlineEditorFromString(text: string): PortableTextItem[] {
   return [textBlock('normal', [{ type: 'text', value: text }])]
 }
 
+// One block per non-empty line — matches studio's own multilineEditorFromString,
+// used for the seo imageBuilder's `text` field (a share card headline that can
+// span a couple of lines, unlike the single-line fields inlineEditorFromString
+// covers).
+export function multilineEditorFromString(text: string): PortableTextItem[] {
+  return text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .map((line) => textBlock('normal', [{ type: 'text', value: line }]))
+}
+
 export interface TitleZoneData {
   title?: PortableTextItem[]
   description?: PortableTextItem[]
   byline?: PortableTextItem[]
   cover?: PtCustomBlock
+  // The TITLE zone's `data.center` flag (Kolumnen etc.) — drives the
+  // EDITORIAL_CENTERED theme (see transform.ts's buildTheme call).
+  centered?: boolean
 }
 
 // TITLE zone: h1 → title, first p → description (lead), second p → byline.
@@ -1699,6 +1714,11 @@ export function extractTitleZoneData(
       (n as MdastZone).identifier === 'TITLE',
   )
   if (titleIdx === -1) return result
+
+  const titleZone = children[titleIdx] as MdastZone
+  if (titleZone.data?.center === true) {
+    result.centered = true
+  }
 
   const coverZone = children
     .slice(0, titleIdx)
