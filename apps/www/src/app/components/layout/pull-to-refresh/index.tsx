@@ -5,6 +5,8 @@ import { css } from '@republik/theme/css'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAudioContext } from '../../../../components/Audio/AudioProvider'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
+import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 
 // eslint-disable-next-line no-unused-vars
 enum IndicatorState {
@@ -193,12 +195,19 @@ type PullToRefreshProps = {
 export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
   const ref = useRef<HTMLDivElement>(null)
   const { isExpanded: audioPlayerExpanded } = useAudioContext()
+  const { isIOSApp } = usePlatformInformation()
+  const postMessage = usePostMessage()
 
   const { refresh } = useRouter()
 
   const pullToRefresh = useCallback(() => {
+    // Matches the legacy pull-to-refresh (see components/Frame/Header.tsx):
+    // iOS only, where the system gives the gesture a physical confirmation.
+    if (isIOSApp) {
+      postMessage({ type: 'haptic', payload: { type: 'impactLight' } })
+    }
     refresh()
-  }, [refresh])
+  }, [isIOSApp, postMessage, refresh])
 
   usePullToRefresh(ref, pullToRefresh, {
     isDisabled: audioPlayerExpanded,
