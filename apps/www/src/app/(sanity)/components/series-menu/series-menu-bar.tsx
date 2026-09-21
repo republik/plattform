@@ -8,6 +8,12 @@ import { css } from '@republik/theme/css'
 import { useEffect, useRef, useState } from 'react'
 
 const barButtonStyle = css({
+  // Pinned to the top of the viewport so the panel stays anchored to it while
+  // the page scrolls. Its z-index sits below the page header's (100), so the
+  // header covers the bar while shown and reveals it once it slides away.
+  position: 'sticky',
+  top: 0,
+  zIndex: 2,
   display: 'block',
   width: 'full',
   padding: '5px 0',
@@ -78,18 +84,24 @@ export function SeriesMenuBar({
 }) {
   const [expanded, setExpanded] = useState(false)
   const barRef = useRef<HTMLButtonElement>(null)
-  const [menuTop, setMenuTop] = useState(0)
+  const [barHeight, setBarHeight] = useState(0)
 
   const episodes = collection.episodes ?? []
   const currentIndex = episodes.findIndex(
     (e) => 'slug' in e && e.slug === currentSlug,
   )
 
-  // position the panel right below the bar
   useEffect(() => {
-    if (!expanded) return
-    setMenuTop(barRef.current?.getBoundingClientRect().bottom ?? 0)
-  }, [expanded])
+    const bar = barRef.current
+    if (!bar) return
+
+    const observer = new ResizeObserver(() => {
+      setBarHeight(bar.getBoundingClientRect().height)
+    })
+    observer.observe(bar)
+
+    return () => observer.disconnect()
+  }, [])
 
   const Icon = expanded ? IconKeyboardArrowUp : IconKeyboardArrowDown
   const teasers = getNotExpiredTeasers(episodes)
@@ -119,7 +131,7 @@ export function SeriesMenuBar({
       <div
         className={menuStyle}
         aria-expanded={expanded}
-        style={{ top: menuTop }}
+        style={{ top: barHeight }}
       >
         <div
           className={css({
