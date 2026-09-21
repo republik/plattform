@@ -38,13 +38,7 @@ export default function GridTeaser({
           {isCurrentArticle ? `Sie lesen: ${teaser.label}` : teaser.label}
         </h6>
       )}
-      <TeaserImage
-        image={teaser.image}
-        alt=''
-        width={640}
-        height={480}
-        sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
-      />
+      <TeaserImage image={teaser.image} alt='' width={320} height={240} />
       <h4 className='editorial'>
         <LinkOverlay teaser={teaser} />
       </h4>
