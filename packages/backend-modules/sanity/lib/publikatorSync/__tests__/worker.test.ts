@@ -10,15 +10,29 @@ jest.mock('../../client', () => ({
   }),
 }))
 
+const resolveFormatRepoId = jest.fn().mockReturnValue(undefined)
+const resolveFormatDerivedFields = jest
+  .fn()
+  .mockImplementation((doc: unknown) => doc)
+
 jest.mock('../articleDoc', () => ({
   buildDraftArticleDoc: (commit: { id: string }) => ({
     _type: 'article',
     _syncedFromCommitId: commit.id,
   }),
+  resolveFormatRepoId: (...args: unknown[]) => resolveFormatRepoId(...args),
+  resolveFormatDerivedFields: (...args: unknown[]) =>
+    resolveFormatDerivedFields(...args),
 }))
 
 jest.mock('../assets', () => ({
   resolveAssetMarkers: (doc: unknown) => Promise.resolve(doc),
+}))
+
+const fetchFormatFields = jest.fn().mockResolvedValue(undefined)
+
+jest.mock('../formatFields', () => ({
+  fetchFormatFields: (...args: unknown[]) => fetchFormatFields(...args),
 }))
 
 const linkLegacySyntheticAudio = jest
@@ -63,6 +77,9 @@ describe('PublikatorSyncWorker', () => {
       .mockReset()
       .mockImplementation((doc: unknown) => Promise.resolve(doc))
     linkLegacyDiscussion.mockReset().mockResolvedValue(undefined)
+    resolveFormatRepoId.mockReset().mockReturnValue(undefined)
+    resolveFormatDerivedFields.mockReset().mockImplementation((doc: unknown) => doc)
+    fetchFormatFields.mockReset().mockResolvedValue(undefined)
   })
 
   it('commit: syncs the latest commit for the repo, not the one in the payload', async () => {
@@ -239,6 +256,76 @@ describe('PublikatorSyncWorker', () => {
       id: 'c1',
       repoId: 'republik/foo',
       meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await expect(
+      worker.perform([
+        { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+      ]),
+    ).resolves.toBeUndefined()
+
+    expect(createOrReplace).toHaveBeenCalledTimes(1)
+    const [written] = createOrReplace.mock.calls[0]
+    expect(written._syncedFromCommitId).toBe('c1')
+  })
+
+  it('commit: fetches the format fields with the format repoId and pgdb, then applies them, before uploading assets', async () => {
+    resolveFormatRepoId.mockReturnValue('republik/format-x')
+    fetchFormatFields.mockResolvedValue({ hasNewsletter: false, hasPodcast: false })
+    const commits = { findOne: jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article', format: 'republik/format-x' },
+    }) }
+    const worker = makeWorker({ publikator: { commits } })
+
+    await worker.perform([
+      { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+    ])
+
+    expect(resolveFormatRepoId).toHaveBeenCalledWith({
+      template: 'article',
+      format: 'republik/format-x',
+    })
+    expect(fetchFormatFields).toHaveBeenCalledWith(
+      'republik/format-x',
+      expect.objectContaining({ publikator: expect.anything() }),
+    )
+    expect(resolveFormatDerivedFields).toHaveBeenCalledWith(
+      expect.objectContaining({ _syncedFromCommitId: 'c1' }),
+      { template: 'article', format: 'republik/format-x' },
+      'republik/foo',
+      'republik/format-x',
+      { hasNewsletter: false, hasPodcast: false },
+    )
+  })
+
+  it('commit: skips the format lookup entirely when the article has no format', async () => {
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+    ])
+
+    expect(fetchFormatFields).not.toHaveBeenCalled()
+    expect(resolveFormatDerivedFields).not.toHaveBeenCalled()
+  })
+
+  it('commit: still syncs the article when the format-derived fields lookup throws', async () => {
+    // A missing/unpublished format, or a transient Postgres hiccup in this
+    // lookup, must never block the article's own text/content from syncing.
+    resolveFormatRepoId.mockReturnValue('republik/format-x')
+    fetchFormatFields.mockRejectedValueOnce(new Error('pg down'))
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article', format: 'republik/format-x' },
     })
     const worker = makeWorker({ publikator: { commits: { findOne } } })
 
