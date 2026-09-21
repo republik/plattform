@@ -240,7 +240,13 @@ export function ImageTeaser({
               // text; the corner variants and UNDERNEATH don't.
               align={
                 !teaser.textPosition ||
-                ['TOP', 'MIDDLE', 'BOTTOM'].includes(teaser.textPosition)
+                [
+                  'TOP',
+                  'TOP_RIGHT',
+                  'MIDDLE',
+                  'BOTTOM',
+                  'BOTTOM_RIGHT',
+                ].includes(teaser.textPosition)
                   ? 'center'
                   : 'left'
               }
