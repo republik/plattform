@@ -1,12 +1,12 @@
 'use client'
 
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
+import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { IconRefresh } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAudioContext } from '../../../../components/Audio/AudioProvider'
-import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
-import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 
 // eslint-disable-next-line no-unused-vars
 enum IndicatorState {
@@ -201,12 +201,10 @@ export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
   const { refresh } = useRouter()
 
   const pullToRefresh = useCallback(() => {
-    // Matches the legacy pull-to-refresh (see components/Frame/Header.tsx):
-    // iOS only, where the system gives the gesture a physical confirmation.
     if (isIOSApp) {
       postMessage({ type: 'haptic', payload: { type: 'impactLight' } })
     }
-    refresh()
+    setTimeout(refresh, 33 * 3)
   }, [isIOSApp, postMessage, refresh])
 
   usePullToRefresh(ref, pullToRefresh, {
