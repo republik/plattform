@@ -1,10 +1,31 @@
 const patch = jest.fn()
+const loggerError = jest.fn()
 
 jest.mock('../client', () => ({
   sanityClient: () => ({ patch }),
 }))
 
-import { claimAudioGeneration, hasPendingVersion, markPendingVersionError } from '../audio'
+jest.mock('@orbiting/backend-modules-logger', () => ({
+  logger: { error: (...args: unknown[]) => loggerError(...args) },
+}))
+
+// withReleaseUnlock has its own dedicated test suite (releaseLock.u.jest.ts) —
+// mocked here as a passthrough so recordAudioVersion's tests below exercise
+// only its own not-found-fallback logic, not the lock guard's internals.
+jest.mock('../releaseLock', () => ({
+  withReleaseUnlock: (
+    _client: unknown,
+    _documentId: string,
+    mutate: () => unknown,
+  ) => mutate(),
+}))
+
+import {
+  claimAudioGeneration,
+  hasPendingVersion,
+  markPendingVersionError,
+  recordAudioVersion,
+} from '../audio'
 
 describe('hasPendingVersion', () => {
   it('is false when nothing is pending', () => {
@@ -138,5 +159,91 @@ describe('markPendingVersionError', () => {
     expect(set).toHaveBeenCalledWith(
       expect.objectContaining({ [`${path}.error`]: 'plain string error' }),
     )
+  })
+})
+
+describe('recordAudioVersion', () => {
+  const version = {
+    file: { _type: 'file' as const, asset: { _type: 'reference' as const, _ref: 'asset-1' } },
+    url: 'https://example.com/audio.mp3',
+    generatedAt: '2026-09-21T00:00:00.000Z',
+  }
+
+  function chainable(commit: jest.Mock) {
+    const obj: Record<string, jest.Mock> = { commit }
+    for (const method of ['set', 'setIfMissing', 'append']) {
+      obj[method] = jest.fn(() => obj)
+    }
+    return obj
+  }
+
+  beforeEach(() => {
+    loggerError.mockReset()
+  })
+
+  it('appends the version and sets current fields when there is no pending placeholder', async () => {
+    const commit = jest.fn().mockResolvedValue(undefined)
+    const chain = chainable(commit)
+    patch.mockReset().mockReturnValue(chain)
+
+    await recordAudioVersion('drafts.doc-1', { audioSourceMp3: 'url' }, version, undefined)
+
+    expect(patch).toHaveBeenCalledWith('drafts.doc-1')
+    expect(chain.set).toHaveBeenCalledWith({ audioSourceMp3: 'url' })
+    expect(chain.setIfMissing).toHaveBeenCalledWith({ audioVersions: [] })
+    expect(chain.append).toHaveBeenCalledWith('audioVersions', [version])
+    expect(commit).toHaveBeenCalledWith({ autoGenerateArrayKeys: true })
+  })
+
+  it('replaces the matching pending placeholder in place when pendingKey is given', async () => {
+    const commit = jest.fn().mockResolvedValue(undefined)
+    const chain = chainable(commit)
+    patch.mockReset().mockReturnValue(chain)
+
+    await recordAudioVersion('drafts.doc-1', {}, version, 'key-1')
+
+    expect(chain.set).toHaveBeenCalledWith({
+      'audioVersions[_key == "key-1"]': version,
+    })
+    expect(chain.append).not.toHaveBeenCalled()
+  })
+
+  it('falls back to the draft and logs an error when the version no longer exists', async () => {
+    const notFoundError = Object.assign(new Error('not found'), {
+      details: { items: [{ error: { type: 'documentNotFoundError' } }] },
+    })
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? failingChain : succeedingChain,
+    )
+
+    await recordAudioVersion('versions.r1.doc-1', {}, version, undefined)
+
+    expect(patch).toHaveBeenCalledWith('versions.r1.doc-1')
+    expect(patch).toHaveBeenCalledWith('drafts.doc-1')
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentId: 'versions.r1.doc-1',
+        draftId: 'drafts.doc-1',
+      }),
+      expect.stringContaining('falling back to the draft'),
+    )
+  })
+
+  it('rethrows a non-not-found error without falling back to the draft', async () => {
+    const otherError = Object.assign(new Error('boom'), { statusCode: 500 })
+    const chain = chainable(jest.fn().mockRejectedValue(otherError))
+    patch.mockReset().mockReturnValue(chain)
+
+    await expect(
+      recordAudioVersion('versions.r1.doc-1', {}, version, undefined),
+    ).rejects.toThrow('boom')
+    expect(loggerError).not.toHaveBeenCalled()
+    expect(patch).toHaveBeenCalledTimes(1)
   })
 })

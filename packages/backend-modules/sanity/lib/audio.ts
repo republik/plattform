@@ -1,6 +1,21 @@
 import { logger } from '@orbiting/backend-modules-logger'
 import { sanityClient } from './client'
+import { draftIdFor } from './document'
 import { withReleaseUnlock } from './releaseLock'
+
+// True when a mutation was rejected because its target document doesn't
+// exist — distinct from a lock rejection (see releaseLock.ts), and not
+// something withReleaseUnlock can catch on its own: it only knows a release
+// isn't locked, not that the specific document inside it is already gone.
+// That happens when a release promotes (publish) or gets unscheduled/deleted
+// while generation was still in flight — by the time Huebsch's webhook lands,
+// `versions.<release>.<id>` may simply no longer exist.
+function isDocumentNotFoundError(err: unknown): boolean {
+  const items = (
+    err as { details?: { items?: { error?: { type?: string } }[] } } | null
+  )?.details?.items
+  return Boolean(items?.some((item) => item.error?.type === 'documentNotFoundError'))
+}
 
 // Portable text: a heterogeneous array of block/object nodes. The exact
 // per-node shape is defined by studio's schema (a separate repo, no shared
@@ -224,21 +239,46 @@ export interface AudioVersion {
 // Falls back to appending when no matching placeholder exists (a generation
 // kicked off before this placeholder mechanism existed, or one whose
 // placeholder was already cleaned up by removePendingVersion).
+//
+// documentId can be gone by the time this runs — TTS generation is async, and
+// if the release promoted (published) or was unscheduled/cancelled while it
+// was still in flight, `versions.<release>.<id>` no longer exists at all
+// (withReleaseUnlock only knows the RELEASE isn't locked, not that this
+// specific document is gone). Rather than lose a successfully generated audio
+// file, fall back to the draft — always still there — and log loudly: this
+// needs a human to notice (most likely the article already published without
+// its audio, or the schedule was cancelled and generation should have been
+// too) and reconcile from the draft's history.
 export const recordAudioVersion = (
   documentId: string,
   currentFields: Record<string, unknown>,
   version: AudioVersion,
   pendingKey: string | undefined,
-) =>
-  withReleaseUnlock(sanityClient(), documentId, () => {
-    const patch = sanityClient().patch(documentId).set(currentFields)
+) => {
+  const doPatch = (id: string) => {
+    const patch = sanityClient().patch(id).set(currentFields)
     if (pendingKey) {
       patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
     } else {
       patch.setIfMissing({ audioVersions: [] }).append('audioVersions', [version])
     }
     return patch.commit({ autoGenerateArrayKeys: true })
+  }
+
+  return withReleaseUnlock(sanityClient(), documentId, () =>
+    doPatch(documentId),
+  ).catch((err) => {
+    if (!isDocumentNotFoundError(err)) throw err
+    const draftId = draftIdFor(documentId)
+    logger.error(
+      { documentId, draftId, err },
+      'sanity audio: version document no longer exists when recording generated ' +
+        'audio (release published or schedule cancelled while generation was in ' +
+        'flight) — falling back to the draft',
+    )
+    return doPatch(draftId)
   })
+}
 
 export const uploadAudioAsset = (buffer: Buffer, filename: string) =>
   sanityClient().assets.upload('file', buffer, {
