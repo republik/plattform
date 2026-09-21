@@ -55,7 +55,11 @@ export function TeaserFeedClient({
         <Button
           type='button'
           variant='link'
-          className={css({ color: 'primary', textDecoration: 'none' })}
+          className={css({
+            color: 'primary',
+            textDecoration: 'none',
+            textAlign: 'left',
+          })}
           onClick={onLoadMore}
         >
           {t('feed/loadMore', {

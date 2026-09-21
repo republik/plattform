@@ -42,6 +42,7 @@ export const buttonRecipe = defineRecipe({
         fontWeight: 'inherit',
         fontSize: 'inherit',
         textDecoration: 'underline',
+        whiteSpace: 'normal',
       },
       outline: {
         borderColor: 'current',
