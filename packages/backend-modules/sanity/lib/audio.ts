@@ -1,5 +1,6 @@
 import { logger } from '@orbiting/backend-modules-logger'
 import { sanityClient } from './client'
+import { withReleaseUnlock } from './releaseLock'
 
 // Portable text: a heterogeneous array of block/object nodes. The exact
 // per-node shape is defined by studio's schema (a separate repo, no shared
@@ -129,25 +130,27 @@ export const claimAudioGeneration = async (
   contentHash: string,
 ): Promise<boolean> => {
   try {
-    await sanityClient()
-      .patch(documentId)
-      .ifRevisionId(rev)
-      .setIfMissing({ audioVersions: [] })
-      .insert('after', 'audioVersions[-1]', [
-        {
-          _type: 'audioVersion',
-          status: 'pending',
-          contentHash,
-          generatedAt: new Date().toISOString(),
-        },
-      ])
-      .set({
-        audioGenerationResult: {
-          status: 'in-progress',
-          updatedAt: new Date().toISOString(),
-        },
-      })
-      .commit({ autoGenerateArrayKeys: true })
+    await withReleaseUnlock(sanityClient(), documentId, () =>
+      sanityClient()
+        .patch(documentId)
+        .ifRevisionId(rev)
+        .setIfMissing({ audioVersions: [] })
+        .insert('after', 'audioVersions[-1]', [
+          {
+            _type: 'audioVersion',
+            status: 'pending',
+            contentHash,
+            generatedAt: new Date().toISOString(),
+          },
+        ])
+        .set({
+          audioGenerationResult: {
+            status: 'in-progress',
+            updatedAt: new Date().toISOString(),
+          },
+        })
+        .commit({ autoGenerateArrayKeys: true }),
+    )
     return true
   } catch (error) {
     if ((error as { statusCode?: number } | null)?.statusCode === 409) {
@@ -171,13 +174,15 @@ export const markPendingVersionError = (
   error: unknown,
 ) => {
   const path = `audioVersions[contentHash == "${contentHash}" && status == "pending"]`
-  return sanityClient()
-    .patch(documentId)
-    .set({
-      [`${path}.status`]: 'error',
-      [`${path}.error`]: errorMessage(error),
-    })
-    .commit({ autoGenerateArrayKeys: true })
+  return withReleaseUnlock(sanityClient(), documentId, () =>
+    sanityClient()
+      .patch(documentId)
+      .set({
+        [`${path}.status`]: 'error',
+        [`${path}.error`]: errorMessage(error),
+      })
+      .commit({ autoGenerateArrayKeys: true }),
+  )
 }
 
 // Looks up the _key of the pending placeholder a given contentHash's
@@ -224,15 +229,16 @@ export const recordAudioVersion = (
   currentFields: Record<string, unknown>,
   version: AudioVersion,
   pendingKey: string | undefined,
-) => {
-  const patch = sanityClient().patch(documentId).set(currentFields)
-  if (pendingKey) {
-    patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
-  } else {
-    patch.setIfMissing({ audioVersions: [] }).append('audioVersions', [version])
-  }
-  return patch.commit({ autoGenerateArrayKeys: true })
-}
+) =>
+  withReleaseUnlock(sanityClient(), documentId, () => {
+    const patch = sanityClient().patch(documentId).set(currentFields)
+    if (pendingKey) {
+      patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
+    } else {
+      patch.setIfMissing({ audioVersions: [] }).append('audioVersions', [version])
+    }
+    return patch.commit({ autoGenerateArrayKeys: true })
+  })
 
 export const uploadAudioAsset = (buffer: Buffer, filename: string) =>
   sanityClient().assets.upload('file', buffer, {
@@ -252,16 +258,18 @@ export const reportAudioGenerationError = async (
 ) => {
   logger.error({ error }, `audio generation failed for ${documentId}`)
   try {
-    await sanityClient()
-      .patch(documentId)
-      .set({
-        audioGenerationResult: {
-          status: 'error',
-          updatedAt: new Date().toISOString(),
-          error: errorMessage(error),
-        },
-      })
-      .commit({ autoGenerateArrayKeys: true })
+    await withReleaseUnlock(sanityClient(), documentId, () =>
+      sanityClient()
+        .patch(documentId)
+        .set({
+          audioGenerationResult: {
+            status: 'error',
+            updatedAt: new Date().toISOString(),
+            error: errorMessage(error),
+          },
+        })
+        .commit({ autoGenerateArrayKeys: true }),
+    )
   } catch (e) {
     logger.error(
       { error: e },
@@ -271,12 +279,14 @@ export const reportAudioGenerationError = async (
 }
 
 export const reportAudioGenerationSuccess = (documentId: string) =>
-  sanityClient()
-    .patch(documentId)
-    .set({
-      audioGenerationResult: {
-        status: 'success',
-        updatedAt: new Date().toISOString(),
-      },
-    })
-    .commit({ autoGenerateArrayKeys: true })
+  withReleaseUnlock(sanityClient(), documentId, () =>
+    sanityClient()
+      .patch(documentId)
+      .set({
+        audioGenerationResult: {
+          status: 'success',
+          updatedAt: new Date().toISOString(),
+        },
+      })
+      .commit({ autoGenerateArrayKeys: true }),
+  )

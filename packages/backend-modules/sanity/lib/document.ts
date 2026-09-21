@@ -12,6 +12,19 @@ const SANITY_ID_PREFIX = 'sanity:'
 // form ids are compared and looked up in.
 export const publishedId = (id: string) => id.replace(/^drafts\./, '')
 
+// A document in a Content Release has the id `versions.<releaseName>.<publishedId>`.
+// releaseName is the same value `client.releases.get/schedule/unschedule({releaseId})`
+// expects — not the `_.releases.<releaseName>` release document id. undefined
+// for a draft/published id, which isn't part of any release.
+const VERSIONS_PREFIX = 'versions.'
+
+export const releaseIdFromVersionId = (id: string): string | undefined => {
+  if (!id.startsWith(VERSIONS_PREFIX)) return undefined
+  const rest = id.slice(VERSIONS_PREFIX.length)
+  const dot = rest.indexOf('.')
+  return dot === -1 ? rest : rest.slice(0, dot)
+}
+
 export const toSanityRef = (id: string) =>
   `${SANITY_ID_PREFIX}${publishedId(id)}`
 
