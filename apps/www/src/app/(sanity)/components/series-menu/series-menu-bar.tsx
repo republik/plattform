@@ -16,7 +16,8 @@ const barButtonStyle = css({
   zIndex: 2,
   display: 'block',
   width: 'full',
-  padding: '5px 0',
+  paddingY: '5px',
+  paddingX: '4',
   cursor: 'pointer',
   borderBottomWidth: 1,
   borderBottomStyle: 'solid',
@@ -33,12 +34,21 @@ const barTitleStyle = css({
   width: 'full',
   minWidth: 0,
   fontSize: '15px',
+  md: { fontSize: '18px' },
+})
+
+// The truncation has to sit on the text itself: `text-overflow` does nothing
+// on a flex container, which is where it used to be.
+const barLabelStyle = css({
+  minWidth: 0,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  flexShrink: 1,
-  md: { fontSize: '18px' },
 })
+
+// Never squeezed out by a long title — the chevron is the only affordance
+// telling the reader the bar opens.
+const barIconStyle = css({ flexShrink: 0, display: 'flex' })
 
 const overlayStyle = css({
   position: 'fixed',
@@ -82,7 +92,7 @@ export function SeriesMenuBar({
 }) {
   const [expanded, setExpanded] = useState(false)
   const barRef = useRef<HTMLButtonElement>(null)
-  const [barHeight, setBarHeight] = useState(0)
+  const [menuTop, setMenuTop] = useState(0)
 
   const episodes = collection.episodes ?? []
   const currentIndex = episodes.findIndex(
@@ -90,16 +100,25 @@ export function SeriesMenuBar({
   )
 
   useEffect(() => {
+    if (!expanded) return
+
     const bar = barRef.current
     if (!bar) return
 
-    const observer = new ResizeObserver(() => {
-      setBarHeight(bar.getBoundingClientRect().height)
-    })
-    observer.observe(bar)
+    const measure = () => setMenuTop(bar.getBoundingClientRect().bottom)
+    measure()
 
-    return () => observer.disconnect()
-  }, [])
+    // The bar can still change while open: a viewport resize, or the title
+    // rewrapping onto another line.
+    const observer = new ResizeObserver(measure)
+    observer.observe(bar)
+    window.addEventListener('resize', measure)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [expanded])
 
   const Icon = expanded ? IconKeyboardArrowUp : IconKeyboardArrowDown
   const teasers = getNotExpiredTeasers(episodes)
@@ -108,13 +127,18 @@ export function SeriesMenuBar({
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <Dialog.Trigger ref={barRef} className={barButtonStyle}>
         <span className={barTitleStyle}>
-          <span>
+          <span className={barLabelStyle}>
             {episodes[currentIndex].label}: {collection.title}
           </span>
-          <span className={css({ md: { display: 'none' } })}>
+          <span className={cx(barIconStyle, css({ md: { display: 'none' } }))}>
             <Icon size={18} />
           </span>
-          <span className={css({ display: 'none', md: { display: 'inline' } })}>
+          <span
+            className={cx(
+              barIconStyle,
+              css({ display: 'none', md: { display: 'flex' } }),
+            )}
+          >
             <Icon size={24} />
           </span>
         </span>
@@ -125,7 +149,7 @@ export function SeriesMenuBar({
 
         <Dialog.Content
           className={menuStyle}
-          style={{ top: barHeight }}
+          style={{ top: menuTop }}
           aria-describedby={undefined}
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
