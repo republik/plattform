@@ -172,7 +172,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const saveActiveItemProgress = useCallback(
     async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
-      const { mediaId } = activePlayerItem?.document.meta?.audioSource ?? {}
+      const { mediaId } = activePlayerItem?.document?.meta?.audioSource ?? {}
       if (duration < (forcedState?.currentTime ?? currentTime)) {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,

@@ -245,7 +245,7 @@ const AudioProvider = ({ children }) => {
         isPlaying,
         setIsPlaying,
         autoPlayActive:
-          autoPlayAudioPlayerItem?.id === activePlayerItem?.document.id,
+          autoPlayAudioPlayerItem?.id === activePlayerItem?.document?.id,
         toggleAudioPlayer,
         toggleAudioPlayback,
         checkIfActivePlayerItem,

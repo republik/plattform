@@ -182,13 +182,28 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
   const [knownItems, setKnownItems] = useState<Map<string, AudioPlayerItem>>(
     new Map(),
   )
+  // A ref mirroring the state above. `handleAddQueueItem` remembers an item and
+  // then, in the same call, maps the mutation's refs through `mergeQueueItem` —
+  // a setState hasn't landed by then, so reading the state Map would always
+  // miss the item just added and hand back `document: null`.
+  const knownItemsRef = useRef(knownItems)
+
+  const writeKnownItems = (
+    update: (
+      previous: Map<string, AudioPlayerItem>,
+    ) => Map<string, AudioPlayerItem>,
+  ) => {
+    const next = update(knownItemsRef.current)
+    knownItemsRef.current = next
+    setKnownItems(next)
+  }
   // Ids already fetched, so a queue change doesn't refetch them. A ref, not
   // state: updating it must not trigger a render of its own.
   const fetchedIds = useRef<Set<string>>(new Set())
 
   const rememberItem = (documentId: string, item: AudioPlayerItem) => {
     if (!documentId || !item?.meta?.audioSource) return
-    setKnownItems((previous) => new Map(previous).set(documentId, item))
+    writeKnownItems((previous) => new Map(previous).set(documentId, item))
   }
 
   const [pendingFetches, setPendingFetches] = useState(0)
@@ -208,7 +223,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
         pending.forEach((id) => fetchedIds.current.add(id))
         if (items.length === 0) return
 
-        setKnownItems((previous) => {
+        writeKnownItems((previous) => {
           const next = new Map(previous)
           items.forEach((item) =>
             next.set(`sanity:${item._id}`, toAudioPlayerItem(item)),
@@ -330,7 +345,10 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
         data?.audioQueueItems || [],
       )
       return refs.map((ref) =>
-        mergeQueueItem(ref, knownItems.get(refDocumentId(ref) ?? '')),
+        mergeQueueItem(
+          ref,
+          knownItemsRef.current.get(refDocumentId(ref) ?? ''),
+        ),
       )
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
