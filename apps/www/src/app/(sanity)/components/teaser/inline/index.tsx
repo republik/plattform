@@ -35,13 +35,7 @@ export function InlineTeaser({ teaser }: { teaser: TeaserListItemType }) {
           ? `Sie lesen: ${teaser.label}`
           : teaser.label}
       </h6>
-      <TeaserImage
-        image={teaser.image}
-        alt=''
-        height={480}
-        width={640}
-        sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
-      />
+      <TeaserImage image={teaser.image} alt='' width={320} height={240} />
       <h5
         className={css({
           textStyle: 'h3Serif',
