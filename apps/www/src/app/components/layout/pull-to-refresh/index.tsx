@@ -1,7 +1,5 @@
 'use client'
 
-import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
-import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { IconRefresh } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { useRouter } from 'next/navigation'
@@ -195,17 +193,12 @@ type PullToRefreshProps = {
 export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
   const ref = useRef<HTMLDivElement>(null)
   const { isExpanded: audioPlayerExpanded } = useAudioContext()
-  const { isIOSApp } = usePlatformInformation()
-  const postMessage = usePostMessage()
 
   const { refresh } = useRouter()
 
   const pullToRefresh = useCallback(() => {
-    if (isIOSApp) {
-      postMessage({ type: 'haptic', payload: { type: 'impactLight' } })
-    }
-    setTimeout(refresh, 33 * 3)
-  }, [isIOSApp, postMessage, refresh])
+    refresh()
+  }, [refresh])
 
   usePullToRefresh(ref, pullToRefresh, {
     isDisabled: audioPlayerExpanded,
