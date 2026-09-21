@@ -3,14 +3,14 @@
 import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
 import { SERIES_MENU_QUERY_RESULT } from '@/sanity.types'
+import * as Dialog from '@radix-ui/react-dialog'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
+import { editorialContent } from '@republik/theme/recipes'
 import { useEffect, useRef, useState } from 'react'
 
 const barButtonStyle = css({
-  // Pinned to the top of the viewport so the panel stays anchored to it while
-  // the page scrolls. Its z-index sits below the page header's (100), so the
-  // header covers the bar while shown and reveals it once it slides away.
   position: 'sticky',
   top: 0,
   zIndex: 2,
@@ -40,25 +40,23 @@ const barTitleStyle = css({
   md: { fontSize: '18px' },
 })
 
+const overlayStyle = css({
+  position: 'fixed',
+  inset: 0,
+  zIndex: 10000,
+})
+
 const menuStyle = css({
   position: 'fixed',
   left: 0,
   right: 0,
   bottom: 0,
-  zIndex: 1,
+  zIndex: 10001,
   overflow: 'auto',
-  WebkitOverflowScrolling: 'touch',
-  overscrollBehavior: 'contain',
   background: 'background',
   color: 'text',
-  visibility: 'hidden',
-  opacity: 0,
-  transition: 'opacity 0.2s ease-in-out, visibility 0s linear 0.2s',
-  '&[aria-expanded=true]': {
-    opacity: 1,
-    visibility: 'visible',
-    transition: 'opacity 0.2s ease-in-out',
-  },
+  _stateOpen: { animation: 'fadeIn' },
+  _stateClosed: { animation: 'fadeOut' },
 })
 
 const gridStyle = css({
@@ -107,14 +105,8 @@ export function SeriesMenuBar({
   const teasers = getNotExpiredTeasers(episodes)
 
   return (
-    <>
-      <button
-        ref={barRef}
-        type='button'
-        className={barButtonStyle}
-        aria-expanded={expanded}
-        onClick={() => setExpanded((state) => !state)}
-      >
+    <Dialog.Root open={expanded} onOpenChange={setExpanded}>
+      <Dialog.Trigger ref={barRef} className={barButtonStyle}>
         <span className={barTitleStyle}>
           <span>
             {episodes[currentIndex].label}: {collection.title}
@@ -126,48 +118,54 @@ export function SeriesMenuBar({
             <Icon size={24} />
           </span>
         </span>
-      </button>
+      </Dialog.Trigger>
 
-      <div
-        className={menuStyle}
-        aria-expanded={expanded}
-        style={{ top: barHeight }}
-      >
-        <div
-          className={css({
-            maxWidth: 'large',
-            marginX: 'auto',
-            paddingX: '4',
-            paddingY: '8',
-          })}
+      <Dialog.Portal>
+        <Dialog.Overlay className={overlayStyle} />
+
+        <Dialog.Content
+          className={menuStyle}
+          style={{ top: barHeight }}
+          aria-describedby={undefined}
+          onOpenAutoFocus={(event) => event.preventDefault()}
         >
-          {collection.description && (
-            <p
-              className={css({
-                textStyle: 'editorialLead',
-                fontSize: 'xl',
-                mb: '8',
-              })}
-            >
-              {collection.description}
-            </p>
-          )}
-          <div className={gridStyle}>
-            {teasers.map((episode, index) => (
-              <div
-                key={episode._id}
-                onClick={() => setExpanded(false)}
-                data-current={index === currentIndex || undefined}
+          <VisuallyHidden asChild>
+            <Dialog.Title>{collection.title}</Dialog.Title>
+          </VisuallyHidden>
+          <div
+            className={cx(
+              editorialContent({ theme: 'EDITORIAL' }),
+              css({ paddingY: '8' }),
+            )}
+          >
+            {collection.description && (
+              <p
+                className={css({
+                  textStyle: 'editorialLead',
+                  fontSize: 'xl',
+                  mb: '8',
+                })}
               >
-                <GridTeaser
-                  teaser={episode}
-                  isCurrentArticle={index === currentIndex}
-                />
-              </div>
-            ))}
+                {collection.description}
+              </p>
+            )}
+            <div className={gridStyle}>
+              {teasers.map((episode, index) => (
+                <div
+                  key={episode._id}
+                  onClick={() => setExpanded(false)}
+                  data-current={index === currentIndex || undefined}
+                >
+                  <GridTeaser
+                    teaser={episode}
+                    isCurrentArticle={index === currentIndex}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
-    </>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
