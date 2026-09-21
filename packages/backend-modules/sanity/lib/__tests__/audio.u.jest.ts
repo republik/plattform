@@ -25,7 +25,30 @@ import {
   hasPendingVersion,
   markPendingVersionError,
   recordAudioVersion,
+  reportAudioGenerationError,
+  reportAudioGenerationSuccess,
 } from '../audio'
+
+const notFoundError = () =>
+  Object.assign(new Error('not found'), {
+    details: { items: [{ error: { type: 'documentNotFoundError' } }] },
+  })
+
+// Generic chainable patch-builder shared by the fallback tests below — every
+// method (however many a given call site chains) just returns the same
+// object so `.commit()` can be configured last.
+function chainable(commit: jest.Mock) {
+  const obj: Record<string, jest.Mock> & { commit: jest.Mock } = { commit }
+  const proxy = new Proxy(obj, {
+    get(target, prop: string) {
+      if (prop in target) return target[prop]
+      const fn = jest.fn(() => proxy)
+      target[prop] = fn
+      return fn
+    },
+  })
+  return proxy
+}
 
 describe('hasPendingVersion', () => {
   it('is false when nothing is pending', () => {
@@ -128,6 +151,37 @@ describe('claimAudioGeneration', () => {
       claimAudioGeneration('drafts.doc-1', 'rev-1', 'hash-1'),
     ).rejects.toThrow('network error')
   })
+
+  it('falls back to the draft (without the revision guard) when the version no longer exists', async () => {
+    loggerError.mockReset()
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? failingChain : succeedingChain,
+    )
+
+    const claimed = await claimAudioGeneration(
+      'versions.r1.doc-1',
+      'rev-1',
+      'hash-1',
+    )
+
+    expect(claimed).toBe(true)
+    // ifRevisionId only makes sense against the original id — rev has
+    // nothing to do with the draft's own revision.
+    expect(failingChain.ifRevisionId).toHaveBeenCalledWith('rev-1')
+    expect(succeedingChain.ifRevisionId).not.toHaveBeenCalled()
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentId: 'versions.r1.doc-1',
+        draftId: 'drafts.doc-1',
+      }),
+      expect.stringContaining('falling back to the draft'),
+    )
+  })
 })
 
 describe('markPendingVersionError', () => {
@@ -160,6 +214,25 @@ describe('markPendingVersionError', () => {
       expect.objectContaining({ [`${path}.error`]: 'plain string error' }),
     )
   })
+
+  it('falls back to the draft when the version no longer exists', async () => {
+    loggerError.mockReset()
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? failingChain : succeedingChain,
+    )
+
+    await markPendingVersionError('versions.r1.doc-1', 'hash-1', new Error('boom'))
+
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ draftId: 'drafts.doc-1' }),
+      expect.stringContaining('falling back to the draft'),
+    )
+  })
 })
 
 describe('recordAudioVersion', () => {
@@ -167,14 +240,6 @@ describe('recordAudioVersion', () => {
     file: { _type: 'file' as const, asset: { _type: 'reference' as const, _ref: 'asset-1' } },
     url: 'https://example.com/audio.mp3',
     generatedAt: '2026-09-21T00:00:00.000Z',
-  }
-
-  function chainable(commit: jest.Mock) {
-    const obj: Record<string, jest.Mock> = { commit }
-    for (const method of ['set', 'setIfMissing', 'append']) {
-      obj[method] = jest.fn(() => obj)
-    }
-    return obj
   }
 
   beforeEach(() => {
@@ -209,10 +274,7 @@ describe('recordAudioVersion', () => {
   })
 
   it('falls back to the draft and logs an error when the version no longer exists', async () => {
-    const notFoundError = Object.assign(new Error('not found'), {
-      details: { items: [{ error: { type: 'documentNotFoundError' } }] },
-    })
-    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError))
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
     const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
 
     patch.mockReset().mockImplementation((id: string) =>
@@ -245,5 +307,93 @@ describe('recordAudioVersion', () => {
     ).rejects.toThrow('boom')
     expect(loggerError).not.toHaveBeenCalled()
     expect(patch).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('reportAudioGenerationError', () => {
+  beforeEach(() => {
+    loggerError.mockReset()
+  })
+
+  it('patches the error status directly when the document exists', async () => {
+    const chain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockReturnValue(chain)
+
+    await reportAudioGenerationError('drafts.doc-1', new Error('boom'))
+
+    expect(patch).toHaveBeenCalledWith('drafts.doc-1')
+    expect(chain.set).toHaveBeenCalledWith({
+      audioGenerationResult: expect.objectContaining({
+        status: 'error',
+        error: 'boom',
+      }),
+    })
+  })
+
+  it('falls back to the draft when the version no longer exists', async () => {
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? failingChain : succeedingChain,
+    )
+
+    await reportAudioGenerationError('versions.r1.doc-1', new Error('boom'))
+
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ draftId: 'drafts.doc-1' }),
+      expect.stringContaining('falling back to the draft'),
+    )
+  })
+
+  it('swallows an error from the report write itself (already logged) rather than throwing', async () => {
+    const chain = chainable(jest.fn().mockRejectedValue(new Error('network down')))
+    patch.mockReset().mockReturnValue(chain)
+
+    await expect(
+      reportAudioGenerationError('drafts.doc-1', new Error('boom')),
+    ).resolves.toBeUndefined()
+    expect(loggerError).toHaveBeenCalledWith(
+      { error: expect.any(Error) },
+      expect.stringContaining('failed to report audio generation error'),
+    )
+  })
+})
+
+describe('reportAudioGenerationSuccess', () => {
+  beforeEach(() => {
+    loggerError.mockReset()
+  })
+
+  it('patches the success status directly when the document exists', async () => {
+    const chain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockReturnValue(chain)
+
+    await reportAudioGenerationSuccess('drafts.doc-1')
+
+    expect(patch).toHaveBeenCalledWith('drafts.doc-1')
+    expect(chain.set).toHaveBeenCalledWith({
+      audioGenerationResult: expect.objectContaining({ status: 'success' }),
+    })
+  })
+
+  it('falls back to the draft when the version no longer exists', async () => {
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? failingChain : succeedingChain,
+    )
+
+    await reportAudioGenerationSuccess('versions.r1.doc-1')
+
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ draftId: 'drafts.doc-1' }),
+      expect.stringContaining('falling back to the draft'),
+    )
   })
 })

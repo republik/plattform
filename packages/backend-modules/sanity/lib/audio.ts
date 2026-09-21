@@ -17,6 +17,39 @@ function isDocumentNotFoundError(err: unknown): boolean {
   return Boolean(items?.some((item) => item.error?.type === 'documentNotFoundError'))
 }
 
+// Every write in this file goes through this: locked-release handling (via
+// withReleaseUnlock) plus a fallback to the draft when documentId itself no
+// longer exists — TTS generation is async and can take real time, and if the
+// release promotes (publish) or gets unscheduled/deleted while a generation
+// is still in flight, `versions.<release>.<id>` is simply gone by the time
+// any of these run. Rather than lose that write with nothing but a server
+// log to show for it, fall back to the draft (always still there) and log
+// loudly: this needs a human to notice (most likely the article already
+// published without its audio, or the schedule was cancelled) and reconcile
+// from the draft's history. `doPatch` receives the id to target, so it can
+// be applied to either documentId or, on fallback, its draft.
+async function withDraftFallback<T>(
+  documentId: string,
+  action: string,
+  doPatch: (id: string) => Promise<T>,
+): Promise<T> {
+  try {
+    return await withReleaseUnlock(sanityClient(), documentId, () =>
+      doPatch(documentId),
+    )
+  } catch (err) {
+    if (!isDocumentNotFoundError(err)) throw err
+    const draftId = draftIdFor(documentId)
+    logger.error(
+      { documentId, draftId, err },
+      `sanity audio: version document no longer exists when ${action} ` +
+        '(release published or schedule cancelled while generation was in ' +
+        'flight) — falling back to the draft',
+    )
+    return doPatch(draftId)
+  }
+}
+
 // Portable text: a heterogeneous array of block/object nodes. The exact
 // per-node shape is defined by studio's schema (a separate repo, no shared
 // type package) — modeling it precisely here would drift the moment that
@@ -144,28 +177,34 @@ export const claimAudioGeneration = async (
   rev: string,
   contentHash: string,
 ): Promise<boolean> => {
+  // ifRevisionId only makes sense against documentId itself — rev was read
+  // from that document, and would just always conflict (409) if reused
+  // against the draft on a not-found fallback, since the draft's own
+  // revision has nothing to do with it. Omitted on the fallback attempt.
+  const doPatch = (id: string) => {
+    let patch = sanityClient().patch(id)
+    if (id === documentId) patch = patch.ifRevisionId(rev)
+    return patch
+      .setIfMissing({ audioVersions: [] })
+      .insert('after', 'audioVersions[-1]', [
+        {
+          _type: 'audioVersion',
+          status: 'pending',
+          contentHash,
+          generatedAt: new Date().toISOString(),
+        },
+      ])
+      .set({
+        audioGenerationResult: {
+          status: 'in-progress',
+          updatedAt: new Date().toISOString(),
+        },
+      })
+      .commit({ autoGenerateArrayKeys: true })
+  }
+
   try {
-    await withReleaseUnlock(sanityClient(), documentId, () =>
-      sanityClient()
-        .patch(documentId)
-        .ifRevisionId(rev)
-        .setIfMissing({ audioVersions: [] })
-        .insert('after', 'audioVersions[-1]', [
-          {
-            _type: 'audioVersion',
-            status: 'pending',
-            contentHash,
-            generatedAt: new Date().toISOString(),
-          },
-        ])
-        .set({
-          audioGenerationResult: {
-            status: 'in-progress',
-            updatedAt: new Date().toISOString(),
-          },
-        })
-        .commit({ autoGenerateArrayKeys: true }),
-    )
+    await withDraftFallback(documentId, 'claiming the generation slot', doPatch)
     return true
   } catch (error) {
     if ((error as { statusCode?: number } | null)?.statusCode === 409) {
@@ -189,14 +228,18 @@ export const markPendingVersionError = (
   error: unknown,
 ) => {
   const path = `audioVersions[contentHash == "${contentHash}" && status == "pending"]`
-  return withReleaseUnlock(sanityClient(), documentId, () =>
+  const doPatch = (id: string) =>
     sanityClient()
-      .patch(documentId)
+      .patch(id)
       .set({
         [`${path}.status`]: 'error',
         [`${path}.error`]: errorMessage(error),
       })
-      .commit({ autoGenerateArrayKeys: true }),
+      .commit({ autoGenerateArrayKeys: true })
+  return withDraftFallback(
+    documentId,
+    'marking a pending generation as failed',
+    doPatch,
   )
 }
 
@@ -239,16 +282,6 @@ export interface AudioVersion {
 // Falls back to appending when no matching placeholder exists (a generation
 // kicked off before this placeholder mechanism existed, or one whose
 // placeholder was already cleaned up by removePendingVersion).
-//
-// documentId can be gone by the time this runs — TTS generation is async, and
-// if the release promoted (published) or was unscheduled/cancelled while it
-// was still in flight, `versions.<release>.<id>` no longer exists at all
-// (withReleaseUnlock only knows the RELEASE isn't locked, not that this
-// specific document is gone). Rather than lose a successfully generated audio
-// file, fall back to the draft — always still there — and log loudly: this
-// needs a human to notice (most likely the article already published without
-// its audio, or the schedule was cancelled and generation should have been
-// too) and reconcile from the draft's history.
 export const recordAudioVersion = (
   documentId: string,
   currentFields: Record<string, unknown>,
@@ -264,20 +297,7 @@ export const recordAudioVersion = (
     }
     return patch.commit({ autoGenerateArrayKeys: true })
   }
-
-  return withReleaseUnlock(sanityClient(), documentId, () =>
-    doPatch(documentId),
-  ).catch((err) => {
-    if (!isDocumentNotFoundError(err)) throw err
-    const draftId = draftIdFor(documentId)
-    logger.error(
-      { documentId, draftId, err },
-      'sanity audio: version document no longer exists when recording generated ' +
-        'audio (release published or schedule cancelled while generation was in ' +
-        'flight) — falling back to the draft',
-    )
-    return doPatch(draftId)
-  })
+  return withDraftFallback(documentId, 'recording generated audio', doPatch)
 }
 
 export const uploadAudioAsset = (buffer: Buffer, filename: string) =>
@@ -297,19 +317,19 @@ export const reportAudioGenerationError = async (
   error: unknown,
 ) => {
   logger.error({ error }, `audio generation failed for ${documentId}`)
+  const doPatch = (id: string) =>
+    sanityClient()
+      .patch(id)
+      .set({
+        audioGenerationResult: {
+          status: 'error',
+          updatedAt: new Date().toISOString(),
+          error: errorMessage(error),
+        },
+      })
+      .commit({ autoGenerateArrayKeys: true })
   try {
-    await withReleaseUnlock(sanityClient(), documentId, () =>
-      sanityClient()
-        .patch(documentId)
-        .set({
-          audioGenerationResult: {
-            status: 'error',
-            updatedAt: new Date().toISOString(),
-            error: errorMessage(error),
-          },
-        })
-        .commit({ autoGenerateArrayKeys: true }),
-    )
+    await withDraftFallback(documentId, 'reporting a generation error', doPatch)
   } catch (e) {
     logger.error(
       { error: e },
@@ -318,15 +338,16 @@ export const reportAudioGenerationError = async (
   }
 }
 
-export const reportAudioGenerationSuccess = (documentId: string) =>
-  withReleaseUnlock(sanityClient(), documentId, () =>
+export const reportAudioGenerationSuccess = (documentId: string) => {
+  const doPatch = (id: string) =>
     sanityClient()
-      .patch(documentId)
+      .patch(id)
       .set({
         audioGenerationResult: {
           status: 'success',
           updatedAt: new Date().toISOString(),
         },
       })
-      .commit({ autoGenerateArrayKeys: true }),
-  )
+      .commit({ autoGenerateArrayKeys: true })
+  return withDraftFallback(documentId, 'reporting a successful generation', doPatch)
+}
