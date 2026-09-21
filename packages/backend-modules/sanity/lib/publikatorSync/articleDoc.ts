@@ -28,6 +28,12 @@ export interface PublikatorCommit {
   // here rather than widening every test fixture that builds a commit
   // object without one.
   id?: string
+  // The `publikator.commits.repoId` column. Needed to resolve a relative
+  // `images/<hash>.ext` asset path (the common case for anything uploaded
+  // through the Publikator editor) into an absolute, fetchable URL — see
+  // mdastToPortableText.ts#resolveRepoImagePath. Optional for the same
+  // reason as `id`: real rows always have it, test fixtures don't need to.
+  repoId?: string
   content: { children?: unknown[] }
   meta: Record<string, unknown>
 }
@@ -189,12 +195,14 @@ export function buildDraftArticleDoc(
   const { title, description, byline, cover } = extractTitleZoneData(
     nodes,
     true,
+    commit.repoId,
   )
   const publishDate = resolvePublishDate(commit, repoMeta)
   const { slugAuto, slug } = resolveSlug(commit.meta, publishDate)
   const formatRepoId = resolveFormatRepoId(commit.meta)
   const image = assetRef(
     typeof commit.meta?.image === 'string' ? commit.meta.image : undefined,
+    commit.repoId,
   )
 
   return {
@@ -211,7 +219,13 @@ export function buildDraftArticleDoc(
           },
         }
       : {}),
-    content: mdastToPortableText(bodyChildren(nodes), true),
+    content: mdastToPortableText(
+      bodyChildren(nodes),
+      true,
+      undefined,
+      undefined,
+      commit.repoId,
+    ),
     slugAuto,
     ...(slug ? { slug } : {}),
     ...(publishDate ? { publishDate } : {}),

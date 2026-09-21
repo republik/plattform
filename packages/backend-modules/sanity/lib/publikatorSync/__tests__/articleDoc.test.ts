@@ -207,6 +207,50 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
       )
     })
 
+    // The common real-world case: an editor-uploaded cover image is stored
+    // on the raw commit as a path relative to the repo's own asset folder,
+    // only ever resolved to an absolute URL at Publikator's own render time
+    // — which this hook bypasses (see mdastToPortableText.ts#
+    // resolveRepoImagePath). Without repoId, this used to be silently
+    // dropped: no `_sanityAsset`, so no upload, so no cover in Sanity at all.
+    it('resolves a relative "images/..." cover path via the commit repoId', () => {
+      const OLD_ENV = process.env
+      process.env = {
+        ...OLD_ENV,
+        ASSETS_SERVER_BASE_URL: 'https://cdn.repub.ch',
+        AWS_S3_BUCKET: 'republik-assets',
+      }
+      try {
+        const doc = buildDraftArticleDoc({
+          repoId: 'republik/foo',
+          content: {
+            children: [
+              {
+                type: 'zone',
+                identifier: 'FIGURE',
+                children: [
+                  {
+                    type: 'paragraph',
+                    children: [
+                      { type: 'image', url: 'images/cover-hash.jpg' },
+                    ],
+                  },
+                ],
+              },
+              TITLE_ZONE,
+            ],
+          },
+          meta: {},
+        })
+
+        expect((doc.cover as any)._sanityAsset).toBe(
+          'image@https://republik-assets.s3.eu-central-1.amazonaws.com/repos/republik/foo/images/cover-hash.jpg',
+        )
+      } finally {
+        process.env = OLD_ENV
+      }
+    })
+
     it('is left unset when there is no FIGURE zone before TITLE', () => {
       const doc = buildDraftArticleDoc({
         content: { children: [TITLE_ZONE] },
@@ -234,6 +278,30 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
       const doc = buildDraftArticleDoc({ content: { children: [] }, meta: {} })
 
       expect(doc.teaserSmall).toBeUndefined()
+    })
+
+    // Same real-world relative-path case as the cover test above: this is
+    // the common shape for meta.image on a raw commit row.
+    it('resolves a relative "images/..." meta.image via the commit repoId', () => {
+      const OLD_ENV = process.env
+      process.env = {
+        ...OLD_ENV,
+        ASSETS_SERVER_BASE_URL: 'https://cdn.repub.ch',
+        AWS_S3_BUCKET: 'republik-assets',
+      }
+      try {
+        const doc = buildDraftArticleDoc({
+          repoId: 'republik/foo',
+          content: { children: [] },
+          meta: { image: 'images/teaser-hash.jpg?size=100x100' },
+        })
+
+        expect((doc.teaserSmall?.image as any)._sanityAsset).toBe(
+          'image@https://republik-assets.s3.eu-central-1.amazonaws.com/repos/republik/foo/images/teaser-hash.jpg',
+        )
+      } finally {
+        process.env = OLD_ENV
+      }
     })
   })
 })

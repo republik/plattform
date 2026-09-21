@@ -80,4 +80,33 @@ describe('resolveFormatTeaserImage', () => {
       id: 'commit-1',
     })
   })
+
+  // The format's own commit row is raw, unrendered Postgres data too — same
+  // relative-path case as an article's own meta.image/cover.
+  it("resolves a relative 'images/...' path on the format's own commit via formatRepoId", async () => {
+    const OLD_ENV = process.env
+    process.env = {
+      ...OLD_ENV,
+      ASSETS_SERVER_BASE_URL: 'https://cdn.repub.ch',
+      AWS_S3_BUCKET: 'republik-assets',
+    }
+    try {
+      const pgdb = makePgdb({
+        milestone: { commitId: 'commit-1' },
+        commit: { meta: { image: 'images/format-hash.jpg?size=1x1' } },
+      })
+
+      const result = await resolveFormatTeaserImage(
+        baseDoc,
+        'republik/format-x',
+        pgdb,
+      )
+
+      expect((result.teaserSmall?.image as any)._sanityAsset).toBe(
+        'image@https://republik-assets.s3.eu-central-1.amazonaws.com/repos/republik/format-x/images/format-hash.jpg',
+      )
+    } finally {
+      process.env = OLD_ENV
+    }
+  })
 })

@@ -33,6 +33,7 @@ export async function resolveFormatTeaserImage(
   const formatImageUrl = formatCommit?.meta?.image
   const image = assetRef(
     typeof formatImageUrl === 'string' ? formatImageUrl : undefined,
+    formatRepoId,
   )
   if (!image) return doc
 

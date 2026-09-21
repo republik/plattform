@@ -136,18 +136,20 @@ export type PortableTextItem = PtBlock | PtCustomBlock
 
 // republik-assets lives in eu-central-1 (see AWS_REGION in plattform's
 // apps/api/.env.example) — matches the bucket the asset server proxies via
-// `/s3/{bucket}/{key}`. cdn.repub.ch and cdn.republik.space are the same
-// proxy under two hostnames (the latter a legacy alias) — both forward to it.
+// `/s3/{bucket}/{key}`. cdn.repub.ch/cdn.republik.space are the production
+// proxy (the latter a legacy alias); cdn.republik.pink is the same proxy for
+// the `love`/staging environment (see apps/www/next.config.js's image host
+// allowlist) — all three forward to S3 the same way.
 const S3_ASSETS_REGION = 'eu-central-1'
 const ASSET_SERVER_S3_RE =
-  /^https?:\/\/cdn\.(?:repub\.ch|republik\.space)\/s3\/([^/]+)\/(.+)$/i
+  /^https?:\/\/cdn\.(?:repub\.ch|republik\.space|republik\.pink)\/s3\/([^/]+)\/(.+)$/i
 
-// rewrite an asset-server proxy URL (`cdn.repub.ch/s3/{bucket}/{key}` or its
-// `cdn.republik.space` alias) to a direct S3 link, so Sanity fetches straight
-// from S3 instead of bouncing through the asset server. Drops the CDN's
-// `?size=WxH` resize query — S3 has no resizing, so the original
-// full-resolution file is the closest equivalent. URLs that don't match the
-// pattern pass through as-is.
+// rewrite an asset-server proxy URL (`cdn.repub.ch/s3/{bucket}/{key}` or one
+// of its aliases) to a direct S3 link, so Sanity fetches straight from S3
+// instead of bouncing through the asset server. Drops the CDN's `?size=WxH`
+// resize query — S3 has no resizing, so the original full-resolution file is
+// the closest equivalent. URLs that don't match the pattern pass through
+// as-is.
 export function toDirectS3Url(url: string): string {
   const match = url.match(ASSET_SERVER_S3_RE)
   if (!match) return url
@@ -156,15 +158,63 @@ export function toDirectS3Url(url: string): string {
   return `https://${bucket}.s3.${S3_ASSETS_REGION}.amazonaws.com/${key}`
 }
 
+// A Publikator image is stored on the commit's raw mdast as either an
+// already-absolute URL (an editor pasted an external image, or — for
+// meta.image specifically — some older content) or, for the common case of
+// an image uploaded through the Publikator editor, a path RELATIVE to the
+// repo's own asset folder: `images/<hash>.<ext>?size=WxH`. That relative
+// form is only ever resolved into an absolute URL at *render* time
+// (publikator's own getDocument()/assets module,
+// see assets/lib/Repo.js#getS3Url and assets/lib/urlPrefixing.js
+// #createRepoUrlPrefixer) — this hook reads the raw, unrendered commit row
+// straight from Postgres, so it never goes through that step and would
+// otherwise see the bare relative path. Reproduces the same formula
+// (`${ASSETS_SERVER_BASE_URL}/s3/${bucket}/${prefix}/${repoId}/${path}`, the
+// "public", non-HMAC-signed form `createRepoUrlPrefixer(repoId, true)`
+// produces) locally rather than taking a cross-package dependency on that
+// JS module for two constants and one string template.
+const IMAGE_PATH_RE = /^images\//
+
+function resolveRepoImagePath(
+  path: string,
+  repoId: string | undefined,
+): string {
+  if (!repoId || !IMAGE_PATH_RE.test(path)) return path
+  const {
+    ASSETS_SERVER_BASE_URL,
+    AWS_S3_BUCKET,
+    AWS_S3_REPO_KEY_PREFIX = 'repos',
+  } = process.env
+  if (!ASSETS_SERVER_BASE_URL || !AWS_S3_BUCKET) return path
+  return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${AWS_S3_REPO_KEY_PREFIX}/${repoId}/${path}`
+}
+
+// Set once per document by mdastToPortableText()/extractTitleZoneData()
+// (mirrors currentVoice2 below) so the many assetRef() call sites throughout
+// this file don't each need repoId threaded through their own signatures —
+// this module only ever processes one document (one incoming commit) at a
+// time. External callers (articleDoc.ts's own meta.image,
+// ./formatTeaserImage.ts's format-image fallback) pass repoId explicitly
+// instead, since they call assetRef() directly, outside of either entry
+// point.
+let currentRepoId: string | undefined
+
 // `_sanityAsset: 'image@<url>'` is a marker this module leaves for
 // ./assets.ts to resolve into a real uploaded asset reference before the
 // document is written — see that file's header comment for why. Only
 // http(s) works here; inline data: URIs (some Publikator images are base64)
 // can't be fetched that way, so they are dropped rather than crashing the
-// sync.
-export function assetRef(url: string | undefined | null): string | undefined {
-  if (!url || !/^https?:\/\//i.test(url)) return undefined
-  return `image@${toDirectS3Url(url)}`
+// sync. A relative `images/...` path is resolved to an absolute URL first
+// (see resolveRepoImagePath) — without repoId, it can't be, and is dropped
+// the same as any other malformed value.
+export function assetRef(
+  url: string | undefined | null,
+  repoId: string | undefined = currentRepoId,
+): string | undefined {
+  if (!url) return undefined
+  const resolved = resolveRepoImagePath(url, repoId)
+  if (!/^https?:\/\//i.test(resolved)) return undefined
+  return `image@${toDirectS3Url(resolved)}`
 }
 
 function isAutoSlugLink(url: string): boolean {
@@ -1637,7 +1687,9 @@ export interface TitleZoneData {
 export function extractTitleZoneData(
   nodes: unknown[],
   mapAssets = false,
+  repoId?: string,
 ): TitleZoneData {
+  currentRepoId = repoId
   const children = nodes as MdastNode[]
   const result: TitleZoneData = {}
 
@@ -1714,8 +1766,10 @@ export function mdastToPortableText(
   mapAssets = false,
   seriesRef?: SanityRef,
   voice2?: string,
+  repoId?: string,
 ): PortableTextItem[] {
   currentVoice2 = voice2
+  currentRepoId = repoId
   return dropEmptyBlocks(
     styleInterviewQuestions(
       (nodes as MdastNode[]).flatMap((node) =>
