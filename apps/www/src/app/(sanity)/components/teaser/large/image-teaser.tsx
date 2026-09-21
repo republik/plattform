@@ -205,6 +205,9 @@ export function ImageTeaser({
           className={teaserTextPosition({
             position: teaser.textPosition,
           })}
+          style={{
+            textAlign: teaser.textAlignment === 'CENTER' ? 'center' : 'left',
+          }}
         >
           {heading && <Heading heading={heading} />}
 
