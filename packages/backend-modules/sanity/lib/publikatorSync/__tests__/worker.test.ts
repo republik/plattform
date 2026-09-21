@@ -10,15 +10,27 @@ jest.mock('../../client', () => ({
   }),
 }))
 
+const resolveFormatRepoId = jest.fn().mockReturnValue(undefined)
+
 jest.mock('../articleDoc', () => ({
   buildDraftArticleDoc: (commit: { id: string }) => ({
     _type: 'article',
     _syncedFromCommitId: commit.id,
   }),
+  resolveFormatRepoId: (...args: unknown[]) => resolveFormatRepoId(...args),
 }))
 
 jest.mock('../assets', () => ({
   resolveAssetMarkers: (doc: unknown) => Promise.resolve(doc),
+}))
+
+const resolveFormatTeaserImage = jest
+  .fn()
+  .mockImplementation((doc: unknown) => Promise.resolve(doc))
+
+jest.mock('../formatTeaserImage', () => ({
+  resolveFormatTeaserImage: (...args: unknown[]) =>
+    resolveFormatTeaserImage(...args),
 }))
 
 const linkLegacySyntheticAudio = jest
@@ -63,6 +75,10 @@ describe('PublikatorSyncWorker', () => {
       .mockReset()
       .mockImplementation((doc: unknown) => Promise.resolve(doc))
     linkLegacyDiscussion.mockReset().mockResolvedValue(undefined)
+    resolveFormatRepoId.mockReset().mockReturnValue(undefined)
+    resolveFormatTeaserImage
+      .mockReset()
+      .mockImplementation((doc: unknown) => Promise.resolve(doc))
   })
 
   it('commit: syncs the latest commit for the repo, not the one in the payload', async () => {
@@ -235,6 +251,52 @@ describe('PublikatorSyncWorker', () => {
     // A transient Sanity/Postgres hiccup in the audio side-channel must
     // never block the article's own text/content from syncing.
     linkLegacySyntheticAudio.mockRejectedValueOnce(new Error('sanity down'))
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await expect(
+      worker.perform([
+        { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+      ]),
+    ).resolves.toBeUndefined()
+
+    expect(createOrReplace).toHaveBeenCalledTimes(1)
+    const [written] = createOrReplace.mock.calls[0]
+    expect(written._syncedFromCommitId).toBe('c1')
+  })
+
+  it('commit: resolves the format teaser-image fallback with the format repoId and pgdb, before uploading assets', async () => {
+    resolveFormatRepoId.mockReturnValue('republik/format-x')
+    const commits = { findOne: jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article', format: 'republik/format-x' },
+    }) }
+    const worker = makeWorker({ publikator: { commits } })
+
+    await worker.perform([
+      { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+    ])
+
+    expect(resolveFormatRepoId).toHaveBeenCalledWith({
+      template: 'article',
+      format: 'republik/format-x',
+    })
+    expect(resolveFormatTeaserImage).toHaveBeenCalledWith(
+      expect.objectContaining({ _syncedFromCommitId: 'c1' }),
+      'republik/format-x',
+      expect.objectContaining({ publikator: expect.anything() }),
+    )
+  })
+
+  it('commit: still syncs the article when the format teaser-image fallback throws', async () => {
+    // A missing/unpublished format, or a transient Postgres hiccup in this
+    // lookup, must never block the article's own text/content from syncing.
+    resolveFormatTeaserImage.mockRejectedValueOnce(new Error('pg down'))
     const findOne = jest.fn().mockResolvedValue({
       id: 'c1',
       repoId: 'republik/foo',

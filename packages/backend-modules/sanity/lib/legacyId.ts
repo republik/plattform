@@ -6,6 +6,7 @@ import { v5 as uuidV5 } from 'uuid'
 // Sanity `_id` deterministically from its repoId, so the mapping is
 // something we compute, not something we need to query a stored field for.
 const NAMESPACE = uuidV5('ch.republik.publikator', uuidV5.DNS)
+const PAGE_NAMESPACE = uuidV5('ch.republik.publikator.page', uuidV5.DNS)
 
 export const normalizeGithubPath = (input: string): string => {
   let sanitized = input.trim()
@@ -32,3 +33,9 @@ export const normalizeGithubPath = (input: string): string => {
 // separately-migrated "page" companion doc uses a different namespace).
 export const repoIdToSanityId = (repoId: string): string =>
   uuidV5(normalizeGithubPath(repoId), NAMESPACE)
+
+// Matches generateUUID.ts#repoIDToPageUUID — the id of a format/section's
+// migrated `page` companion document, i.e. the target of an article's
+// `heading` reference ("Spitzmarke" in the Studio schema).
+export const repoIdToPageId = (repoId: string): string =>
+  uuidV5(normalizeGithubPath(repoId), PAGE_NAMESPACE)

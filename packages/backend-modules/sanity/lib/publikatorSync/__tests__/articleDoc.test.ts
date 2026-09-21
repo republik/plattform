@@ -1,4 +1,5 @@
-import { buildDraftArticleDoc } from '../articleDoc'
+import { buildDraftArticleDoc, resolveFormatRepoId } from '../articleDoc'
+import { repoIdToPageId } from '../../legacyId'
 
 const TITLE_ZONE = {
   type: 'zone',
@@ -125,5 +126,114 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
     expect(doc.content).toEqual([])
     expect(doc.title).toBeUndefined()
     expect(doc.slugAuto).toBe(true)
+  })
+
+  describe('heading (Spitzmarke / format connection)', () => {
+    it('references the format\'s page id when meta.format is a republik GitHub URL', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { format: 'https://github.com/republik/format-binswanger' },
+      })
+
+      expect(doc.heading).toEqual({
+        _type: 'reference',
+        _ref: repoIdToPageId('republik/format-binswanger'),
+        _weak: true,
+      })
+    })
+
+    it('accepts the bare "republik/<repo>" shorthand', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { format: 'republik/format-am-gericht' },
+      })
+
+      expect(doc.heading?._ref).toBe(
+        repoIdToPageId('republik/format-am-gericht'),
+      )
+    })
+
+    it('leaves heading unset when meta.format is missing or not a republik repo', () => {
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} }).heading,
+      ).toBeUndefined()
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { format: 'https://example.com/not-a-repo' },
+        }).heading,
+      ).toBeUndefined()
+    })
+  })
+
+  describe('resolveFormatRepoId', () => {
+    it('normalizes a full GitHub URL to owner/repo', () => {
+      expect(
+        resolveFormatRepoId({
+          format: 'https://github.com/republik/format-binswanger',
+        }),
+      ).toBe('republik/format-binswanger')
+    })
+
+    it('returns undefined for a non-republik value', () => {
+      expect(resolveFormatRepoId({ format: 'acme/other-repo' })).toBeUndefined()
+      expect(resolveFormatRepoId({})).toBeUndefined()
+    })
+  })
+
+  describe('cover', () => {
+    const FIGURE_ZONE = {
+      type: 'zone',
+      identifier: 'FIGURE',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            { type: 'image', url: 'https://cdn.repub.ch/s3/bucket/cover.jpg' },
+          ],
+        },
+      ],
+    }
+
+    it('is included, with an unresolved asset marker, when a FIGURE zone precedes TITLE', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [FIGURE_ZONE, TITLE_ZONE] },
+        meta: {},
+      })
+
+      expect(doc.cover).toBeDefined()
+      expect((doc.cover as any)._sanityAsset).toMatch(
+        /^image@https:\/\/bucket\.s3\.eu-central-1\.amazonaws\.com\/cover\.jpg$/,
+      )
+    })
+
+    it('is left unset when there is no FIGURE zone before TITLE', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [TITLE_ZONE] },
+        meta: {},
+      })
+
+      expect(doc.cover).toBeUndefined()
+    })
+  })
+
+  describe('teaserSmall.image', () => {
+    it('is built from meta.image', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { image: 'https://cdn.repub.ch/s3/bucket/teaser.jpg' },
+      })
+
+      expect(doc.teaserSmall?._type).toBe('teaserSmallConfig')
+      expect((doc.teaserSmall?.image as any)._sanityAsset).toMatch(
+        /^image@https:\/\/bucket\.s3\.eu-central-1\.amazonaws\.com\/teaser\.jpg$/,
+      )
+    })
+
+    it('is left unset when the article has no meta.image (left to the format fallback)', () => {
+      const doc = buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+
+      expect(doc.teaserSmall).toBeUndefined()
+    })
   })
 })

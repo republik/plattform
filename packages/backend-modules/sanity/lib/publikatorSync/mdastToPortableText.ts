@@ -162,7 +162,7 @@ export function toDirectS3Url(url: string): string {
 // http(s) works here; inline data: URIs (some Publikator images are base64)
 // can't be fetched that way, so they are dropped rather than crashing the
 // sync.
-function assetRef(url: string | undefined | null): string | undefined {
+export function assetRef(url: string | undefined | null): string | undefined {
   if (!url || !/^https?:\/\//i.test(url)) return undefined
   return `image@${toDirectS3Url(url)}`
 }

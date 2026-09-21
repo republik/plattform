@@ -8,10 +8,12 @@ import {
   buildDraftArticleDoc,
   DraftArticleDoc,
   PublikatorCommit,
+  resolveFormatRepoId,
 } from './articleDoc'
 import { resolveAssetMarkers } from './assets'
 import { DiscussionRef, linkLegacyDiscussion } from './discussionRef'
 import { isArticleLikeMeta } from './eligibility'
+import { resolveFormatTeaserImage } from './formatTeaserImage'
 import { linkLegacySyntheticAudio } from './legacyAudio'
 
 export type PublikatorSyncPayload =
@@ -114,9 +116,16 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // each one and rewrites it into a real asset reference. See the header
     // comment in ./assets.ts for why this can't be skipped: the plain
     // content API doesn't understand that marker the way @sanity/import does.
-    const doc = await resolveAssetMarkers(
-      buildDraftArticleDoc(commit, repo?.meta),
+    //
+    // The format-image fallback runs before resolveAssetMarkers so any
+    // `_sanityAsset` marker it adds still gets uploaded in the same sweep.
+    const draft = buildDraftArticleDoc(commit, repo?.meta)
+    const withFormatImage = await this.resolveFormatTeaserImageSafely(
+      draft,
+      resolveFormatRepoId(commit.meta),
+      pgdb,
     )
+    const doc = await resolveAssetMarkers(withFormatImage)
 
     if (data.action === 'commit') {
       const draftDoc = await this.linkLegacyAudioSafely(
@@ -161,6 +170,28 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
       ...(discussionRef ? { discussion: discussionRef } : {}),
     })
     await this.deleteIfExists(draftId)
+  }
+
+  // Best-effort, same reasoning as linkLegacyAudioSafely below: a missing/
+  // unpublished format, or a transient Postgres hiccup in this lookup, must
+  // never fail the whole sync job and block the article's own text/content
+  // from mirroring for a reason that has nothing to do with that content —
+  // the article just keeps whatever teaserSmall.image it already had (its
+  // own, or none).
+  private async resolveFormatTeaserImageSafely(
+    doc: DraftArticleDoc,
+    formatRepoId: string | undefined,
+    pgdb: ConnectionContext['pgdb'],
+  ): Promise<DraftArticleDoc> {
+    try {
+      return await resolveFormatTeaserImage(doc, formatRepoId, pgdb)
+    } catch (error) {
+      this.logger.warn(
+        { error, formatRepoId },
+        'sanity sync: format teaser-image fallback failed (article content still synced)',
+      )
+      return doc
+    }
   }
 
   // Best-effort, same reasoning as deleteIfExists below: a transient

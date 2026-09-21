@@ -2,17 +2,25 @@
 //
 // Assembles a Sanity `article`-shaped document body from one publikator
 // commit row (repos.publikator.commits: {content, meta, ...}). Deliberately
-// narrow: only the article's own text (title/description/byline/body/slug),
-// not articleCollections, teasers, or format/section wiring — see the
-// "Scope decision" in the plan this module implements. That structural web
-// is built once, correctly, by the real cutover migration
-// (studio/import/publikator/src/transform.ts); duplicating it here would be
-// a second, drifting implementation of a migration that's going away.
+// narrow: only what's derivable from THIS commit's own data (title/
+// description/byline/body/slug/cover/heading/teaserSmall.image) — not
+// articleCollections, cross-repo carousel/series teaser overrides, or
+// section wiring — see the "Scope decision" in the plan this module
+// implements. That structural web (which formats/sections a document is
+// teased in elsewhere) is built once, correctly, by the real cutover
+// migration (studio/import/publikator/src/transform.ts); duplicating it here
+// would be a second, drifting implementation of a migration that's going
+// away. `heading` and `teaserSmall.image` are the exception: both resolve
+// from data this hook already has (meta.format) or can cheaply look up
+// (the format's own already-published commit, see ./formatTeaserImage.ts),
+// not from a cross-dump pre-scan.
 import {
+  assetRef,
   bodyChildren,
   extractTitleZoneData,
   mdastToPortableText,
 } from './mdastToPortableText'
+import { normalizeGithubPath, repoIdToPageId } from '../legacyId'
 
 export interface PublikatorCommit {
   // Optional: buildDraftArticleDoc itself never reads it, only worker.ts's
@@ -29,10 +37,26 @@ export interface DraftArticleDoc {
   title?: unknown[]
   description?: unknown[]
   byline?: unknown[]
+  // The article's format connection ("Spitzmarke" in the Studio schema) — a
+  // weak reference to the format's migrated `page` document, derived
+  // deterministically from meta.format (see repoIdToPageId). Weak, and left
+  // unset when meta.format is missing/invalid, so a format not yet migrated
+  // by the batch import just leaves this field empty rather than pointing at
+  // a page that doesn't exist yet.
+  heading?: { _type: 'reference'; _ref: string; _weak: true }
   content: unknown[]
   slug?: { _type: 'slug'; current: string }
   slugAuto: boolean
   publishDate?: string
+  // The article's own hero image (root-level FIGURE zone before TITLE),
+  // still holding an unresolved `_sanityAsset` marker at this point —
+  // resolveAssetMarkers() turns it into a real asset reference before write.
+  cover?: unknown
+  // The compact/small teaser image ("Kompakter Teaser" in Studio). Set here
+  // from the article's own meta.image; filled in from the linked format's
+  // own published image instead when the article has none — see
+  // ./formatTeaserImage.ts, applied by the worker after this doc is built.
+  teaserSmall?: { _type: 'teaserSmallConfig'; image?: unknown }
   // Linked (not generated) from a legacy Publikator SyntheticReadAloud
   // derivative — see ./legacyAudio.ts.
   audioSourceMp3?: string
@@ -131,23 +155,74 @@ function resolvePublishDate(
   return undefined
 }
 
+// Matches transform.ts#isGithubRepublikUrl: accepts a full GitHub URL
+// (`github.com/republik/...`) or the bare `republik/<repo>` shorthand some
+// meta.format values use. Anything else (a foreign/malformed value) is
+// ignored rather than fed into normalizeGithubPath, which would throw.
+function isGithubRepublikUrl(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    (value.includes('github.com/republik/') || /^republik\//.test(value))
+  )
+}
+
+// The article's format repo id (meta.format), when present and
+// well-formed — shared by the `heading` reference below and by the
+// teaser-image format fallback the worker applies afterwards.
+export function resolveFormatRepoId(
+  meta: Record<string, unknown> | undefined,
+): string | undefined {
+  const format = meta?.format
+  if (!isGithubRepublikUrl(format)) return undefined
+  try {
+    return normalizeGithubPath(format)
+  } catch {
+    return undefined
+  }
+}
+
 export function buildDraftArticleDoc(
   commit: PublikatorCommit,
   repoMeta?: Record<string, unknown>,
 ): DraftArticleDoc {
   const nodes = commit.content?.children ?? []
-  const { title, description, byline } = extractTitleZoneData(nodes, true)
+  const { title, description, byline, cover } = extractTitleZoneData(
+    nodes,
+    true,
+  )
   const publishDate = resolvePublishDate(commit, repoMeta)
   const { slugAuto, slug } = resolveSlug(commit.meta, publishDate)
+  const formatRepoId = resolveFormatRepoId(commit.meta)
+  const image = assetRef(
+    typeof commit.meta?.image === 'string' ? commit.meta.image : undefined,
+  )
 
   return {
     _type: 'article',
     ...(title ? { title } : {}),
     ...(description ? { description } : {}),
     ...(byline ? { byline } : {}),
+    ...(formatRepoId
+      ? {
+          heading: {
+            _type: 'reference',
+            _ref: repoIdToPageId(formatRepoId),
+            _weak: true,
+          },
+        }
+      : {}),
     content: mdastToPortableText(bodyChildren(nodes), true),
     slugAuto,
     ...(slug ? { slug } : {}),
     ...(publishDate ? { publishDate } : {}),
+    ...(cover ? { cover } : {}),
+    ...(image
+      ? {
+          teaserSmall: {
+            _type: 'teaserSmallConfig',
+            image: { _type: 'image', _sanityAsset: image },
+          },
+        }
+      : {}),
   }
 }
