@@ -10,7 +10,39 @@ const SANITY_ID_PREFIX = 'sanity:'
 // `drafts.<id>` and `<id>` are the same document under the `published`
 // perspective, which is all the member-facing reads below use — so this is the
 // form ids are compared and looked up in.
+//
+// NOTE: this only strips a `drafts.` prefix — it deliberately does NOT also
+// strip `versions.<releaseName>.`, unlike the sibling `publishedIdFor` below.
+// Existing callers rely on a version id passing through unchanged (it's
+// never a legitimate input to the member-facing reads this feeds).
 export const publishedId = (id: string) => id.replace(/^drafts\./, '')
+
+// A document in a Content Release has the id `versions.<releaseName>.<publishedId>`.
+// releaseName is the same value `client.releases.get/schedule/unschedule({releaseId})`
+// expects — not the `_.releases.<releaseName>` release document id. undefined
+// for a draft/published id, which isn't part of any release.
+const VERSIONS_PREFIX = 'versions.'
+
+export const releaseIdFromVersionId = (id: string): string | undefined => {
+  if (!id.startsWith(VERSIONS_PREFIX)) return undefined
+  const rest = id.slice(VERSIONS_PREFIX.length)
+  const dot = rest.indexOf('.')
+  return dot === -1 ? rest : rest.slice(0, dot)
+}
+
+// Strips whichever prefix is present (drafts. or versions.<release>.), unlike
+// the plain `publishedId` above which only strips `drafts.`.
+export const publishedIdFor = (id: string): string => {
+  if (id.startsWith('drafts.')) return id.slice('drafts.'.length)
+  if (id.startsWith(VERSIONS_PREFIX)) {
+    const rest = id.slice(VERSIONS_PREFIX.length)
+    const dot = rest.indexOf('.')
+    return dot === -1 ? rest : rest.slice(dot + 1)
+  }
+  return id
+}
+
+export const draftIdFor = (id: string): string => `drafts.${publishedIdFor(id)}`
 
 export const toSanityRef = (id: string) =>
   `${SANITY_ID_PREFIX}${publishedId(id)}`
