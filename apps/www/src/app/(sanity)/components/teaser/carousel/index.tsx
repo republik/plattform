@@ -6,6 +6,7 @@ import {
   upcomingTeaser,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
+import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { timeFormat } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
@@ -56,6 +57,11 @@ export function CarouselTeaser({
 
   return (
     <div
+      data-sanity={dataAttribute({
+        type: teaser._type,
+        id: teaser._id,
+        path: '/',
+      })}
       style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
       className={css({
         scrollSnapAlign: 'start',
