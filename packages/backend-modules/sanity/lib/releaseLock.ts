@@ -31,6 +31,15 @@
 // of how many call sites end up touching the same document, without having
 // to restructure every branch of that handler to coordinate by hand.
 //
+// Both the unschedule and the relock are retried, not just the relock —
+// confirmed live: "scheduling" is genuinely a transient in-between state, not
+// just a name — a release still settling into it rejects `unschedule()`
+// outright ("is not permitted to transition from state 'scheduling' to
+// 'unscheduling'"), a real validationError, not the lock-rejection this whole
+// guard exists to route around. Both actions get a few retries with a short
+// backoff before giving up, since both can hit this same kind of transient
+// state-machine rejection depending on which side of the race they land on.
+//
 // Twin implementation: republik/studio's functions/shared/releaseLock.ts —
 // the two repos can't share code, so keep them in sync by hand if this logic
 // changes.
@@ -39,36 +48,39 @@ import { releaseIdFromVersionId } from './document'
 
 const LOCKED_STATES = new Set(['scheduled', 'scheduling'])
 
-// Retried, not just logged: a bare one-shot relock attempt is fragile for the
-// one step that must not fail — Sanity's schedule action can genuinely reject
-// a request that lands right as the matching unschedule is still propagating.
-const RELOCK_ATTEMPTS = 3
-const RELOCK_RETRY_DELAY_MS = 1000
+const ACTION_ATTEMPTS = 3
+const ACTION_RETRY_DELAY_MS = 1000
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function relock(client: SanityClient, releaseId: string, publishAt: string): Promise<void> {
-  for (let attempt = 1; attempt <= RELOCK_ATTEMPTS; attempt++) {
+async function withRetries<T>(action: () => Promise<T>): Promise<T> {
+  let lastErr: unknown
+  for (let attempt = 1; attempt <= ACTION_ATTEMPTS; attempt++) {
     try {
-      await client.releases.schedule({ releaseId, publishAt })
-      return
+      return await action()
     } catch (err) {
-      if (attempt === RELOCK_ATTEMPTS) {
-        // Deliberately not rethrown — must not mask mutate()'s own outcome.
-        // This IS the failure mode that needs a human: the release is now
-        // sitting unscheduled with nothing else watching it.
-        console.error(
-          `RELEASE STUCK UNSCHEDULED: ${releaseId} could not be re-locked ` +
-            `after ${RELOCK_ATTEMPTS} attempts (was due to publish at ${publishAt}). ` +
-            `Needs manual recovery.`,
-          err,
-        )
-        return
-      }
-      await sleep(RELOCK_RETRY_DELAY_MS)
+      lastErr = err
+      if (attempt < ACTION_ATTEMPTS) await sleep(ACTION_RETRY_DELAY_MS)
     }
+  }
+  throw lastErr
+}
+
+async function relock(client: SanityClient, releaseId: string, publishAt: string): Promise<void> {
+  try {
+    await withRetries(() => client.releases.schedule({ releaseId, publishAt }))
+  } catch (err) {
+    // Deliberately not rethrown — must not mask mutate()'s own outcome.
+    // This IS the failure mode that needs a human: the release is now
+    // sitting unscheduled with nothing else watching it.
+    console.error(
+      `RELEASE STUCK UNSCHEDULED: ${releaseId} could not be re-locked ` +
+        `after ${ACTION_ATTEMPTS} attempts (was due to publish at ${publishAt}). ` +
+        `Needs manual recovery.`,
+      err,
+    )
   }
 }
 
@@ -100,7 +112,7 @@ export async function withReleaseUnlock<T>(
     const publishAt = release.publishAt ?? release.metadata.intendedPublishAt
     if (!publishAt) return mutate() // can't relock without a target time — don't unlock either
 
-    await client.releases.unschedule({ releaseId })
+    await withRetries(() => client.releases.unschedule({ releaseId }))
     session = { refCount: 1, publishAt }
     activeSessions.set(releaseId, session)
   }

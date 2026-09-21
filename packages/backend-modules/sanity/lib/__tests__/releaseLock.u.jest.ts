@@ -175,6 +175,72 @@ describe('withReleaseUnlock', () => {
     }
   })
 
+  it('retries the unschedule a few times before giving up, and rethrows (mutate never runs)', async () => {
+    jest.useFakeTimers()
+    try {
+      const get = jest.fn().mockResolvedValue({
+        state: 'scheduling',
+        publishAt: '2026-09-22T03:00:00.000Z',
+        metadata: {},
+      })
+      // Mirrors the real error: "is not permitted to transition from state
+      // 'scheduling' to 'unscheduling'" — a release still settling into
+      // "scheduling" rejects unschedule() outright.
+      const unschedule = jest
+        .fn()
+        .mockRejectedValue(
+          new Error(
+            "is not permitted to transition from state 'scheduling' to 'unscheduling'",
+          ),
+        )
+      const client = fakeClient({ get, unschedule })
+      const mutate = jest.fn().mockResolvedValue('done')
+
+      const promise = withReleaseUnlock(client, 'versions.r1.abc123', mutate)
+      const assertion = expect(promise).rejects.toThrow(
+        'is not permitted to transition',
+      )
+      await jest.runAllTimersAsync()
+      await assertion
+
+      expect(unschedule).toHaveBeenCalledTimes(3)
+      // Unlike the relock, an unschedule that never succeeds means we never
+      // got access to the document at all — mutate must not run.
+      expect(mutate).not.toHaveBeenCalled()
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
+  it("succeeds on a later attempt after an earlier unschedule attempt hits the transient 'scheduling' rejection", async () => {
+    jest.useFakeTimers()
+    try {
+      const get = jest.fn().mockResolvedValue({
+        state: 'scheduling',
+        publishAt: '2026-09-22T03:00:00.000Z',
+        metadata: {},
+      })
+      const unschedule = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('scheduling -> unscheduling'))
+        .mockResolvedValueOnce(undefined)
+      const schedule = jest.fn().mockResolvedValue(undefined)
+      const client = fakeClient({ get, unschedule, schedule })
+      const mutate = jest.fn().mockResolvedValue('done')
+
+      const promise = withReleaseUnlock(client, 'versions.r1.abc123', mutate)
+      await jest.runAllTimersAsync()
+      const result = await promise
+
+      expect(result).toBe('done')
+      expect(unschedule).toHaveBeenCalledTimes(2)
+      expect(mutate).toHaveBeenCalledTimes(1)
+      expect(schedule).toHaveBeenCalledTimes(1)
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
   it('relocks only once nested calls have all completed, not after the inner one', async () => {
     const get = jest.fn().mockResolvedValue({
       state: 'scheduled',
