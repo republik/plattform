@@ -117,28 +117,86 @@ describe('withReleaseUnlock', () => {
     })
   })
 
-  it('does not mask the mutation result when the relock itself fails', async () => {
+  it('retries the relock a few times before giving up, without masking the mutation result', async () => {
+    jest.useFakeTimers()
+    try {
+      const get = jest.fn().mockResolvedValue({
+        state: 'scheduled',
+        publishAt: '2026-09-22T03:00:00.000Z',
+        metadata: {},
+      })
+      const schedule = jest.fn().mockRejectedValue(new Error('relock failed'))
+      const client = fakeClient({ get, schedule })
+      const mutate = jest.fn().mockResolvedValue('done')
+      const consoleError = jest.spyOn(console, 'error').mockImplementation()
+
+      const promise = withReleaseUnlock(client, 'versions.r1.abc123', mutate)
+      await jest.runAllTimersAsync()
+      const result = await promise
+
+      expect(result).toBe('done')
+      expect(schedule).toHaveBeenCalledTimes(3)
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('RELEASE STUCK UNSCHEDULED'),
+        expect.any(Error),
+      )
+      consoleError.mockRestore()
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
+  it('succeeds on a later attempt after an earlier relock attempt fails', async () => {
+    jest.useFakeTimers()
+    try {
+      const get = jest.fn().mockResolvedValue({
+        state: 'scheduled',
+        publishAt: '2026-09-22T03:00:00.000Z',
+        metadata: {},
+      })
+      const schedule = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('transient'))
+        .mockResolvedValueOnce(undefined)
+      const client = fakeClient({ get, schedule })
+      const mutate = jest.fn().mockResolvedValue('done')
+      const consoleError = jest.spyOn(console, 'error').mockImplementation()
+
+      const promise = withReleaseUnlock(client, 'versions.r1.abc123', mutate)
+      await jest.runAllTimersAsync()
+      const result = await promise
+
+      expect(result).toBe('done')
+      expect(schedule).toHaveBeenCalledTimes(2)
+      expect(consoleError).not.toHaveBeenCalled()
+      consoleError.mockRestore()
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
+  it('relocks only once nested calls have all completed, not after the inner one', async () => {
     const get = jest.fn().mockResolvedValue({
       state: 'scheduled',
       publishAt: '2026-09-22T03:00:00.000Z',
       metadata: {},
     })
-    const schedule = jest.fn().mockRejectedValue(new Error('relock failed'))
-    const client = fakeClient({ get, schedule })
-    const mutate = jest.fn().mockResolvedValue('done')
-    const consoleError = jest.spyOn(console, 'error').mockImplementation()
+    const unschedule = jest.fn().mockResolvedValue(undefined)
+    const schedule = jest.fn().mockResolvedValue(undefined)
+    const client = fakeClient({ get, unschedule, schedule })
 
-    const result = await withReleaseUnlock(
-      client,
-      'versions.r1.abc123',
-      mutate,
-    )
+    await withReleaseUnlock(client, 'versions.r1.abc123', async () => {
+      // A second, nested call for the same release while the outer one is
+      // still "open" — must reuse the session, not relock early. Mirrors
+      // generateAudioHandler's real shape: claimAudioGeneration, then later
+      // (after the Huebsch request) reportAudioGenerationError/Success on the
+      // same documentId.
+      await withReleaseUnlock(client, 'versions.r1.abc123', async () => 'inner')
+      expect(schedule).not.toHaveBeenCalled()
+      return 'outer'
+    })
 
-    expect(result).toBe('done')
-    expect(consoleError).toHaveBeenCalledWith(
-      expect.stringContaining('RELEASE STUCK UNSCHEDULED'),
-      expect.any(Error),
-    )
-    consoleError.mockRestore()
+    expect(unschedule).toHaveBeenCalledTimes(1)
+    expect(schedule).toHaveBeenCalledTimes(1)
   })
 })
