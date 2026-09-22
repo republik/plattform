@@ -34,7 +34,7 @@
     "@orbiting/backend-modules-redirections": "*",
     "@orbiting/backend-modules-subscriptions": "*",
     "@portabletext/toolkit": "^2.0.16",
-    "@sanity/client": "^7.27.0",
+    "@sanity/client": "7.25.0",
     "body-parser": "^1.19.1",
     "uuid": "^8.1.0"
   },

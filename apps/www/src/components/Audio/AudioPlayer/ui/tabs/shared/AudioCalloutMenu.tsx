@@ -1,9 +1,6 @@
-import {
-  useColorContext,
-  CalloutMenu,
-  IconButton,
-} from '@project-r/styleguide'
+import { CalloutMenu, IconButton } from '@project-r/styleguide'
 import { IconMoreVertical } from '@republik/icons'
+import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
 import { ComponentType } from 'react'
 
@@ -25,10 +22,11 @@ export type AudioListItemAction = {
   hidden?: boolean
 }
 
-const MoreIconButton = (props) => <IconButton Icon={IconMoreVertical} {...props} />
+const MoreIconButton = (props) => (
+  <IconButton Icon={IconMoreVertical} {...props} />
+)
 
 const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
-  const [colorScheme] = useColorContext()
   const activeActions = actions.filter(({ hidden }) => !hidden)
 
   if (!activeActions?.length) return null
@@ -38,7 +36,7 @@ const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
       Element={MoreIconButton}
       align='right'
       elementProps={{
-        ...colorScheme.set('fill', 'textSoft'),
+        style: { fill: token.var('colors.textSoft') },
         size: 20,
       }}
     >

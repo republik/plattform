@@ -9,6 +9,7 @@ import useDiscussionNotificationHelper from '../hooks/useDiscussionNotificationH
 import useShareCommentOverlay from '../hooks/overlays/useShareCommentOverlay'
 import { DiscussionCredential } from '../graphql/types/SharedTypes'
 import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphql'
+import { getDiscussionQueryVariables } from '../graphql/prefetchDiscussion'
 
 /**
  * Wrapper component that provides the discussion data it's children.
@@ -22,23 +23,19 @@ const DiscussionContextProvider: FC<{
   includeParent?: boolean
 }> = ({ children, discussionPath, parentId, includeParent }) => {
   const { query } = useRouter()
-  const orderBy = (query.order as string) || 'AUTO'
 
-  const activeTag = query.tag as string
-  const focusId = query.focus as string
-
-  const depth = 3
+  // Kept in sync with the variables `prefetchDiscussion` seeds the SSR cache with
+  const variables = getDiscussionQueryVariables({
+    query,
+    discussionPath,
+    parentId,
+    includeParent,
+  })
+  const { orderBy, activeTag, focusId, depth } = variables
 
   const { discussion, error, loading, refetch, fetchMore } = useDiscussionData(
     discussionPath,
-    {
-      orderBy,
-      activeTag,
-      depth,
-      focusId,
-      parentId,
-      includeParent,
-    },
+    variables,
   )
 
   useDiscussionNotificationHelper(discussion)

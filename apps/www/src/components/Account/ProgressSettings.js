@@ -1,13 +1,17 @@
-import { css } from 'glamor'
-import { useState } from 'react'
 import { useMe } from '@/lib/context/MeContext'
 import { useTranslation } from '@/lib/withT'
+import { useMutation } from '@apollo/client'
 
 import { Checkbox, InlineSpinner, Loader } from '@project-r/styleguide'
+import { css } from 'glamor'
+import { useState } from 'react'
+import {
+  ClearProgressDocument,
+  RevokeConsentDocument,
+  SubmitConsentDocument,
+} from '../../../graphql/republik-api/__generated__/gql/graphql'
 import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
-
-import { useProgress } from '../Article/Progress/api'
 
 const styles = {
   headline: css({
@@ -33,8 +37,10 @@ const ProgressSettings = () => {
   // an opt in for the Progress feature
   // while submitProgressOptOut revokes consent to the Progress feature
   // this is consistent with how other consent settings work
-  const { revokeProgressOptOut, submitProgressOptOut, clearProgress } =
-    useProgress()
+  const [submitProgressOptOut] = useMutation(SubmitConsentDocument)
+  const [clearProgress] = useMutation(ClearProgressDocument)
+  const [revokeProgressOptOut] = useMutation(RevokeConsentDocument)
+
   const { meLoading, progressConsent } = useMe()
   const { t } = useTranslation()
 

@@ -1,12 +1,8 @@
-import { css } from 'glamor'
-import {
-  IconButton,
-  fontStyles,
-  mediaQueries,
-  useColorContext,
-} from '@project-r/styleguide'
-import { useState } from 'react'
+import { IconButton, fontStyles, mediaQueries } from '@project-r/styleguide'
 import { IconAdd, IconRemove } from '@republik/icons'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import { useState } from 'react'
 
 const styles = {
   root: css({
@@ -39,12 +35,13 @@ const roundPlaybackRate = (playbackRate: number) => {
 const PlaybackRateControl = ({
   playbackRate,
   setPlaybackRate,
-  availablePlaybackRates = [0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
+  availablePlaybackRates = [
+    0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5,
+  ],
 }: PlaybackRateControl) => {
   const [currentIndex, setCurrentIndex] = useState(
     availablePlaybackRates.indexOf(roundPlaybackRate(playbackRate)),
   )
-  const [colorScheme] = useColorContext()
 
   const handleIncrease = () => {
     if (currentIndex < availablePlaybackRates.length - 1) {
@@ -71,8 +68,11 @@ const PlaybackRateControl = ({
         style={{ marginRight: 0 }}
       />
       <span
-        style={{ minWidth: '4ch', textAlign: 'center' }}
-        {...colorScheme.set('color', 'text')}
+        style={{
+          minWidth: '4ch',
+          textAlign: 'center',
+          color: token.var('colors.text'),
+        }}
       >
         {roundPlaybackRate(playbackRate)}
         {'×'}

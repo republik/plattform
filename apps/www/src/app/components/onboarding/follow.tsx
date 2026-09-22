@@ -1,16 +1,13 @@
 'use client'
-
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
-import { css } from '@republik/theme/css'
 import { useTranslation } from '@/lib/withT'
+import { css } from '@republik/theme/css'
+import type { PropsWithChildren } from 'react'
 import { Frame } from '../ui/containers'
-import AuthorsSection from './authors-section'
-import FormatsSection from './formats-section'
 import OnboardingHeader, { OnboardingBackButton } from './onboarding-header'
 import { OnboardingNextStep } from './onboarding-next-step'
-import PodcastsSection from './podcasts-section'
 
-function OnboardingFollow() {
+export function OnboardingFollow({ children }: PropsWithChildren) {
   const { t } = useTranslation()
   const { isNativeApp } = usePlatformInformation()
 
@@ -30,9 +27,7 @@ function OnboardingFollow() {
           </p>
         </OnboardingHeader>
 
-        <FormatsSection />
-        <AuthorsSection />
-        <PodcastsSection />
+        {children}
       </div>
 
       <OnboardingNextStep href='/'>
@@ -41,5 +36,3 @@ function OnboardingFollow() {
     </Frame>
   )
 }
-
-export default OnboardingFollow

@@ -1,19 +1,14 @@
-import { css } from 'glamor'
-
-import ActionBar from '../ActionBar'
-
-import { PUBLIC_BASE_URL } from '@/lib/constants'
-
 import {
   A,
-  Interaction,
-  P as SerifP,
-  VideoPlayer,
   fontFamilies,
   inQuotes,
+  Interaction,
   mediaQueries,
+  P as SerifP,
   useColorContext,
+  VideoPlayer,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
 import Link from 'next/link'
 
 const { H3, P } = Interaction
@@ -41,7 +36,6 @@ const styles = {
 
 const Detail = ({
   t,
-  share = true,
   data: {
     id,
     slug,
@@ -54,14 +48,6 @@ const Detail = ({
   },
 }) => {
   const [colorScheme] = useColorContext()
-  const shareObject = {
-    title: t('statement/share/title', { name }),
-    url: `${PUBLIC_BASE_URL}/community?id=${id}`,
-    emailSubject: t('statement/share/title', { name }),
-    emailAttachUrl: false,
-    emailBody: `${PUBLIC_BASE_URL}/community?id=${id}`,
-    overlayTitle: t('statement/share/overlayTitle', { name }),
-  }
   return (
     <div {...styles.detail}>
       <div
@@ -111,7 +97,6 @@ const Detail = ({
             })}
           </P>
         )}
-        {share && <ActionBar share={shareObject} />}
       </div>
     </div>
   )

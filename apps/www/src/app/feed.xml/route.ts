@@ -1,7 +1,6 @@
-import { RssFeedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { getClient } from '@/app/lib/apollo/client'
+import { client } from '@/app/(sanity)/lib/client'
+import { FEED_QUERY } from '@/app/(sanity)/groq/feed-query'
 import { Feed } from 'feed'
-import crypto from 'node:crypto'
 
 export async function GET() {
   const feed = new Feed({
@@ -13,24 +12,23 @@ export async function GET() {
     copyright: `© 2017-${new Date().getFullYear()} Republik AG`,
   })
 
-  const client = await getClient()
+  const articles = await client.fetch(FEED_QUERY)
 
-  const { data } = await client.query({ query: RssFeedDocument })
+  articles.forEach((article) => {
+    if (!article.path || !article.publishDate) return
 
-  if (data) {
-    data.feed.nodes.forEach((n) => {
-      if (n.entity.__typename === 'Document') {
-        feed.addItem({
-          id: crypto.createHash('sha256').update(n.entity.repoId).digest('hex'),
-          title: n.entity.meta.title,
-          link: `${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}?utm_medium=rss`,
-          description: n.entity.meta.description,
-          date: new Date(n.entity.meta.publishDate),
-          content: `<p>${n.entity.meta.description}</p><p><a href="${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}?utm_medium=rss">Beitrag öffnen</a></p>`,
-        })
-      }
+    const link = `${process.env.NEXT_PUBLIC_BASE_URL}${article.path}?utm_medium=rss`
+    const description = article.description ?? ''
+
+    feed.addItem({
+      id: article._id,
+      title: article.title ?? '',
+      link,
+      description: description || undefined,
+      date: new Date(article.publishDate),
+      content: `<p>${description}</p><p><a href="${link}">Beitrag öffnen</a></p>`,
     })
-  }
+  })
 
   return new Response(feed.rss2(), {
     headers: {

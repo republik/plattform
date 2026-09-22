@@ -78,6 +78,7 @@
   },
   "packageManager": "yarn@1.22.10",
   "resolutions": {
+    "@types/node": "24",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "react": "^19.2.8",

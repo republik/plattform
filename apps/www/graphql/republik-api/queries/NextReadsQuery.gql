@@ -1,8 +1,8 @@
-query NextReads($repoId: ID!) {
-  nextReads(repoId: $repoId) {
+query NextReadsSanity($documentId: ID!) {
+  nextReadsSanity(documentId: $documentId) {
     id
     documents {
-      ...NextReadDocumentFields
+      id
     }
   }
 }

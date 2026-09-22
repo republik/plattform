@@ -96,9 +96,15 @@ const Callout = ({ children, align = 'left', onClose }: Props) => {
   const calloutRule = useMemo(
     () =>
       css({
-        backgroundColor: colorScheme.getCSSColor('overlay'),
+        backgroundColor: [
+          colorScheme.getCSSColor('overlay'),
+          `var(--r-colors-background-overlay)`,
+        ],
         [mUp]: {
-          boxShadow: colorScheme.getCSSColor('overlayShadow'),
+          boxShadow: [
+            colorScheme.getCSSColor('overlayShadow'),
+            `var(--r-shadows-md)`,
+          ],
         },
       }),
     [colorScheme],
@@ -115,6 +121,7 @@ const Callout = ({ children, align = 'left', onClose }: Props) => {
           {...styles.arrow}
           {...colorScheme.set('backgroundColor', 'overlay')}
           {...styles[align].arrow}
+          style={{ backgroundColor: `var(--r-colors-background-overlay)` }}
         />
         {children}
       </span>

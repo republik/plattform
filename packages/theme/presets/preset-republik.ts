@@ -1,14 +1,22 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
+import { editorialContentRecipe } from '../src/recipes/editorial-content'
+import { infoboxRecipe } from '../src/recipes/infobox'
+import { editorialFontSizes } from '../src/typography'
 
 export const presetRepublik = definePreset({
   name: 'republik',
   conditions: {
     extend: {
       light: '[data-theme="light"] &',
-      dark: '[data-theme="dark"] &',
+      // Dark applies when an ancestor is `[data-theme="dark"]`, or when a
+      // `data-force-theme="dark"` marker exists anywhere in the document — the
+      // latter puts the whole app in dark mode and outranks a `[data-theme]` set
+      // on `<html>` (e.g. by next-themes).
+      dark: ':is([data-theme="dark"], :root:has([data-force-theme="dark"])) &',
       stateOpen: '&[data-state="open"]',
       stateClosed: '&[data-state="closed"]',
+      canHover: '@media (hover: hover) and (pointer: fine)',
     },
   },
   globalCss: {
@@ -25,6 +33,7 @@ export const presetRepublik = definePreset({
         sm: '375px',
         md: '768px',
         lg: '1025px',
+        xlg: '1400px',
       },
       tokens: {
         colors: {
@@ -37,14 +46,23 @@ export const presetRepublik = definePreset({
           current: { value: 'currentColor' },
         },
         shadows: {
-          sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.35)' },
+          sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.3)' },
+          md: { value: '0 0 15px 0 rgba(0, 0, 0, 0.3)' },
+          overlay: { value: 'rgba(0, 0, 0, 0.12) 0px -2px 15px -3px' },
+        },
+        gradients: {
+          simple: {
+            value:
+              'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+          },
         },
         sizes: {
           full: { value: '100%' },
           viewportWidth: { value: '100vw' },
           24: { value: '6rem' },
           narrow: { value: '30rem' },
-          center: { value: '695px' },
+          editorial: { value: '695px' },
+          large: { value: '1035px' },
           shop: { value: '866px' },
           carousel: { value: '1300px' },
         },
@@ -68,6 +86,9 @@ export const presetRepublik = definePreset({
           20: { value: '5rem' },
           24: { value: '6rem' },
           32: { value: '8rem' },
+          40: { value: '10rem' },
+          48: { value: '12rem' },
+          64: { value: '16rem' },
         },
         radii: {
           full: { value: '9999px' },
@@ -122,6 +143,7 @@ export const presetRepublik = definePreset({
           slideDown: { value: 'slideDown 300ms ease-in-out' },
           fadeIn: { value: 'fadeIn 300ms ease-in-out' },
           fadeOut: { value: 'fadeOut 300ms ease-in-out' },
+          pulse: { value: 'pulse 2s 3' },
         },
       },
       semanticTokens: {
@@ -165,6 +187,16 @@ export const presetRepublik = definePreset({
                 _light: 'white',
                 _dark: '#191919',
               },
+            },
+            overlay: {
+              value: {
+                base: 'white',
+                _light: 'white',
+                _dark: '#1F1F1F',
+              },
+            },
+            alert: {
+              value: { base: '#E4F5E1', _light: '#E4F5E1', _dark: '#144313' },
             },
             marketing: {
               value: {
@@ -288,7 +320,6 @@ export const presetRepublik = definePreset({
           '32-64': { value: { base: '8rem', md: '16rem' } },
           header: {
             height: { value: '{sizes.header.height}' },
-            avatarMargin: { value: '0.6875rem  1rem' },
             logoMargin: { value: { base: '12px 0', md: '15px 0' } },
           },
         },
@@ -329,12 +360,84 @@ export const presetRepublik = definePreset({
             lineHeight: 1,
           },
         },
-        title: {
+        editorialTitle: {
           value: {
             fontFamily: 'republikSerif',
             fontWeight: 'black',
             fontStyle: 'normal',
-            fontSize: '4em',
+            fontSize: editorialFontSizes.editorialTitle,
+            lineHeight: 1.1333,
+          },
+        },
+        editorialLead: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.editorialLead,
+            lineHeight: 1.5,
+          },
+        },
+        editorialByline: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.editorialByline,
+            lineHeight: 1.25,
+          },
+        },
+        editorialHeading: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: '500',
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.editorialHeading,
+          },
+        },
+        editorialParagraph: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.editorialParagraph,
+            lineHeight: 1.6,
+          },
+        },
+        editorialSubheading: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 700,
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.editorialSubheading,
+            lineHeight: 1.5,
+          },
+        },
+        metaTitle: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'medium',
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.metaTitle,
+            lineHeight: 1.1333,
+          },
+        },
+        metaSubheading: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'medium',
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.metaSubheading,
+            lineHeight: 1.5,
+          },
+        },
+        metaParagraph: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.metaParagraph,
+            lineHeight: 1.6,
           },
         },
         teaserTitle: {
@@ -529,6 +632,8 @@ export const presetRepublik = definePreset({
 
     recipes: {
       button: buttonRecipe,
+      editorialContent: editorialContentRecipe,
+      infobox: infoboxRecipe,
     },
 
     keyframes: {
@@ -563,6 +668,11 @@ export const presetRepublik = definePreset({
       slideDown: {
         from: { transform: 'translateY(0%)' },
         to: { transform: 'translateY(100%)' },
+      },
+      pulse: {
+        '0%': { boxShadow: `0 0 0 0 rgba(255, 255, 255, 0.3)` },
+        '70%': { boxShadow: `0 0 0 10px transparent` },
+        '100%': { boxShadow: `0 0 0 0 transparent` },
       },
     },
   },

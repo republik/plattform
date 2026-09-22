@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { AudioCoverGenerator } from '@project-r/styleguide'
+import { cva } from '@republik/theme/css'
 import {
   AudioCoverCropOptions,
   getImageCropURL,
@@ -8,6 +9,7 @@ import {
 
 type AudioCoverProps = {
   cover?: string
+  coverDark?: string
   size: number
   format?: any
   image?: string
@@ -23,8 +25,23 @@ const styles = {
   }),
 }
 
+const themeVisibility = cva({
+  base: {},
+  variants: {
+    only: {
+      dark: {
+        _light: { display: 'none' },
+      },
+      light: {
+        _dark: { display: 'none' },
+      },
+    },
+  },
+})
+
 const AudioCover = ({
   cover,
+  coverDark,
   size,
   format,
   image: imageUrl,
@@ -32,7 +49,24 @@ const AudioCover = ({
   alt = '',
 }: AudioCoverProps) => {
   if (cover) {
-    return (
+    return coverDark ? (
+      <>
+        <img
+          className={themeVisibility({ only: 'dark' })}
+          {...styles.cover}
+          src={coverDark}
+          style={{ width: size }}
+          alt={alt}
+        />
+        <img
+          className={themeVisibility({ only: 'light' })}
+          {...styles.cover}
+          src={cover}
+          style={{ width: size }}
+          alt={alt}
+        />
+      </>
+    ) : (
       <img {...styles.cover} src={cover} style={{ width: size }} alt={alt} />
     )
   } else if (imageUrl) {

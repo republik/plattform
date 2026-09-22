@@ -1,0 +1,26 @@
+import { FontSizeStyle } from '@/app/components/font-size-style'
+import { FontSizeSync } from '@/app/components/font-size-sync'
+import { PageLayout } from '@/app/components/layout'
+import { css } from '@republik/theme/css'
+
+export const revalidate = 60
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <PageLayout>
+      <FontSizeStyle />
+      <FontSizeSync />
+      <div
+        className={css({
+          color: 'text',
+        })}
+      >
+        {children}
+      </div>
+    </PageLayout>
+  )
+}

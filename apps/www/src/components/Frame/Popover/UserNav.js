@@ -1,3 +1,7 @@
+import { useMe } from '@/lib/context/MeContext'
+import { useInNativeApp } from '@/lib/withInNativeApp'
+
+import { useTranslation } from '@/lib/withT'
 import {
   Button,
   Center,
@@ -8,15 +12,8 @@ import {
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
-import { useMe } from '@/lib/context/MeContext'
-import { useInNativeApp } from '@/lib/withInNativeApp'
-
-import { useTranslation } from '@/lib/withT'
 import SignIn from '../../Auth/SignIn'
 import SignOut from '../../Auth/SignOut'
-import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
-import { registerQueryVariables } from '../../Bookmarks/queries'
 import { HEADER_HEIGHT } from '../../constants'
 import Footer from '../../Footer'
 import NotificationFeedMini from '../../Notifications/NotificationFeedMini'
@@ -37,19 +34,6 @@ const UserNav = () => {
 
   const [colorScheme] = useColorContext()
   const currentPath = router.asPath
-  const variables = useMemo(() => {
-    if (progressConsent) {
-      return {
-        collections: ['progress', 'bookmarks'],
-        progress: 'UNFINISHED',
-        lastDays: 30,
-      }
-    }
-    return {
-      collections: ['bookmarks'],
-    }
-  }, [progressConsent])
-  registerQueryVariables(variables)
 
   return (
     <>
@@ -84,12 +68,6 @@ const UserNav = () => {
                     {`${t('nav/bookmarks')}`}
                   </NavLink>
                 </div>
-                <BookmarkMiniFeed
-                  style={{
-                    marginTop: 10,
-                  }}
-                  variables={variables}
-                />
                 <div {...styles.navSection}>
                   <div {...styles.navLinks}>
                     <NavLink href='/konto' currentPath={currentPath} large>

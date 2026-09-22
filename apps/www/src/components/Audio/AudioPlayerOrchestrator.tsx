@@ -1,6 +1,7 @@
+'use client'
 import AudioPlayerController from './AudioPlayerController'
 import dynamic from 'next/dynamic'
-import useAudioQueue from './hooks/useAudioQueue'
+import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
 import { useAudioContext } from './AudioProvider'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 
@@ -17,7 +18,7 @@ const LegacyAudioPlayer = dynamic(
 
 const AudioPlayerOrchestrator = () => {
   const { inNativeApp } = useInNativeApp()
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { audioPlayerVisible } = useAudioContext()
 
   // If the audio queue is available, we want to use the new audio player

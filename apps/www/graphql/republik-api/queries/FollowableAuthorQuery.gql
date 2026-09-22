@@ -9,12 +9,5 @@ query FollowableAuthor($id: ID!) {
       description
       verified
     }
-    subscribedBy(onlyMe: true) {
-      nodes {
-        id
-        active
-        isEligibleForNotifications
-      }
-    }
   }
 }

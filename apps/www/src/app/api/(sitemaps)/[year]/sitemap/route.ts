@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getClient } from '@/app/lib/apollo/client'
-import {
-  SitemapByYearDocument,
-  type SitemapByYearQuery,
-  type Document,
-} from '#graphql/republik-api/__generated__/gql/graphql'
+import { client } from '@/app/(sanity)/lib/client'
+import { SITEMAP_BY_YEAR_QUERY } from '@/app/(sanity)/groq/sitemap-query'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
@@ -14,64 +10,30 @@ export async function GET(
 ) {
   const params = await props.params
   const year = parseInt(params.year)
-  const client = await getClient()
 
   const fromDate = new Date(year, 0, 1) // January 1st of the year
   const toDate = new Date(year + 1, 0, 1) // January 1st of the next year
 
   try {
-    const allArticles: Document[] = []
-    let hasNextPage = true
-    let after: string | undefined = undefined
-    const pageSize = 500
-
-    while (hasNextPage) {
-      const { data, error } = await client.query<SitemapByYearQuery>({
-        query: SitemapByYearDocument,
-        variables: {
-          from: fromDate.toISOString(),
-          to: toDate.toISOString(),
-          first: pageSize,
-          after,
-        },
-      })
-
-      if (error) {
-        console.error(`[sitemap-${year}]`, error)
-        return NextResponse.json(
-          { error: 'Failed to fetch data' },
-          { status: 500 },
-        )
-      }
-
-      const {
-        search: { nodes, pageInfo },
-      } = data
-
-      const articles = nodes.map(({ entity }) => entity as Document)
-
-      allArticles.push(...articles)
-
-      hasNextPage = pageInfo.hasNextPage
-      after = pageInfo.endCursor || undefined
-    }
-
-    const articles = allArticles
+    const documents = await client.fetch(SITEMAP_BY_YEAR_QUERY, {
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
+    })
 
     // Generate XML sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    ${articles
-      .filter((article) => article.meta.path && article.meta.publishDate)
+    ${documents
+      .filter((document) => document.path && document.publishDate)
       .map(
-        (article) => `  <url>
-        <loc>${BASE_URL}${article.meta.path}</loc>
+        (document) => `  <url>
+        <loc>${BASE_URL}${document.path}</loc>
         <lastmod>${(() => {
-          const lastPublishedAt = new Date(article.meta.lastPublishedAt)
-          const publishDate = new Date(article.meta.publishDate)
+          const updatedAt = new Date(document._updatedAt)
+          const publishDate = new Date(document.publishDate!)
           // Return the more recent of the two dates
-          return lastPublishedAt > publishDate
-            ? lastPublishedAt.toISOString()
+          return updatedAt > publishDate
+            ? updatedAt.toISOString()
             : publishDate.toISOString()
         })()}</lastmod>
       </url>`,

@@ -1,12 +1,9 @@
 import { gql } from '@apollo/client'
-import { documentListQueryFragment } from '../../Feed/DocumentListContainer'
 
 const getPublicUser = gql`
   query getPublicUser(
     $slug: String!
-    $firstDocuments: Int!
     $firstComments: Int!
-    $afterDocument: String
     $afterComment: String
   ) {
     user(slug: $slug) {
@@ -40,9 +37,6 @@ const getPublicUser = gql`
       }
       profileUrls
       prolitterisId
-      documents(first: $firstDocuments, after: $afterDocument) {
-        ...DocumentListConnection
-      }
       subscribedBy(onlyMe: true) {
         nodes {
           id
@@ -95,7 +89,6 @@ const getPublicUser = gql`
       }
     }
   }
-  ${documentListQueryFragment}
 `
 
 export default getPublicUser

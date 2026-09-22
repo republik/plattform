@@ -1,11 +1,14 @@
-import React from 'react'
-import Link from 'next/link'
-import { css } from 'glamor'
-import { fontStyles, A, useColorContext } from '@project-r/styleguide'
 import { useMe } from '@/lib/context/MeContext'
+import { A, fontStyles } from '@project-r/styleguide'
 import { IconPlaylistAdd } from '@republik/icons'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import Link from 'next/link'
 
 const styles = {
+  wrapper: css({
+    color: token.var('colors.text'),
+  }),
   text: css({
     ...fontStyles.sansSerifRegular16,
     lineHeight: '22px',
@@ -15,9 +18,8 @@ const styles = {
 
 const EmptyQueue = ({ t }: { t: any }) => {
   const { progressConsent } = useMe()
-  const [colorScheme] = useColorContext()
   return (
-    <div {...colorScheme.set('color', 'text')}>
+    <div {...styles.wrapper}>
       <p {...styles.text}>{t('AudioPlayer/Queue/EmptyQueue/p1')}</p>
       <p {...styles.text}>
         {t.elements('AudioPlayer/Queue/EmptyQueue/p2', {

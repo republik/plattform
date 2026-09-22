@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 import { QUESTIONNAIRE_SUBMISSION_BOOL_QUERY } from '../graphql'
 import { useQuery } from '@apollo/client'
 import { useMe } from '@/lib/context/MeContext'
@@ -28,11 +28,8 @@ export const mapShareParam = (
   return {}
 }
 
-const getPathname = (router) => router.asPath.split('?')[0].split('#')[0]
-
 const QuestionnaireLink = ({ share, children }) => {
-  const router = useRouter()
-  const pathname = getPathname(router)
+  const pathname = usePathname()
 
   return (
     <Link
@@ -114,8 +111,7 @@ type OverviewLinkProps = {
   focus?: string
 }
 export const OverviewLink = ({ focus }: OverviewLinkProps) => {
-  const router = useRouter()
-  const pathname = getPathname(router)
+  const pathname = usePathname()
 
   return (
     <Interaction.P>

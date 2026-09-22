@@ -1,6 +1,22 @@
 import { DiscussionNotificationOption } from '#graphql/republik-api/__generated__/gql/graphql'
-import FollowDiscussionDropdown from '@/app/components/follow/follow-discussion-dropdown'
-import { DialogPaynote } from '@/app/components/paynotes/paynotes-in-trial/dialog'
+import FollowDiscussionDropdown from '@/app/(sanity)/components/follow/follow-discussion-dropdown'
+import { DialogPaynote } from '@/app/(sanity)/components/paynotes/paynotes-in-trial/dialog'
+import ActionBar from '@/components/ActionBar/Discussion'
+import DiscussionTitle from '@/components/Dialog/DiscussionTitle'
+import { useDiscussion } from '@/components/Discussion/context/DiscussionContext'
+import DiscussionContextProvider from '@/components/Discussion/context/DiscussionContextProvider'
+import Discussion from '@/components/Discussion/Discussion'
+import Frame from '@/components/Frame'
+import Meta from '@/components/Frame/Meta'
+import StatusError from '@/components/StatusError'
+import { prefetchDiscussion } from '@/components/Discussion/graphql/prefetchDiscussion'
+import {
+  createGetServerSideProps,
+  providedUserAgentProps,
+} from '@/lib/apollo/helpers'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
+import { getServerSideRedirection } from '@/lib/redirections'
+import { useTranslation } from '@/lib/withT'
 import {
   Center,
   Editorial,
@@ -9,19 +25,8 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
-import { PUBLIC_BASE_URL } from '@/lib/constants'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import ActionBar from '@/components/ActionBar'
-import DiscussionTitle from '@/components/Dialog/DiscussionTitle'
-import { useDiscussion } from '@/components/Discussion/context/DiscussionContext'
-import DiscussionContextProvider from '@/components/Discussion/context/DiscussionContextProvider'
-import Discussion from '@/components/Discussion/Discussion'
-import Frame from '@/components/Frame'
-import Meta from '@/components/Frame/Meta'
-import StatusError from '@/components/StatusError'
-import { useTranslation } from '@/lib/withT'
 
 const styles = {
   container: css({
@@ -93,10 +98,7 @@ const DialogContent = () => {
                     ?.notifications as DiscussionNotificationOption
                 }
               />
-              <ActionBar
-                discussion={discussionContext?.discussion?.id}
-                fontSize
-              />
+              <ActionBar />
             </div>
           </div>
           <Discussion />
@@ -106,10 +108,13 @@ const DialogContent = () => {
   )
 }
 
+const getDiscussionPath = (path: string | string[]): string =>
+  '/' + (Array.isArray(path) ? path : [path]).filter(Boolean).join('/')
+
 const DialogPage = () => {
   const router = useRouter()
-  const { path } = router.query
-  const discussionPath = '/' + [].concat(path || []).join('/')
+  const discussionPath = getDiscussionPath(router.query.path)
+
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
       <DiscussionContextProvider discussionPath={discussionPath}>
@@ -119,4 +124,31 @@ const DialogPage = () => {
   )
 }
 
-export default withDefaultSSR(DialogPage)
+export default DialogPage
+
+export const getServerSideProps = createGetServerSideProps(
+  async ({ client, ctx }) => {
+    const data = await prefetchDiscussion(client, {
+      query: ctx.query,
+      discussionPath: getDiscussionPath(ctx.params?.path),
+    })
+
+    // Only a loaded-but-empty result means the discussion is gone. If the
+    // prefetch itself failed we render the page and let the client retry.
+    if (data && !data.discussion) {
+      const redirection = await getServerSideRedirection(client, ctx)
+
+      if (redirection.type === 'redirect') {
+        return { redirect: redirection.redirect }
+      }
+
+      if (redirection.type === 'none') {
+        // `DialogContent` renders the 404 screen, this gives it the matching
+        // status code — which `StatusError` used to set through `serverContext`
+        ctx.res.statusCode = 404
+      }
+    }
+
+    return { props: providedUserAgentProps(ctx.req) }
+  },
+)

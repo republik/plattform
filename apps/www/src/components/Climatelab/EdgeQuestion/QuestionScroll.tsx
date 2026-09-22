@@ -1,5 +1,5 @@
 import { renderMdast } from '@republik/mdast-react-render'
-import { useRouter } from 'next/router'
+import { usePathname, useSearchParams } from 'next/navigation'
 import React, { ReactNode, useEffect, useMemo, useRef } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
@@ -98,10 +98,14 @@ const QuestionScroll: React.FC<{
   share: ShareProps
 }> = ({ answers, share = {} }) => {
   const { t } = useTranslation()
-  const router = useRouter()
-  const { query } = router
-  const answerId = query.share
-  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const answerId = searchParams.get('share')
+  const search = searchParams.toString()
+  const urlObj = new URL(
+    `${pathname}${search ? `?${search}` : ''}`,
+    PUBLIC_BASE_URL,
+  )
   const url = urlObj.toString()
 
   const shareImageUrlObj = urlObj

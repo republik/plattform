@@ -16,7 +16,7 @@ import { REGWALL_CAMPAIGN } from '@/lib/constants'
 import { getConversionPayload } from '@/lib/utils/conversion-payload'
 
 import { useTranslation } from '@/lib/withT'
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useId, useRef, useState } from 'react'
 
 import { Spinner } from '../../ui/spinner'
@@ -39,8 +39,8 @@ export function CodeForm({
   redirectUrl,
 }: CodeFormProps) {
   const codeId = useId()
-  const router = useRouter()
-  const { query } = router
+  const searchParams = useSearchParams()
+  const query = Object.fromEntries(searchParams)
   const trackEvent = useTrackEvent()
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState<ApolloError | undefined>()

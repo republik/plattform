@@ -4,13 +4,13 @@ import {
   FollowableAuthorDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
-import { FollowButton } from '@/app/components/follow/follow-button'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import { Section, SectionH3 } from '@/app/components/ui/section'
+import { useTranslation } from '@/lib/withT'
+import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
-import { useState } from 'react'
-import { useTranslation } from '@/lib/withT'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { AUTHORS_FEATURED, AuthorType } from './config'
 
@@ -29,8 +29,6 @@ function AuthorCard({
   const authorData = data?.user
 
   if (!authorData) return null
-
-  const subscriptionId = authorData.subscribedBy.nodes.find((n) => n.active)?.id
 
   return (
     <div
@@ -67,7 +65,6 @@ function AuthorCard({
         >
           <FollowButton
             type={SubscriptionObjectType.User}
-            subscriptionId={subscriptionId}
             objectId={author.id}
             objectName={authorData.name}
           />
@@ -76,7 +73,6 @@ function AuthorCard({
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <FollowButton
           type={SubscriptionObjectType.User}
-          subscriptionId={subscriptionId}
           objectId={author.id}
           objectName={authorData.name}
         />
@@ -85,7 +81,7 @@ function AuthorCard({
   )
 }
 
-function AuthorsSection() {
+export function AuthorsSection() {
   const { t } = useTranslation()
   const [showAll, setShowAll] = useState(false)
 
@@ -140,5 +136,3 @@ function AuthorsSection() {
     </Section>
   )
 }
-
-export default AuthorsSection

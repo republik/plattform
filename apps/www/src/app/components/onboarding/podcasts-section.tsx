@@ -1,24 +1,16 @@
-'use client'
-
+import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import {
-  Document,
-  OnboardingDocumentsDocument,
-  SubscriptionObjectType,
-} from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
-import { FollowButton } from '@/app/components/follow/follow-button'
+  COLLECTIONS_QUERY,
+  type ArticleCollectionType,
+} from '@/app/(sanity)/groq/collections-query'
+import { client } from '@/app/(sanity)/lib/client'
 import { Section, SectionH3 } from '@/app/components/ui/section'
+import { t } from '@/lib/withT'
 import { css } from '@republik/theme/css'
-import { useTranslation } from '@/lib/withT'
 import { PODCASTS_FEATURED, PODCASTS_STYLE } from './config'
 
-function PodcastCard({ podcast }: { podcast?: Document }) {
-  const { t } = useTranslation()
-
-  if (!podcast) return null
-
-  const subscriptionId = podcast.subscribedBy.nodes.find((n) => n.active)?.id
-
+function PodcastCard({ collection }: { collection: ArticleCollectionType }) {
   return (
     <div
       className={css({
@@ -27,7 +19,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
       })}
     >
       <div
-        style={PODCASTS_STYLE[podcast.repoId]}
+        style={PODCASTS_STYLE[collection._id]}
         className={css({
           display: 'flex',
           flexDirection: 'column',
@@ -48,7 +40,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
             textAlign: 'right',
           })}
         >
-          {podcast.meta.title}
+          {collection.title}
         </h4>
         <span
           className={css({
@@ -65,27 +57,28 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
           mt: 1,
         })}
       >
-        {podcast.meta.description}
+        {collection.description}
       </p>
       <div className={css({ mt: 2 })}>
         <FollowButton
           type={SubscriptionObjectType.Document}
-          subscriptionId={subscriptionId}
-          objectId={podcast.id}
-          objectName={podcast.meta.title}
+          objectId={`sanity:${collection._id}`}
         />
       </div>
     </div>
   )
 }
 
-function PodcastsSection() {
-  const { t } = useTranslation()
-  const { data } = useQuery(OnboardingDocumentsDocument, {
-    variables: { repoIds: PODCASTS_FEATURED },
-  })
+export async function PodcastsSection() {
+  const data = await client.fetch(
+    COLLECTIONS_QUERY,
+    {
+      ids: PODCASTS_FEATURED,
+    },
+    { tag: 'podcasts-section' },
+  )
 
-  const podcasts = data?.documents.nodes as Document[]
+  const podcasts = data
 
   if (!podcasts?.length) return null
 
@@ -104,15 +97,12 @@ function PodcastsSection() {
           },
         })}
       >
-        {PODCASTS_FEATURED.map((repoId) => (
-          <PodcastCard
-            key={repoId}
-            podcast={podcasts.find((podcast) => podcast.repoId === repoId)}
-          />
-        ))}
+        {PODCASTS_FEATURED.map((id) => {
+          const collection = podcasts.find((p) => p._id === id)
+          if (!collection) return null
+          return <PodcastCard key={id} collection={collection} />
+        })}
       </div>
     </Section>
   )
 }
-
-export default PodcastsSection

@@ -7,7 +7,7 @@ import SignIn from '@/components/Auth/SignIn'
 import { Interaction } from '@project-r/styleguide'
 
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 const NotificationsPage = ({ t, me }) => {
   const meta = {
@@ -30,4 +30,6 @@ const NotificationsPage = ({ t, me }) => {
   )
 }
 
-export default withDefaultSSR(compose(withMe, withT)(NotificationsPage))
+export default compose(withMe, withT)(NotificationsPage)
+
+export const getServerSideProps = defaultServerSideProps

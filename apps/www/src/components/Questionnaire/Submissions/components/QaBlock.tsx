@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
@@ -118,8 +118,7 @@ const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
 }
 
 export const QaBlock = ({ slug, questions, bgColor, valueLength, hint }) => {
-  const router = useRouter()
-  const { query } = router
+  const searchParams = useSearchParams()
 
   const hasTextAnswer = questions.some(
     (q) => q.__typename === 'QuestionTypeText',
@@ -127,7 +126,7 @@ export const QaBlock = ({ slug, questions, bgColor, valueLength, hint }) => {
 
   const questionRef = useRef(null)
   useEffect(() => {
-    if (query?.focus === questions[0].id) {
+    if (searchParams.get('focus') === questions[0].id) {
       scrollIntoView(questionRef.current, {
         time: 0,
         align: { top: 0 },

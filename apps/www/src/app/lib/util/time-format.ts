@@ -1,10 +1,12 @@
 import dayjs from 'dayjs'
 import locale_ch from 'dayjs/locale/de-ch'
-import utc from 'dayjs/plugin/utc'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+dayjs.extend(relativeTime)
 dayjs.locale(locale_ch)
 dayjs.tz.setDefault('Europe/Berlin')
 
@@ -79,4 +81,8 @@ export const formatEventDateRange = (start: DateLike, end?: DateLike) => {
 export const isFutureEvent = (start: DateLike, end?: DateLike) => {
   const now = dayjs()
   return end ? now.isBefore(end) : now.isBefore(start)
+}
+
+export const formatTimeAgo = (date: DateLike) => {
+  return dayjs(date).fromNow()
 }

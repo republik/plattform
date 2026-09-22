@@ -1,0 +1,76 @@
+import {
+    getNotExpiredTeasers,
+    TeaserListItemType,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
+import GridTeaser from '@/app/(sanity)/components/teaser/grid'
+import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
+import {
+    TEASERS_SMALL_QUERY_ASC,
+    TEASERS_SMALL_QUERY_DESC,
+} from '@/app/(sanity)/groq/teasers-small-query'
+import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
+import { css } from '@republik/theme/css'
+
+const gridStyle = css({
+  gridColumn: 'breakout',
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  md: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+  lg: {
+    gridTemplateColumns: 'repeat(3, 1fr)',
+  },
+  columnGap: '4',
+  rowGap: '12',
+})
+
+export async function TeaserGrid({
+  teaserList,
+  documentId,
+  blockKey,
+}: {
+  teaserList: TeaserListBlockFragmentType
+  documentId: string
+  blockKey: string
+}) {
+  const { title, series, maxItems, total } = teaserList
+
+  // We display series in chronological order, starting with the first episode
+  const QUERY = series ? TEASERS_SMALL_QUERY_ASC : TEASERS_SMALL_QUERY_DESC
+
+  const data = await sanityClientFetch(
+    QUERY,
+    {
+      documentId,
+      blockKey,
+      start: 0,
+      end: maxItems ?? total,
+    },
+    { tag: 'teaser-grid' },
+  )
+
+  const teasers = getNotExpiredTeasers(data?.block?.teasers)
+  if (!teasers.length) return null
+
+  return (
+    <>
+      {!!title && (
+        <h2
+          className={css({
+            textStyle: 'subtitleBold',
+            textAlign: 'center',
+            mt: '8',
+          })}
+        >
+          {title}
+        </h2>
+      )}
+      <div className={gridStyle}>
+        {teasers.map((teaser, index) => (
+          <GridTeaser key={teaser._id} teaser={teaser as TeaserListItemType} />
+        ))}
+      </div>
+    </>
+  )
+}

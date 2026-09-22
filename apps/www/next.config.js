@@ -65,6 +65,11 @@ const nextConfig = {
           }
         : false,
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   async headers() {
     return [
       // Migrated from custom express server
@@ -84,7 +89,7 @@ const nextConfig = {
             }; includeSubDomains; preload`,
             'X-Content-Type-Options': 'nosniff',
             'X-Download-Options': 'noopen',
-            'X-Frame-Options': 'SAMEORIGIN',
+            // 'X-Frame-Options': 'SAMEORIGIN',
             // removed by helmet by default, but we keep it for now
             'X-Powered-By': 'Republik',
             'X-XSS-Protection': '1; mode=block',
@@ -97,43 +102,16 @@ const nextConfig = {
   },
   async rewrites() {
     return {
-      beforeFiles: [
-        // _ssr routes are only accessible via rewrites
-        {
-          source: '/_ssr/:path*',
-          destination: '/404',
-        },
-      ],
       afterFiles: [
+        // Rewrite to new Sanity front
+        {
+          source: '/',
+          destination: '/front',
+        },
         // impossible route via file system path
         {
           source: '/~:slug',
           destination: '/~/:slug',
-        },
-        // Avoid SSG for extract urls used for image rendering
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [{ type: 'query', key: 'extract' }],
-        },
-        // Avoid SSG for share urls, e.g. meta.fromQuery
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [{ type: 'query', key: 'share' }],
-        },
-        // Rewrite for crawlers when a comment is focused inside a debate on the article-site
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [
-            { type: 'query', key: 'focus' },
-            {
-              type: 'header',
-              key: 'User-Agent',
-              value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
-            },
-          ],
         },
         {
           source: '/pgp/:userSlug',
@@ -168,6 +146,11 @@ const nextConfig = {
       {
         source: '/umfrage/1-minute',
         destination: '/komplizin',
+        permanent: true,
+      },
+      {
+        source: '/dialog/feedback',
+        destination: '/feedback',
         permanent: true,
       },
       // Redirect /angebote to shop if no query params are set
@@ -243,7 +226,8 @@ const nextConfig = {
         permanent: true,
       },
       // Redirect overview pages to 1st month
-      {
+      // TODO: fix and use sanity for the overview
+      /*{
         source: '/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
@@ -252,7 +236,7 @@ const nextConfig = {
         source: '/archiv/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
-      },
+      },*/
       { source: '/en', destination: '/manifest/en', permanent: false },
     ].filter(Boolean)
   },

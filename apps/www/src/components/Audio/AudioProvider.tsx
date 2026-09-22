@@ -1,3 +1,4 @@
+'use client'
 import {
   createContext,
   useState,
@@ -14,7 +15,7 @@ import { useInNativeApp, postMessage } from '@/lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
-import useAudioQueue from './hooks/useAudioQueue'
+import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
 
@@ -123,7 +124,7 @@ const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>(null)
 
-  const { isAudioQueueAvailable } = useAudioQueue()
+  const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (
@@ -144,9 +145,16 @@ const AudioProvider = ({ children }) => {
     const mediaId = audioSource.mediaId
 
     if (isAudioQueueAvailable) {
-      AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
-        item: playerItem,
-        location: location || AudioPlayerLocations.AUDIO_PLAYER,
+      // AudioEventEmitter.emit doesn't wait for (or propagate errors from)
+      // listeners, so without this bridge the promise below would resolve
+      // immediately regardless of whether playback actually started — the
+      // caller's try/catch would never see a failure.
+      await new Promise<void>((resolve, reject) => {
+        AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
+          item: playerItem,
+          location: location || AudioPlayerLocations.AUDIO_PLAYER,
+          onSettled: (error?: unknown) => (error ? reject(error) : resolve()),
+        })
       })
     } else {
       if (inNativeApp) {
@@ -237,7 +245,7 @@ const AudioProvider = ({ children }) => {
         isPlaying,
         setIsPlaying,
         autoPlayActive:
-          autoPlayAudioPlayerItem?.id === activePlayerItem?.document.id,
+          autoPlayAudioPlayerItem?.id === activePlayerItem?.document?.id,
         toggleAudioPlayer,
         toggleAudioPlayback,
         checkIfActivePlayerItem,

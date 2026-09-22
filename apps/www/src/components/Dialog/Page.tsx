@@ -1,9 +1,7 @@
 import { useTranslation } from '@/lib/withT'
+import { A, Interaction, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { mediaQueries } from '@project-r/styleguide'
-import { Interaction } from '@project-r/styleguide'
 import Link from 'next/link'
-import { A } from '@project-r/styleguide'
 import TestimonialList from '../Testimonial/List'
 import ActiveDiscussions from './ActiveDiscussions'
 import LatestComments from './LatestComments'
@@ -38,7 +36,7 @@ const DialogOverviewPage = () => {
       <Interaction.H3 {...styles.h3}>
         {t('marketing/community/title/plain')}
       </Interaction.H3>
-      <TestimonialList singleRow minColumns={3} first={5} share={false} />
+      <TestimonialList singleRow minColumns={3} first={5} />
       <Link href='/community' passHref legacyBehavior>
         <A>{t('marketing/community/link')}</A>
       </Link>

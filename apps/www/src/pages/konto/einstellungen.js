@@ -1,7 +1,7 @@
 import compose from 'lodash/flowRight'
 
 import withT from '@/lib/withT'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import Frame from '@/components/Frame'
 import AccountTabs from '@/components/Account/AccountTabs'
 import AccountSection from '@/components/Account/AccountSection'
@@ -43,4 +43,6 @@ const SettingsPage = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT)(SettingsPage))
+export default compose(withT)(SettingsPage)
+
+export const getServerSideProps = defaultServerSideProps

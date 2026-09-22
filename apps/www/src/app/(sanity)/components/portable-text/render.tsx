@@ -1,0 +1,112 @@
+import { Button } from '@/app/(sanity)/components/portable-text/button'
+import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
+import {
+  Em,
+  ExternalLink,
+  InternalLink,
+  Strong,
+  Sub,
+  Sup,
+} from '@/app/(sanity)/components/portable-text/marks'
+import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
+import { Variable } from '@/app/(sanity)/components/portable-text/variable'
+import { type InlineEditor, type NestedEditor } from '@/sanity.types'
+import {
+  PortableText,
+  type PortableTextMarkComponentProps,
+  type PortableTextReactComponents,
+} from 'next-sanity'
+
+const inlineComponents: Partial<PortableTextReactComponents> = {
+  unknownType: UnknownType,
+
+  types: {
+    variable: ({ value }) => <Variable value={value} />,
+    voiceTag: () => null,
+  },
+
+  block: {
+    // Inline PT can only contain 1 paragraph, so we unwrap it
+    normal: ({ children }) => <>{children}</>,
+  },
+  marks: {
+    strong: Strong,
+    em: Em,
+    sub: Sub,
+    sup: Sup,
+    link: ExternalLink,
+    internalLink: InternalLink,
+  },
+}
+
+export function InlinePortableText({ value }: { value: InlineEditor }) {
+  return <PortableText components={inlineComponents} value={value} />
+}
+
+const nestedComponents: Partial<PortableTextReactComponents> = {
+  unknownType: UnknownType,
+
+  types: {
+    variable: ({ value }) => <Variable value={value} />,
+    button: ({ value }) => <Button value={value} />,
+    voiceTag: () => null,
+    divider: () => <hr />,
+    dividerStars: DividerStars,
+  },
+
+  block: {
+    heading: ({ children }) => <h2>{children}</h2>,
+  },
+  marks: {
+    strong: Strong,
+    em: Em,
+    sub: Sub,
+    sup: Sup,
+    link: ExternalLink,
+    internalLink: InternalLink,
+  },
+}
+
+export function NestedPortableText({ value }: { value: NestedEditor }) {
+  return <PortableText components={nestedComponents} value={value} />
+}
+
+// for comment embed
+const nestedComponentsWithoutLinks: Partial<PortableTextReactComponents> = {
+  unknownType: UnknownType,
+
+  types: {
+    variable: ({ value }) => <Variable value={value} />,
+    button: ({ value }) => null,
+    voiceTag: () => null,
+    divider: () => <hr />,
+    dividerStars: DividerStars,
+  },
+
+  block: {
+    heading: ({ children }) => <h2>{children}</h2>,
+  },
+  marks: {
+    strong: Strong,
+    em: Em,
+    sub: Sub,
+    sup: Sup,
+    link: ({ text }: PortableTextMarkComponentProps) => {
+      return text
+    },
+    internalLink: ({ text }: PortableTextMarkComponentProps) => {
+      return text
+    },
+  },
+}
+
+// for comment embed
+export function NestedPortableTextWithoutLinks({
+  value,
+}: {
+  value: NestedEditor
+}) {
+  return (
+    <PortableText components={nestedComponentsWithoutLinks} value={value} />
+  )
+}

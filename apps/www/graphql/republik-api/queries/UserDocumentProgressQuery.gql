@@ -1,0 +1,12 @@
+query UserDocumentProgress($documentId: ID!) {
+  userDocumentProgress(documentId: $documentId) {
+    id
+    percentage
+    updatedAt
+    max {
+      id
+      percentage
+      updatedAt
+    }
+  }
+}

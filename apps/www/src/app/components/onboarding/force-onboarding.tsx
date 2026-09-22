@@ -1,8 +1,10 @@
+'use client'
+
 import { useMe } from '@/lib/context/MeContext'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-export const ForceOnboarding = ({ children }) => {
+export const ForceOnboarding = () => {
   const { me, hasActiveMembership } = useMe()
   const router = useRouter()
 
@@ -14,5 +16,5 @@ export const ForceOnboarding = ({ children }) => {
     }
   }, [notOnboardedMember, router])
 
-  return <>{children}</>
+  return null
 }

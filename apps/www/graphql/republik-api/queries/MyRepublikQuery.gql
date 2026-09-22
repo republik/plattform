@@ -1,0 +1,28 @@
+query MyRepublik(
+  $names: [String!]!
+  $progress: ProgressState
+) {
+  progress: userCollectionItemsByNames(
+    names: $names
+    progress: $progress
+    first: 2
+    uniqueDocuments: true
+    lastDays: 30
+  ) {
+    nodes {
+      id
+      sanityId
+    }
+  }
+
+  notifications(first: 2, filter: Document, lastDays: 30) {
+    nodes {
+      id
+      object {
+        ... on SanityDocumentRef {
+          id
+        }
+      }
+    }
+  }
+}

@@ -16,14 +16,15 @@ export function useIntersectionObserver(
   ref: RefObject<HTMLElement>,
   options?: {
     intersectionObserverOptions?: IntersectionObserverInit
-    callback?: (isIntersecting: boolean) => void
+    callback?: (isIntersecting: boolean, entry: IntersectionObserverEntry) => void
   },
 ): [boolean, Pick<IntersectionObserver, 'root' | 'rootMargin' | 'thresholds'>] {
   const { root, rootMargin, threshold } =
     options?.intersectionObserverOptions || {}
   const [isVisible, setIsVisible] = useState(false)
   const [observer, setObserver] = useState<IntersectionObserver>()
-  const callbackRef = useRef<(val: boolean) => void>(null)
+  const callbackRef =
+    useRef<(val: boolean, entry: IntersectionObserverEntry) => void>(null)
 
   // For performance reasons we store the callback function in a ref
   // to ensure the intersection observer is not recreated on every render
@@ -35,7 +36,7 @@ export function useIntersectionObserver(
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (callbackRef.current) {
-          callbackRef.current(entry.isIntersecting)
+          callbackRef.current(entry.isIntersecting, entry)
         }
         setIsVisible(entry.isIntersecting)
       },

@@ -1,7 +1,7 @@
 'use client'
 
-import { css } from '@republik/theme/css'
 import { IconRefresh } from '@republik/icons'
+import { css } from '@republik/theme/css'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAudioContext } from '../../../../components/Audio/AudioProvider'
@@ -12,6 +12,21 @@ enum IndicatorState {
   PULLING,
   TRIGGERED,
   LOADING,
+}
+
+/**
+ * Whether an overlay has locked page scrolling. Checked by feature rather than
+ * by importing a lock hook, because two mechanisms are in play: Radix dialogs
+ * lock via react-remove-scroll (which marks the body), the styleguide's
+ * overlays via body-scroll-lock (which sets inline overflow). Without this a
+ * downward drag on an open modal refreshes the route behind it — the legacy
+ * pull-to-refresh guards the same way (see components/Frame/Pullable.js).
+ */
+function isPageScrollLocked() {
+  return (
+    document.body.hasAttribute('data-scroll-locked') ||
+    document.body.style.overflow === 'hidden'
+  )
 }
 
 /**
@@ -31,16 +46,16 @@ function usePullToRefresh(
     triggerThreshold?: number
     pullResistance?: number
     isDisabled?: boolean
-  } = {
-    maxPullDistance: 240,
-    triggerThreshold: 240,
-    pullResistance: 0.4,
-    isDisabled: false,
-  },
+  } = {},
 ) {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const callbackRef = useRef<typeof callback>(() => {})
-  const { maxPullDistance, triggerThreshold, pullResistance, isDisabled } = options
+  const {
+    maxPullDistance = 240,
+    triggerThreshold = 240,
+    pullResistance = 0.4,
+    isDisabled = false,
+  } = options
 
   const appr = useMemo<(_: number) => number>(
     () => (x: number) => {
@@ -66,12 +81,24 @@ function usePullToRefresh(
       const el = ref.current
       if (!el || window.scrollY !== 0 || isDisabled) return
 
+      // `touchstart` is bound to the window, so it also fires for the header,
+      // the CTA banner and any overlay — none of which are inside `el`. Those
+      // gestures must not arm a pull.
+      const target = startEvent.target
+      if (!(target instanceof Node) || !el.contains(target)) return
+
+      if (isPageScrollLocked()) return
+
       // get the initial Y position
       const initialY = startEvent.touches[0].clientY
 
-      el.style.transition = null
-      el.addEventListener('touchmove', handleTouchMove, { passive: true })
-      el.addEventListener('touchend', handleTouchEnd)
+      el.style.transition = ''
+      // Bound to the window rather than to `el`: a finger that leaves the
+      // element mid-drag must still deliver `touchend`, or the listeners below
+      // and `overscrollBehaviorY` would never be cleaned up.
+      window.addEventListener('touchmove', handleTouchMove, { passive: true })
+      window.addEventListener('touchend', handleTouchEnd)
+      window.addEventListener('touchcancel', handleTouchEnd)
       document.documentElement.style.overscrollBehaviorY = 'none'
       document.documentElement.style.setProperty(
         '--pull-to-refresh-progress',
@@ -117,7 +144,7 @@ function usePullToRefresh(
 
         // Clean up attributes on <html> element
         document.documentElement.removeAttribute('data-pull-to-refresh-state')
-        document.documentElement.style.overscrollBehaviorY = null
+        document.documentElement.style.overscrollBehaviorY = ''
         document.documentElement.style.setProperty(
           '--pull-to-refresh-progress',
           '',
@@ -145,8 +172,9 @@ function usePullToRefresh(
           resetState()
         }
         // cleanup
-        el.removeEventListener('touchmove', handleTouchMove)
-        el.removeEventListener('touchend', handleTouchEnd)
+        window.removeEventListener('touchmove', handleTouchMove)
+        window.removeEventListener('touchend', handleTouchEnd)
+        window.removeEventListener('touchcancel', handleTouchEnd)
       }
     }
 

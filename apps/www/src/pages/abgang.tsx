@@ -8,7 +8,7 @@ import Frame from '@/components/Frame'
 
 import { Interaction } from '@project-r/styleguide'
 import { useMe } from '@/lib/context/MeContext'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 import { CancelMagazineSubscription } from '@/components/Account/Memberships/CancelMagazineSubscription'
 
 const CancelMembershipPage = () => {
@@ -51,4 +51,6 @@ const CancelMembershipPage = () => {
   )
 }
 
-export default withDefaultSSR(CancelMembershipPage)
+export default CancelMembershipPage
+
+export const getServerSideProps = defaultServerSideProps

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import { fontStyles, inQuotes } from '@project-r/styleguide'
 
 import { css } from 'glamor'
-
-import { inQuotes, fontStyles } from '@project-r/styleguide'
-import { getRandomReason } from '../Crowdfunding/reasonData'
+import { useEffect, useState } from 'react'
+import { getRandomReason } from './reasonData'
 
 const WIDTH = 1200
 const HEIGHT = 628

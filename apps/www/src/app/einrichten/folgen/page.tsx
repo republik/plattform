@@ -1,6 +1,9 @@
 // second "onbarding tip"
 
-import FollowOnboarding from '@/app/components/onboarding/follow'
+import { AuthorsSection } from '@/app/components/onboarding/authors-section'
+import { OnboardingFollow } from '@/app/components/onboarding/follow'
+import { FormatsSection } from '@/app/components/onboarding/formats-section'
+import { PodcastsSection } from '@/app/components/onboarding/podcasts-section'
 import { getMe } from '@/app/lib/auth/me'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -15,5 +18,11 @@ export default async function Page() {
     return redirect('/anmelden')
   }
 
-  return <FollowOnboarding />
+  return (
+    <OnboardingFollow>
+      <FormatsSection />
+      <AuthorsSection />
+      <PodcastsSection />
+    </OnboardingFollow>
+  )
 }

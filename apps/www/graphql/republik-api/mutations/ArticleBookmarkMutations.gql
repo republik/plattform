@@ -1,0 +1,18 @@
+mutation AddArticleBookmark($documentId: ID!) {
+  addDocumentToCollection(
+    documentId: $documentId
+    collectionName: "bookmarks"
+  ) {
+    id
+    createdAt
+  }
+}
+
+mutation RemoveArticleBookmark($documentId: ID!) {
+  removeDocumentFromCollection(
+    documentId: $documentId
+    collectionName: "bookmarks"
+  ) {
+    id
+  }
+}

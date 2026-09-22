@@ -4,7 +4,7 @@ import isEmail from 'validator/lib/isEmail'
 
 import { maybeDecode } from '@/lib/utils/base64u'
 import withT from '@/lib/withT'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 import ClaimMembership, {
   sanitizeVoucherCode,
@@ -50,4 +50,6 @@ const Claim = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT)(Claim))
+export default compose(withT)(Claim)
+
+export const getServerSideProps = defaultServerSideProps

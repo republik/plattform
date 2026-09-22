@@ -15,44 +15,58 @@ const formatRosenwasser = '/static/onboarding/format-rosenwasser.png'
 const formatVahland = '/static/onboarding/format-vahland.png'
 
 type StyleType = {
+  author?: string
   backgroundColor?: string
   color?: string
   // imageSrc?: StaticImageData
   imageSrc?: string
 }
 
+// Sanity articleCollection IDs
 export const FORMATS_FEATURED: string[] = [
-  'republik/format-binswanger',
-  'republik/format-rosenwasser',
-  'republik/format-vahland',
-  'republik/format-pfister',
-  'republik/format-gedankensplitter',
-  'republik/format-format-wie-reden-wir-eigentlich',
+  '66a6167d-9bb4-540a-a1a6-5ab9d6e1b95c', // Binswanger
+  '574d5260-3cd5-56b5-a822-09d24fb9af30', // Rosenwasser
+  'fda13d89-c89a-5fe3-8d93-6fbd943554fb', // Vahland
+  'deb07ccb-8502-53cc-a2c5-75c1054b3f8b', // Pfister
+  '6b669e3c-b75a-5bf7-bb82-e82d5a19bce0', // Strassberg
+  '455aceb9-3537-5aef-8f5b-88baffbe509f', // Wie reden wir eigentlich
 ]
 
 export const FORMATS_STYLE: { [key: string]: StyleType } = {
-  'republik/format-binswanger': {
+  // Binswanger
+  '66a6167d-9bb4-540a-a1a6-5ab9d6e1b95c': {
     backgroundColor: '#EEB8BF',
+    author: 'Daniel Binswanger',
     imageSrc: formatBinswanger,
   },
-  'republik/format-rosenwasser': {
+  // Rosenwasser
+  '574d5260-3cd5-56b5-a822-09d24fb9af30': {
     backgroundColor: '#8CDBB6',
+    author: 'Anna Rosenwasser',
     imageSrc: formatRosenwasser,
   },
-  'republik/format-vahland': {
+  // Vahland
+  'fda13d89-c89a-5fe3-8d93-6fbd943554fb': {
     backgroundColor: '#A9A7E0',
+    author: 'Kia Vahland',
     imageSrc: formatVahland,
   },
-  'republik/format-pfister': {
+  // Pfister
+  'deb07ccb-8502-53cc-a2c5-75c1054b3f8b': {
     backgroundColor: '#EF6B6D',
+    author: 'Gerhard Pfister',
     imageSrc: formatPfister,
   },
-  'republik/format-gedankensplitter': {
+  // Strassberg
+  '6b669e3c-b75a-5bf7-bb82-e82d5a19bce0': {
     backgroundColor: '#F2ECE6',
+    author: 'Daniel Strassberg',
     imageSrc: formatGedankensplitter,
   },
-  'republik/format-format-wie-reden-wir-eigentlich': {
+  // Wie reden wir eigentlich
+  '455aceb9-3537-5aef-8f5b-88baffbe509f': {
     backgroundColor: '#DAFF8D',
+    author: 'Marie-José Kolly',
     imageSrc: formatWieRedenWirEigentlich,
   },
 }
@@ -75,26 +89,34 @@ export const AUTHORS_FEATURED: AuthorType[] = [
 ]
 
 export const PODCASTS_FEATURED: string[] = [
-  'republik/format-dritte-gewalt',
-  'republik/format-sondersession',
-  'republik/format-gute-frage',
-  'republik/format-was-wurde-eigentlich-aus',
+  // Dritte Gewalt
+  '67a3bf52-70d7-5457-85cd-de16425eaacb',
+  // Sondersession
+  '94032342-f283-50c9-b846-96a793abc386',
+  // Gute Frage
+  '13327b71-46ef-58f3-9f06-72b5732f37af',
+  // Update!
+  'c06e068c-6823-52cd-a16d-43fea77012f8',
 ]
 
 export const PODCASTS_STYLE: { [key: string]: StyleType } = {
-  'republik/format-dritte-gewalt': {
+  // Dritte Gewalt
+  '67a3bf52-70d7-5457-85cd-de16425eaacb': {
     backgroundColor: '#3C1F59',
     color: '#00FFFF',
   },
-  'republik/format-sondersession': {
+  // Sondersession
+  '94032342-f283-50c9-b846-96a793abc386': {
     backgroundColor: '#025E58',
     color: '#FFB6EF',
   },
-  'republik/format-gute-frage': {
+  // Gute Frage
+  '13327b71-46ef-58f3-9f06-72b5732f37af': {
     backgroundColor: '#890024',
     color: '#FF416D',
   },
-  'republik/format-was-wurde-eigentlich-aus': {
+  // Update!
+  'c06e068c-6823-52cd-a16d-43fea77012f8': {
     backgroundColor: '#D4C800',
     color: '#000000',
   },

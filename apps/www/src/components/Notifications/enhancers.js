@@ -27,6 +27,10 @@ export const subInfo = gql`
           title
         }
       }
+      ... on SanityDocumentRef {
+        id
+        type
+      }
     }
   }
 `
@@ -46,6 +50,10 @@ export const notificationsMiniQuery = gql`
           }
           ... on Document {
             id
+          }
+          ... on SanityDocumentRef {
+            id
+            type
           }
         }
         content {
@@ -79,6 +87,10 @@ export const notificationsQuery = gql`
         object {
           ... on Document {
             ...FeedDocument
+          }
+          ... on SanityDocumentRef {
+            id
+            type
           }
           ... on Comment {
             id
@@ -144,22 +156,27 @@ export const notificationsQuery = gql`
   ${subInfo}
 `
 
-export const possibleSubscriptions = gql`
-  query getSubscriptions {
-    sections: documents(template: "section", feed: true) {
-      nodes {
-        id
-        repoId
-        meta {
-          title
-          color
-          suggestSubscription
-        }
-        formats: linkedDocuments {
-          nodes {
-            id
-            subscribedByMe {
-              ...subInfo
+export const myDocumentSubscriptions = gql`
+  query getMyDocumentSubscriptions {
+    myDocumentSubscriptions: me {
+      id
+      subscribedTo(objectType: Document) {
+        nodes {
+          ...subInfo
+          documentDetails: object {
+            ... on Document {
+              id
+              meta {
+                title
+                path
+                image
+                color
+                template
+              }
+            }
+            ... on SanityDocumentRef {
+              id
+              type
             }
           }
         }

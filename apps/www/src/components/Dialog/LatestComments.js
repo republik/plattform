@@ -49,11 +49,6 @@ const LatestComments = ({ t, data, fetchMore }) => {
                 tags,
                 parentIds,
               } = node
-              const meta =
-                (discussion &&
-                  discussion.document &&
-                  discussion.document.meta) ||
-                {}
 
               return (
                 <CommentTeaser

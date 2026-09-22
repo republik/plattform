@@ -9,21 +9,6 @@ const getActiveDiscussions = gql`
         title
         path
         closed
-        document {
-          id
-          meta {
-            title
-            image
-            audioCover
-            path
-            template
-            ownDiscussion {
-              id
-              path
-              closed
-            }
-          }
-        }
         comments {
           totalCount
         }
@@ -83,25 +68,6 @@ const getComments = gql`
           id
           title
           path
-          document {
-            id
-            meta {
-              title
-              path
-              credits
-              template
-              ownDiscussion {
-                id
-                path
-                closed
-              }
-              linkedDiscussion {
-                id
-                path
-                closed
-              }
-            }
-          }
         }
       }
     }

@@ -247,8 +247,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'flex-end',
   }),
-  backButton: css({
-    ...plainButtonRule,
+  backButton: css(plainButtonRule, {
     display: 'block',
   }),
   signInLink: css({

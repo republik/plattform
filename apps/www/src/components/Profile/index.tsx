@@ -1,15 +1,14 @@
-import { useQuery } from '@apollo/client'
-import { useTranslation } from '@/lib/withT'
-import Frame from '../Frame'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 
 import { PUBLIC_BASE_URL } from '@/lib/constants'
+import { useMe } from '@/lib/context/MeContext'
+import { useTranslation } from '@/lib/withT'
+import { useQuery } from '@apollo/client'
 
 import { useRouter } from 'next/router'
-import { useMe } from '@/lib/context/MeContext'
-import getPublicUser from './graphql/getPublicUser'
-
-import { screenshotUrl } from '@/app/lib/util/screenshot-api'
+import Frame from '../Frame'
 import EditProfile from './EditProfile'
+import getPublicUser from './graphql/getPublicUser'
 import ProfileView from './ProfileView'
 
 const ProfilePage = ({ data, fetchMore }) => {
@@ -37,7 +36,6 @@ const Profile = ({ slug }: { slug: string }) => {
   const { data, fetchMore } = useQuery(getPublicUser, {
     variables: {
       slug,
-      firstDocuments: 10,
       firstComments: 10,
     },
   })
@@ -61,15 +59,6 @@ const Profile = ({ slug }: { slug: string }) => {
       description: user.biography || user.statement || '',
       image: user.portrait,
       interactionStatistic: [
-        ...(user.documents?.totalCount
-          ? [
-              {
-                '@type': 'InteractionCounter',
-                interactionType: 'https://schema.org/WriteAction',
-                userInteractionCount: user.documents.totalCount,
-              },
-            ]
-          : []),
         ...(user.comments?.totalCount
           ? [
               {

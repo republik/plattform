@@ -2,29 +2,29 @@ import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 import '@/globals.css'
 import '@/lib/polyfill'
-import { IpAllowlistBanner } from '@/app/components/ip-allowlist-banner'
-import CampaignPaynote from '@/app/components/paynotes/campaign/campaign-paynote'
+import CampaignPaynote from '@/app/(sanity)/components/paynotes/campaign/campaign-paynote'
 
-import { PaynoteOverlay } from '@/app/components/paynotes/paynote/paynote-overlay'
-import { PaynotesProvider } from '@/app/components/paynotes/paynotes-context'
+import { PaynoteOverlay } from '@/app/(sanity)/components/paynotes/paynote/paynote-overlay'
+import { PaynotesProvider } from '@/app/(sanity)/components/paynotes/paynotes-context'
+import { IpAllowlistBanner } from '@/app/components/ip-allowlist-banner'
 import { AnalyticsProvider } from '@/app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@/app/lib/analytics/utm-session-storage'
-
-import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
-import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
-import { OPEN_ACCESS } from '@/lib/constants'
-import { AppProps } from 'next/app'
-import Head from 'next/head'
-import AppVariableContext from '@/components/Article/AppVariableContext'
 import AudioPlayerOrchestrator from '@/components/Audio/AudioPlayerOrchestrator'
 import AudioProvider from '@/components/Audio/AudioProvider'
+import AudioQueueProvider from '@/components/Audio/AudioQueueProvider'
 import MediaProgressContext from '@/components/Audio/MediaProgress'
 import { ThemeProvider } from '@/components/ColorScheme/ThemeProvider'
 import MessageSync from '@/components/NativeApp/MessageSync'
 import { withApollo } from '@/lib/apollo'
+import { OPEN_ACCESS } from '@/lib/constants'
 import MeContextProvider from '@/lib/context/MeContext'
 import UserAgentProvider from '@/lib/context/UserAgentContext'
 import PageErrorBoundary from '@/lib/errors/PageErrorBoundary'
+
+import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
+import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
+import { AppProps } from 'next/app'
+import Head from 'next/head'
 
 type WebAppProps = {
   providedUserAgent?: string
@@ -50,8 +50,8 @@ const WebApp = ({
         <AnalyticsProvider>
           <UserAgentProvider providedValue={providedUserAgent}>
             <MediaProgressContext>
-              <AudioProvider>
-                <AppVariableContext>
+              <AudioQueueProvider>
+                <AudioProvider>
                   <ThemeProvider>
                     <RootColorVariables />
                     <ColorContextProvider colorSchemeKey='auto'>
@@ -81,8 +81,8 @@ const WebApp = ({
                       </PaynotesProvider>
                     </ColorContextProvider>
                   </ThemeProvider>
-                </AppVariableContext>
-              </AudioProvider>
+                </AudioProvider>
+              </AudioQueueProvider>
             </MediaProgressContext>
           </UserAgentProvider>
         </AnalyticsProvider>

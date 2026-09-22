@@ -3,7 +3,7 @@ import { graphql } from '@apollo/client/react/hoc'
 
 import { Editorial, Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
-import { withRouter } from 'next/router'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useEffect } from 'react'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import withInNativeApp from '@/lib/withInNativeApp'
@@ -44,28 +44,46 @@ const appendQueryString = (target, queryString) => {
   }`
 }
 
+// Replaces withRouter: the graphql HOC below needs the current path in its
+// options/skip config, so it has to arrive as a prop rather than from a hook.
+const withCurrentPath = (WrappedComponent) => {
+  const WithCurrentPath = (props) => {
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+    const search = searchParams.toString()
+
+    return (
+      <WrappedComponent
+        {...props}
+        asPath={`${pathname}${search ? `?${search}` : ''}`}
+      />
+    )
+  }
+  return WithCurrentPath
+}
+
 const StatusError = ({
   clientRedirection,
   statusCode,
   t,
   loading,
   children,
-  router,
+  asPath,
   inNativeApp,
 }) => {
+  const router = useRouter()
   const isExternalClientRedirection =
     clientRedirection && isExternal(clientRedirection.target)
   // forward current query string
   // - this useful for utm preserving
   // - forwarding params to ultradashboard
-  const queryString = router.asPath.split('?')[1]
+  const queryString = asPath.split('?')[1]
   const clientRedirectionTarget =
     clientRedirection &&
     appendQueryString(clientRedirection.target, queryString)
-  const { isReady } = router
 
   useEffect(() => {
-    if (!clientRedirection || !isReady) {
+    if (!clientRedirection) {
       return
     }
     if (isExternalClientRedirection) {
@@ -95,7 +113,6 @@ const StatusError = ({
     }
   }, [
     clientRedirection,
-    isReady,
     clientRedirectionTarget,
     queryString,
     isExternalClientRedirection,
@@ -140,13 +157,11 @@ const StatusError = ({
 export default compose(
   withT,
   withInNativeApp,
-  withRouter,
+  withCurrentPath,
   graphql(getRedirect, {
     skip: (props) =>
-      props.statusCode !== 404 ||
-      !props.router.asPath ||
-      props.clientRedirection,
-    options: ({ router: { asPath } }) => ({
+      props.statusCode !== 404 || !props.asPath || props.clientRedirection,
+    options: ({ asPath }) => ({
       variables: {
         path: asPath.split('#')[0],
       },

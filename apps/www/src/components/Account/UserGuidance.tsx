@@ -1,11 +1,11 @@
-import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
+import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
+import withMe from '@/lib/apollo/withMe'
+import { useTranslation } from '@/lib/withT'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
 import Link from 'next/link'
-import withMe from '@/lib/apollo/withMe'
-import { useTranslation } from '@/lib/withT'
 import SignOut from '../Auth/SignOut'
 
 const UserGuidance = ({ me }) => {

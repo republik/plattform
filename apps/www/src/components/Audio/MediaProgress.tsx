@@ -1,3 +1,4 @@
+'use client'
 import { createContext, useContext, useMemo } from 'react'
 
 import debounce from 'lodash/debounce'

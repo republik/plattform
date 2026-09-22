@@ -1,11 +1,16 @@
 import { screenshotUrl } from '@/app/lib/util/screenshot-api'
-import { useRouter } from 'next/router'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import Meta from '../../../Frame/Meta'
 
 const QuestionnaireMeta = ({ share, shareText }) => {
-  const router = useRouter()
-  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const search = searchParams.toString()
+  const urlObj = new URL(
+    `${pathname}${search ? `?${search}` : ''}`,
+    PUBLIC_BASE_URL,
+  )
   const url = urlObj.toString()
 
   const shareImageUrlObj = urlObj

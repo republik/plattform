@@ -1,11 +1,12 @@
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
+import { fontStyles } from '@project-r/styleguide'
 import { IconDownload } from '@republik/icons'
+import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
 import { dateFormatter, formatMinutes } from '../shared'
 import AudioCover from './AudioCover'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
-import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
 
 const styles = {
   root: css({
@@ -24,6 +25,7 @@ const styles = {
     flexDirection: 'row',
     gap: 12,
     ...fontStyles.sansSerifRegular12,
+    color: token.var('colors.text'),
   }),
 }
 
@@ -40,8 +42,6 @@ const CurrentlyPlaying = ({
   handleOpen,
   handleDownload,
 }: CurrentlyPlayingProps) => {
-  const [colorScheme] = useColorContext()
-
   const {
     document: {
       meta: {
@@ -53,6 +53,8 @@ const CurrentlyPlaying = ({
         format,
         audioCoverCrop,
         coverMd,
+        cover,
+        coverDark,
       },
     },
   } = item
@@ -61,7 +63,8 @@ const CurrentlyPlaying = ({
     <div>
       <div {...styles.root}>
         <AudioCover
-          cover={coverMd}
+          cover={coverMd ?? cover}
+          coverDark={coverDark}
           size={90}
           image={image}
           format={format?.meta}
@@ -78,7 +81,7 @@ const CurrentlyPlaying = ({
             />
           )}
 
-          <div {...styles.metaWrapper} {...colorScheme.set('color', 'text')}>
+          <div {...styles.metaWrapper}>
             <span>
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}
             </span>

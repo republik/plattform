@@ -2,14 +2,14 @@ import {
   NL_COURSES,
   NL_FEATURED,
   NL_MORE,
-} from '@/app/components/newsletters/config'
-import NewslettersOverview from '@/app/components/newsletters/newsletters-overview'
+} from '@/app/(sanity)/components/newsletters/config'
+import NewslettersOverview from '@/app/(sanity)/components/newsletters/newsletters-overview'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 
 import AccountTabs from '@/components/Account/AccountTabs'
 import { AccountEnforceMe } from '@/components/Account/Elements'
 import Frame from '@/components/Frame'
-import { withDefaultSSR } from '@/lib/apollo/helpers'
+import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
 import withT from '@/lib/withT'
 import compose from 'lodash/flowRight'
@@ -35,4 +35,6 @@ const SettingsPage = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT)(SettingsPage))
+export default compose(withT)(SettingsPage)
+
+export const getServerSideProps = defaultServerSideProps
