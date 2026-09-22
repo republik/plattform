@@ -1,7 +1,7 @@
 import { logger } from '@orbiting/backend-modules-logger'
 import { sanityClient } from './client'
 import { draftIdFor } from './document'
-import { withReleaseUnlock } from './releaseLock'
+import { ReleaseNotMutableError, withReleaseUnlock } from './releaseLock'
 
 // True when a mutation was rejected because its target document doesn't
 // exist — distinct from a lock rejection (see releaseLock.ts), and not
@@ -15,6 +15,19 @@ function isDocumentNotFoundError(err: unknown): boolean {
     err as { details?: { items?: { error?: { type?: string } }[] } } | null
   )?.details?.items
   return Boolean(items?.some((item) => item.error?.type === 'documentNotFoundError'))
+}
+
+// True for either way a versioned document can turn out to be unwritable by
+// the time we get to it: it's gone outright (isDocumentNotFoundError), or
+// its release moved into a state withReleaseUnlock has no recovery path for
+// — confirmed live: a release that's already `published` rejects the
+// mutation outright ("Documents in release ... (state: published) can not
+// be mutated", a validationError, not a documentNotFoundError) rather than
+// the version document simply vanishing the way an unscheduled/deleted
+// release does. Both mean the same thing for us: this write's real target
+// is done, fall back to the draft.
+function isUnrecoverableVersionError(err: unknown): boolean {
+  return isDocumentNotFoundError(err) || err instanceof ReleaseNotMutableError
 }
 
 // Every write in this file goes through this: locked-release handling (via
@@ -50,12 +63,12 @@ async function withDraftSync<T>(
       doPatch(documentId),
     )
   } catch (err) {
-    if (!isDocumentNotFoundError(err)) throw err
+    if (!isUnrecoverableVersionError(err)) throw err
     logger.error(
       { documentId, draftId, err },
-      `sanity audio: version document no longer exists when ${action} ` +
-        '(release published or schedule cancelled while generation was in ' +
-        'flight) — falling back to the draft',
+      `sanity audio: version document no longer writable when ${action} ` +
+        '(release published, archived, or schedule cancelled while ' +
+        'generation was in flight) — falling back to the draft',
     )
     return doPatch(draftId)
   }

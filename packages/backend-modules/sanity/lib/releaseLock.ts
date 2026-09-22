@@ -48,6 +48,28 @@ import { releaseIdFromVersionId } from './document'
 
 const LOCKED_STATES = new Set(['scheduled', 'scheduling'])
 
+// Thrown instead of attempting the mutation when a release is in a state
+// this guard has no recovery path for — confirmed live: a "published"
+// release's documents are rejected with "Documents in release ... (state:
+// published) can not be mutated", a validationError, not the
+// documentNotFoundError this module otherwise expects once a release is
+// done with. Unlike "scheduled"/"scheduling" there's no unscheduling a
+// published (or archived, or a release transitioning toward either) release
+// back into a mutable state — callers should treat this the same as a
+// vanished document and fall back to the draft (see audio.ts's
+// isUnrecoverableVersionError).
+export class ReleaseNotMutableError extends Error {
+  constructor(releaseId: string, state: string) {
+    super(
+      `release "${releaseId}" is in state "${state}" and its documents can ` +
+        'not be mutated (only "active", "scheduled" and "scheduling" ' +
+        'releases can be) — there is no unscheduling/relocking this back ' +
+        'into a mutable state',
+    )
+    this.name = 'ReleaseNotMutableError'
+  }
+}
+
 const ACTION_ATTEMPTS = 3
 const ACTION_RETRY_DELAY_MS = 1000
 
@@ -107,7 +129,13 @@ export async function withReleaseUnlock<T>(
     session.refCount++
   } else {
     const release = await client.releases.get({ releaseId })
-    if (!release || !LOCKED_STATES.has(release.state)) return mutate()
+    if (!release) return mutate()
+    if (!LOCKED_STATES.has(release.state)) {
+      if (release.state !== 'active') {
+        throw new ReleaseNotMutableError(releaseId, release.state)
+      }
+      return mutate()
+    }
 
     const publishAt = release.publishAt ?? release.metadata.intendedPublishAt
     if (!publishAt) return mutate() // can't relock without a target time — don't unlock either

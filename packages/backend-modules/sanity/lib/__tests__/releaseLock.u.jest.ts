@@ -1,4 +1,4 @@
-import { withReleaseUnlock } from '../releaseLock'
+import { ReleaseNotMutableError, withReleaseUnlock } from '../releaseLock'
 
 function fakeClient(overrides: {
   get?: jest.Mock
@@ -47,6 +47,25 @@ describe('withReleaseUnlock', () => {
     expect(unschedule).not.toHaveBeenCalled()
     expect(schedule).not.toHaveBeenCalled()
   })
+
+  it.each(['published', 'publishing', 'archived', 'archiving', 'unarchiving'])(
+    'throws ReleaseNotMutableError for a %s release, without attempting to mutate/unschedule/schedule',
+    async (state) => {
+      const get = jest.fn().mockResolvedValue({ state })
+      const unschedule = jest.fn()
+      const schedule = jest.fn()
+      const client = fakeClient({ get, unschedule, schedule })
+      const mutate = jest.fn().mockResolvedValue('done')
+
+      await expect(
+        withReleaseUnlock(client, 'versions.r1.abc123', mutate),
+      ).rejects.toThrow(ReleaseNotMutableError)
+
+      expect(mutate).not.toHaveBeenCalled()
+      expect(unschedule).not.toHaveBeenCalled()
+      expect(schedule).not.toHaveBeenCalled()
+    },
+  )
 
   it('unschedules, mutates, then re-schedules to the same publishAt when locked', async () => {
     const get = jest.fn().mockResolvedValue({

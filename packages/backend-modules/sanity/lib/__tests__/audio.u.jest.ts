@@ -13,7 +13,10 @@ jest.mock('@orbiting/backend-modules-logger', () => ({
 // withReleaseUnlock has its own dedicated test suite (releaseLock.u.jest.ts) —
 // mocked here as a passthrough so these tests exercise only withDraftSync's
 // own not-found-fallback/mirror-to-draft logic, not the lock guard's internals.
+// ReleaseNotMutableError is kept real (not mocked) so `instanceof` checks in
+// audio.ts's isUnrecoverableVersionError still work against errors built here.
 jest.mock('../releaseLock', () => ({
+  ReleaseNotMutableError: jest.requireActual('../releaseLock').ReleaseNotMutableError,
   withReleaseUnlock: (
     _client: unknown,
     _documentId: string,
@@ -29,11 +32,15 @@ import {
   reportAudioGenerationError,
   reportAudioGenerationSuccess,
 } from '../audio'
+import { ReleaseNotMutableError } from '../releaseLock'
 
 const notFoundError = () =>
   Object.assign(new Error('not found'), {
     details: { items: [{ error: { type: 'documentNotFoundError' } }] },
   })
+
+const releaseNotMutableError = () =>
+  new ReleaseNotMutableError('r1', 'published')
 
 // Generic chainable patch-builder shared by the fallback/mirror tests below —
 // every method (however many a given call site chains) just returns the same
@@ -501,6 +508,44 @@ describe('reportAudioGenerationError', () => {
     expect(loggerError).not.toHaveBeenCalledWith(
       expect.anything(),
       expect.stringContaining('failed to mirror'),
+    )
+  })
+
+  // Reproduces a live incident: a release already in state "published"
+  // rejects the mutation with a validationError ("Documents in release ...
+  // (state: published) can not be mutated"), not a documentNotFoundError —
+  // withReleaseUnlock (releaseLock.ts) throws ReleaseNotMutableError for
+  // this case, and withDraftSync must still fall back to the draft for it,
+  // the same as a genuinely vanished document.
+  it('falls back to the draft when the release is no longer mutable (e.g. already published)', async () => {
+    const failingChain = chainable(
+      jest.fn().mockRejectedValue(releaseNotMutableError()),
+    )
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? failingChain : succeedingChain,
+    )
+
+    await expect(
+      reportAudioGenerationError('versions.r1.doc-1', new Error('boom')),
+    ).resolves.toBeUndefined()
+
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentId: 'versions.r1.doc-1',
+        draftId: 'drafts.doc-1',
+      }),
+      expect.stringContaining('falling back to the draft'),
+    )
+    // The bug this reproduces: without recognizing ReleaseNotMutableError,
+    // the fallback never runs and this "report the failure" call itself
+    // fails, logging "failed to report audio generation error" instead.
+    expect(loggerError).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining('failed to report audio generation error'),
     )
   })
 
