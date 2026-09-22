@@ -12,7 +12,9 @@ import {
   resolveFormatRepoId,
 } from './articleDoc'
 import { resolveAssetMarkers } from './assets'
+import { resolveContributorRefs } from './contributors'
 import { DiscussionRef, linkLegacyDiscussion } from './discussionRef'
+import { buildEditorialSignOffs, fetchChecklistMilestones } from './editorialSignOffs'
 import { isArticleLikeMeta } from './eligibility'
 import { fetchFormatFields } from './formatFields'
 import { linkLegacySyntheticAudio } from './legacyAudio'
@@ -130,7 +132,13 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
       resolveFormatRepoId(commit.meta),
       pgdb,
     )
-    const doc = await resolveAssetMarkers(withFormatFields)
+    const withSignOffs = await this.fetchEditorialSignOffsSafely(
+      withFormatFields,
+      data.repoId,
+      pgdb,
+    )
+    const assetResolvedDoc = await resolveAssetMarkers(withSignOffs)
+    const doc = await resolveContributorRefs(assetResolvedDoc)
 
     if (data.action === 'commit') {
       const draftDoc = await this.linkLegacyAudioSafely(
@@ -205,6 +213,29 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
       this.logger.warn(
         { error, formatRepoId },
         'sanity sync: format-derived fields failed (article content still synced)',
+      )
+      return doc
+    }
+  }
+
+  // Best-effort, same reasoning as resolveFormatDerivedFieldsSafely above: a
+  // transient Postgres hiccup fetching the checklist must never fail the
+  // whole sync job over a field that's a status mirror, not the article's
+  // own content. On failure the doc simply keeps no editorialSignOffs for
+  // this write, same tradeoff every other *Safely step here already accepts.
+  private async fetchEditorialSignOffsSafely(
+    doc: DraftArticleDoc,
+    repoId: string,
+    pgdb: ConnectionContext['pgdb'],
+  ): Promise<DraftArticleDoc> {
+    try {
+      const milestones = await fetchChecklistMilestones(repoId, pgdb)
+      const editorialSignOffs = buildEditorialSignOffs(milestones)
+      return editorialSignOffs ? { ...doc, editorialSignOffs } : doc
+    } catch (error) {
+      this.logger.warn(
+        { error, repoId },
+        'sanity sync: fetching editorial checklist failed (article content still synced)',
       )
       return doc
     }

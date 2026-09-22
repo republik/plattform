@@ -5,6 +5,13 @@ const {
 
 const { updateCurrentPhase } = require('../../../lib/postgres')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+} = require('@orbiting/backend-modules-sanity')
+
 module.exports = async (_, { repoId, name }, context) => {
   const { user, pgdb, pubsub } = context
   ensureUserHasRole(user, 'editor')
@@ -28,6 +35,13 @@ module.exports = async (_, { repoId, name }, context) => {
     await updateCurrentPhase(repoId, tx)
 
     await tx.transactionCommit()
+
+    // SANITY_SYNC (transition period, removable): see placeMilestone.js's
+    // matching call — unchecking a checklist item must reach Sanity's
+    // editorialSignOffs just as promptly as checking one does.
+    if (isSyncFromPublikatorEnabled()) {
+      await enqueueSyncFromPublikator({ repoId, action: 'commit' })
+    }
 
     // @TODO: Safe to remove, once repoChange is adopted
     await pubsub.publish('repoUpdate', {

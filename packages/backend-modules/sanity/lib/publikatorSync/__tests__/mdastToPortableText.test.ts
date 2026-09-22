@@ -236,4 +236,67 @@ describe('publikatorSync/mdastToPortableText', () => {
       )
     })
   })
+
+  describe('contributor references', () => {
+    const AUTHOR_ID = 'b4c26f2e-6c1f-4f00-8d1f-b1b4a3e1a697'
+
+    it('flags an AUTHOR zone contributor ref for lookup, with a title hint from resolvedAuthor', () => {
+      const [block] = mdastToPortableText([
+        {
+          type: 'zone',
+          identifier: 'AUTHOR',
+          data: {
+            authorId: AUTHOR_ID,
+            resolvedAuthor: { name: 'Nina Schick' },
+          },
+          children: [],
+        },
+      ]) as Record<string, any>[]
+
+      expect(block.contributor._sanityContributor).toEqual({
+        userId: AUTHOR_ID,
+        title: 'Nina Schick',
+      })
+    })
+
+    it('flags a /~<uuid> byline profile link for lookup, using the visible text as the title hint', () => {
+      const [block] = mdastToPortableText([
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              url: `/~${AUTHOR_ID}`,
+              children: [{ type: 'text', value: 'Nina Schick' }],
+            },
+          ],
+        },
+      ]) as Record<string, any>[]
+
+      const markDef = block.markDefs[0]
+      expect(markDef.reference._sanityContributor).toEqual({
+        userId: AUTHOR_ID,
+        title: 'Nina Schick',
+      })
+    })
+
+    it('does not flag a /~<username> byline profile link (no real userId to look up)', () => {
+      const [block] = mdastToPortableText([
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              url: '/~ninaschick',
+              children: [{ type: 'text', value: 'Nina Schick' }],
+            },
+          ],
+        },
+      ]) as Record<string, any>[]
+
+      const markDef = block.markDefs[0]
+      expect(markDef.reference._sanityContributor).toBeUndefined()
+      expect(markDef.reference._ref).toBeDefined()
+    })
+  })
 })

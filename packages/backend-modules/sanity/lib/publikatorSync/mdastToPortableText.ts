@@ -29,8 +29,21 @@ const CONTRIBUTOR_NAMESPACE = uuidV5(
 )
 
 // Matches generateUUID.ts#contributorToSanityUUID in studio.
-const contributorToSanityUUID = (key: string) =>
+export const contributorToSanityUUID = (key: string) =>
   uuidV5(key.trim(), CONTRIBUTOR_NAMESPACE)
+
+// Attached to a contributor `reference` object by this file, read and
+// stripped by contributors.ts's resolveContributorRefs before the doc is
+// written: `_ref` above is only ever the *deterministic* id, computed with
+// no knowledge of whether a contributor doc actually exists there. A
+// contributor profile hand-created in Sanity Studio gets a random `_id`
+// instead, so the deterministic ref can point at nothing. This marker lets
+// the post-processing pass look the real document up by `userId` first,
+// falling back to creating one at the deterministic id only if none exists.
+export interface ContributorRefMarker {
+  userId: string
+  title?: string
+}
 
 // ── MDAST types ───────────────────────────────────────────────────────────────
 
@@ -429,17 +442,24 @@ function inlineToSpans(
           reference: { _type: 'reference', _ref: ref, _weak: true },
         })
       } else if (profileSlug(link.url)) {
-        // author profile link (byline) → internal link to the contributor
+        // author profile link (byline) → internal link to the contributor.
+        // Only a `/~<uuid>` slug is a real Publikator userId that a
+        // contributor doc's own `userId` field can be looked up by — a
+        // `/~<username>` slug falls back to hashing the visible link text
+        // (see contributorLinkId), which isn't a queryable identity, so the
+        // resolve-marker is only attached in the userId case.
+        const slug = profileSlug(link.url) as string
+        const linkText = extractInlineText(children).trim()
         markDefs.push({
           _key: markKey,
           _type: 'internalLink',
           reference: {
             _type: 'reference',
-            _ref: contributorLinkId(
-              profileSlug(link.url) as string,
-              extractInlineText(children).trim(),
-            ),
+            _ref: contributorLinkId(slug, linkText),
             _weak: true,
+            ...(UUID_RE.test(slug)
+              ? { _sanityContributor: { userId: slug, title: linkText } }
+              : {}),
           },
         })
       } else {
@@ -1049,6 +1069,10 @@ function zoneToItems(
         contributor: {
           _type: 'reference',
           _ref: contributorToSanityUUID(authorId),
+          _sanityContributor: {
+            userId: authorId,
+            title: resolvedAuthor.name as string | undefined,
+          },
         },
         credentialText,
         large: Boolean(data.isLarge),
