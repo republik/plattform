@@ -1,6 +1,6 @@
 import { MenuBlockFragmentType } from '@/app/(sanity)/groq/menu-block-fragment'
-import { css } from '@republik/theme/css'
 import Link from '@/app/components/ui/link'
+import { css } from '@republik/theme/css'
 
 function MenuItem({ href, title, color }) {
   return (
@@ -70,7 +70,7 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
         {pages?.map((item) => (
           <MenuItem
             color={item._type === 'reference' && item.page.color}
-            key={item._type === 'link' ? item.href : item.page.slug}
+            key={item._key}
             href={item._type === 'link' ? item.href : item.page.slug}
             title={
               item._type === 'link' ? item.title ?? item.href : item.page.title
