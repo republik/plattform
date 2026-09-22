@@ -23,10 +23,12 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
     markDefs[]{
       ...,
       _type == "internalLink" => {
-        "slug": ${REFERENCE_SLUG}
+        "slug": ${REFERENCE_SLUG},
+        "_id": reference->_id
       },
       _type == "expandableLink" => {
         "slug": ${REFERENCE_SLUG},
+        "_id": reference->_id,
         "referenceTitle": ${REFERENCE_TITLE}
       }
     },

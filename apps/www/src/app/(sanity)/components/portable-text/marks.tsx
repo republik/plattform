@@ -1,6 +1,6 @@
+import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import type { PortableTextMarkComponentProps } from 'next-sanity'
-import Link from '@/app/components/ui/link'
 import type { ReactNode } from 'react'
 
 export function Strong({ children }: { children?: ReactNode }) {
@@ -40,18 +40,12 @@ const linkStyle = css({
 })
 
 export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
-  const href = value?.slug
+  const href = value?.slug ?? `/permalink/${value?._id}`
 
-  if (!href) {
-    console.warn('Internal link without href', value, { text })
-  }
-
-  return href ? (
+  return (
     <Link href={href} className={linkStyle}>
       {text}
     </Link>
-  ) : (
-    text
   )
 }
 
