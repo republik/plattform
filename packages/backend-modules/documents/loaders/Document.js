@@ -27,10 +27,20 @@ const {
 // need to reject the wrong kind of document (collections accept only articles,
 // while subscriptions legitimately target formats — so the loader itself stays
 // permissive). Not a GraphQL field; nothing exposes this stub as a `Document`.
+//
+// `sanityRef` is the canonical `sanity:`-prefixed ref for `doc`, independent
+// of which key (`documentRef`) actually matched it -- a legacy repoId whose
+// content has since moved to Sanity (the "rescued" case below) keeps
+// `documentRef`/`meta.repoId` unprefixed on purpose (see that case's own
+// comment), so callers that need to tell "is this Sanity-backed" apart from
+// a still-publikator row, and build a real Sanity reference for it, must
+// read this field rather than inspect `documentRef`'s shape (see
+// subscriptions/lib/genericObject.js).
 const toDocumentShape = (documentRef, doc) => ({
   id: documentRef,
   repoId: documentRef,
   sanityType: doc._type,
+  sanityRef: toSanityRef(doc._id),
   meta: { repoId: documentRef, title: doc.title, path: doc.slug?.current },
   __typename: 'Document',
 })
