@@ -29,6 +29,18 @@ jest.mock('../assets', () => ({
   resolveAssetMarkers: (doc: unknown) => Promise.resolve(doc),
 }))
 
+jest.mock('../contributors', () => ({
+  resolveContributorRefs: (doc: unknown) => Promise.resolve(doc),
+}))
+
+const fetchChecklistMilestones = jest.fn().mockResolvedValue([])
+
+jest.mock('../editorialSignOffs', () => ({
+  fetchChecklistMilestones: (...args: unknown[]) =>
+    fetchChecklistMilestones(...args),
+  buildEditorialSignOffs: () => undefined,
+}))
+
 const fetchFormatFields = jest.fn().mockResolvedValue(undefined)
 
 jest.mock('../formatFields', () => ({

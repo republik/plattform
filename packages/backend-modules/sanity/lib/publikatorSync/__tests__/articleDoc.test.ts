@@ -209,6 +209,88 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
     })
   })
 
+  describe('articleRecommendations', () => {
+    it('resolves meta.recommendations links into weak references', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: {
+          recommendations: [
+            'https://github.com/republik/article-a',
+            'republik/article-b',
+          ],
+        },
+      })
+
+      expect(doc.articleRecommendations).toEqual([
+        {
+          _key: expect.any(String),
+          _type: 'reference',
+          _ref: repoIdToSanityId('republik/article-a'),
+          _weak: true,
+        },
+        {
+          _key: expect.any(String),
+          _type: 'reference',
+          _ref: repoIdToSanityId('republik/article-b'),
+          _weak: true,
+        },
+      ])
+    })
+
+    it('drops non-republik entries without failing the rest of the list', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: {
+          recommendations: [
+            'https://example.com/not-a-repo',
+            'republik/article-a',
+          ],
+        },
+      })
+
+      expect(doc.articleRecommendations).toEqual([
+        {
+          _key: expect.any(String),
+          _type: 'reference',
+          _ref: repoIdToSanityId('republik/article-a'),
+          _weak: true,
+        },
+      ])
+    })
+
+    it('caps the list at 5, matching the schema\'s rule.max(5)', () => {
+      const recommendations = Array.from(
+        { length: 7 },
+        (_, i) => `republik/article-${i}`,
+      )
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { recommendations },
+      })
+
+      expect(doc.articleRecommendations).toHaveLength(5)
+    })
+
+    it('is left unset when meta.recommendations is missing, empty, or not an array', () => {
+      expect(
+        buildDraftArticleDoc({ content: { children: [] }, meta: {} })
+          .articleRecommendations,
+      ).toBeUndefined()
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { recommendations: [] },
+        }).articleRecommendations,
+      ).toBeUndefined()
+      expect(
+        buildDraftArticleDoc({
+          content: { children: [] },
+          meta: { recommendations: 'not-an-array' },
+        }).articleRecommendations,
+      ).toBeUndefined()
+    })
+  })
+
   describe('resolveFormatRepoId', () => {
     it('normalizes a full GitHub URL to owner/repo', () => {
       expect(
