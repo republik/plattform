@@ -1,7 +1,7 @@
 import { logger } from '@orbiting/backend-modules-logger'
 import { sanityClient } from './client'
-import { draftIdFor } from './document'
-import { withReleaseUnlock } from './releaseLock'
+import { draftIdFor, publishedIdFor } from './document'
+import { ReleaseNotMutableError, withReleaseUnlock } from './releaseLock'
 
 // True when a mutation was rejected because its target document doesn't
 // exist — distinct from a lock rejection (see releaseLock.ts), and not
@@ -17,37 +17,105 @@ function isDocumentNotFoundError(err: unknown): boolean {
   return Boolean(items?.some((item) => item.error?.type === 'documentNotFoundError'))
 }
 
+// True for either way a versioned document can turn out to be unwritable by
+// the time we get to it: it's gone outright (isDocumentNotFoundError), or
+// its release moved into a state withReleaseUnlock has no recovery path for
+// (any ReleaseNotMutableError — see releaseLock.ts). A `published` release
+// gets its own, more specific recovery in withDraftSync below (its content
+// merged into a real, mutable published document); this covers the rest
+// (archived, or a genuinely vanished document), where falling back to the
+// draft is the only option.
+function isUnrecoverableVersionError(err: unknown): boolean {
+  return isDocumentNotFoundError(err) || err instanceof ReleaseNotMutableError
+}
+
 // Every write in this file goes through this: locked-release handling (via
-// withReleaseUnlock) plus a fallback to the draft when documentId itself no
-// longer exists — TTS generation is async and can take real time, and if the
-// release promotes (publish) or gets unscheduled/deleted while a generation
-// is still in flight, `versions.<release>.<id>` is simply gone by the time
-// any of these run. Rather than lose that write with nothing but a server
-// log to show for it, fall back to the draft (always still there) and log
-// loudly: this needs a human to notice (most likely the article already
-// published without its audio, or the schedule was cancelled) and reconcile
-// from the draft's history. `doPatch` receives the id to target, so it can
-// be applied to either documentId or, on fallback, its draft.
-async function withDraftFallback<T>(
+// withReleaseUnlock) against documentId, plus keeping the draft permanently
+// up to date with the same write. Editors are almost always looking at the
+// draft in Studio, not the scheduled/published version — so whenever
+// documentId isn't already the draft itself, the same patch is also mirrored
+// onto draftIdFor(documentId) once the primary write succeeds. That mirror
+// write is best-effort: it's never allowed to fail the caller, since the
+// primary write (the one actually gating claim/success/error semantics)
+// already landed.
+//
+// TTS generation is async and can take real time, and the release backing
+// `documentId` can move on while it's in flight. Two different things can
+// have happened by the time any of these run:
+//   - The release already PUBLISHED: its version content already merged
+//     into the real published document (a normal, mutable, non-versioned
+//     doc) — that's the live target now, not a vanished one. Patch it
+//     directly (making this generation the article's current audio version,
+//     same as if it had finished before publish), then still mirror onto
+//     the draft below, same as the ordinary success path — both the
+//     published document and the draft must end up with this write.
+//   - Anything else unrecoverable (archived, or the document genuinely gone
+//     because a schedule was cancelled/deleted): there's no live document to
+//     redirect to, so fall back to the draft (always still there) and log
+//     loudly — this needs a human to notice and reconcile from the draft's
+//     history.
+// `doPatch` receives the id to target, so it can be applied to documentId,
+// the published id, the draft, or a combination.
+async function withDraftSync<T>(
   documentId: string,
   action: string,
   doPatch: (id: string) => Promise<T>,
 ): Promise<T> {
+  const draftId = draftIdFor(documentId)
+  const isVersioned = draftId !== documentId
+
+  let result: T
   try {
-    return await withReleaseUnlock(sanityClient(), documentId, () =>
+    result = await withReleaseUnlock(sanityClient(), documentId, () =>
       doPatch(documentId),
     )
   } catch (err) {
-    if (!isDocumentNotFoundError(err)) throw err
-    const draftId = draftIdFor(documentId)
-    logger.error(
-      { documentId, draftId, err },
-      `sanity audio: version document no longer exists when ${action} ` +
-        '(release published or schedule cancelled while generation was in ' +
-        'flight) — falling back to the draft',
-    )
-    return doPatch(draftId)
+    if (err instanceof ReleaseNotMutableError && err.state === 'published') {
+      const publishedId = publishedIdFor(documentId)
+      try {
+        result = await doPatch(publishedId)
+        logger.error(
+          { documentId, publishedId, err },
+          `sanity audio: release already published when ${action} — ` +
+            'patched the live published document instead',
+        )
+      } catch (publishErr) {
+        logger.error(
+          { documentId, publishedId, err: publishErr },
+          `sanity audio: failed to patch the published document when ` +
+            `${action} after its release published — falling back to the draft`,
+        )
+        return doPatch(draftId)
+      }
+      // Falls through to the draft-mirror step below, same as any other
+      // successful primary write — both the published doc and the draft
+      // must get this write, not one or the other.
+    } else if (isUnrecoverableVersionError(err)) {
+      logger.error(
+        { documentId, draftId, err },
+        `sanity audio: version document no longer writable when ${action} ` +
+          '(release archived, or schedule cancelled while generation was ' +
+          'in flight) — falling back to the draft',
+      )
+      return doPatch(draftId)
+    } else {
+      throw err
+    }
   }
+
+  if (isVersioned) {
+    try {
+      await doPatch(draftId)
+    } catch (err) {
+      logger.error(
+        { documentId, draftId, err },
+        `sanity audio: failed to mirror ${action} onto the draft (the ` +
+          'scheduled/published write itself succeeded)',
+      )
+    }
+  }
+
+  return result
 }
 
 // Portable text: a heterogeneous array of block/object nodes. The exact
@@ -192,8 +260,9 @@ export const claimAudioGeneration = async (
 ): Promise<boolean> => {
   // ifRevisionId only makes sense against documentId itself — rev was read
   // from that document, and would just always conflict (409) if reused
-  // against the draft on a not-found fallback, since the draft's own
-  // revision has nothing to do with it. Omitted on the fallback attempt.
+  // against the draft (whether mirrored or a not-found fallback), since the
+  // draft's own revision has nothing to do with it. Omitted whenever id
+  // isn't the original documentId.
   const doPatch = (id: string) => {
     let patch = sanityClient().patch(id)
     if (id === documentId) patch = patch.ifRevisionId(rev)
@@ -217,7 +286,7 @@ export const claimAudioGeneration = async (
   }
 
   try {
-    await withDraftFallback(documentId, 'claiming the generation slot', doPatch)
+    await withDraftSync(documentId, 'claiming the generation slot', doPatch)
     return true
   } catch (error) {
     if ((error as { statusCode?: number } | null)?.statusCode === 409) {
@@ -249,7 +318,7 @@ export const markPendingVersionError = (
         [`${path}.error`]: errorMessage(error),
       })
       .commit({ autoGenerateArrayKeys: true })
-  return withDraftFallback(
+  return withDraftSync(
     documentId,
     'marking a pending generation as failed',
     doPatch,
@@ -293,20 +362,26 @@ export interface AudioVersion {
 // generation in `audioVersions` (the full history, browsable/restorable in
 // Studio) in the same commit, so the two never drift out of sync.
 //
-// When `pendingKey` identifies the placeholder claimAudioGeneration inserted
-// for this run, the finished entry replaces it in place (same _key) rather
-// than being appended — the replacement object has no `status`/`contentHash`
-// fields, so it reads exactly like every other finished entry once written.
-// Falls back to appending when no matching placeholder exists (a generation
-// kicked off before this placeholder mechanism existed, or one whose
-// placeholder was already cleaned up by removePendingVersion).
+// The finished entry replaces claimAudioGeneration's placeholder in place
+// (same _key) rather than being appended — the replacement object has no
+// `status`/`contentHash` fields, so it reads exactly like every other
+// finished entry once written. Falls back to appending when no matching
+// placeholder exists (a generation kicked off before this placeholder
+// mechanism existed, or one whose placeholder was already cleaned up).
+//
+// Since withDraftSync now mirrors this write onto the draft in addition to
+// documentId, the placeholder's _key isn't shared between the two documents
+// (each claim inserted its own placeholder, independently, into each) — so
+// the matching key is looked up per target id here, rather than once by the
+// caller for documentId alone.
 export const recordAudioVersion = (
   documentId: string,
   currentFields: Record<string, unknown>,
   version: AudioVersion,
-  pendingKey: string | undefined,
+  contentHash: string,
 ) => {
-  const doPatch = (id: string) => {
+  const doPatch = async (id: string) => {
+    const pendingKey = await fetchPendingVersionKey(id, contentHash)
     const patch = sanityClient().patch(id).set(currentFields)
     if (pendingKey) {
       patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
@@ -315,7 +390,7 @@ export const recordAudioVersion = (
     }
     return patch.commit({ autoGenerateArrayKeys: true })
   }
-  return withDraftFallback(documentId, 'recording generated audio', doPatch)
+  return withDraftSync(documentId, 'recording generated audio', doPatch)
 }
 
 export const uploadAudioAsset = (buffer: Buffer, filename: string) =>
@@ -347,7 +422,7 @@ export const reportAudioGenerationError = async (
       })
       .commit({ autoGenerateArrayKeys: true })
   try {
-    await withDraftFallback(documentId, 'reporting a generation error', doPatch)
+    await withDraftSync(documentId, 'reporting a generation error', doPatch)
   } catch (e) {
     logger.error(
       { error: e },
@@ -367,5 +442,5 @@ export const reportAudioGenerationSuccess = (documentId: string) => {
         },
       })
       .commit({ autoGenerateArrayKeys: true })
-  return withDraftFallback(documentId, 'reporting a successful generation', doPatch)
+  return withDraftSync(documentId, 'reporting a successful generation', doPatch)
 }

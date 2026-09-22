@@ -1,5 +1,4 @@
 const fetchAudioContentHash = jest.fn()
-const fetchPendingVersionKey = jest.fn()
 const markPendingVersionError = jest.fn().mockResolvedValue(undefined)
 const recordAudioVersion = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationSuccess = jest.fn().mockResolvedValue(undefined)
@@ -8,7 +7,6 @@ const uploadAudioAsset = jest.fn()
 
 jest.mock('../../lib/audio', () => ({
   fetchAudioContentHash: (...args: unknown[]) => fetchAudioContentHash(...args),
-  fetchPendingVersionKey: (...args: unknown[]) => fetchPendingVersionKey(...args),
   markPendingVersionError: (...args: unknown[]) => markPendingVersionError(...args),
   recordAudioVersion: (...args: unknown[]) => recordAudioVersion(...args),
   reportAudioGenerationSuccess: (...args: unknown[]) =>
@@ -38,7 +36,6 @@ function fakeReq() {
 describe('processResult (huebsch webhook idempotency)', () => {
   beforeEach(() => {
     fetchAudioContentHash.mockReset()
-    fetchPendingVersionKey.mockReset().mockResolvedValue(undefined)
     markPendingVersionError.mockReset().mockResolvedValue(undefined)
     recordAudioVersion.mockReset().mockResolvedValue(undefined)
     reportAudioGenerationSuccess.mockReset().mockResolvedValue(undefined)
@@ -76,9 +73,8 @@ describe('processResult (huebsch webhook idempotency)', () => {
     expect(reportAudioGenerationSuccess).toHaveBeenCalledWith('drafts.doc-1')
   })
 
-  it('replaces the matching pending placeholder in place when one exists', async () => {
+  it('passes the contentHash through so recordAudioVersion can resolve its own pending placeholder', async () => {
     fetchAudioContentHash.mockResolvedValue(undefined)
-    fetchPendingVersionKey.mockResolvedValue('pending-key-1')
     parseHuebschResult.mockResolvedValue({
       audioFile: new Uint8Array([1, 2, 3]),
       chapters: undefined,
@@ -88,30 +84,12 @@ describe('processResult (huebsch webhook idempotency)', () => {
 
     await processResult(fakeReq(), 'drafts.doc-1', 'my-slug', 'hash-new', {})
 
-    expect(fetchPendingVersionKey).toHaveBeenCalledWith('drafts.doc-1', 'hash-new')
-    const [, , , pendingKey] = recordAudioVersion.mock.calls[0]
-    expect(pendingKey).toBe('pending-key-1')
-  })
-
-  it('falls back to appending when no matching pending placeholder exists', async () => {
-    fetchAudioContentHash.mockResolvedValue(undefined)
-    fetchPendingVersionKey.mockResolvedValue(undefined)
-    parseHuebschResult.mockResolvedValue({
-      audioFile: new Uint8Array([1, 2, 3]),
-      chapters: undefined,
-      durationMs: 12000,
-    })
-    uploadAudioAsset.mockResolvedValue({ _id: 'file-asset-1', url: 'https://x/a.mp3' })
-
-    await processResult(fakeReq(), 'drafts.doc-1', 'my-slug', 'hash-new', {})
-
-    const [, , , pendingKey] = recordAudioVersion.mock.calls[0]
-    expect(pendingKey).toBeUndefined()
+    const [, , , contentHash] = recordAudioVersion.mock.calls[0]
+    expect(contentHash).toBe('hash-new')
   })
 
   it('marks the matching placeholder as errored when Huebsch reports a failed generation, without rethrowing', async () => {
     fetchAudioContentHash.mockResolvedValue(undefined)
-    fetchPendingVersionKey.mockResolvedValue('pending-key-1')
     const failure = new Error('huebsch reported a failed generation')
     parseHuebschResult.mockRejectedValue(failure)
 
