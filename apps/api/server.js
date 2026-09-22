@@ -7,6 +7,10 @@ const {
 const {
   NotifyListener: SearchNotifyListener,
 } = require('@orbiting/backend-modules-search')
+const {
+  Listener: SearchTypesenseListener,
+  graphql: searchTypesense,
+} = require('@orbiting/backend-modules-search-typesense')
 const { t } = require('@orbiting/backend-modules-translate')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
@@ -37,7 +41,11 @@ const {
 const {
   graphql: nextReads,
   ReadingPositionRefreshWorker,
-  NextReadsFeedRefreshWorker,
+  Next7DaysFeedRefreshWorker,
+  Next20DaysCommentsFeedRefreshWorker,
+  SanityReadingPositionRefreshWorker,
+  SanityNext7DaysFeedRefreshWorker,
+  SanityNext20DaysCommentsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
 const {
   graphql: contributors,
@@ -106,6 +114,14 @@ const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail'
 
 const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
 const { CockpitWorker } = require('./workers/cockpit')
+const {
+  PublishNotificationWorker,
+  PublikatorSyncWorker,
+  isSyncFromPublikatorEnabled,
+} = require('@orbiting/backend-modules-sanity')
+const {
+  parseFeatureHeader,
+} = require('@orbiting/backend-modules-feature-flags')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -133,11 +149,16 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpEndedWorker,
     CockpitWorker,
     ReadingPositionRefreshWorker,
-    NextReadsFeedRefreshWorker,
+    Next7DaysFeedRefreshWorker,
+    Next20DaysCommentsFeedRefreshWorker,
+    SanityReadingPositionRefreshWorker,
+    SanityNext7DaysFeedRefreshWorker,
+    SanityNext20DaysCommentsFeedRefreshWorker,
     SlackNotifierWorker,
     // port of old schedulers
 
     StatsCacheWorker,
+    PublishNotificationWorker,
   ]
 
   if (
@@ -160,6 +181,13 @@ function setupQueue(context, monitorQueueState = undefined) {
     )
   }
 
+  // SANITY_SYNC (transition period, removable — see
+  // packages/backend-modules/sanity/lib/publikatorSync/index.ts). Registered
+  // only when enabled, so the queue is a no-op footprint otherwise.
+  if (isSyncFromPublikatorEnabled()) {
+    workers.push(PublikatorSyncWorker)
+  }
+
   queue.registerWorkers(workers)
 
   return queue
@@ -169,6 +197,7 @@ const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
+  SEARCH_TYPESENSE_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
@@ -211,6 +240,7 @@ const run = async (workerId, config) => {
     publikator,
     documents,
     search,
+    searchTypesense,
     redirections,
     discussions,
     notifications,
@@ -238,6 +268,7 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-invoices/express'),
     // needed for the gender sheet import
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
+    require('@orbiting/backend-modules-sanity/build/express'),
   ]
 
   if (MAIL_EXPRESS_RENDER) {
@@ -278,10 +309,14 @@ const run = async (workerId, config) => {
     const clientIp = forwardedFor
       ? forwardedFor.split(',')[0].trim()
       : defaultContext.req?.connection?.remoteAddress
+    const requestFeatures = parseFeatureHeader(
+      defaultContext.req?.headers['x-republik-features'],
+    )
     const context = {
       ...connectionContext,
       ...defaultContext,
       clientIp,
+      requestFeatures,
       t,
       signInHooks,
       mail,
@@ -342,6 +377,11 @@ const runOnce = async () => {
   let searchNotifyListener
   if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
     searchNotifyListener = await SearchNotifyListener.start(context)
+  }
+
+  let searchTypesenseListener
+  if (SEARCH_TYPESENSE_LISTENER && SEARCH_TYPESENSE_LISTENER !== 'false') {
+    searchTypesenseListener = await SearchTypesenseListener.start(context)
   }
 
   let accessScheduler
@@ -415,11 +455,19 @@ const runOnce = async () => {
     )
     await queue.schedule(
       'next_reads:reading_position',
-      '*/45 * * * *', // every 45 minutes
+      '7 2,14 * * *', // twice daily: 02:07 and 14:07 UTC (night + midday/afternoon)
     )
     await queue.schedule(
-      'next_reads:feed:refresh',
-      '*/60 * * * *', // every 60 minutes
+      'next_reads:feed:20days:refresh',
+      '37 */3 * * *', // every 3 hours, independent of reading_position
+    )
+    await queue.schedule(
+      'next_reads_sanity:reading_position',
+      '22 2,14 * * *', // twice daily, offset 15min from next_reads:reading_position
+    )
+    await queue.schedule(
+      'next_reads_sanity:feed:20days:refresh',
+      '52 */3 * * *', // every 3 hours, offset from next_reads:feed:20days:refresh; independent of reading_position
     )
   }
 
@@ -449,6 +497,7 @@ const runOnce = async () => {
     await Promise.all(
       [
         searchNotifyListener && searchNotifyListener.close(),
+        searchTypesenseListener && searchTypesenseListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
         databroomScheduler && databroomScheduler.close(),

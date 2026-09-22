@@ -1,0 +1,155 @@
+import { sanityClient } from './client'
+import { toSanityRef, legacySanityId } from './document'
+import type { PortableTextBlocks } from './audio'
+
+export interface ArticleForNotification {
+  _id: string
+  title?: PortableTextBlocks
+  pushNotificationText?: PortableTextBlocks
+  description?: PortableTextBlocks
+  byline?: PortableTextBlocks
+  slug?: { current: string }
+  // "format" — the article's `heading` reference (a `page`, labelled
+  // "Spitzmarke" elsewhere in studio, e.g.
+  // workspaces/newsroom/tools/wochenvorschau/helpers/articleQuery.ts).
+  // This is the branding/title/URL source for notifications, analogous to
+  // publikator's Format document — NOT the same as articleCollections,
+  // which govern who gets notified, not what the notification is branded as.
+  format?: { title?: string; path?: string } | null
+  articleCollections?: {
+    collection: { _id: string; title?: string } | null
+  }[]
+  contributors?: { contributor: { userId: string } | null }[]
+}
+
+export const fetchArticleForNotification = (documentId: string) =>
+  sanityClient().fetch<ArticleForNotification | null>(
+    `*[_id == $id][0]{
+      _id, title, pushNotificationText, description, byline, slug,
+      "format": heading->{ "title": pt::text(title), "path": slug.current },
+      articleCollections[]{ "collection": collection->{ _id, title } },
+      contributors[]{ "contributor": contributor->{ userId } }
+    }`,
+    { id: documentId },
+    { perspective: 'raw' },
+  )
+
+const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')
+
+// Existing subscriptions to a migrated Format are still keyed on its
+// pre-migration Publikator repoId, not the `sanity:`-prefixed ref its
+// migrated `articleCollection` counterpart resolves to elsewhere. Rather
+// than depend on the one-off, manually-run migrate-legacy-subscriptions.ts
+// script having already rewritten those rows, resolve them here the same
+// way next-reads' SanityNext20DaysCommentsFeedRefreshWorker resolves legacy
+// discussion refs: hash every candidate legacy repoId still on file and
+// keep the ones matching a collection this article actually references.
+const resolveLegacyRepoIdsForSanityIds = async (
+  sanityIds: string[],
+  pgdb: any,
+): Promise<string[]> => {
+  if (!sanityIds.length) {
+    return []
+  }
+
+  const candidateIds = new Set(sanityIds)
+  const rows: { objectDocumentId: string }[] = await pgdb.query(`
+    SELECT DISTINCT "objectDocumentId"
+    FROM subscriptions
+    WHERE "objectType" = 'Document'
+      AND "objectDocumentId" IS NOT NULL
+      AND "objectDocumentId" NOT LIKE 'sanity:%';
+  `)
+
+  return rows
+    .map((row) => row.objectDocumentId)
+    .filter((repoId) => {
+      const sanityId = legacySanityId(repoId)
+      return !!sanityId && candidateIds.has(sanityId)
+    })
+}
+
+// Who a publish notification for this article reaches: subscribers of its
+// articleCollections (topics/series — see that field's own description,
+// "Abonnenten dieser Sammlungen erhalten eine Benachrichtigung") plus
+// subscribers of its contributors (authors).
+//
+// The single definition of that rule. PublishNotificationWorker sends to these
+// lists and express/subscriberCount.ts counts them, and the count is only
+// worth showing an editor as long as it is the same resolution the send does —
+// two implementations would drift the first time the rule changes, silently.
+export const resolveNotificationRecipients = async (
+  article: ArticleForNotification,
+  context: any,
+): Promise<{ collectionSubscribers: any[]; authorSubscribers: any[] }> => {
+  // Subscriptions to Sanity-backed documents are stored (and looked up
+  // elsewhere, e.g. loaders.Document.byRepoId) under the `sanity:`-prefixed,
+  // published-id form — see toSanityRef. Without this, a bare Sanity _id
+  // here never matches the stored objectDocumentId and collection followers
+  // are silently invisible to both the notification send and the count.
+  const collectionSanityIds = (article.articleCollections ?? [])
+    .map((entry) => entry.collection?._id)
+    .filter((id): id is string => Boolean(id))
+
+  // A migrated Format's existing subscribers are still keyed on its old
+  // repoId until migrate-legacy-subscriptions.ts rewrites them (a manual,
+  // never-automatically-run step) -- match on both forms so notifications
+  // work regardless of whether that's happened yet.
+  const legacyRepoIds = await resolveLegacyRepoIdsForSanityIds(
+    collectionSanityIds,
+    context.pgdb,
+  )
+  const articleCollectionIds = [
+    ...collectionSanityIds.map(toSanityRef),
+    ...legacyRepoIds,
+  ]
+  const authorUserIds = (article.contributors ?? [])
+    .map((entry) => entry.contributor?.userId)
+    .filter((id): id is string => Boolean(id))
+
+  const [collectionSubs, authorSubs] = await Promise.all([
+    Subscriptions.getSubscriptionsForUserAndObjects(
+      null,
+      { type: 'Document', ids: articleCollectionIds, filters: ['Document'] },
+      context,
+      { onlyEligibles: true },
+    ),
+    Subscriptions.getSubscriptionsForUserAndObjects(
+      null,
+      { type: 'User', ids: authorUserIds, filters: ['Document'] },
+      context,
+      { onlyEligibles: true },
+    ),
+  ])
+
+  const [collectionSubscribers, authorSubscribers] = await Promise.all([
+    Subscriptions.getUsersWithSubscriptions(collectionSubs, context),
+    Subscriptions.getUsersWithSubscriptions(authorSubs, context),
+  ])
+
+  return { collectionSubscribers, authorSubscribers }
+}
+
+// Read-only counterpart to PublishNotificationWorker#notifyPublish: the same
+// recipient set, deduped by user and only counted, for the studio
+// subscriber-count endpoint (express/subscriberCount.ts) to show editors how
+// many people a publish-with-notifications decision would reach.
+export const getSubscriberCountForArticle = async (
+  documentId: string,
+  context: any,
+): Promise<{ totalCount: number } | null> => {
+  const article = await fetchArticleForNotification(documentId)
+  if (!article) {
+    return null
+  }
+
+  const { collectionSubscribers, authorSubscribers } =
+    await resolveNotificationRecipients(article, context)
+
+  const uniqueUserIds = new Set<string>()
+  for (const user of [...collectionSubscribers, ...authorSubscribers]) {
+    uniqueUserIds.add(user.__subscription.userId)
+  }
+
+  return { totalCount: uniqueUserIds.size }
+}

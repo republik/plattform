@@ -16,6 +16,10 @@ module.exports = {
       },
       context,
     )
-    return paginate(args, items)
+    // publikator items only — see CollectionItemInterface.document.
+    return paginate(
+      args,
+      items.filter(({ repoId }) => repoId),
+    )
   },
 }

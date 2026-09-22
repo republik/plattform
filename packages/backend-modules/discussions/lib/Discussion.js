@@ -1,5 +1,7 @@
 const isUUID = require('is-uuid')
 
+const { DiscussionNotFoundError } = require('./errors')
+
 // id can be uuid or repoId
 // on insert, specified id is not honoured
 const upsert = async (
@@ -61,6 +63,95 @@ const upsert = async (
   return discussion
 }
 
+const create = async (
+  {
+    title,
+    maxLength,
+    anonymity,
+    tags,
+    tagRequired,
+    closed,
+    path,
+    hidden,
+    disableTopLevelComments,
+    collapsable,
+    defaultOrder,
+    allowedRoles,
+  },
+  { pgdb, t },
+) => {
+  if (tagRequired && (!tags || tags.length === 0)) {
+    throw new Error(t('api/discussion/tagRequiredButNoTags'))
+  }
+
+  return pgdb.public.discussions.insertAndGet(
+    {
+      title,
+      maxLength,
+      anonymity,
+      tags,
+      tagRequired: !!tagRequired,
+      closed,
+      path,
+      hidden,
+      disableTopLevelComments,
+      collapsable,
+      defaultOrder,
+      allowedRoles,
+    },
+    { skipUndefined: true },
+  )
+}
+
+const update = async (
+  {
+    id,
+    title,
+    maxLength,
+    anonymity,
+    tags,
+    tagRequired,
+    closed,
+    path,
+    hidden,
+    disableTopLevelComments,
+    collapsable,
+    defaultOrder,
+    allowedRoles,
+  },
+  { pgdb, t },
+) => {
+  const discussion = await pgdb.public.discussions.findOne({ id })
+  if (!discussion) {
+    throw new DiscussionNotFoundError(t('api/discussion/404'))
+  }
+
+  if (tagRequired && !(tags ?? discussion.tags)?.length) {
+    throw new Error(t('api/discussion/tagRequiredButNoTags'))
+  }
+
+  return pgdb.public.discussions.updateAndGetOne(
+    { id },
+    {
+      title,
+      maxLength,
+      anonymity,
+      tags,
+      tagRequired,
+      closed,
+      path,
+      hidden,
+      disableTopLevelComments,
+      collapsable,
+      defaultOrder,
+      allowedRoles,
+    },
+    { skipUndefined: true },
+  )
+}
+
 module.exports = {
   upsert,
+  create,
+  update,
 }

@@ -1,0 +1,26 @@
+-- The only existing index touching "repoId" is the unique constraint on
+-- ("collectionId", "userId", "repoId") -- "repoId" sits in third position
+-- there, which a btree can't use for a `WHERE "repoId" = $1` filter alone.
+-- Confirmed via EXPLAIN ANALYZE on production: that filter falls back to a
+-- parallel sequential scan of the whole table, ~4 seconds per lookup on
+-- ~12.5M rows. migrate-legacy-collection-items.ts (see
+-- packages/backend-modules/sanity/script/) does exactly that lookup once per
+-- distinct legacy repoId -- ~10k times on production -- which without this
+-- index would take on the order of a day to run instead of minutes.
+--
+-- Also generally worth having independent of that script: "repoId" is a
+-- foreign key to publikator.repos(id) (see publikator's
+-- 20210520082541-repoid-as-foreignkey), and Postgres does not automatically
+-- index the referencing side of a foreign key -- an unindexed FK column is a
+-- standard, well-known cause of slow cascading updates/deletes on the
+-- referenced table too.
+--
+-- CONCURRENTLY: this table is written on essentially every article view, and
+-- a plain `CREATE INDEX` takes a lock that blocks writes for as long as the
+-- build takes. CONCURRENTLY avoids that at the cost of a slower build and
+-- (only on failure, e.g. a killed connection) an INVALID index left behind
+-- that must be dropped and retried -- see
+-- packages/backend-modules/republik/migrations/sqls/20260911132619-add-charge-attempts-membership-id-index-up.sql
+-- for the same pattern already used in this codebase.
+CREATE INDEX CONCURRENTLY IF NOT EXISTS "collectionDocumentItems_repoId_idx"
+  ON "collectionDocumentItems" ("repoId");

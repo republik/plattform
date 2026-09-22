@@ -54,6 +54,7 @@ type mutations {
     tags: [String!]
     # is a tag required (only applies to root level)
     tagRequired: Boolean!
+    closed: Boolean
   ): ID!
   submitComment(
     # client side generated id
@@ -82,7 +83,15 @@ type mutations {
     discussionPreferences: DiscussionPreferencesInput!
   ): Discussion!
 
-  updateDiscussion(id: ID!, closed: Boolean): Discussion!
+  updateDiscussion(
+    id: ID!
+    title: String
+    maxLength: Int
+    anonymity: Permission
+    tags: [String!]
+    tagRequired: Boolean
+    closed: Boolean
+  ): Discussion!
 
   # requires role: editor
   # content = null: unfeature comment
