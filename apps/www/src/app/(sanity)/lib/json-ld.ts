@@ -30,7 +30,14 @@ export function getArticleJsonLd(article: Article) {
   const contributors = article.contributors ?? []
   const authors = contributors.filter(isAuthor)
   const otherContributors = contributors.filter((c) => !isAuthor(c))
-  const image = getSocialImage(article.seo, article.slug)
+  const image = getSocialImage(
+    {
+      // Same fallback chain as SEO_QUERY, resolved from the document at hand.
+      image: article.seo?.image ?? article.cover ?? article.teaserSmall?.image,
+      useImageBuilder: article.seo?.useImageBuilder,
+    },
+    article.slug,
+  )
 
   return stegaClean({
     '@context': 'https://schema.org',
