@@ -19,6 +19,8 @@ const DEFAULT_TEXT_POSITION: TextPosition = 'bottom'
 const HEADING_FONT_SIZE = 44
 const LOGO_HEIGHT = 260
 const PLACEHOLDER_TEXT = 'Text für Sharebild'
+const GIFT_BADGE_TEXT = 'Geschenk-Artikel'
+const GIFT_BADGE_ICON_SIZE = 22
 
 // Soft hyphens (U+00AD) are hyphenation hints that stay invisible in a browser
 // but Satori renders them as visible hyphens. Strip them so the generated image
@@ -122,6 +124,57 @@ export type ThemeName = 'EDITORIAL' | 'META' | 'PAGE' | 'EDITORIAL_CENTERED'
 export type Layout = 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
 export type TextPosition = 'top' | 'center' | 'bottom'
 
+/**
+ * Marks the image of a gift link, so the article reads as a present in the
+ * timeline it was posted to rather than as any other share.
+ *
+ * Drawn by hand rather than pulled from an icon set: satori rasterizes plain
+ * SVG elements, but not a React icon component's own internals.
+ */
+function GiftBadge({
+  background,
+  color,
+}: {
+  background: string
+  color: string
+}) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: SHARE_IMAGE_PADDING / 2,
+        right: SHARE_IMAGE_PADDING / 2,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        backgroundColor: background,
+        color,
+        padding: '10px 20px',
+        borderRadius: 4,
+        fontFamily: GT_AMERICA,
+        fontWeight: 500,
+        fontSize: GIFT_BADGE_ICON_SIZE,
+      }}
+    >
+      <svg
+        width={GIFT_BADGE_ICON_SIZE}
+        height={GIFT_BADGE_ICON_SIZE}
+        viewBox='0 0 24 24'
+        fill='none'
+      >
+        <path
+          d='M20 12v10H4V12M2 7h20v5H2V7M12 22V7M12 7H7.5a2.5 2.5 0 110-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 100-5C13 2 12 7 12 7z'
+          stroke={color}
+          strokeWidth='2'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+      </svg>
+      {GIFT_BADGE_TEXT}
+    </div>
+  )
+}
+
 export type ShareImageProps = {
   text?: TextBlockLine[] | null
   fontSize?: number | null
@@ -133,6 +186,8 @@ export type ShareImageProps = {
   heading?: string | null
   backgroundImageUrl?: string | null
   logoUrl?: string | null
+  /** Renders the "Geschenk-Artikel" badge — see `GiftBadge`. */
+  isGift?: boolean | null
 }
 
 // EDITORIAL → serif title (RepublikSerif 900); META/PAGE → sans serif (GT America).
@@ -166,6 +221,7 @@ export function ShareImage({
   heading,
   backgroundImageUrl,
   logoUrl,
+  isGift,
 }: ShareImageProps): ReactElement {
   const hasBackgroundImage =
     layout === 'BACKGROUND_IMAGE' && !!backgroundImageUrl
@@ -291,6 +347,7 @@ export function ShareImage({
             : PLACEHOLDER_TEXT}
         </div>
       </div>
+      {isGift && <GiftBadge background={textColor} color={backgroundColor} />}
     </div>
   )
 }

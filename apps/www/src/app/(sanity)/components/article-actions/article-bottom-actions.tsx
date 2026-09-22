@@ -12,8 +12,8 @@ import {
 import { BookmarkAction } from './bookmark-action'
 import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
+import { ShareOrGiftAction } from './gift-action'
 import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
-import { ShareAction } from './share-action'
 
 export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
@@ -42,7 +42,7 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
       })}
     >
       <BookmarkAction documentId={documentId} />
-      <ShareAction title={title} path={path} />
+      <ShareOrGiftAction documentId={documentId} title={title} path={path} />
       <DiscussionAction
         path={path}
         backendDiscussionId={article.discussion?.backendDiscussionId}

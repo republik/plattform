@@ -1,0 +1,10 @@
+mutation CreateGiftArticleLink($documentId: ID!, $documentPath: String!) {
+  createGiftArticleLink(documentId: $documentId, documentPath: $documentPath) {
+    id
+    token
+    url
+    documentId
+    documentPath
+    expiresAt
+  }
+}

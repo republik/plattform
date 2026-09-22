@@ -11,8 +11,8 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { BookmarkAction } from './bookmark-action'
 import { collectionsDocumentId } from './document-id'
+import { ShareOrGiftAction } from './gift-action'
 import { MENU_SIDE_OFFSET } from './menu-style'
-import { ShareAction } from './share-action'
 import { useArticleActions } from './article-actions-context'
 
 // Matches the header, so the bar and the header appear and disappear together.
@@ -80,6 +80,7 @@ export type ArticleFloatingActionsProps = {
 export function ArticleFloatingActions({
   article,
 }: ArticleFloatingActionsProps) {
+  const documentId = collectionsDocumentId(article)
   const { audioPlayerVisible } = useAudioContext()
   const { paynoteInlineHeight } = usePaynotes()
   const { isIOSApp } = usePlatformInformation()
@@ -164,9 +165,10 @@ export function ArticleFloatingActions({
         } as CSSProperties
       }
     >
-      <BookmarkAction documentId={collectionsDocumentId(article)} />
-      <ShareAction
+      <BookmarkAction documentId={documentId} />
+      <ShareOrGiftAction
         align='center'
+        documentId={documentId}
         menuOffsetX={shareMenuOffset.x}
         menuSideOffset={shareMenuOffset.side}
         path={article.slug}
