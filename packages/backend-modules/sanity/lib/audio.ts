@@ -378,10 +378,12 @@ export const recordAudioVersion = (
   documentId: string,
   currentFields: Record<string, unknown>,
   version: AudioVersion,
-  contentHash: string,
+  contentHash: string | undefined,
 ) => {
   const doPatch = async (id: string) => {
-    const pendingKey = await fetchPendingVersionKey(id, contentHash)
+    const pendingKey = contentHash
+      ? await fetchPendingVersionKey(id, contentHash)
+      : undefined
     const patch = sanityClient().patch(id).set(currentFields)
     if (pendingKey) {
       patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
