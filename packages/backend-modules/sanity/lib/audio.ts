@@ -125,6 +125,19 @@ export const fetchAudioContentHash = (documentId: string) =>
     { perspective: 'raw' },
   )
 
+// Same idempotency shape as fetchAudioContentHash above, for the Publikator
+// sync's legacy-audio link (see publikatorSync/legacyAudio.ts): that flow
+// needs both `audioContentHash` (never overwrite a real Sanity-native
+// generation) and the currently-stored `audioSourceMp3` (skip re-recording
+// an audioVersions entry when nothing about the link actually changed) —
+// one round trip for both rather than two separate fetches.
+export const fetchAudioLinkState = (documentId: string) =>
+  sanityClient().fetch<{ audioContentHash?: string; audioSourceMp3?: string }>(
+    `*[_id == $id][0]{ audioContentHash, audioSourceMp3 }`,
+    { id: documentId },
+    { perspective: 'raw' },
+  )
+
 // Mirrors studio's own STALE_AFTER_MS (functions/sync-audio/index.ts) — the
 // longest a legitimate generation + Huebsch webhook delivery can take. A
 // claim older than this must belong to a run that was abandoned (backend
@@ -262,7 +275,12 @@ export interface AudioVersionChapter {
 }
 
 export interface AudioVersion {
-  file: { _type: 'file'; asset: { _type: 'reference'; _ref: string } }
+  // Optional: Studio's `audioVersion` schema itself only ever required
+  // `url` — a version can point at an externally-hosted file with no
+  // matching Sanity file asset (Studio's own backfill-audio-versions
+  // migration already does exactly this for pre-Sanity legacy audio; see
+  // publikatorSync/legacyAudio.ts for a live example of the same case).
+  file?: { _type: 'file'; asset: { _type: 'reference'; _ref: string } }
   url: string
   durationMs?: number
   generatedAt: string
