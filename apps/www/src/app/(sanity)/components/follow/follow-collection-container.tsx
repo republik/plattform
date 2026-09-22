@@ -19,6 +19,9 @@ function FollowCollectionContainer({
         display: 'flex',
         alignItems: 'center',
         gap: 4,
+        _last: {
+          mb: '8',
+        },
         '@media print': { display: 'none' },
       })}
     >
