@@ -43,7 +43,7 @@ export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
   const href = value?.slug
 
   if (!href) {
-    console.warn('Internal link without href', value)
+    console.warn('Internal link without href', value, { text })
   }
 
   return href ? (
