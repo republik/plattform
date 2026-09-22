@@ -2,7 +2,7 @@
 import { css } from '@republik/theme/css'
 import { GalleryHorizontal } from 'lucide-react'
 import { useVisualEditingEnvironment } from 'next-sanity/hooks'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export function TeaserSmallPreviewLink({ documentId }: { documentId: string }) {
   const visualEditingEnvironment = useVisualEditingEnvironment()

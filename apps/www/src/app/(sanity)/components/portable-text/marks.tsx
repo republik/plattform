@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 import type { PortableTextMarkComponentProps } from 'next-sanity'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import type { ReactNode } from 'react'
 
 export function Strong({ children }: { children?: ReactNode }) {

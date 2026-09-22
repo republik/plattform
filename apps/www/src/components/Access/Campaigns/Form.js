@@ -14,7 +14,7 @@ import {
 import ErrorMessage from '../../ErrorMessage'
 import FieldSet from '../../FieldSet'
 import withT from '@/lib/withT'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const { H3, P } = Interaction
 

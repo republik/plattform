@@ -4,7 +4,7 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import isEmail from 'validator/lib/isEmail'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 import SignIn, { withSignIn } from '../Auth/SignIn'
 import { withSignOut } from '../Auth/SignOut'

@@ -4,7 +4,7 @@ import { DiscussionByIdDocument } from '#graphql/republik-api/__generated__/gql/
 import { useQuery } from '@apollo/client'
 import { IconDiscussion } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
 
 const discussionActionStyle = css({

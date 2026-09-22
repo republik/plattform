@@ -13,7 +13,7 @@ import { HEADER_HEIGHT } from '../constants'
 import { SIDEBAR_WIDTH } from './constants'
 
 import { Button, A, mediaQueries } from '@project-r/styleguide'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export const minWindowHeight = 400
 

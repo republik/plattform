@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react'
 import Container from '@/app/components/container'
 import { css } from '@republik/theme/css'
 import { stack } from '@republik/theme/patterns'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export function ErrorPage({ children }: PropsWithChildren) {
   return (

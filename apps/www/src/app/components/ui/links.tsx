@@ -1,6 +1,6 @@
 import { type AnchorHTMLAttributes } from 'react'
 
-import Link, { type LinkProps } from 'next/link'
+import Link, { type LinkProps } from '@/app/components/ui/link'
 
 import { IconArrowLeft, IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'

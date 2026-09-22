@@ -9,7 +9,7 @@ import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const teaserStyle = cva({
   base: {

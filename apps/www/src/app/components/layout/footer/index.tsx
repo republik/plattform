@@ -12,7 +12,7 @@ import { css } from '@republik/theme/css'
 import logo from '@republik/theme/logo.json'
 import { vstack } from '@republik/theme/patterns'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import Link, { LinkProps } from 'next/link'
+import Link, { type LinkProps } from '@/app/components/ui/link'
 import { ComponentType, isValidElement, ReactElement } from 'react'
 import { UrlObject } from 'url'
 

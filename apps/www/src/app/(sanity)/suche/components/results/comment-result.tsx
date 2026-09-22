@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import { IconCheck } from '@republik/icons'

@@ -9,7 +9,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useState } from 'react'
 import FieldSet from '../../FieldSet'
 import { PORTRAIT_SIZE } from '../ProfileView'

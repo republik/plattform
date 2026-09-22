@@ -3,15 +3,6 @@ const { withSentryConfig } = require('@sentry/nextjs')
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withPlausibleProxy } = require('next-plausible')
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const path = require('path')
-
-const LINK_WRAPPER_RELATIVE = './src/app/components/ui/link.tsx'
-const LINK_WRAPPER_ABSOLUTE = path.resolve(
-  __dirname,
-  'src/app/components/ui/link.tsx',
-)
-
 const isProduction = process.env.NODE_ENV === 'production'
 
 const deploymentId =
@@ -53,19 +44,6 @@ const nextConfig = {
   },
 
   poweredByHeader: false,
-
-  turbopack: {
-    resolveAlias: {
-      'next/link': LINK_WRAPPER_RELATIVE,
-    },
-  },
-
-  webpack: (config) => {
-    // `$` anchors the alias to the exact specifier, so deeper paths such as
-    // `next/link.d.ts` are left alone.
-    config.resolve.alias['next/link$'] = LINK_WRAPPER_ABSOLUTE
-    return config
-  },
 
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,

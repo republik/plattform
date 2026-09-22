@@ -4,7 +4,7 @@ import { ErrorPage } from '@/app/components/layout/error-page'
 import { css } from '@republik/theme/css'
 import * as Sentry from '@sentry/nextjs'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useEffect, useState } from 'react'
 
 const linkClass = css({

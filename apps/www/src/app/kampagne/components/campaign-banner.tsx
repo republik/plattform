@@ -12,7 +12,7 @@ import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { IconExpandLess, IconExpandMore } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useEffect, useState } from 'react'
 
 const localStorageKey = 'republik-campaign-banner-is-open'

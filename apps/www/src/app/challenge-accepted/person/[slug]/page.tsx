@@ -3,7 +3,7 @@ import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import { getMe } from '@/app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import { Metadata, ResolvingMetadata } from 'next'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { notFound } from 'next/navigation'
 import { PersonDetail } from './components/person-detail'
 

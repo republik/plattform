@@ -13,7 +13,7 @@ import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import logo from '@republik/theme/logo.json'
 import { stegaClean } from 'next-sanity'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import {
   nextReadHeader,
   nextReadItemTypography,

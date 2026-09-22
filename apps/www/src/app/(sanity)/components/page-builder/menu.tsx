@@ -1,6 +1,6 @@
 import { MenuBlockFragmentType } from '@/app/(sanity)/groq/menu-block-fragment'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 function MenuItem({ href, title, color }) {
   return (

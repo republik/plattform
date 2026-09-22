@@ -21,7 +21,7 @@ import {
 } from '@republik/icons'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import {
   useSubscribeDocumentMutation,

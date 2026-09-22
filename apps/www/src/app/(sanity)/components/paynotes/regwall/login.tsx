@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { usePathname } from 'next/navigation'
 
 import { css } from '@republik/theme/css'

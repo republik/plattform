@@ -11,7 +11,7 @@ import { DEFAULT_TOKEN_TYPE } from '../constants'
 import RawHtmlTranslation from '../RawHtmlTranslation'
 import Me from './Me'
 import TokenAuthorization from './TokenAuthorization'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const { H1, P } = Interaction
 

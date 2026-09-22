@@ -1,7 +1,7 @@
 import { parse, format } from 'url'
 
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export const getFocusHref = (discussion, comment) => {
   const focusParams = { focus: comment?.id }
