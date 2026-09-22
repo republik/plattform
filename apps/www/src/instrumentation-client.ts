@@ -14,6 +14,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
       /Failed to fetch/i,
       /Load failed/i,
       /fetch failed/i,
+      /Received status code 503/i,
       /NetworkError when attempting to fetch resource/i,
       /Invariant: attempted to hard navigate to the same URL/i,
       /Sie müssen sich zuerst anmelden/i,

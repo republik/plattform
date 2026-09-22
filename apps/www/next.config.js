@@ -272,6 +272,19 @@ module.exports = withSentryConfig(withConfiguredPlausibleProxy(nextConfig), {
   // side errors will fail.
   tunnelRoute: '/monitoring',
 
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
+  // Upload after all builds complete (faster)
+  useRunAfterProductionCompileHook: true,
+
+  webpack: {
+    // Instrument Pages Router API routes and data fetching methods (default: true)
+    autoInstrumentServerFunctions: true,
+    // Instrument Next.js middleware (default: true)
+    autoInstrumentMiddleware: true,
+    // Instrument App Router components (default: true)
+    autoInstrumentAppDirectory: true,
+    // Tree-shake Sentry logger statements to reduce bundle size
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
 })
