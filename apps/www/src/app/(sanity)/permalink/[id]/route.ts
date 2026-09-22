@@ -1,6 +1,5 @@
 import { DOCUMENT_SLUG_BY_ID } from '@/app/(sanity)/groq/document-slug-by-id'
 import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
-import { notFound } from 'next/navigation'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export const revalidate = 60
@@ -19,7 +18,10 @@ export async function GET(
   )
 
   if (!slug) {
-    notFound()
+    // Redirect to /404, so user sees an error page instead of nothing
+    return NextResponse.redirect(
+      new URL('/404', process.env.NEXT_PUBLIC_BASE_URL),
+    )
   }
 
   const url = new URL(slug, process.env.NEXT_PUBLIC_BASE_URL)
