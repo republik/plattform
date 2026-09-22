@@ -27,7 +27,7 @@ import {
 
 import { defaultServerSideProps } from '@/lib/apollo/helpers'
 
-import withMe from '@/lib/apollo/withMe'
+import { useMe } from '@/lib/context/MeContext'
 
 import { intersperse } from '@/lib/utils/helpers'
 import withInNativeApp from '@/lib/withInNativeApp'
@@ -93,9 +93,10 @@ const fixAmpsInQuery = (rawQuery) => {
   return query
 }
 
-const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
+const Page = ({ router: { query: rawQuery }, inNativeApp }) => {
   const { t } = useTranslation()
   const router = useRouter()
+  const { me } = useMe()
   const [colorScheme] = useColorContext()
   const query = fixAmpsInQuery(rawQuery)
   const { context, type } = query
@@ -122,7 +123,8 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
   const hasRedirect = router.query.redirect
 
   return (
-    <ForceOnboarding>
+    <>
+      <ForceOnboarding />
       <Head>
         <title>{t('notifications/pageTitle')}</title>
         <meta name='robots' content='noindex' />
@@ -169,10 +171,10 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
           )}
         </div>
       </NarrowContainer>
-    </ForceOnboarding>
+    </>
   )
 }
 
-export default compose(withRouter, withMe, withInNativeApp)(Page)
+export default compose(withRouter, withInNativeApp)(Page)
 
 export const getServerSideProps = defaultServerSideProps
