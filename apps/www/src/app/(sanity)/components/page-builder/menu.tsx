@@ -70,7 +70,7 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
         {pages?.map((item) => (
           <MenuItem
             color={item._type === 'reference' && item.page.color}
-            key={item._key}
+            key={item._type === 'link' ? item.href : item.page.slug}
             href={item._type === 'link' ? item.href : item.page.slug}
             title={
               item._type === 'link' ? item.title ?? item.href : item.page.title
