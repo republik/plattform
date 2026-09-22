@@ -33,6 +33,7 @@ import {
   resolveRepublikRepoId,
 } from '../legacyId'
 import { hexToSanityColor } from './color'
+import type { SignOff } from './editorialSignOffs'
 import type { FormatFields } from './formatFields'
 
 // transform.ts:1035 — sections whose articles get the META theme regardless
@@ -84,6 +85,15 @@ export interface DraftArticleDoc {
   // by the batch import just leaves this field empty rather than pointing at
   // a page that doesn't exist yet.
   heading?: { _type: 'reference'; _ref: string; _weak: true }
+  // "Von der Redaktion empfohlen" — weak refs to other article/page docs,
+  // resolved from meta.recommendations (an array of repoId links, same shape
+  // as meta.format). Capped at 5 to match the schema's own rule.max(5)
+  // (sharedFields.ts) — real editorial data never approaches that anyway.
+  articleRecommendations?: {
+    _type: 'reference'
+    _ref: string
+    _weak: true
+  }[]
   // The format's own articleCollection (featured), the format's section's
   // (not featured), and/or the hardcoded "Vorgelesen" collection — all
   // STRONG references (unlike `heading`), matching the schema
@@ -153,6 +163,11 @@ export interface DraftArticleDoc {
   audioSourceMp3?: string
   audioDurationMs?: number
   estimatedConsumptionMinutes?: number
+  // The editorial checklist, mirrored from Publikator's milestones — set by
+  // worker.ts after this doc is built (see ./editorialSignOffs.ts), same as
+  // teaserSmall.image/newsletter/podcast are filled in post-hoc by
+  // resolveFormatDerivedFields.
+  editorialSignOffs?: SignOff[]
 }
 
 function optStr(val: unknown): string | undefined {
@@ -278,6 +293,30 @@ export function resolveFormatRepoId(
   meta: Record<string, unknown> | undefined,
 ): string | undefined {
   return resolveRepublikRepoId(meta?.format)
+}
+
+// meta.recommendations ("Von der Redaktion empfohlen") — same link shape as
+// meta.format (Meta.js's resolveRecommendations resolves each entry the same
+// way), just an array instead of a single repo. Invalid/foreign entries are
+// dropped rather than failing the whole list, matching resolveRepublikRepoId's
+// own permissive-fallback style. Capped at 5, matching the schema's own
+// rule.max(5) (sharedFields.ts) — Sanity's write API doesn't enforce that
+// itself, but there's no reason to write a doc that already fails its own
+// schema's validation.
+function buildArticleRecommendations(
+  meta: Record<string, unknown>,
+): DraftArticleDoc['articleRecommendations'] {
+  const raw = meta.recommendations
+  if (!Array.isArray(raw)) return undefined
+  const refs = raw
+    .map((entry) => resolveRepublikRepoId(entry))
+    .filter((repoId): repoId is string => Boolean(repoId))
+    .map((repoId) => ({
+      _type: 'reference' as const,
+      _ref: repoIdToSanityId(repoId),
+      _weak: true as const,
+    }))
+  return refs.length ? refs.slice(0, 5) : undefined
 }
 
 // transform.ts:742-753 (buildTheme), minus the format/section-derived parts
@@ -480,6 +519,10 @@ export function buildDraftArticleDoc(
         formatRepoId,
       )
       return articleCollections ? { articleCollections } : {}
+    })(),
+    ...(() => {
+      const articleRecommendations = buildArticleRecommendations(commit.meta)
+      return articleRecommendations ? { articleRecommendations } : {}
     })(),
     content: mdastToPortableText(
       bodyChildren(nodes),

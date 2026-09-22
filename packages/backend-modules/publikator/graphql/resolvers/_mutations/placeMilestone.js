@@ -5,6 +5,13 @@ const {
 const { updateCurrentPhase } = require('../../../lib/postgres')
 const yaml = require('../../../lib/yaml')
 
+// SANITY_SYNC (transition period, removable — see
+// packages/backend-modules/sanity/lib/publikatorSync/index.ts)
+const {
+  isSyncFromPublikatorEnabled,
+  enqueueSyncFromPublikator,
+} = require('@orbiting/backend-modules-sanity')
+
 module.exports = async (
   _,
   { repoId, commitId, name: _name, message, meta },
@@ -47,6 +54,16 @@ module.exports = async (
     await updateCurrentPhase(repoId, tx)
 
     await tx.transactionCommit()
+
+    // SANITY_SYNC (transition period, removable): a checklist sign-off isn't
+    // itself a content commit, so without this it would sit un-mirrored in
+    // Sanity's editorialSignOffs until the next unrelated commit/publish —
+    // see editorialSignOffs.ts. Refreshes the draft only (action 'commit'),
+    // matching editRepoMeta.js's own reasoning: a published article's live
+    // Sanity copy stays as-is until the next real commit/publish.
+    if (isSyncFromPublikatorEnabled()) {
+      await enqueueSyncFromPublikator({ repoId, action: 'commit' })
+    }
 
     // @TODO: Safe to remove, once repoChange is adopted
     await pubsub.publish('repoUpdate', {
