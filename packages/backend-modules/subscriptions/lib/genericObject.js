@@ -6,7 +6,6 @@ const { getParsedDocumentId } = require('../../search/lib/Documents')
 // dependency the other way would form a cycle. Keep in sync if the prefix
 // ever changes.
 const SANITY_ID_PREFIX = 'sanity:'
-const isSanityRef = (value) => value.startsWith(SANITY_ID_PREFIX)
 const fromSanityRef = (value) => value.slice(SANITY_ID_PREFIX.length)
 
 // SANITY_DOCUMENT_REFS_ENABLED (pre-launch kill-switch, removable once the
@@ -55,12 +54,21 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
           // (no mdast/content), so it's surfaced as its own union member
           // rather than as `Document` — the frontend needs `__typename` to
           // tell the two apart and fetch preview data from Sanity directly.
-          if (isSanityRef(obj.objectId)) {
+          //
+          // Branch on `obj.sanityRef`, not on whether `obj.objectId` itself
+          // is `sanity:`-prefixed: a legacy repoId whose content has since
+          // moved to Sanity resolves through the loader's Sanity branch too
+          // (see documents/loaders/Document.js's "rescued" case), but keeps
+          // `objectId` unprefixed until the migration script rewrites the
+          // stored row — checking `objectId`'s shape would let that case
+          // fall through to `normalize(obj)` below and leak the loader's
+          // minimal, non-GraphQL `Document` stub to the frontend.
+          if (obj.sanityRef) {
             if (!isSanityDocumentRefsEnabled()) {
               return undefined
             }
             return {
-              id: fromSanityRef(obj.objectId),
+              id: fromSanityRef(obj.sanityRef),
               type: obj.sanityType,
               objectId: obj.objectId,
               __typename: 'SanityDocumentRef',
