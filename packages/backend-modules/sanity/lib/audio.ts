@@ -1,6 +1,6 @@
 import { logger } from '@orbiting/backend-modules-logger'
 import { sanityClient } from './client'
-import { draftIdFor } from './document'
+import { draftIdFor, publishedIdFor } from './document'
 import { ReleaseNotMutableError, withReleaseUnlock } from './releaseLock'
 
 // True when a mutation was rejected because its target document doesn't
@@ -20,12 +20,11 @@ function isDocumentNotFoundError(err: unknown): boolean {
 // True for either way a versioned document can turn out to be unwritable by
 // the time we get to it: it's gone outright (isDocumentNotFoundError), or
 // its release moved into a state withReleaseUnlock has no recovery path for
-// — confirmed live: a release that's already `published` rejects the
-// mutation outright ("Documents in release ... (state: published) can not
-// be mutated", a validationError, not a documentNotFoundError) rather than
-// the version document simply vanishing the way an unscheduled/deleted
-// release does. Both mean the same thing for us: this write's real target
-// is done, fall back to the draft.
+// (any ReleaseNotMutableError — see releaseLock.ts). A `published` release
+// gets its own, more specific recovery in withDraftSync below (its content
+// merged into a real, mutable published document); this covers the rest
+// (archived, or a genuinely vanished document), where falling back to the
+// draft is the only option.
 function isUnrecoverableVersionError(err: unknown): boolean {
   return isDocumentNotFoundError(err) || err instanceof ReleaseNotMutableError
 }
@@ -40,15 +39,23 @@ function isUnrecoverableVersionError(err: unknown): boolean {
 // primary write (the one actually gating claim/success/error semantics)
 // already landed.
 //
-// Separately: TTS generation is async and can take real time, and if the
-// release promotes (publish) or gets unscheduled/deleted while a generation
-// is still in flight, `versions.<release>.<id>` is simply gone by the time
-// any of these run. Rather than lose that write with nothing but a server
-// log to show for it, fall back to patching the draft instead (always still
-// there) and log loudly: this needs a human to notice (most likely the
-// article already published without its audio, or the schedule was
-// cancelled) and reconcile from the draft's history. `doPatch` receives the
-// id to target, so it can be applied to documentId, its draft, or both.
+// TTS generation is async and can take real time, and the release backing
+// `documentId` can move on while it's in flight. Two different things can
+// have happened by the time any of these run:
+//   - The release already PUBLISHED: its version content already merged
+//     into the real published document (a normal, mutable, non-versioned
+//     doc) — that's the live target now, not a vanished one. Patch it
+//     directly (making this generation the article's current audio version,
+//     same as if it had finished before publish), then still mirror onto
+//     the draft below, same as the ordinary success path — both the
+//     published document and the draft must end up with this write.
+//   - Anything else unrecoverable (archived, or the document genuinely gone
+//     because a schedule was cancelled/deleted): there's no live document to
+//     redirect to, so fall back to the draft (always still there) and log
+//     loudly — this needs a human to notice and reconcile from the draft's
+//     history.
+// `doPatch` receives the id to target, so it can be applied to documentId,
+// the published id, the draft, or a combination.
 async function withDraftSync<T>(
   documentId: string,
   action: string,
@@ -63,14 +70,37 @@ async function withDraftSync<T>(
       doPatch(documentId),
     )
   } catch (err) {
-    if (!isUnrecoverableVersionError(err)) throw err
-    logger.error(
-      { documentId, draftId, err },
-      `sanity audio: version document no longer writable when ${action} ` +
-        '(release published, archived, or schedule cancelled while ' +
-        'generation was in flight) — falling back to the draft',
-    )
-    return doPatch(draftId)
+    if (err instanceof ReleaseNotMutableError && err.state === 'published') {
+      const publishedId = publishedIdFor(documentId)
+      try {
+        result = await doPatch(publishedId)
+        logger.error(
+          { documentId, publishedId, err },
+          `sanity audio: release already published when ${action} — ` +
+            'patched the live published document instead',
+        )
+      } catch (publishErr) {
+        logger.error(
+          { documentId, publishedId, err: publishErr },
+          `sanity audio: failed to patch the published document when ` +
+            `${action} after its release published — falling back to the draft`,
+        )
+        return doPatch(draftId)
+      }
+      // Falls through to the draft-mirror step below, same as any other
+      // successful primary write — both the published doc and the draft
+      // must get this write, not one or the other.
+    } else if (isUnrecoverableVersionError(err)) {
+      logger.error(
+        { documentId, draftId, err },
+        `sanity audio: version document no longer writable when ${action} ` +
+          '(release archived, or schedule cancelled while generation was ' +
+          'in flight) — falling back to the draft',
+      )
+      return doPatch(draftId)
+    } else {
+      throw err
+    }
   }
 
   if (isVersioned) {

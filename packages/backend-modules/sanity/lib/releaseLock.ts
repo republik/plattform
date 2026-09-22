@@ -59,7 +59,10 @@ const LOCKED_STATES = new Set(['scheduled', 'scheduling'])
 // vanished document and fall back to the draft (see audio.ts's
 // isUnrecoverableVersionError).
 export class ReleaseNotMutableError extends Error {
-  constructor(releaseId: string, state: string) {
+  constructor(
+    public readonly releaseId: string,
+    public readonly state: string,
+  ) {
     super(
       `release "${releaseId}" is in state "${state}" and its documents can ` +
         'not be mutated (only "active", "scheduled" and "scheduling" ' +

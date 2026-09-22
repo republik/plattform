@@ -57,10 +57,15 @@ describe('withReleaseUnlock', () => {
       const client = fakeClient({ get, unschedule, schedule })
       const mutate = jest.fn().mockResolvedValue('done')
 
-      await expect(
-        withReleaseUnlock(client, 'versions.r1.abc123', mutate),
-      ).rejects.toThrow(ReleaseNotMutableError)
+      const error = (await withReleaseUnlock(
+        client,
+        'versions.r1.abc123',
+        mutate,
+      ).catch((e) => e)) as ReleaseNotMutableError
 
+      expect(error).toBeInstanceOf(ReleaseNotMutableError)
+      expect(error.releaseId).toBe('r1')
+      expect(error.state).toBe(state)
       expect(mutate).not.toHaveBeenCalled()
       expect(unschedule).not.toHaveBeenCalled()
       expect(schedule).not.toHaveBeenCalled()

@@ -39,8 +39,8 @@ const notFoundError = () =>
     details: { items: [{ error: { type: 'documentNotFoundError' } }] },
   })
 
-const releaseNotMutableError = () =>
-  new ReleaseNotMutableError('r1', 'published')
+const releaseNotMutableError = (state = 'archived') =>
+  new ReleaseNotMutableError('r1', state)
 
 // Generic chainable patch-builder shared by the fallback/mirror tests below —
 // every method (however many a given call site chains) just returns the same
@@ -511,15 +511,14 @@ describe('reportAudioGenerationError', () => {
     )
   })
 
-  // Reproduces a live incident: a release already in state "published"
-  // rejects the mutation with a validationError ("Documents in release ...
-  // (state: published) can not be mutated"), not a documentNotFoundError —
-  // withReleaseUnlock (releaseLock.ts) throws ReleaseNotMutableError for
-  // this case, and withDraftSync must still fall back to the draft for it,
-  // the same as a genuinely vanished document.
-  it('falls back to the draft when the release is no longer mutable (e.g. already published)', async () => {
+  // A release in a state withReleaseUnlock has no unlock path for (anything
+  // other than "published" — see the dedicated published-release tests
+  // below for that case) — e.g. archived. There's no live document to
+  // redirect to here, so this must fall back to the draft, the same as a
+  // genuinely vanished document.
+  it('falls back to the draft when the release is no longer mutable (e.g. archived)', async () => {
     const failingChain = chainable(
-      jest.fn().mockRejectedValue(releaseNotMutableError()),
+      jest.fn().mockRejectedValue(releaseNotMutableError('archived')),
     )
     const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
     patch.mockReset().mockImplementation((id: string) =>
@@ -546,6 +545,77 @@ describe('reportAudioGenerationError', () => {
     expect(loggerError).not.toHaveBeenCalledWith(
       expect.anything(),
       expect.stringContaining('failed to report audio generation error'),
+    )
+  })
+
+  // The user's follow-up on the incident above: when the release is
+  // specifically "published" (not archived, not gone), its content has
+  // already merged into the real published document — that's the live
+  // target now, not a vanished one. Both the published doc AND the draft
+  // must get this write, not one or the other.
+  it('patches the published document, then also mirrors onto the draft, when the release is already published', async () => {
+    const versionChain = chainable(
+      jest.fn().mockRejectedValue(releaseNotMutableError('published')),
+    )
+    const publishedChain = chainable(jest.fn().mockResolvedValue(undefined))
+    const draftChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) => {
+      if (id === 'versions.r1.doc-1') return versionChain
+      if (id === 'doc-1') return publishedChain
+      if (id === 'drafts.doc-1') return draftChain
+      throw new Error(`unexpected id ${id}`)
+    })
+
+    await expect(
+      reportAudioGenerationError('versions.r1.doc-1', new Error('boom')),
+    ).resolves.toBeUndefined()
+
+    expect(patch).toHaveBeenCalledWith('versions.r1.doc-1')
+    expect(patch).toHaveBeenCalledWith('doc-1')
+    expect(patch).toHaveBeenCalledWith('drafts.doc-1')
+    expect(publishedChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(draftChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentId: 'versions.r1.doc-1',
+        publishedId: 'doc-1',
+      }),
+      expect.stringContaining('patched the live published document instead'),
+    )
+  })
+
+  it('falls back to the draft as a last resort when the published document patch also fails', async () => {
+    const versionChain = chainable(
+      jest.fn().mockRejectedValue(releaseNotMutableError('published')),
+    )
+    const publishedChain = chainable(
+      jest.fn().mockRejectedValue(new Error('published patch boom')),
+    )
+    const draftChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) => {
+      if (id === 'versions.r1.doc-1') return versionChain
+      if (id === 'doc-1') return publishedChain
+      if (id === 'drafts.doc-1') return draftChain
+      throw new Error(`unexpected id ${id}`)
+    })
+
+    await expect(
+      reportAudioGenerationError('versions.r1.doc-1', new Error('boom')),
+    ).resolves.toBeUndefined()
+
+    expect(draftChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentId: 'versions.r1.doc-1',
+        publishedId: 'doc-1',
+      }),
+      expect.stringContaining('falling back to the draft'),
     )
   })
 
