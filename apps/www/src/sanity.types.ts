@@ -6471,7 +6471,7 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/seo-query.ts
 // Variable: SEO_QUERY
-// Query: *[slug.current == $slug][0]{    "title": coalesce(pt::text(seo.title), pt::text(title)),    "description": coalesce(pt::text(seo.description), pt::text(description)),    "image": coalesce(seo.image, image),    "useImageBuilder": seo.useImageBuilder,    "imageBuilder": seo.imageBuilder,    "heading": pt::text(heading->title),    theme {      name,      accentColor,      darkMode    }  }
+// Query: *[slug.current == $slug][0]{    "title": coalesce(pt::text(seo.title), pt::text(title)),    "description": coalesce(pt::text(seo.description), pt::text(description)),    "image": coalesce(seo.image, cover, teaserSmall.image),    "useImageBuilder": seo.useImageBuilder,    "imageBuilder": seo.imageBuilder,    "heading": pt::text(heading->title),    theme {      name,      accentColor,      darkMode    }  }
 export type SEO_QUERY_RESULT =
   | {
       title: string
@@ -6485,50 +6485,24 @@ export type SEO_QUERY_RESULT =
   | {
       title: string
       description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        imageDark?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        }
-        _type: 'image'
-      } | null
-      useImageBuilder: null
-      imageBuilder: null
-      heading: string
-      theme: null
-    }
-  | {
-      title: string
-      description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
-      useImageBuilder: null
-      imageBuilder: null
-      heading: string
-      theme: null
-    }
-  | {
-      title: string
-      description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
+      image:
+        | EditorialImage
+        | {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            imageDark?: ImageDark
+            _type: 'image'
+          }
+        | {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            _type: 'image'
+          }
+        | null
       useImageBuilder: boolean | null
       imageBuilder: SeoImageBuilder | null
       heading: string
@@ -6542,7 +6516,7 @@ export type SEO_QUERY_RESULT =
 
 // Source: src/app/(sanity)/groq/seo-query.ts
 // Variable: OG_SHARE_IMAGE_QUERY
-// Query: *[slug.current == $slug || _id == $id || _id == "drafts." + $id][0]{    "title": coalesce(pt::text(seo.title), pt::text(title)),    "description": coalesce(pt::text(seo.description), pt::text(description)),    "image": coalesce(seo.image, image),    "useImageBuilder": seo.useImageBuilder,    "imageBuilder": seo.imageBuilder,    "heading": pt::text(heading->title),    theme {      name,      accentColor,      darkMode    }  }
+// Query: *[slug.current == $slug || _id == $id || _id == "drafts." + $id][0]{    "title": coalesce(pt::text(seo.title), pt::text(title)),    "description": coalesce(pt::text(seo.description), pt::text(description)),    "image": coalesce(seo.image, cover, teaserSmall.image),    "useImageBuilder": seo.useImageBuilder,    "imageBuilder": seo.imageBuilder,    "heading": pt::text(heading->title),    theme {      name,      accentColor,      darkMode    }  }
 export type OG_SHARE_IMAGE_QUERY_RESULT =
   | {
       title: string
@@ -6556,50 +6530,24 @@ export type OG_SHARE_IMAGE_QUERY_RESULT =
   | {
       title: string
       description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        imageDark?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        }
-        _type: 'image'
-      } | null
-      useImageBuilder: null
-      imageBuilder: null
-      heading: string
-      theme: null
-    }
-  | {
-      title: string
-      description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
-      useImageBuilder: null
-      imageBuilder: null
-      heading: string
-      theme: null
-    }
-  | {
-      title: string
-      description: string
-      image: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
+      image:
+        | EditorialImage
+        | {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            imageDark?: ImageDark
+            _type: 'image'
+          }
+        | {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            _type: 'image'
+          }
+        | null
       useImageBuilder: boolean | null
       imageBuilder: SeoImageBuilder | null
       heading: string
@@ -8034,8 +7982,8 @@ declare module '@sanity/client' {
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "menu"][0]{\n      \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current,\n        "color": theme.accentColor.hex\n      }\n    }\n  }\n\n    }\n  }': MENU_BLOCK_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n    }\n  }': PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
     '*[_type == "article"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n  }': ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
-    '*[slug.current == $slug][0]{\n    "title": coalesce(pt::text(seo.title), pt::text(title)),\n    "description": coalesce(pt::text(seo.description), pt::text(description)),\n    "image": coalesce(seo.image, image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': SEO_QUERY_RESULT
-    '*[slug.current == $slug || _id == $id || _id == "drafts." + $id][0]{\n    "title": coalesce(pt::text(seo.title), pt::text(title)),\n    "description": coalesce(pt::text(seo.description), pt::text(description)),\n    "image": coalesce(seo.image, image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': OG_SHARE_IMAGE_QUERY_RESULT
+    '*[slug.current == $slug][0]{\n    "title": coalesce(pt::text(seo.title), pt::text(title)),\n    "description": coalesce(pt::text(seo.description), pt::text(description)),\n    "image": coalesce(seo.image, cover, teaserSmall.image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': SEO_QUERY_RESULT
+    '*[slug.current == $slug || _id == $id || _id == "drafts." + $id][0]{\n    "title": coalesce(pt::text(seo.title), pt::text(title)),\n    "description": coalesce(pt::text(seo.description), pt::text(description)),\n    "image": coalesce(seo.image, cover, teaserSmall.image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': OG_SHARE_IMAGE_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image,\n      series,\n      "episodes": *[\n        (\n          _type == "article" &&\n          ^._id in articleCollections[].collection._ref\n        ) || (\n          _type == "teaserSmall" &&\n          collection._ref == ^._id\n        )\n      ] | order(publishDate asc) {\n        _type == "article" => {\n          \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    audioSourceMp3,\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n        },\n        _type == "teaserSmall" => {\n          \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n        }\n      }\n    },\n  }': SERIES_MENU_QUERY_RESULT
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n    slug,\n\n    "episodes": *[\n      (\n        _type == "article" &&\n        ^._id in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^._id\n      )\n    ] | order(publishDate asc) {\n      _type == "article" => {\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    audioSourceMp3,\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      },\n      _type == "teaserSmall" => {\n        \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n      }\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '\n  *[\n    _type in ["article", "page"] &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    publishDate >= $from && publishDate < $to\n  ] | order(publishDate desc) {\n    _type,\n    "path": slug.current,\n    "title": pt::text(title),\n    publishDate,\n    _updatedAt\n  }': SITEMAP_BY_YEAR_QUERY_RESULT
