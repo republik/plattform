@@ -90,6 +90,7 @@ export interface DraftArticleDoc {
   // as meta.format). Capped at 5 to match the schema's own rule.max(5)
   // (sharedFields.ts) — real editorial data never approaches that anyway.
   articleRecommendations?: {
+    _key: string
     _type: 'reference'
     _ref: string
     _weak: true
@@ -312,6 +313,7 @@ function buildArticleRecommendations(
     .map((entry) => resolveRepublikRepoId(entry))
     .filter((repoId): repoId is string => Boolean(repoId))
     .map((repoId) => ({
+      _key: crypto.randomUUID(),
       _type: 'reference' as const,
       _ref: repoIdToSanityId(repoId),
       _weak: true as const,

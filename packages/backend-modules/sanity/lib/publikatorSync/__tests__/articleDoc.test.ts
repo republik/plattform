@@ -223,11 +223,13 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
 
       expect(doc.articleRecommendations).toEqual([
         {
+          _key: expect.any(String),
           _type: 'reference',
           _ref: repoIdToSanityId('republik/article-a'),
           _weak: true,
         },
         {
+          _key: expect.any(String),
           _type: 'reference',
           _ref: repoIdToSanityId('republik/article-b'),
           _weak: true,
@@ -248,6 +250,7 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
 
       expect(doc.articleRecommendations).toEqual([
         {
+          _key: expect.any(String),
           _type: 'reference',
           _ref: repoIdToSanityId('republik/article-a'),
           _weak: true,
