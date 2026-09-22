@@ -9328,15 +9328,6 @@
     yaml "^2.9.0"
     zod "^4.4.3"
 
-"@sanity/client@^6.24.1":
-  version "6.29.1"
-  resolved "https://registry.yarnpkg.com/@sanity/client/-/client-6.29.1.tgz#a40e6be06481b7291d9dc0115ef34809bb5befe3"
-  integrity sha512-BQRCMeDlBxwnMbFtB61HUxFf9aSb4HNVrpfrC7IFVqFf4cwcc3o5H8/nlrL9U3cDFedbe4W0AXt1mQzwbY/ljw==
-  dependencies:
-    "@sanity/eventsource" "^5.0.2"
-    get-it "^8.6.7"
-    rxjs "^7.0.0"
-
 "@sanity/client@^7.22.0":
   version "7.22.0"
   resolved "https://registry.yarnpkg.com/@sanity/client/-/client-7.22.0.tgz#f2d72c1660e7aedbe2de1ed93e7b36b946b21e13"
@@ -9356,6 +9347,16 @@
     get-it "^8.8.0"
     nanoid "^3.3.11"
     rxjs "^7.0.0"
+
+"@sanity/client@^7.27.0":
+  version "7.27.0"
+  resolved "https://registry.yarnpkg.com/@sanity/client/-/client-7.27.0.tgz#77d60d7ec20d9a226da0859b0275c8513a1df63a"
+  integrity sha512-qPVfGFo0bjUmRRtrx8mk1a2UnPPM93CFQr97bNacm2J3nShdhJlR6goNA/pQ7eRQO9uEG8moyUNrINYVGXgpPA==
+  dependencies:
+    "@sanity/eventsource" "^5.0.4"
+    get-it "^8.8.3"
+    nanoid "^3.3.17"
+    rxjs "^7.8.2"
 
 "@sanity/codegen@^7.0.3":
   version "7.0.3"
@@ -19743,7 +19744,7 @@ get-intrinsic@^1.1.3, get-intrinsic@^1.2.2, get-intrinsic@^1.2.4, get-intrinsic@
     hasown "^2.0.2"
     math-intrinsics "^1.1.0"
 
-get-it@^8.6.10, get-it@^8.6.7, get-it@^8.7.0, get-it@^8.8.0:
+get-it@^8.6.10, get-it@^8.7.0, get-it@^8.8.0:
   version "8.8.0"
   resolved "https://registry.yarnpkg.com/get-it/-/get-it-8.8.0.tgz#e67f9f86b146de7d77b843761785071a812dcb53"
   integrity sha512-vRyooMBzoIdEbARGT3JcvWqMD67YzC5SKlMqofyfck1ebLh2zzlpD4hVQ3xiuuiADk4jNs0rTezVlxCMqOlZfA==
@@ -19757,6 +19758,16 @@ get-it@^8.7.2:
   version "8.7.2"
   resolved "https://registry.yarnpkg.com/get-it/-/get-it-8.7.2.tgz#a015ff618901f3b751e471774cf4e9015b1a82ba"
   integrity sha512-slSwC/BBAnoz9OnHopU+V5pJKAieddoF6dmx2CvbWMRePgup8ftiB+D7d+pr2PZzcqNtZOVDMoLOsXGsERhTEg==
+  dependencies:
+    decompress-response "^7.0.0"
+    is-retry-allowed "^2.2.0"
+    through2 "^4.0.2"
+    tunnel-agent "^0.6.0"
+
+get-it@^8.8.3:
+  version "8.8.3"
+  resolved "https://registry.yarnpkg.com/get-it/-/get-it-8.8.3.tgz#ca7478119b5b15322d8c043b8f2b4ec8238976ca"
+  integrity sha512-IfkbWqOGO2kd2Ccgiz/NIzk3bcwjtVqBm3RNa3j/veHg2q7c1DgS3EXrCrvIWH0jbNTbhkdblnxBP7Dm8CiH+A==
   dependencies:
     decompress-response "^7.0.0"
     is-retry-allowed "^2.2.0"
@@ -25477,6 +25488,11 @@ nanoid@^3.3.16, nanoid@^3.3.6:
   version "3.3.18"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.18.tgz#f66a2de1199ffde0fcf21c8a5f13106b1c081913"
   integrity sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==
+
+nanoid@^3.3.17:
+  version "3.3.19"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.19.tgz#336d4aa4bcd4fb24d2cddede7ffeae40bec03f0a"
+  integrity sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==
 
 nanoid@^5.1.11:
   version "5.1.11"
