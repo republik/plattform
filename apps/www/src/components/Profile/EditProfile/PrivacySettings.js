@@ -7,7 +7,7 @@ import {
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '@/lib/withT'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const styles = {
   radio: css({

@@ -25,7 +25,7 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 
 const styles = {

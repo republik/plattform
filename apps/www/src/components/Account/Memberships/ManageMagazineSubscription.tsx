@@ -22,7 +22,7 @@ import {
   OverlayToolbar,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { errorToString } from '@/lib/utils/errors'

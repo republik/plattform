@@ -3,7 +3,7 @@ import { A, fontStyles } from '@project-r/styleguide'
 import { IconPlaylistAdd } from '@republik/icons'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const styles = {
   wrapper: css({

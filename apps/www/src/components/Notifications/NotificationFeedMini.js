@@ -14,7 +14,7 @@ import {
 import { notificationsMiniQuery } from './enhancers'
 import { timeFormat } from '@/lib/utils/format'
 import withT, { useTranslation } from '@/lib/withT'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const dateFormat = timeFormat('%d.%m.')
 

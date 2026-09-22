@@ -12,7 +12,7 @@ import { getMe } from '@/app/lib/auth/me'
 import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 
 const journalismPromiseStyle = css({

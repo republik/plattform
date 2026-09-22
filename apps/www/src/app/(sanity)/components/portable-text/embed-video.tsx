@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/withT'
 import { css, cva } from '@republik/theme/css'
 import { CirclePlay, ExternalLink as ExternalLinkIcon } from 'lucide-react'
 import { stegaClean } from 'next-sanity'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRef, useState, type ReactNode } from 'react'
 
 const containerStyle = cva({

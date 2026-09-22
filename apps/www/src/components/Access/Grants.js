@@ -3,7 +3,7 @@ import { graphql } from '@apollo/client/react/hoc'
 
 import { A, Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 import { timeFormat } from '@/lib/utils/format'
 import withInNativeApp from '@/lib/withInNativeApp'

@@ -1,6 +1,6 @@
 import { getClient } from '@/app/lib/apollo/client'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import Image from 'next/image'
 import formatCredits from '@/components/Feed/formatCredits'
 import { vstack } from '@republik/theme/patterns'

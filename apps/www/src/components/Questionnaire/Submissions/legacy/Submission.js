@@ -13,7 +13,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 import { AnswerText } from '../components/AnswerText'
 import PlainButton from './PlainButton'

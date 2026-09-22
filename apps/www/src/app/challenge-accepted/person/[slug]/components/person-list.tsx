@@ -7,7 +7,7 @@ import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import { css } from '@republik/theme/css'
 import { hstack } from '@republik/theme/patterns'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 type Person = ChallengeAcceptedPersonListQuery['people'][number]
 

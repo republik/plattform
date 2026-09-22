@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { format } from 'url'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { withRouter } from 'next/router'
 
 import withT from '@/lib/withT'

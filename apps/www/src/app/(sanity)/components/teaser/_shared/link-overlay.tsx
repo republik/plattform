@@ -5,7 +5,7 @@ import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/tea
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export function LinkOverlay({ teaser }: { teaser: TeaserListItemType }) {
   const trackEvent = useTrackEvent()

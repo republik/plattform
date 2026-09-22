@@ -1,5 +1,5 @@
 import { screenshotUrl } from '@/app/lib/util/screenshot-api'
-import NextLink from 'next/link'
+import NextLink from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 
 import {

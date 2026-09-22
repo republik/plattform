@@ -8,7 +8,7 @@ import { formatDateTimeLong, formatTimeAgo } from '@/app/lib/util/time-format'
 import type { NestedEditor } from '@/sanity.types'
 import { markdownToPortableText } from '@portabletext/markdown'
 import { css, cx } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { NestedPortableTextWithoutLinks } from './render'
 
 type EmbedCommentValue = Extract<

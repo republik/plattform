@@ -28,7 +28,7 @@ import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { toPlainText } from 'next-sanity'
 import { draftMode } from 'next/headers'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { Suspense } from 'react'
 
 export default async function ArticleDocument({

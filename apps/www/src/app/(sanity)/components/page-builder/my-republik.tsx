@@ -9,7 +9,7 @@ import { Spinner } from '@/app/components/ui/spinner'
 import { getClient } from '@/app/lib/apollo/client'
 import { getMe } from '@/app/lib/auth/me'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { Suspense } from 'react'
 
 const gridStyle = css({

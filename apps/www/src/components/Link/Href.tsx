@@ -1,5 +1,5 @@
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { cloneElement } from 'react'
 
 /**

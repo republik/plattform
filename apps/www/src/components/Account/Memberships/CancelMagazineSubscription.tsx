@@ -21,7 +21,7 @@ import {
   Loader,
 } from '@project-r/styleguide'
 
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export const styles = {
   autoSize: css({

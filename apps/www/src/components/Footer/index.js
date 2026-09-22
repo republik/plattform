@@ -8,7 +8,7 @@ import {
 import { IconOpensource } from '@republik/icons'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useMemo } from 'react'
 import withMe from '@/lib/apollo/withMe'
 import { useInNativeApp } from '@/lib/withInNativeApp'

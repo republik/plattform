@@ -2,7 +2,7 @@ import { ArticleTeaserDocument } from '#graphql/republik-api/__generated__/gql/g
 import { getClient } from '@/app/lib/apollo/client'
 import { getMe } from '@/app/lib/auth/me'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 type NewsletterProps = {
   path: string

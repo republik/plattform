@@ -15,7 +15,7 @@ import {
 } from '@/lib/constants'
 import { useTranslation } from '@/lib/withT'
 import { Center, Editorial, Interaction } from '@project-r/styleguide'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const DISCUSSION_PATH = '/feedback'
 

@@ -6,7 +6,7 @@ import {
   useHeaderHeight,
   Scroller,
 } from '@project-r/styleguide'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { rerouteDiscussion } from '../shared/DiscussionLink'
 

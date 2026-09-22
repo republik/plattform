@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import compose from 'lodash/flowRight'
 import {
   A,

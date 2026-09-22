@@ -4,7 +4,7 @@ import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import React from 'react'
 
 function FollowContributorCard({

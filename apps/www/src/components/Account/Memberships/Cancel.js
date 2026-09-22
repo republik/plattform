@@ -23,7 +23,7 @@ import {
 } from '@project-r/styleguide'
 
 import { useRouter } from 'next/router'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
 
