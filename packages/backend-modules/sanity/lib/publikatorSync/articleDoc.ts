@@ -488,11 +488,13 @@ export function buildDraftArticleDoc(
   repoMeta?: Record<string, unknown>,
 ): DraftArticleDoc {
   const nodes = commit.content?.children ?? []
-  const { title, description, byline, cover, centered } = extractTitleZoneData(
-    nodes,
-    true,
-    commit.repoId,
-  )
+  const { title: contentTitle, description, byline, cover, centered } =
+    extractTitleZoneData(nodes, true, commit.repoId)
+  const fallbackTitleStr =
+    optStr(commit.meta?.title) ?? optStr(commit.meta?.emailSubject)
+  const title =
+    contentTitle ??
+    (fallbackTitleStr ? inlineEditorFromString(fallbackTitleStr) : undefined)
   const publishDate = resolvePublishDate(commit, repoMeta)
   const { slugAuto, slug } = resolveSlug(commit.meta, publishDate)
   const formatRepoId = resolveFormatRepoId(commit.meta)
