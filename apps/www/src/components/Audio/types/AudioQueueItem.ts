@@ -14,7 +14,13 @@ export type AudioQueueItemProgress = Pick<MediaProgress, 'id' | 'secs'>
  * queue rather than shown broken.
  */
 export type AudioQueueItem = {
-  id: string
+  /**
+   * The queue slot's own id. Null for an optimistic item — one the player is
+   * already showing while the mutation that creates its slot is still in
+   * flight (see `togglePlayer`). Such an item can't be removed or advanced
+   * past, so anything keyed on this must check it first.
+   */
+  id: string | null
   sequence: number
   /** Key the media-progress API stores playback position under. */
   mediaId: string | null

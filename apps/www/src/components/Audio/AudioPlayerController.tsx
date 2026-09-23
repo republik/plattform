@@ -486,7 +486,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   // Handle track ending on media element
   const onQueueAdvance = async (autoPlay: boolean) => {
-    if (!activePlayerItem) {
+    // No id means the item is still optimistic: its queue slot doesn't exist
+    // server-side yet, so there's nothing to remove or advance past.
+    if (!activePlayerItem?.id) {
       return
     }
     try {
@@ -573,6 +575,29 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const togglePlayer = useCallback(
     async (item: AudioQueueItemContent, location?: AudioPlayerLocations) => {
       try {
+        // Nothing below touches the audio element until `handleSetupTrack`,
+        // at the end of `setupNextAudioItem` — and two network round trips
+        // sit in front of it (the queue mutation, then this item's media
+        // progress). Without pausing here the track the reader was listening
+        // to plays on through all of that, so the click appears to do
+        // nothing. `onPause` also saves the position they left off at.
+        await onPause()
+
+        // Show the clicked track before the round trips below, so the player
+        // swaps over on the click rather than a beat later. `id` is null
+        // until the mutation hands back the real slot, which
+        // `setupNextAudioItem` then sets in place of this.
+        const optimisticItem: AudioQueueItem = {
+          id: null,
+          sequence: 0,
+          mediaId: collectionsDocumentId(item),
+          userProgress: null,
+          document: item,
+        }
+        setActivePlayerItem(optimisticItem)
+        setOptimisticTimeUI(optimisticItem)
+        setIsVisible(true)
+
         const isHeadOfQueue = checkIfHeadOfQueue(collectionsDocumentId(item))
         let nextUp: AudioQueueItem
         // If the item to be played is already the first item in the queue
@@ -582,6 +607,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         } else {
           const queue = await addAudioQueueItem(item, 1)
           if (!queue || queue.length === 0) {
+            // Nothing was queued, so the optimistic item above would linger
+            // as a track that can never play.
+            setActivePlayerItem(null)
             return
           }
 
@@ -589,6 +617,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         }
         activeItemRef.current = nextUp
         await setupNextAudioItem(nextUp, true)
+        // Again, deliberately: the effect below hides the player whenever the
+        // queue reads as empty, and it can run on the queue update this
+        // mutation triggers — before the new item is in there.
         setIsVisible(true)
 
         if (inNativeApp) {
