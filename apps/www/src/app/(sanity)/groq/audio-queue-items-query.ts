@@ -40,8 +40,6 @@ export const AUDIO_QUEUE_ITEMS_QUERY = defineQuery(`
 export const LATEST_AUDIO_ARTICLES_QUERY = defineQuery(`
   *[
     _type == "article" &&
-    defined(slug.current) &&
-    defined(publishDate) &&
     defined(audioSourceMp3) &&
     (
       !defined($lastPublishDate) ||
