@@ -108,8 +108,8 @@ const DOCUMENT_FIELDS = /* groq */ `{
         // Same profile slug as the byline links
         "slug": coalesce(contributor->slug.current, contributor->userId),
         "name": contributor->title,
-        "description": contributor->description,
-        "portrait": contributor->portrait
+        "role": contributor->role,
+        "portraitImage": contributor->portraitImage
       },
       "articleCollection": articleCollections[featured == true][0].collection->{
         _id,

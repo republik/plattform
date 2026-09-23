@@ -1,3 +1,8 @@
+import Link from '@/app/components/ui/link'
+import withMe from '@/lib/apollo/withMe'
+import { useInNativeApp } from '@/lib/withInNativeApp'
+
+import withT from '@/lib/withT'
 import {
   ColorContextProvider,
   fontStyles,
@@ -8,12 +13,7 @@ import {
 import { IconOpensource } from '@republik/icons'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import Link from '@/app/components/ui/link'
 import { useMemo } from 'react'
-import withMe from '@/lib/apollo/withMe'
-import { useInNativeApp } from '@/lib/withInNativeApp'
-
-import withT from '@/lib/withT'
 import { withSignOut } from '../Auth/SignOut'
 import { ZINDEX_FOOTER } from '../constants'
 import Address from './Address'
@@ -265,7 +265,7 @@ const Footer = ({ t, me, signOut, hasActiveMembership }) => {
                 </FooterNavLink>
               </li>
               <li>
-                <FooterNavLink href='/format/jobs'>
+                <FooterNavLink href='/jobs'>
                   <a {...navLinkStyle}>{t('footer/jobs')}</a>
                 </FooterNavLink>
               </li>

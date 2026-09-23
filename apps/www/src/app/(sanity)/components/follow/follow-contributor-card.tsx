@@ -2,9 +2,9 @@ import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from '@/app/components/ui/link'
 import React from 'react'
 
 function FollowContributorCard({
@@ -31,9 +31,9 @@ function FollowContributorCard({
         },
       })}
     >
-      {contributor.portrait && (
+      {contributor.portraitImage && (
         <img
-          src={urlFor(contributor.portrait).width(250).height(250).url()}
+          src={urlFor(contributor.portraitImage).width(250).height(250).url()}
           width='84'
           height='84'
           className={css({
@@ -48,7 +48,7 @@ function FollowContributorCard({
             {contributor.name}
           </Link>
         </h4>
-        {!!contributor.description && (
+        {!!contributor.role && (
           <p
             className={css({
               fontSize: 'sm',
@@ -57,7 +57,7 @@ function FollowContributorCard({
               wordBreak: 'break-word',
             })}
           >
-            {contributor.description}
+            {contributor.role}
           </p>
         )}
       </div>

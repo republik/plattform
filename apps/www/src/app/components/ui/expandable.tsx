@@ -23,7 +23,7 @@ export function Expandable({ children }: { children: ReactNode }) {
               right: 0,
               bottom: 0,
               height: 80,
-              bgGradient: 'simple',
+              bgGradient: 'cutoffFade',
               pointerEvents: 'none',
             },
             _print: {

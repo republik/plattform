@@ -15,6 +15,7 @@ import { BookmarkAction } from './bookmark-action'
 import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
 import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
+import { OpenInSanityAction } from './open-in-sanity'
 import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
 import { ShareAction } from './share-action'
@@ -75,6 +76,13 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
           collisionPadding={16}
           title='Weitere Aktionen'
         >
+          <Menu.Item asChild>
+            <OpenInSanityAction
+              documentId={article._id}
+              documentType={article._type}
+              className={menuItemStyle}
+            />
+          </Menu.Item>
           {!hasPaywall && (
             <Menu.Item asChild>
               <PdfDownloadAction
