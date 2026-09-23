@@ -90,10 +90,10 @@ export function ArticleFloatingActions({
     downThreshold: MAX_HEADER_HEIGHT,
   })
 
-  // In the native app the page content sits inside `PullToRefresh`, which leaves
-  // a `translateY(0)` transform on its wrapper after the first pull gesture —
-  // that would make the wrapper, rather than the viewport, the containing block
-  // for this fixed element. A body portal is immune to it.
+  // In the native app the page content sits inside `PullToRefresh`, which
+  // transforms its wrapper while a pull is in progress — that makes the
+  // wrapper, rather than the viewport, the containing block for this fixed
+  // element. A body portal is immune to it.
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
 

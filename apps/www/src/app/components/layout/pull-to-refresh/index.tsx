@@ -30,6 +30,14 @@ function isPageScrollLocked() {
 }
 
 /**
+ * How far the finger has to travel down before the container starts to follow.
+ * Any transform on the container — even a sub-pixel one from a jittery tap —
+ * makes it the containing block for the `position: fixed` elements inside it,
+ * which then jump out from under the finger before the tap's `click` lands.
+ */
+const PULL_SLOP = 10
+
+/**
  * Hook to add a pull-to-refresh behavior to a container.
  * @param ref elementRef of the container
  * @param callback that is called when the user pulls down the container
@@ -91,6 +99,8 @@ function usePullToRefresh(
 
       // get the initial Y position
       const initialY = startEvent.touches[0].clientY
+      // Whether the container has been moved, and so has to be put back.
+      let pulled = false
 
       el.style.transition = ''
       // Bound to the window rather than to `el`: a finger that leaves the
@@ -129,8 +139,11 @@ function usePullToRefresh(
             'pulling',
           )
         }
-        if (dy <= triggerThreshold) {
-          el.style.transform = `translateY(${appr(dy)}px)`
+        if (dy > PULL_SLOP && dy <= triggerThreshold) {
+          pulled = true
+          // Measured from the end of the slop, so the container starts moving
+          // from 0 instead of jumping to where it would have been.
+          el.style.transform = `translateY(${appr(dy - PULL_SLOP)}px)`
         }
       }
 
@@ -138,9 +151,25 @@ function usePullToRefresh(
         const el = ref.current
         if (!el) return
 
-        // Return pulled element to original position
-        el.style.transform = 'translateY(0)'
-        el.style.transition = 'transform 0.2s ease-in-out'
+        if (pulled) {
+          // Return pulled element to original position, then drop the
+          // transform altogether — left in place, even `translateY(0)` keeps
+          // capturing the fixed elements inside (see `PULL_SLOP`).
+          el.style.transform = 'translateY(0)'
+          el.style.transition = 'transform 0.2s ease-in-out'
+
+          // `transitionend` bubbles, and the content has transitions of its
+          // own; only the container's snap-back counts.
+          const settle = (event: TransitionEvent) => {
+            if (event.target !== el || event.propertyName !== 'transform') {
+              return
+            }
+            el.removeEventListener('transitionend', settle)
+            el.style.transform = ''
+            el.style.transition = ''
+          }
+          el.addEventListener('transitionend', settle)
+        }
 
         // Clean up attributes on <html> element
         document.documentElement.removeAttribute('data-pull-to-refresh-state')
