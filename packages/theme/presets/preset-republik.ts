@@ -51,9 +51,9 @@ export const presetRepublik = definePreset({
           overlay: { value: 'rgba(0, 0, 0, 0.12) 0px -2px 15px -3px' },
         },
         gradients: {
-          simple: {
+          cutoffFade: {
             value:
-              'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+              'linear-gradient(0deg, {colors.background} 0%, rgba(255,255,255,0) 100%)',
           },
         },
         sizes: {

@@ -43,7 +43,7 @@ export function ContentWall({
               width: '100%',
               height: '200px',
               mt: '-200px',
-              bgGradient: 'simple',
+              bgGradient: 'cutoffFade',
             })}
           />
         </>
