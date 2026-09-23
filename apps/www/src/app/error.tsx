@@ -17,10 +17,10 @@ const linkClass = css({
 
 export default function Error({
   error,
-  reset,
+  retry,
 }: {
   error: Error
-  reset: () => void
+  retry: () => void
 }) {
   const [errorId, setErrorId] = useState<string | null>(null)
 
@@ -95,7 +95,7 @@ export default function Error({
               backgroundColor: 'primaryHover',
             },
           })}
-          onClick={() => reset()}
+          onClick={() => retry()}
         >
           Seite neu laden
         </button>
