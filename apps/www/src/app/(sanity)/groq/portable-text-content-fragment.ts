@@ -24,11 +24,9 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
       ...,
       _type == "internalLink" => {
         "slug": ${REFERENCE_SLUG},
-        "_id": reference->_id
       },
       _type == "expandableLink" => {
         "slug": ${REFERENCE_SLUG},
-        "_id": reference->_id,
         "referenceTitle": ${REFERENCE_TITLE}
       }
     },
