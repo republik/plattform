@@ -495,17 +495,22 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
 
+      const removedItemId = activePlayerItem.id
       const updatedQueue = (audioQueue || []).filter(
-        (item) => item.id !== activePlayerItem.id,
+        (item) => item.id !== removedItemId,
       )
 
       console.log('Audio Controller: onQueueAdvance', {
-        removingItemId: activePlayerItem.id,
+        removingItemId: removedItemId,
         queueLength: updatedQueue.length,
         autoPlay,
       })
 
-      await removeAudioQueueItem(activePlayerItem.id)
+      // Started here but awaited at the end: the mutation's optimistic
+      // response already takes the finished track out of the queue, and
+      // nothing below needs the server's answer. Awaiting it here put a full
+      // round trip between one track ending and the next one starting.
+      const removal = removeAudioQueueItem(removedItemId)
 
       audioQueueRef.current = [...updatedQueue]
       setInitialized(true)
@@ -528,6 +533,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           nextItem?.document?.slug,
         ])
       }
+
+      // Surfaces a failed removal, now that the next track is already going.
+      await removal
     } catch (error) {
       handleError(error)
     }
