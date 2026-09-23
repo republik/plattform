@@ -124,17 +124,6 @@ const AudioListItem = ({
                 <span style={{ whiteSpace: 'nowrap' }}>
                   {durationString} min
                 </span>
-                <span
-                  style={{
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    WebkitLineClamp: 1,
-                    wordBreak: 'break-all',
-                  }}
-                >
-                  {item.syntheticVoiceEnabled && 'synthetisch'}
-                </span>
               </span>
             </div>
             {userProgress?.secs >= 10 && durationSecs > 0 && (

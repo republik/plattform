@@ -43,16 +43,7 @@ const CurrentlyPlaying = ({
   handleOpen,
   handleDownload,
 }: CurrentlyPlayingProps) => {
-  const {
-    document: {
-      title,
-      publishDate,
-      slug,
-      image,
-      audioDurationMs,
-      syntheticVoiceEnabled,
-    },
-  } = item
+  const { title, publishDate, slug, image, audioDurationMs } = item.document
   return (
     <div>
       <div {...styles.root}>
@@ -80,17 +71,6 @@ const CurrentlyPlaying = ({
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}
             </span>
             <span>{formatMinutes((audioDurationMs ?? 0) / 1000)}min</span>
-            <span
-              style={{
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                WebkitLineClamp: 1,
-                wordBreak: 'break-all',
-              }}
-            >
-              {syntheticVoiceEnabled && 'synthetisch'}
-            </span>
           </div>
         </div>
         <AudioCalloutMenu
