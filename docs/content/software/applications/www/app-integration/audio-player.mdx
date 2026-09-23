@@ -19,13 +19,23 @@ The function `notifyApp` is used to send the events.
 
 ```ts
 notifyApp(AudioEvent.SETUP_TRACK, {
-  item,
+  // Adapted, not sent as-is — see below.
+  item: toNativeAppTrack(item),
   autoPlay,
   initialTime,
   playbackRate,
-  coverImage: item.document.meta.coverForNativeApp,
+  coverImage: audioCoverUrl(item.document?.image, 1024),
 })
 ```
+
+> **The `item` payload is a frozen shape.** The web player's own queue items
+> carry Sanity content (`{ _id, title, slug, audioSourceMp3, … }`), but the app
+> reads a track's url from `document.meta.audioSource.mp3` — the shape the old
+> `AudioQueueItem` GraphQL fragment delivered. App versions already installed
+> can never be updated, so a web release cannot change what they receive.
+> `helpers/nativeAppTrack.ts` translates between the two at this boundary, and
+> is the only place that knows about the old shape. The same applies to the
+> `play-audio` payload in `AudioProvider`, used by app versions below v2.2.0.
 ### Events
 
 | Event name | Description |

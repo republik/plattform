@@ -28,6 +28,7 @@ import { clamp } from './helpers/clamp'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { audioCoverUrl } from './helpers/audioCoverImages'
+import { toNativeAppTrack } from './helpers/nativeAppTrack'
 import { AudioQueueItem } from './types/AudioQueueItem'
 import {
   AudioPlayerLocations,
@@ -282,7 +283,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         initialTime,
       })
       notifyApp(AudioEvent.SETUP_TRACK, {
-        item,
+        // Adapted, not sent as-is: the app expects the pre-Sanity shape.
+        item: toNativeAppTrack(item),
         autoPlay,
         initialTime,
         playbackRate,

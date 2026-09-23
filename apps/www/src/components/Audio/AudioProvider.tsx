@@ -1,24 +1,13 @@
 'use client'
-import {
-  createContext,
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-  Dispatch,
-  SetStateAction,
-  useMemo,
-} from 'react'
-
-import { postMessage } from '@/lib/withInNativeApp'
-
-import { useMediaProgress } from './MediaProgress'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
-import { AudioQueueItem } from './types/AudioQueueItem'
-import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
+
+import { postMessage } from '@/lib/withInNativeApp'
 import EventEmitter from 'events'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
+import { AudioQueueItem } from './types/AudioQueueItem'
 
 /**
  * Where the removed legacy web player persisted its last track. Nothing
@@ -117,7 +106,6 @@ const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false)
 
   const isAudioQueueAvailable = useIsAudioQueueAvailable()
-  const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (
     playerItem: AudioQueueItemContent,
@@ -128,8 +116,6 @@ const AudioProvider = ({ children }) => {
     if (!url) {
       return
     }
-    const mediaId = collectionsDocumentId(playerItem)
-
     if (isAudioQueueAvailable) {
       // AudioEventEmitter.emit doesn't wait for (or propagate errors from)
       // listeners, so without this bridge the promise below would resolve
@@ -146,16 +132,27 @@ const AudioProvider = ({ children }) => {
       // The queue is unavailable only in a native app below v2.2.0, so this
       // branch is always in-app: hand the track to the app's own player in
       // the payload shape that version expects.
-      const currentTime = await getMediaProgress({ mediaId })
       postMessage({
         type: 'play-audio',
         payload: {
-          audioSource: { mp3: url, mediaId },
+          // Same reasoning as `toNativeAppTrack`: this shape is frozen by app
+          // versions and cannot be updated without an app update
+          audioSource: {
+            mediaId: null,
+            kind: playerItem.syntheticVoiceEnabled
+              ? 'syntheticReadAloud'
+              : 'readAloud',
+            mp3: url,
+            aac: null,
+            ogg: null,
+            durationMs: playerItem.audioDurationMs ?? null,
+            userProgress: null,
+          },
           url,
           title,
           sourcePath: slug,
-          mediaId,
-          currentTime,
+          mediaId: null,
+          currentTime: null,
         },
       })
     }
