@@ -387,13 +387,14 @@ export const buildSpeakableContent = (
       continue
     }
 
-    if (lastTextItem) {
+    if (
+      lastTextItem &&
+      (pendingDivider || lastTextItem.isHeading || item.isHeading)
+    ) {
       // a divider, or either side being a heading (or an aside boundary,
-      // itself expressed as a virtual divider), gets the longer "beat"
-      // pause; plain paragraph-to-paragraph gets the short one.
-      const duration =
-        pendingDivider || lastTextItem.isHeading || item.isHeading ? 1.4 : 0.6
-      blocks.push(pause(duration))
+      // itself expressed as a virtual divider), gets the "beat" pause;
+      // plain paragraph-to-paragraph transitions get none.
+      blocks.push(pause(1.4))
     }
 
     if (options?.chapterMarkers && item.isHeading) {
