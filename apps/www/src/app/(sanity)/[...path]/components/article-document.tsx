@@ -77,14 +77,7 @@ export default async function ArticleDocument({
           {cover && (
             <EditorialImage value={cover}>
               {podcast?._id && (
-                <CoverAudioButton
-                  targetId={article._id}
-                  durationMs={article.audioDurationMs ?? undefined}
-                  mp3={article.audioSourceMp3 ?? undefined}
-                  path={slug}
-                  title={toPlainText(title)}
-                  publishDate={article.publishDate}
-                />
+                <CoverAudioButton audioItem={article.audioItem} />
               )}
             </EditorialImage>
           )}

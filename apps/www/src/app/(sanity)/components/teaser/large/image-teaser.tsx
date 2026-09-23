@@ -6,9 +6,9 @@ import {
 } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
+import Link from '@/app/components/ui/link'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from '@/app/components/ui/link'
 
 const teaserTextContainer = css({
   py: '10',
@@ -227,31 +227,20 @@ export function ImageTeaser({
           <p className={teaserByline}>
             <InlinePortableText value={teaser.byline} />
           </p>
-          {teaser.audioSourceMp3 && (
-            <TeaserAudioPlayButton
-              targetId={targetId}
-              title={teaser.audioTitle}
-              path={target}
-              publishDate={publishDate}
-              mp3={teaser.audioSourceMp3}
-              durationMs={teaser.audioDurationMs}
-              // Matches teaserTextPosition's own centering rule above —
-              // TOP/MIDDLE/BOTTOM (and the unset default, MIDDLE) center the
-              // text; the corner variants and UNDERNEATH don't.
-              align={
-                !teaser.textPosition ||
-                [
-                  'TOP',
-                  'TOP_RIGHT',
-                  'MIDDLE',
-                  'BOTTOM',
-                  'BOTTOM_RIGHT',
-                ].includes(teaser.textPosition)
-                  ? 'center'
-                  : 'left'
-              }
-            />
-          )}
+          <TeaserAudioPlayButton
+            audioItem={teaser.audioItem}
+            // Matches teaserTextPosition's own centering rule above —
+            // TOP/MIDDLE/BOTTOM (and the unset default, MIDDLE) center the
+            // text; the corner variants and UNDERNEATH don't.
+            align={
+              !teaser.textPosition ||
+              ['TOP', 'TOP_RIGHT', 'MIDDLE', 'BOTTOM', 'BOTTOM_RIGHT'].includes(
+                teaser.textPosition,
+              )
+                ? 'center'
+                : 'left'
+            }
+          />
         </div>
       </div>
     </div>

@@ -4,7 +4,8 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import useAudioQueue, {
   useIsAudioQueueAvailable,
 } from '@/components/Audio/hooks/useAudioQueue'
-import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
+import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { collectionsDocumentId } from './document-id'
 import { useMe } from '@/lib/context/MeContext'
 import { cx } from '@republik/theme/css'
 import { ListMusic, ListX } from 'lucide-react'
@@ -23,52 +24,26 @@ export function useAddToPlaylistAllowed(mp3?: string): boolean {
 }
 
 export function AddToPlaylistAction({
-  documentId,
-  path,
-  title,
-  durationMs,
-  mp3,
+  audioItem,
   className,
-  cover,
-  coverDark,
 }: {
-  /** Same join key as `BookmarkAction` — see `document-id.ts`. */
-  documentId: string
-  path: string
-  title: string
-  durationMs?: number
-  mp3?: string
+  /** `null` for an article without audio — see `audio-item.ts`. */
+  audioItem: AudioQueueItemContent | null
   /** Overrides the standalone look, e.g. when embedded in a menu. */
   className?: string
-  cover?: string
-  coverDark?: string
 }) {
   const trackEvent = useTrackEvent()
-  const allowed = useAddToPlaylistAllowed(mp3)
+  const allowed = useAddToPlaylistAllowed(audioItem?.audioSourceMp3 ?? undefined)
   const [isPending, setIsPending] = useState(false)
   const { checkIfInQueue, addAudioQueueItem, removeAudioQueueItem } =
     useAudioQueue()
 
-  if (!allowed) {
+  if (!allowed || !audioItem) {
     return null
   }
 
-  const queueItem = checkIfInQueue(documentId)
-
-  const playerItem = {
-    id: documentId,
-    meta: {
-      title,
-      path,
-      cover,
-      coverDark,
-      audioSource: {
-        mediaId: documentId,
-        mp3,
-        durationMs: durationMs ?? 0,
-      },
-    },
-  } as unknown as AudioPlayerItem
+  const path = audioItem.slug
+  const queueItem = checkIfInQueue(collectionsDocumentId(audioItem))
 
   async function toggleQueueItem() {
     if (isPending) return
@@ -78,7 +53,7 @@ export function AddToPlaylistAction({
         await removeAudioQueueItem(queueItem.id)
         trackEvent({ action: 'audioQueueRemove', name: path })
       } else {
-        await addAudioQueueItem(playerItem)
+        await addAudioQueueItem(audioItem)
         trackEvent({ action: 'audioQueueAdd', name: path })
       }
     } catch (error) {

@@ -3,29 +3,18 @@
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { useIsAudioQueueAvailable } from '@/components/Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
-import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
+import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { collectionsDocumentId } from './document-id'
 import { IconAudio } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 type CoverAudioButtonProps = {
-  /** Sanity `_id` of the target article */
-  targetId: string
-  title: string
-  path: string
-  publishDate?: string | null
-  mp3?: string
-  durationMs?: number | null
+  /** `null` for an article without audio — see `audio-item.ts`. */
+  audioItem: AudioQueueItemContent | null
 }
 
 // shown on podcasts
-export function CoverAudioButton({
-  targetId,
-  title,
-  path,
-  publishDate,
-  mp3,
-  durationMs,
-}: CoverAudioButtonProps) {
+export function CoverAudioButton({ audioItem }: CoverAudioButtonProps) {
   const {
     toggleAudioPlayer,
     toggleAudioPlayback,
@@ -34,26 +23,13 @@ export function CoverAudioButton({
   } = useAudioContext()
   const isAudioQueueAvailable = useIsAudioQueueAvailable()
 
-  if (!isAudioQueueAvailable || !mp3) {
+  if (!isAudioQueueAvailable || !audioItem) {
     return null
   }
 
-  const id = `sanity:${targetId}`
-  const playerItem = {
-    id,
-    meta: {
-      title,
-      path,
-      publishDate,
-      audioSource: {
-        mediaId: id,
-        mp3,
-        durationMs: durationMs ?? 0,
-      },
-    },
-  } as unknown as AudioPlayerItem
-
-  const isActiveAudioItem = checkIfActivePlayerItem(id)
+  const isActiveAudioItem = checkIfActivePlayerItem(
+    collectionsDocumentId(audioItem),
+  )
   const itemPlaying = isPlaying && isActiveAudioItem
 
   return (
@@ -96,7 +72,7 @@ export function CoverAudioButton({
         if (isActiveAudioItem) {
           toggleAudioPlayback()
         } else {
-          toggleAudioPlayer(playerItem, AudioPlayerLocations.ARTICLE)
+          toggleAudioPlayer(audioItem, AudioPlayerLocations.ARTICLE)
         }
       }}
     >

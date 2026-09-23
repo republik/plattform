@@ -3,7 +3,8 @@
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
-import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
+import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { collectionsDocumentId } from './document-id'
 import { useMe } from '@/lib/context/MeContext'
 import { css, cx } from '@republik/theme/css'
 import { CirclePause, CirclePlay } from 'lucide-react'
@@ -11,22 +12,10 @@ import { useState } from 'react'
 import { ACTION_ICON_SIZE, actionStyle, pillStyle } from './action-style'
 
 export function PlayAction({
-  documentId,
-  durationMs,
-  mp3,
-  path,
-  title,
-  cover,
-  coverDark,
+  audioItem,
 }: {
-  /** Same join key as `BookmarkAction` — see `document-id.ts`. */
-  documentId: string
-  durationMs?: number
-  mp3?: string
-  path: string
-  title: string
-  cover?: string
-  coverDark?: string
+  /** `null` for an article without audio — see `audio-item.ts`. */
+  audioItem: AudioQueueItemContent | null
 }) {
   // Inactive until membership is known or for non-members
   const { isMember, hasActiveMembership } = useMe()
@@ -41,28 +30,15 @@ export function PlayAction({
   const trackEvent = useTrackEvent()
   const [failed, setFailed] = useState(false)
 
-  if (!mp3) {
+  if (!audioItem) {
     return null
   }
 
-  const isActive = checkIfActivePlayerItem(documentId)
-  const minutes = durationMs ? Math.round(durationMs / 60_000) : undefined
-
-  // Shaped like the legacy Document the audio player expects.
-  const playerItem = {
-    id: documentId,
-    meta: {
-      title,
-      path,
-      cover,
-      coverDark,
-      audioSource: {
-        mediaId: documentId,
-        mp3,
-        durationMs: durationMs ?? 0,
-      },
-    },
-  } as unknown as AudioPlayerItem
+  const path = audioItem.slug
+  const isActive = checkIfActivePlayerItem(collectionsDocumentId(audioItem))
+  const minutes = audioItem.audioDurationMs
+    ? Math.round(audioItem.audioDurationMs / 60_000)
+    : undefined
 
   const onClick = async () => {
     if (!canPlay) return
@@ -73,7 +49,7 @@ export function PlayAction({
       if (isActive) {
         await toggleAudioPlayback()
       } else {
-        await toggleAudioPlayer(playerItem, AudioPlayerLocations.ACTION_BAR)
+        await toggleAudioPlayer(audioItem, AudioPlayerLocations.ACTION_BAR)
       }
     } catch (error) {
       setFailed(true)

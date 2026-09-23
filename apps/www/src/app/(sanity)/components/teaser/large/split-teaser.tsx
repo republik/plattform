@@ -6,10 +6,10 @@ import {
 } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
+import Link from '@/app/components/ui/link'
 
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from '@/app/components/ui/link'
 
 const teaserStyle = cva({
   base: {
@@ -283,17 +283,10 @@ export function SplitTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
-        {teaser.audioSourceMp3 && (
-          <TeaserAudioPlayButton
-            targetId={targetId}
-            title={teaser.audioTitle}
-            path={target}
-            publishDate={publishDate}
-            mp3={teaser.audioSourceMp3}
-            durationMs={teaser.audioDurationMs}
-            align={teaser.textAlignment === 'CENTER' ? 'center' : 'left'}
-          />
-        )}
+        <TeaserAudioPlayButton
+          audioItem={teaser.audioItem}
+          align={teaser.textAlignment === 'CENTER' ? 'center' : 'left'}
+        />
       </div>
     </div>
   )

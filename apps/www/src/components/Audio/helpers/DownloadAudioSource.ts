@@ -1,10 +1,10 @@
-import { AudioQueueItem } from '../types/AudioPlayerItem'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 
-function downloadAudioSourceFile(item: AudioQueueItem['document']) {
-  const {
-    meta: { audioSource },
-  } = item
-  const downloadSource = audioSource.mp3 || audioSource.aac || audioSource.ogg
+function downloadAudioSourceFile(item: AudioQueueItemContent) {
+  const downloadSource = item?.audioSourceMp3
+  if (!downloadSource) {
+    return
+  }
 
   const anchorElement = document.createElement('a')
   anchorElement.style.display = 'none'
