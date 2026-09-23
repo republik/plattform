@@ -1,11 +1,11 @@
-import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
-import { useInNativeApp } from '@/lib/withInNativeApp'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItemProgress } from '@/components/Audio/types/AudioQueueItem'
 import { fontStyles } from '@project-r/styleguide'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
 import { ReactNode } from 'react'
-import { dateFormatter, formatMinutes } from '../../../shared'
-import AudioCover from '../../AudioCover'
+import { audioCoverStyle, dateFormatter, formatMinutes } from '../../../shared'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
 
@@ -75,29 +75,27 @@ const styles = {
 }
 
 type AudioListItemProps = {
-  item: AudioQueueItem['document']
+  item: AudioQueueItemContent
+  /** Listening position, when the item is one the queue tracks. */
+  userProgress?: AudioQueueItemProgress | null
   isActive?: boolean
-  onClick: (document: string) => Promise<void>
+  onClick: () => Promise<void>
   beforeActionItem: ReactNode
   actions: AudioListItemAction[]
 }
 
 const AudioListItem = ({
   item,
+  userProgress,
   isActive,
   onClick,
   beforeActionItem,
   actions,
 }: AudioListItemProps) => {
-  const { inNativeApp } = useInNativeApp()
+  const durationSecs = (item.audioDurationMs ?? 0) / 1000
+  const publishDate = new Date(Date.parse(item.publishDate))
 
-  const { meta } = item
-  const { audioSource } = meta
-  const publishDate = new Date(Date.parse(meta.publishDate))
-
-  const durationString = formatMinutes(
-    audioSource ? Math.max(audioSource.durationMs / 1000, 60) : 0,
-  )
+  const durationString = formatMinutes(Math.max(durationSecs, 60))
 
   return (
     <div
@@ -107,24 +105,20 @@ const AudioListItem = ({
       }}
     >
       {beforeActionItem}
-      <button
-        {...styles.buttonFix}
-        onClick={() => onClick(item.id)}
-        disabled={isActive}
-      >
+      <button {...styles.buttonFix} onClick={onClick} disabled={isActive}>
         <div {...styles.itemWrapper}>
-          <AudioCover
-            cover={meta.coverSm ?? meta.cover}
-            coverDark={meta.coverDark}
-            size={62}
-            image={meta.image}
-            format={meta.format?.meta}
-            audioCoverCrop={meta.audioCoverCrop}
-            alt={meta?.title}
+          <TeaserImage
+            image={item.image}
+            width={62}
+            height={62}
+            alt=''
+            fallback
+            className={audioCoverStyle}
+            style={{ width: 62, height: 62 }}
           />
           <div {...styles.dataWrapper}>
             <div {...styles.dataText}>
-              <AudioPlayerTitle title={meta.title} />
+              <AudioPlayerTitle title={item.title} />
               <span {...styles.metaLine}>
                 <span>{dateFormatter(publishDate)}</span>
                 <span style={{ whiteSpace: 'nowrap' }}>
@@ -139,11 +133,11 @@ const AudioListItem = ({
                     wordBreak: 'break-all',
                   }}
                 >
-                  {audioSource.kind === 'syntheticReadAloud' && 'synthetisch'}
+                  {item.syntheticVoiceEnabled && 'synthetisch'}
                 </span>
               </span>
             </div>
-            {audioSource.userProgress?.secs >= 10 && (
+            {userProgress?.secs >= 10 && durationSecs > 0 && (
               <div
                 style={{
                   width: '100%',
@@ -155,11 +149,7 @@ const AudioListItem = ({
                   style={{
                     backgroundColor: token.var('colors.divider'),
                     position: 'relative',
-                    width: `${
-                      (audioSource.userProgress.secs /
-                        (audioSource.durationMs / 1000)) *
-                      100
-                    }%`,
+                    width: `${(userProgress.secs / durationSecs) * 100}%`,
                     maxWidth: '100%',
                     height: 2,
                   }}

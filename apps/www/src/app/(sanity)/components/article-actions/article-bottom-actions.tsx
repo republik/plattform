@@ -5,6 +5,7 @@ import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
 import { ACTION_ICON_SIZE } from './action-style'
+import { audioItemFromArticle } from './audio-item'
 import {
   AddToPlaylistAction,
   useAddToPlaylistAllowed,
@@ -23,6 +24,16 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
+  const audioItem = audioItemFromArticle({
+    _id: article._id,
+    title,
+    slug: path,
+    publishDate: article.publishDate,
+    audioSourceMp3: article.audioSourceMp3,
+    audioDurationMs: article.audioDurationMs,
+    syntheticVoiceEnabled: article.syntheticVoiceEnabled,
+    image: article.teaserSmall?.image,
+  })
 
   const showAddToPlaylist = useAddToPlaylistAllowed(
     article.audioSourceMp3 ?? undefined,
@@ -66,11 +77,7 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
           >
             <Menu.Item asChild>
               <AddToPlaylistAction
-                documentId={documentId}
-                durationMs={article.audioDurationMs ?? undefined}
-                mp3={article.audioSourceMp3 ?? undefined}
-                path={path}
-                title={title}
+                audioItem={audioItem}
                 className={menuItemStyle}
               />
             </Menu.Item>

@@ -1,4 +1,4 @@
-import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItem } from './AudioQueueItem'
 
 export enum AudioEvent {
   // Sent to app
@@ -21,7 +21,7 @@ export enum AudioEvent {
 // Object with callbacks to control the web audio player
 export type AudioEventHandlers = {
   handleSetupTrack: (
-    track: AudioQueueItemContent,
+    track: AudioQueueItem,
     autoPlay: boolean,
     initialTime?: number,
   ) => Promise<void>

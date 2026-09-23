@@ -6,6 +6,7 @@ import {
   useAddToPlaylistAllowed,
 } from '@/app/(sanity)/components/article-actions/add-to-playlist-action'
 import { BookmarkAction } from '@/app/(sanity)/components/article-actions/bookmark-action'
+import { audioItemFromArticle } from '@/app/(sanity)/components/article-actions/audio-item'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { DiscussionAction } from '@/app/(sanity)/components/article-actions/discussion-action'
 import {
@@ -33,6 +34,15 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
   const documentId = collectionsDocumentId(teaser)
   const path = teaser.slug
   const title = teaser.plainTitle ?? ''
+  const audioItem = audioItemFromArticle({
+    _id: teaser._id,
+    title,
+    slug: path,
+    publishDate: teaser.publishDate,
+    audioSourceMp3: teaser.audioSourceMp3,
+    audioDurationMs: teaser.audioDurationMs,
+    image: teaser.image,
+  })
 
   return (
     <div
@@ -58,13 +68,7 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
           gap: '5',
         })}
       >
-        <PlayAction
-          documentId={documentId}
-          durationMs={teaser.audioDurationMs ?? undefined}
-          mp3={teaser.audioSourceMp3 ?? undefined}
-          path={path}
-          title={title}
-        />
+        <PlayAction audioItem={audioItem} />
         <BookmarkAction documentId={documentId} />
         <DiscussionAction
           path={path}
@@ -86,11 +90,7 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
           >
             <Menu.Item asChild>
               <AddToPlaylistAction
-                documentId={documentId}
-                durationMs={teaser.audioDurationMs ?? undefined}
-                mp3={mp3}
-                path={path}
-                title={title}
+                audioItem={audioItem}
                 className={menuItemStyle}
               />
             </Menu.Item>

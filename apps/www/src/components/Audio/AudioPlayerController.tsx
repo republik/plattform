@@ -25,7 +25,10 @@ import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
 import useTimeout from '@/lib/hooks/useTimeout'
 import { clamp } from './helpers/clamp'
-import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { audioCoverUrl } from './helpers/audioCoverImages'
+import { AudioQueueItem } from './types/AudioQueueItem'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
@@ -151,11 +154,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [hasDelayedAutoPlay, setHasDelayedAutoPlay] = useState(false)
 
   const setOptimisticTimeUI = (playerItem: AudioQueueItem, initialTime = 0) => {
-    const audioSource = playerItem?.document?.meta?.audioSource
     // Optimistic UI update
-    if (audioSource) {
-      const duration = audioSource.durationMs / 1000
-      setDuration(duration || 0)
+    if (playerItem?.document) {
+      setDuration((playerItem.document.audioDurationMs ?? 0) / 1000)
       setCurrentTime(initialTime)
     }
   }
@@ -172,12 +173,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const saveActiveItemProgress = useCallback(
     async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
-      const { mediaId } = activePlayerItem?.document?.meta?.audioSource ?? {}
+      const mediaId = activePlayerItem?.mediaId
       if (duration < (forcedState?.currentTime ?? currentTime)) {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.ILLEGAL_PROGRESS_UPDATE,
-          activePlayerItem?.document?.meta?.path,
+          activePlayerItem?.document?.slug,
           {
             currentTime: forcedState?.currentTime ?? currentTime,
             duration,
@@ -246,8 +247,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const fetchInitialTime = async (item: AudioQueueItem): Promise<number> => {
-    const mediaId = item.document?.meta?.audioSource.mediaId
-    const duration = item.document?.meta?.audioSource.durationMs / 1000
+    const mediaId = item.mediaId
+    const duration = (item.document?.audioDurationMs ?? 0) / 1000
     console.log('Audio Controller: fetchInitialTime', {
       mediaId,
       duration,
@@ -285,7 +286,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         autoPlay,
         initialTime,
         playbackRate,
-        coverImage: item.document.meta.coverForNativeApp,
+        coverImage: audioCoverUrl(item.document?.image, 1024),
       })
     },
     [playbackRate],
@@ -334,7 +335,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.PLAY_TRACK,
-          activePlayerItem?.document?.meta?.path,
+          activePlayerItem?.document?.slug,
         ])
       }
 
@@ -514,7 +515,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ENDED,
-          activePlayerItem?.document?.meta?.path,
+          activePlayerItem?.document?.slug,
         ])
       } else {
         const nextItem = updatedQueue[0]
@@ -522,7 +523,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ADVANCE,
-          nextItem?.document?.meta?.path,
+          nextItem?.document?.slug,
         ])
       }
     } catch (error) {
@@ -531,7 +532,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const addQueueItem = useCallback(
-    async (item: AudioPlayerItem, position?: number) => {
+    async (item: AudioQueueItemContent, position?: number) => {
       await addAudioQueueItem(item, position).catch(handleError)
     },
     [addAudioQueueItem],
@@ -543,7 +544,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         const queueItem = audioQueue?.find(({ id }) => id === audioQueueItemId)
 
         if (queueItem) {
-          const isHeadOfQueue = checkIfHeadOfQueue(queueItem.document.id)
+          const isHeadOfQueue = checkIfHeadOfQueue(
+            collectionsDocumentId(queueItem.document),
+          )
           if (isHeadOfQueue && audioQueue?.length > 1) {
             setupNextAudioItem(audioQueue[1], false).catch(handleError)
           }
@@ -568,9 +571,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   )
 
   const togglePlayer = useCallback(
-    async (item: AudioPlayerItem, location?: AudioPlayerLocations) => {
+    async (item: AudioQueueItemContent, location?: AudioPlayerLocations) => {
       try {
-        const isHeadOfQueue = checkIfHeadOfQueue(item.id)
+        const isHeadOfQueue = checkIfHeadOfQueue(collectionsDocumentId(item))
         let nextUp: AudioQueueItem
         // If the item to be played is already the first item in the queue
         // already just set the active item directly
@@ -594,10 +597,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
         trackEvent([
           location,
-          nextUp?.document?.meta?.audioSource?.kind === 'syntheticReadAloud'
+          nextUp?.document?.syntheticVoiceEnabled
             ? AudioPlayerActions.PLAY_SYNTHETIC
             : AudioPlayerActions.PLAY_TRACK,
-          nextUp?.document?.meta?.path,
+          nextUp?.document?.slug,
         ])
       } catch (error) {
         handleError(error)
@@ -677,7 +680,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }, [audioQueue, activePlayerItem, isVisible])
 
   useAudioContextEvent<{
-    item: AudioPlayerItem
+    item: AudioQueueItemContent
     location?: AudioPlayerLocations
     onSettled?: (error?: unknown) => void
   }>(AudioContextEvent.TOGGLE_PLAYER, async ({ item, location, onSettled }) => {
@@ -690,7 +693,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   })
   useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYBACK, togglePlayback)
   useAudioContextEvent<{
-    item: AudioPlayerItem
+    item: AudioQueueItemContent
     position?: number
   }>(AudioContextEvent.ADD_AUDIO_QUEUE_ITEM, ({ item, position }) =>
     addQueueItem(item, position),
@@ -759,8 +762,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         duration:
           duration !== 0
             ? duration
-            : (activePlayerItem?.document?.meta?.audioSource?.durationMs || 0) /
-              1000,
+            : (activePlayerItem?.document?.audioDurationMs || 0) / 1000,
         playbackRate,
         actions: {
           onPlay,
@@ -778,7 +780,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
             trackEvent([
               AudioPlayerLocations.AUDIO_PLAYER,
               AudioPlayerActions.SKIP_TO_NEXT,
-              activePlayerItem?.document?.meta?.path,
+              activePlayerItem?.document?.slug,
             ])
           },
           handleError,

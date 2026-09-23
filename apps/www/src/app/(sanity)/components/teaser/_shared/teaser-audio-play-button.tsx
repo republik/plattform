@@ -3,19 +3,15 @@
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { useIsAudioQueueAvailable } from '@/components/Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
-import type { AudioPlayerItem } from '@/components/Audio/types/AudioPlayerItem'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { useMe } from '@/lib/context/MeContext'
 import { IconPauseCircleOutline, IconPlayCircleOutline } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 type TeaserAudioPlayButtonProps = {
-  /** Sanity `_id` of the target article */
-  targetId: string
-  title: string
-  path: string
-  publishDate?: string | null
-  mp3: string
-  durationMs?: number | null
+  /** `null` for an article without audio — see `audio-item.ts`. */
+  audioItem: AudioQueueItemContent | null
   /**
    * Matches the surrounding teaser text's alignment. The button is a flex
    * item in a `flexDirection: 'column'` container, so it stretches full-width
@@ -32,12 +28,7 @@ type TeaserAudioPlayButtonProps = {
  * the legacy `TeaserAudioPlayButton`.
  */
 export function TeaserAudioPlayButton({
-  targetId,
-  title,
-  path,
-  publishDate,
-  mp3,
-  durationMs,
+  audioItem,
   align = 'left',
 }: TeaserAudioPlayButtonProps) {
   const {
@@ -49,29 +40,13 @@ export function TeaserAudioPlayButton({
   const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { isMember } = useMe()
 
-  if (!isAudioQueueAvailable || !isMember) {
+  if (!isAudioQueueAvailable || !isMember || !audioItem) {
     return null
   }
 
-  const id = `sanity:${targetId}`
-  // `mediaId` is a placeholder: the server is authoritative for it and
-  // `useAudioQueue` overrides it with the ref's own `mediaId` once the queue
-  // mutation comes back.
-  const playerItem = {
-    id,
-    meta: {
-      title,
-      path,
-      publishDate,
-      audioSource: {
-        mediaId: id,
-        mp3,
-        durationMs: durationMs ?? 0,
-      },
-    },
-  } as unknown as AudioPlayerItem
-
-  const isActiveAudioItem = checkIfActivePlayerItem(id)
+  const isActiveAudioItem = checkIfActivePlayerItem(
+    collectionsDocumentId(audioItem),
+  )
   const itemPlaying = isPlaying && isActiveAudioItem
 
   return (
@@ -90,7 +65,7 @@ export function TeaserAudioPlayButton({
         if (isActiveAudioItem) {
           toggleAudioPlayback()
         } else {
-          toggleAudioPlayer(playerItem, AudioPlayerLocations.FRONT)
+          toggleAudioPlayer(audioItem, AudioPlayerLocations.FRONT)
         }
       }}
     >

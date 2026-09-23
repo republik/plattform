@@ -1,4 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { audioItemFromArticle } from '@/app/(sanity)/components/article-actions/audio-item'
 import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
@@ -148,12 +149,14 @@ export function TextTeaser({
         </p>
         {teaser.audioSourceMp3 && (
           <TeaserAudioPlayButton
-            targetId={targetId}
-            title={teaser.audioTitle}
-            path={target}
-            publishDate={publishDate}
-            mp3={teaser.audioSourceMp3}
-            durationMs={teaser.audioDurationMs}
+            audioItem={audioItemFromArticle({
+              _id: targetId,
+              title: teaser.audioTitle,
+              slug: target,
+              publishDate,
+              audioSourceMp3: teaser.audioSourceMp3,
+              audioDurationMs: teaser.audioDurationMs,
+            })}
             align='center'
           />
         )}

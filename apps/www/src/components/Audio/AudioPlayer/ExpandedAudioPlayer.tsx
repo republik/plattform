@@ -20,7 +20,7 @@ import {
   AudioPlayerActions,
   AudioPlayerLocations,
 } from '../types/AudioActionTracking'
-import { AudioQueueItem } from '../types/AudioPlayerItem'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import AudioControl, { AudioControlProps } from './controls/AudioControl'
 import { AudioPlayerProps } from './shared'
 import AudioError from './ui/AudioError'
@@ -164,13 +164,13 @@ const ExpandedAudioPlayer = ({
     return () => window.removeEventListener('popstate', handlePopState)
   }, [handleMinimize])
 
-  const handleDownload = async (item: AudioQueueItem['document']) => {
+  const handleDownload = async (item: AudioQueueItemContent) => {
     try {
       downloadAudioSourceFile(item)
       trackEvent([
         AudioPlayerLocations.AUDIO_PLAYER,
         AudioPlayerActions.DOWNLOAD_TRACK,
-        activeItem.document.meta?.path,
+        activeItem.document?.slug,
       ])
     } catch (err) {
       console.error(err)

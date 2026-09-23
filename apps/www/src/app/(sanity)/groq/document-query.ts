@@ -70,6 +70,7 @@ const DOCUMENT_FIELDS = /* groq */ `{
       "plainTitle": pt::text(title),
       audioSourceMp3,
       audioDurationMs,
+      syntheticVoiceEnabled,
       teaserSmall{ image },
       _updatedAt,
       publishDate,
