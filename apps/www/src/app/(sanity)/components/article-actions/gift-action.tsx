@@ -30,28 +30,18 @@ const noteStyle = css({
 })
 
 export type ShareOrGiftActionProps = ShareActionProps & {
-  /** Sanity document ref — what a gift link is minted against. */
   documentId: string
 }
 
 /**
  * Members hand the article out as a gift; everyone else just shares it.
- *
- * Deliberately one action rather than two: the gift menu already carries every
- * target the share menu does, so offering both would only ask the reader to
- * pick between two versions of the same link.
  */
 export function ShareOrGiftAction({
   documentId,
   ...shareProps
 }: ShareOrGiftActionProps) {
-  // Same pair as the bookmark action: the `member` role alone also covers
-  // trial and "Abo teilen" readers, who have nothing of their own to give
-  // away.
   const { isMember, hasActiveMembership } = useMe()
 
-  // Membership isn't known on the first paint, so this starts as the plain
-  // share menu and swaps once it is.
   if (!isMember || !hasActiveMembership) {
     return <ShareAction {...shareProps} />
   }
