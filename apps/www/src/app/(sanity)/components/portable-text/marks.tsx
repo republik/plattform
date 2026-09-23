@@ -40,10 +40,14 @@ const linkStyle = css({
 })
 
 export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
-  const href = value?.slug ?? `/permalink/${value?._id}`
+  const href = value?.slug
+
+  if (!href) {
+    console.warn('Internal link without href', value, { text })
+  }
 
   return (
-    <Link href={href} className={linkStyle}>
+    <Link href={href ?? '#'} className={linkStyle}>
       {text}
     </Link>
   )
