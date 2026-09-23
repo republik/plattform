@@ -6,7 +6,6 @@ import {
   useAddToPlaylistAllowed,
 } from '@/app/(sanity)/components/article-actions/add-to-playlist-action'
 import { BookmarkAction } from '@/app/(sanity)/components/article-actions/bookmark-action'
-import { audioItemFromArticle } from '@/app/(sanity)/components/article-actions/audio-item'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { DiscussionAction } from '@/app/(sanity)/components/article-actions/discussion-action'
 import {
@@ -20,9 +19,10 @@ import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
 
 export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
-  const mp3 =
-    teaser._type === 'article' ? teaser.audioSourceMp3 ?? undefined : undefined
-  const showAddToPlaylist = useAddToPlaylistAllowed(mp3)
+  const audioItem = teaser._type === 'article' ? teaser.audioItem : null
+  const showAddToPlaylist = useAddToPlaylistAllowed(
+    audioItem?.audioSourceMp3 ?? undefined,
+  )
 
   // Only articles carry audio/discussion data, and standalone teaser
   // documents point at other content — there's nothing of their own to
@@ -33,16 +33,6 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
 
   const documentId = collectionsDocumentId(teaser)
   const path = teaser.slug
-  const title = teaser.plainTitle ?? ''
-  const audioItem = audioItemFromArticle({
-    _id: teaser._id,
-    title,
-    slug: path,
-    publishDate: teaser.publishDate,
-    audioSourceMp3: teaser.audioSourceMp3,
-    audioDurationMs: teaser.audioDurationMs,
-    image: teaser.image,
-  })
 
   return (
     <div

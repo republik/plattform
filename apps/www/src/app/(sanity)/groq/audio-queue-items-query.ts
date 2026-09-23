@@ -10,7 +10,7 @@ import { defineQuery } from 'next-sanity'
  * a track's title/cover/mp3 — both for the queue and for the player's
  * "Latest" tab.
  */
-const AUDIO_ITEM_FRAGMENT = /* groq */ `
+export const AUDIO_ITEM_FRAGMENT = /* groq */ `
   _id,
   "title": pt::text(title),
   "slug": slug.current,

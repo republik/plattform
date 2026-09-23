@@ -1,3 +1,4 @@
+import { AUDIO_ITEM_FRAGMENT } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { TEASER_LARGE_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
@@ -39,11 +40,11 @@ export const TEASER_LARGE_FRAGMENT = /* groq */ `
     textSize,
     color,
     backgroundColor,
-    // Audio always comes from the target article itself — a teaserLarge
-    // override doc has no audio of its own.
-    "audioTitle": pt::text(target[0]->title),
-    "audioSourceMp3": target[0]->audioSourceMp3,
-    "audioDurationMs": target[0]->audioDurationMs,
+    "audioItem": select(
+      defined(target[0]->audioSourceMp3) => target[0]->{
+        ${AUDIO_ITEM_FRAGMENT}
+      }
+    ),
   }
 `
 

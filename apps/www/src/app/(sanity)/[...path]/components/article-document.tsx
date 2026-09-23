@@ -5,7 +5,6 @@ import { ArticleFloatingActions } from '@/app/(sanity)/components/article-action
 import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
 import { JumpToReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
 import { CoverAudioButton } from '@/app/(sanity)/components/article-actions/cover-audio-button'
-import { audioItemFromArticle } from '@/app/(sanity)/components/article-actions/audio-item'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { ReadingPositionTracker } from '@/app/(sanity)/components/article-actions/reading-position-tracker'
 import { EditLink } from '@/app/(sanity)/components/edit-link'
@@ -78,18 +77,7 @@ export default async function ArticleDocument({
           {cover && (
             <EditorialImage value={cover}>
               {podcast?._id && (
-                <CoverAudioButton
-                  audioItem={audioItemFromArticle({
-                    _id: article._id,
-                    title: toPlainText(title),
-                    slug,
-                    publishDate: article.publishDate,
-                    audioSourceMp3: article.audioSourceMp3,
-                    audioDurationMs: article.audioDurationMs,
-                    syntheticVoiceEnabled: article.syntheticVoiceEnabled,
-                    image: article.teaserSmall?.image,
-                  })}
-                />
+                <CoverAudioButton audioItem={article.audioItem} />
               )}
             </EditorialImage>
           )}

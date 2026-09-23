@@ -1,5 +1,4 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { audioItemFromArticle } from '@/app/(sanity)/components/article-actions/audio-item'
 import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/teaser-audio-play-button'
 import {
   Heading,
@@ -228,16 +227,9 @@ export function ImageTeaser({
           <p className={teaserByline}>
             <InlinePortableText value={teaser.byline} />
           </p>
-          {teaser.audioSourceMp3 && (
+          {teaser.audioItem && (
             <TeaserAudioPlayButton
-              audioItem={audioItemFromArticle({
-                _id: targetId,
-                title: teaser.audioTitle,
-                slug: target,
-                publishDate,
-                audioSourceMp3: teaser.audioSourceMp3,
-                audioDurationMs: teaser.audioDurationMs,
-              })}
+              audioItem={teaser.audioItem}
               // Matches teaserTextPosition's own centering rule above —
               // TOP/MIDDLE/BOTTOM (and the unset default, MIDDLE) center the
               // text; the corner variants and UNDERNEATH don't.

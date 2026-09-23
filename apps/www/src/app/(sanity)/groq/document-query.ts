@@ -1,3 +1,4 @@
+import { AUDIO_ITEM_FRAGMENT } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { CTA_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/cta-block-fragment'
 import { MENU_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/menu-block-fragment'
@@ -68,10 +69,10 @@ const DOCUMENT_FIELDS = /* groq */ `{
     _type == "article" => {
       repoId,
       "plainTitle": pt::text(title),
-      audioSourceMp3,
-      audioDurationMs,
-      syntheticVoiceEnabled,
       teaserSmall{ image },
+      "audioItem": select(defined(audioSourceMp3) => @{
+        ${AUDIO_ITEM_FRAGMENT}
+      }),
       _updatedAt,
       publishDate,
       // Plain text and SEO overrides, used for the JSON-LD linked data
