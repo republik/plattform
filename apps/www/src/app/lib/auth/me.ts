@@ -9,12 +9,20 @@ export async function getMe(): Promise<{
   isMember: boolean
   hasActiveMembership: boolean
 }> {
-  const client = await getClient()
-  const { data } = await client.query({ query: MeDocument })
-  return {
-    me: data?.me,
-    isMember: data?.me?.roles.some((role) => role === 'member'),
-    hasActiveMembership:
-      !!data?.me?.activeMembership || !!data?.me?.activeMagazineSubscription,
+  try {
+    const client = await getClient()
+    const { data } = await client.query({ query: MeDocument })
+    return {
+      me: data?.me,
+      isMember: data?.me?.roles.some((role) => role === 'member'),
+      hasActiveMembership:
+        !!data?.me?.activeMembership || !!data?.me?.activeMagazineSubscription,
+    }
+  } catch (e) {
+    return {
+      me: null,
+      isMember: false,
+      hasActiveMembership: false,
+    }
   }
 }

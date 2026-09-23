@@ -106,15 +106,19 @@ const footerLinkStyle = css({
 export async function EmbedComment({ value }: { value: EmbedCommentValue }) {
   const { id, content, createdAt, discussion } = value
 
-  const { data } = id
-    ? await (
-        await getClient()
-      ).query<CommentEmbedQuery>({
-        query: CommentEmbedDocument,
-        variables: { id },
-        errorPolicy: 'all',
-      })
-    : { data: undefined }
+  let data = undefined
+  try {
+    const res = id
+      ? await (
+          await getClient()
+        ).query<CommentEmbedQuery>({
+          query: CommentEmbedDocument,
+          variables: { id },
+          errorPolicy: 'all',
+        })
+      : { data: undefined }
+    data = res.data
+  } catch (e) {}
 
   const live = data?.comment
   const unavailable = !live
