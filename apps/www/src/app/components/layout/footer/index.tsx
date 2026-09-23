@@ -1,18 +1,12 @@
 import LightSwitch from '@/app/components/lightswitch'
+import Link, { type LinkProps } from '@/app/components/ui/link'
 import { getMe } from '@/app/lib/auth/me'
 import { getPlatformInformation } from '@/app/lib/util/useragent/platform-information'
-import {
-  IconInstagram,
-  IconLogoBluesky,
-  IconLogoFacebook,
-  IconLogoMastodon,
-  IconOpensource,
-} from '@republik/icons'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
+import { IconInstagram, IconLogoBluesky, IconLogoFacebook, IconLogoMastodon, IconOpensource } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import logo from '@republik/theme/logo.json'
 import { vstack } from '@republik/theme/patterns'
-import { PUBLIC_BASE_URL } from '@/lib/constants'
-import Link, { type LinkProps } from '@/app/components/ui/link'
 import { ComponentType, isValidElement, ReactElement } from 'react'
 import { UrlObject } from 'url'
 
@@ -102,7 +96,7 @@ export default async function Footer() {
       name: 'Republik',
       links: {
         'Das sind wir': '/about',
-        Jobs: '/format/jobs',
+        Jobs: '/jobs',
         Cockpit: '/cockpit',
         FAQ: '/faq',
         'Project R': 'https://project-r.construction',
