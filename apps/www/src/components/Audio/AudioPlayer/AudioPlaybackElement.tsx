@@ -1,6 +1,6 @@
-import { AudioPlayerProps } from '../AudioPlayerController'
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import useInterval from '@/lib/hooks/useInterval'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { AudioPlayerProps } from '../AudioPlayerController'
 import { useMediaSession } from '../hooks/useMediaSession'
 import { AudioQueueItem } from '../types/AudioQueueItem'
 
@@ -143,8 +143,14 @@ const AudioPlaybackElement = ({
         return
       }
 
+      const mp3 = playerItem?.document?.audioSourceMp3
+      if (!mp3) {
+        console.error('Audio Elem: track has no mp3 to play')
+        return
+      }
+
       setActivePlayerItem(playerItem)
-      setAudioSource(mediaRef.current, playerItem.document.audioSourceMp3)
+      setAudioSource(mediaRef.current, mp3)
       mediaRef.current.preload = autoPlay ? 'auto' : 'metadata'
 
       setIsLoading(true)

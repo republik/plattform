@@ -80,6 +80,9 @@ function mergeQueueItem(
   }
 }
 
+const isPlayable = (item: AudioQueueItem | null): boolean =>
+  !!item?.document?.audioSourceMp3
+
 /**
  * useAudioQueue acts as a provider for the audio queue and all it's mutations.
  * Additionally, it provides the user-progress for all queued audio-items.
@@ -194,13 +197,15 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sanityIds.join(',')])
 
-  const audioQueueItems = audioQueueRefs.map((ref) => {
+  // used for remove excess items, including invisible ones
+  const allQueueItems = audioQueueRefs.map((ref) => {
     const documentId = refDocumentId(ref)
     return mergeQueueItem(
       ref,
       documentId ? knownItems.get(documentId) : undefined,
     )
   })
+  const audioQueueItems = allQueueItems.filter(isPlayable)
   const isLoading = meLoading || audioQueueIsLoading || pendingFetches > 0
 
   const [localAudioItem, setLocalAudioItem] =
@@ -281,10 +286,12 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     const documentId = collectionsDocumentId(item)
 
     if (me) {
-      // Enforce queue limit by removing oldest item (end of queue) before adding
-      if (audioQueueItems.length >= MAX_QUEUE_SIZE) {
-        const lastItem = audioQueueItems[audioQueueItems.length - 1]
-        await removeAudioQueueItemMutation({ variables: { id: lastItem.id } })
+      // Enforce the queue limit by removing an item before adding.
+      if (allQueueItems.length >= MAX_QUEUE_SIZE) {
+        const evicted =
+          allQueueItems.find((item) => !isPlayable(item)) ??
+          audioQueueItems[audioQueueItems.length - 1]
+        await removeAudioQueueItemMutation({ variables: { id: evicted.id } })
       }
 
       const { data } = await addAudioQueueItemMutation({
@@ -300,12 +307,15 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
         AudioQueueItemRefFragmentDoc,
         data?.audioQueueItems || [],
       )
-      return refs.map((ref) =>
-        mergeQueueItem(
-          ref,
-          knownItemsRef.current.get(refDocumentId(ref) ?? ''),
-        ),
-      )
+      // Filtered like every other queue this hook hands out.
+      return refs
+        .map((ref) =>
+          mergeQueueItem(
+            ref,
+            knownItemsRef.current.get(refDocumentId(ref) ?? ''),
+          ),
+        )
+        .filter(isPlayable)
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
         id: uuid(),
@@ -412,16 +422,13 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
   }
 
   const resolvedQueue = !me
-    ? [localAudioItem].filter(Boolean)
+    ? [localAudioItem].filter(isPlayable)
     : audioQueueData
     ? audioQueueItems ?? []
     : null
 
   return {
-    // Items without content (queued elsewhere, not fetched yet), or whose
-    // audio has since been removed/unpublished in Sanity (mp3 gone, ref still
-    // lingering in userAudioQueue), are hidden rather than rendered broken.
-    audioQueue: resolvedQueue?.filter((item) => item.document?.audioSourceMp3),
+    audioQueue: resolvedQueue,
     audioQueueIsLoading: isLoading,
     audioQueueHasError: !me ? null : audioQueueHasError,
     refetchAudioQueue: !me ? () => null : refetchAudioQueue,
