@@ -33,9 +33,11 @@ function getCarouselHeading(teaser: TeaserListItemType): string {
   if (teaser._type === 'teaserSmall') {
     return teaser.label
   }
-  return (
-    teaser.label || teaser.articleCollection?.title || teaser.heading?.title
-  )
+  // if an article is part of a series, we show the series name in the feed
+  if (teaser.articleCollection?.series) {
+    return teaser.articleCollection.title
+  }
+  return teaser.label || teaser.heading?.title
 }
 
 export function CarouselTeaser({
