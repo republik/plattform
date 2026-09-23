@@ -131,18 +131,26 @@ describe('buildSpeakableContent', () => {
   })
 
   describe('paragraph pausing', () => {
-    it('uses a 0.6s pause between two plain paragraphs', () => {
+    it('inserts no pause between two plain paragraphs', () => {
       const result = buildSpeakableContent(
         { content: [block('Erster.'), block('Zweiter.')] },
         'voice-a',
       )
-      // last pause before stinger is the inter-paragraph one (credits pause
-      // is always 1.4s, so check the pause immediately preceding "Zweiter.")
+      // "Erster." and "Zweiter." must be back-to-back, with no pause node
+      // sandwiched between them (the only pause in the whole result is the
+      // fixed 1.4s one following the credits paragraph).
+      const blocks = result as any[]
+      const first = blocks.findIndex((n) => n.content?.[0]?.text === 'Erster.')
+      const second = blocks.findIndex(
+        (n) => n.content?.[0]?.text === 'Zweiter.',
+      )
+      expect(second).toBe(first + 1)
+
       const durations = pauseDurations(result)
-      expect(durations[durations.length - 1]).toBe(0.6)
+      expect(durations).toEqual([1.4])
     })
 
-    it('treats a divider as a caesura: 1.4s pause instead of 0.6s', () => {
+    it('treats a divider as a caesura: 1.4s pause instead of none', () => {
       const result = buildSpeakableContent(
         {
           content: [block('Erster.'), { _type: 'divider' }, block('Zweiter.')],
