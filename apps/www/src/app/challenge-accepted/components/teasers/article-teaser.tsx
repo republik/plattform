@@ -76,107 +76,113 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   // To support path with query params, we use the URL API
   // and extract the pathname from it.
   const url = new URL(path, PUBLIC_BASE_URL)
+  // Wrap GraphQL API calls in try/catch because Apollo Client will throw on networkError
+  try {
+    const client = await getClient()
+    const { data } = await client.query<ArticleTeaserQuery>({
+      query: ArticleTeaserDocument,
+      variables: { path: url.pathname },
+    })
 
-  const client = await getClient()
-  const { data } = await client.query<ArticleTeaserQuery>({
-    query: ArticleTeaserDocument,
-    variables: { path: url.pathname },
-  })
+    const { article } = data
 
-  const { article } = data
+    if (!data.article) {
+      const { me } = await getMe()
 
-  if (!data.article) {
-    const { me } = await getMe()
-
-    // Show warning to editors
-    if (
-      me?.roles.some((role) => ['editor', 'moderator', 'admin'].includes(role))
-    ) {
-      return (
-        <div
-          className={css({
-            background: 'hotpink',
-            textStyle: 'h1Sans',
-            fontWeight: 'bold',
-            p: '4',
-          })}
-        >
-          Beitrag nicht gefunden: {path}
-        </div>
-      )
-    }
-    return null
-  }
-
-  const overrideImage = !!image
-
-  return (
-    <Link
-      href={path}
-      className={css({ color: 'text.white', textDecoration: 'none' })}
-    >
-      <div
-        className={css({
-          background: 'challengeAccepted.blue',
-          color: 'text.white',
-        })}
-      >
-        {overrideImage ? (
-          <Image
-            alt=''
-            src={image.url}
-            width={image.width}
-            height={image.height}
+      // Show warning to editors
+      if (
+        me?.roles.some((role) =>
+          ['editor', 'moderator', 'admin'].includes(role),
+        )
+      ) {
+        return (
+          <div
             className={css({
-              width: 'full',
-              height: 'auto',
-              objectFit: 'contain',
-            })}
-          />
-        ) : (
-          <>
-            {article.meta.image && (
-              <Image
-                alt=''
-                src={getResizedImageSrc(article.meta.image, 1500)}
-                {...getOriginalImageDimensions(article.meta.image)}
-                className={css({
-                  width: 'full',
-                  height: 'auto',
-                  objectFit: 'contain',
-                })}
-                unoptimized
-              />
-            )}
-          </>
-        )}
-        <div
-          className={vstack({
-            gap: '4',
-            p: { base: '8', md: '12' },
-            textAlign: 'center',
-            textStyle: 'serif',
-          })}
-        >
-          <h3 className={css({ textStyle: 'teaserTitle' })}>
-            {article.meta.title}
-          </h3>
-          <p className={css({ textStyle: 'teaserLead' })}>
-            {article.meta.description}
-          </p>
-          <p
-            className={css({
-              textStyle: 'teaserCredits',
-              '& > a': {
-                color: 'text.white',
-                textDecoration: 'underline',
-              },
+              background: 'hotpink',
+              textStyle: 'h1Sans',
+              fontWeight: 'bold',
+              p: '4',
             })}
           >
-            {renderMdast(formatCredits(article.meta.credits), creditsSchema)}
-          </p>
+            Beitrag nicht gefunden: {path}
+          </div>
+        )
+      }
+      return null
+    }
+
+    const overrideImage = !!image
+
+    return (
+      <Link
+        href={path}
+        className={css({ color: 'text.white', textDecoration: 'none' })}
+      >
+        <div
+          className={css({
+            background: 'challengeAccepted.blue',
+            color: 'text.white',
+          })}
+        >
+          {overrideImage ? (
+            <Image
+              alt=''
+              src={image.url}
+              width={image.width}
+              height={image.height}
+              className={css({
+                width: 'full',
+                height: 'auto',
+                objectFit: 'contain',
+              })}
+            />
+          ) : (
+            <>
+              {article.meta.image && (
+                <Image
+                  alt=''
+                  src={getResizedImageSrc(article.meta.image, 1500)}
+                  {...getOriginalImageDimensions(article.meta.image)}
+                  className={css({
+                    width: 'full',
+                    height: 'auto',
+                    objectFit: 'contain',
+                  })}
+                  unoptimized
+                />
+              )}
+            </>
+          )}
+          <div
+            className={vstack({
+              gap: '4',
+              p: { base: '8', md: '12' },
+              textAlign: 'center',
+              textStyle: 'serif',
+            })}
+          >
+            <h3 className={css({ textStyle: 'teaserTitle' })}>
+              {article.meta.title}
+            </h3>
+            <p className={css({ textStyle: 'teaserLead' })}>
+              {article.meta.description}
+            </p>
+            <p
+              className={css({
+                textStyle: 'teaserCredits',
+                '& > a': {
+                  color: 'text.white',
+                  textDecoration: 'underline',
+                },
+              })}
+            >
+              {renderMdast(formatCredits(article.meta.credits), creditsSchema)}
+            </p>
+          </div>
         </div>
-      </div>
-    </Link>
-  )
+      </Link>
+    )
+  } catch (e) {
+    return null
+  }
 }

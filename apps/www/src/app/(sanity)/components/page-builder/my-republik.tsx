@@ -31,67 +31,71 @@ export function MyRepublik() {
 }
 
 async function MyRepublikWithData() {
-  const { me } = await getMe()
+  // Wrap GraphQL API calls in try/catch because Apollo Client will throw on networkError
+  try {
+    const { me } = await getMe()
 
-  if (!me) return null
+    if (!me) return null
 
-  const gql = await getClient()
+    const gql = await getClient()
+    const { data, error } = await gql.query({
+      query: MyRepublikDocument,
+      variables: {
+        names: me.progressOptOut ? ['bookmarks'] : ['progress', 'bookmarks'],
+        progress: me.progressOptOut ? null : ProgressState.Unfinished,
+      },
+    })
 
-  const { data, error } = await gql.query({
-    query: MyRepublikDocument,
-    variables: {
-      names: me.progressOptOut ? ['bookmarks'] : ['progress', 'bookmarks'],
-      progress: me.progressOptOut ? null : ProgressState.Unfinished,
-    },
-  })
+    if (error) {
+      throw new Error(error.message)
+    }
 
-  if (error) {
-    throw new Error(error.message)
+    const progressIds = data.progress?.nodes?.map((n) => n.sanityId) ?? []
+    const notificationIds =
+      data.notifications?.nodes
+        ?.filter((n) => n.object?.__typename === 'SanityDocumentRef')
+        .map((n) => (n.object as { id: string })?.id) ?? []
+
+    const teasers = await sanityClientFetch(ARTICLES_BY_IDS_QUERY, {
+      ids: [...progressIds, ...notificationIds],
+    })
+    const teasersById = new Map(teasers.map((t) => [t._id, t]))
+
+    // keep API order
+    const progressTeasers = progressIds
+      .map((id) => teasersById.get(id))
+      .filter((teaser) => teaser !== undefined)
+    const notificationTeasers = notificationIds
+      .map((id) => teasersById.get(id))
+      .filter((teaser) => teaser !== undefined)
+
+    if (!progressTeasers.length && !notificationTeasers.length) return null
+
+    return (
+      <div className={gridStyle}>
+        {progressTeasers.length > 0 && (
+          <div>
+            <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
+              <Link href='/lesezeichen'>Weiterlesen</Link>
+            </h2>
+            {progressTeasers.map((teaser) => (
+              <FeedTeaser key={teaser._id} teaser={teaser} />
+            ))}
+          </div>
+        )}
+        {notificationTeasers.length > 0 && (
+          <div>
+            <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
+              <Link href='/benachrichtigungen'>Abonnierte Beiträge</Link>
+            </h2>
+            {notificationTeasers.map((teaser) => (
+              <FeedTeaser key={teaser._id} teaser={teaser} />
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  } catch (e) {
+    return null
   }
-
-  const progressIds = data.progress?.nodes?.map((n) => n.sanityId) ?? []
-  const notificationIds =
-    data.notifications?.nodes
-      ?.filter((n) => n.object?.__typename === 'SanityDocumentRef')
-      .map((n) => (n.object as { id: string })?.id) ?? []
-
-  const teasers = await sanityClientFetch(ARTICLES_BY_IDS_QUERY, {
-    ids: [...progressIds, ...notificationIds],
-  })
-  const teasersById = new Map(teasers.map((t) => [t._id, t]))
-
-  // keep API order
-  const progressTeasers = progressIds
-    .map((id) => teasersById.get(id))
-    .filter((teaser) => teaser !== undefined)
-  const notificationTeasers = notificationIds
-    .map((id) => teasersById.get(id))
-    .filter((teaser) => teaser !== undefined)
-
-  if (!progressTeasers.length && !notificationTeasers.length) return null
-
-  return (
-    <div className={gridStyle}>
-      {progressTeasers.length > 0 && (
-        <div>
-          <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
-            <Link href='/lesezeichen'>Weiterlesen</Link>
-          </h2>
-          {progressTeasers.map((teaser) => (
-            <FeedTeaser key={teaser._id} teaser={teaser} />
-          ))}
-        </div>
-      )}
-      {notificationTeasers.length > 0 && (
-        <div>
-          <h2 className={css({ textStyle: 'metaSubheading', mb: '8' })}>
-            <Link href='/benachrichtigungen'>Abonnierte Beiträge</Link>
-          </h2>
-          {notificationTeasers.map((teaser) => (
-            <FeedTeaser key={teaser._id} teaser={teaser} />
-          ))}
-        </div>
-      )}
-    </div>
-  )
 }
