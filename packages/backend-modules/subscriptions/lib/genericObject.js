@@ -77,7 +77,14 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
             return {
               id: fromSanityRef(obj.sanityRef),
               type: obj.sanityType,
-              objectId: obj.objectId,
+              // The canonical `sanity:`-prefixed ref, not `obj.objectId`
+              // (which stays the legacy bare repoId for a rescued-legacy row
+              // -- see documents/loaders/Document.js). Callers that key off
+              // this (e.g. subscribedByMe's `resolvedId`, used to look up an
+              // existing subscription by `objectDocumentId`) need the form
+              // new rows are actually stored under, or they'd silently miss
+              // a subscription created after the content moved to Sanity.
+              objectId: obj.sanityRef,
               __typename: 'SanityDocumentRef',
             }
           }
