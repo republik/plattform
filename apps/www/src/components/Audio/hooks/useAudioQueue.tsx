@@ -13,6 +13,7 @@ import {
   ReorderAudioQueueDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
 import { useMe } from '@/lib/context/MeContext'
 import { reportError } from '@/lib/errors/reportError'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
@@ -22,8 +23,6 @@ import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { NEW_AUDIO_API_VERSION } from '../constants'
-import { getAudioCoverImages } from '../helpers/audioCoverImages'
-import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -64,36 +63,6 @@ async function getAudioQueueItemsByIds(
 }
 
 /**
- * Shapes a Sanity `AUDIO_QUEUE_ITEMS_QUERY` result into an `AudioPlayerItem`.
- * Cover art falls back through the same chain as the old per-format fallback:
- * the article's compact-teaser image, else its own cover, else its featured
- * collection's image (the "Kolumne"/"Briefing" equivalent).
- */
-function toAudioPlayerItem(content: AudioQueueItemContent): AudioPlayerItem {
-  const id = `sanity:${content._id}`
-  const { cover, coverDark } = getAudioCoverImages({
-    teaserSmallImage: content.teaserSmall?.image,
-    cover: content.cover,
-    collectionImage: content.collectionImage,
-  })
-  return {
-    id,
-    meta: {
-      title: content.title,
-      path: content.path,
-      publishDate: content.publishDate,
-      cover,
-      coverDark,
-      audioSource: {
-        mediaId: id,
-        mp3: content.audioSourceMp3,
-        durationMs: content.audioDurationMs ?? 0,
-      },
-    },
-  } as unknown as AudioPlayerItem
-}
-
-/**
  * Attach cached metadata to a ref, so the rest of the player (which expects
  * `document.meta...`) doesn't need to know refs exist. `mediaId` and
  * `userProgress` come from the server, which is authoritative for both —
@@ -101,24 +70,13 @@ function toAudioPlayerItem(content: AudioQueueItemContent): AudioPlayerItem {
  */
 function mergeQueueItem(
   ref: AudioQueueItemRefFragment,
-  knownItem: AudioPlayerItem | undefined,
+  knownItem: AudioQueueItemContent | undefined,
 ): AudioQueueItem {
   return {
     id: ref.id,
     sequence: ref.sequence,
-    document: knownItem
-      ? {
-          ...knownItem,
-          meta: {
-            ...knownItem.meta,
-            audioSource: {
-              ...knownItem.meta.audioSource,
-              mediaId: ref.mediaId ?? knownItem.meta.audioSource.mediaId,
-              userProgress: ref.userProgress ?? null,
-            },
-          },
-        }
-      : null,
+    userProgress: ref.userProgress,
+    document: knownItem,
   }
 }
 

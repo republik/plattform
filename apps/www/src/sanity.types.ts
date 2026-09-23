@@ -378,6 +378,7 @@ export type ArticleTemplate = {
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
   showTextProgress?: boolean
   theme?: Theme
+  autoCreateDiscussion?: boolean
   mailchimpCampaignId?: string
   mailchimpCampaignUrl?: string
   repoId?: string
@@ -825,6 +826,7 @@ export type Article = {
   theme?: Theme
   discussion?: DiscussionReference
   inlineDiscussion?: boolean
+  autoCreateDiscussion?: boolean
   mailchimpCampaignId?: string
   mailchimpCampaignUrl?: string
   repoId?: string
@@ -1927,7 +1929,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
 
 // Source: src/app/(sanity)/groq/audio-queue-items-query.ts
 // Variable: AUDIO_QUEUE_ITEMS_QUERY
-// Query: *[_type == "article" && _id in $ids]{    _id,    "title": pt::text(title),    "path": slug.current,    publishDate,    audioSourceMp3,    audioDurationMs,    teaserSmall{ image },    cover,    "collectionImage": articleCollections[featured == true][0].collection->image,  }
+// Query: *[_type == "article" && _id in $ids]{    _id,    "title": pt::text(title),    "path": slug.current,    publishDate,    audioSourceMp3,    audioDurationMs,    "image": teaserSmall.image,  }
 export type AUDIO_QUEUE_ITEMS_QUERY_RESULT = Array<{
   _id: string
   title: string
@@ -1935,29 +1937,12 @@ export type AUDIO_QUEUE_ITEMS_QUERY_RESULT = Array<{
   publishDate: string | null
   audioSourceMp3: string | null
   audioDurationMs: number | null
-  teaserSmall: {
-    image: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      imageDark?: ImageDark
-      _type: 'image'
-    } | null
-  } | null
-  cover: EditorialImage | null
-  collectionImage: {
+  image: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
-    imageDark?: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    }
+    imageDark?: ImageDark
     _type: 'image'
   } | null
 }>
@@ -7968,7 +7953,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "contributor" && userId == $userId][0]{\n    "totalCount": count(*[\n  _type == "article" &&\n  defined(slug.current) &&\n  defined(publishDate) &&\n  references(^._id) &&\n  ^._id in contributors[].contributor._ref\n])\n  }.totalCount': ARTICLES_BY_AUTHOR_COUNT_QUERY_RESULT
     '\n  *[\n    _type == "article" &&\n    _id in $ids\n  ] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    audioSourceMp3,\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': ARTICLES_BY_IDS_QUERY_RESULT
     '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true) &&\n    (\n      !defined($lastPublishDate) ||\n      publishDate < $lastPublishDate ||\n      (publishDate == $lastPublishDate && _id > $lastId)\n    )\n  ] | order(publishDate desc, _id asc) [0...$limit] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    audioSourceMp3,\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': ARTICLES_QUERY_RESULT
-    '\n  *[_type == "article" && _id in $ids]{\n    _id,\n    "title": pt::text(title),\n    "path": slug.current,\n    publishDate,\n    audioSourceMp3,\n    audioDurationMs,\n    teaserSmall{ image },\n    cover,\n    "collectionImage": articleCollections[featured == true][0].collection->image,\n  }\n': AUDIO_QUEUE_ITEMS_QUERY_RESULT
+    '\n  *[_type == "article" && _id in $ids]{\n    _id,\n    "title": pt::text(title),\n    "path": slug.current,\n    publishDate,\n    audioSourceMp3,\n    audioDurationMs,\n    "image": teaserSmall.image,\n  }\n': AUDIO_QUEUE_ITEMS_QUERY_RESULT
     '*[_type == "article"][0]{\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n\n  }': BYLINE_FRAGMENT_QUERY_RESULT
     '\n  *[_type == "articleCollection" && _id in $ids]{\n    _id,\n    title,\n    description,\n    image\n  }\n': COLLECTIONS_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "callToAction"][0]{\n      \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n    }\n  }': CTA_BLOCK_FRAGMENT_QUERY_RESULT

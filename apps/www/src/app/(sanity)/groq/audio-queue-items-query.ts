@@ -1,5 +1,5 @@
-import { defineQuery } from 'next-sanity'
-import type { AUDIO_QUEUE_ITEMS_QUERY_RESULT } from '@/sanity.types'
+import type { AUDIO_QUEUE_ITEMS_QUERY_RESULT } from "@/sanity.types";
+import { defineQuery } from "next-sanity";
 
 /**
  * Content for a batch of audio-queue refs, keyed by `_id` — the counterpart
@@ -15,9 +15,7 @@ export const AUDIO_QUEUE_ITEMS_QUERY = defineQuery(`
     publishDate,
     audioSourceMp3,
     audioDurationMs,
-    teaserSmall{ image },
-    cover,
-    "collectionImage": articleCollections[featured == true][0].collection->image,
+    "image": teaserSmall.image,
   }
 `)
 
