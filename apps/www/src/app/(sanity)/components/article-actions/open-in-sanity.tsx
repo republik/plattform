@@ -24,11 +24,8 @@ export function OpenInSanityAction({
   return (
     <a
       className={cx(actionStyle, className)}
-      // Preview renders drafts, whose `_id` carries a `drafts.` prefix — the
-      // same reason `document-id.ts` strips it. An edit intent is resolved
-      // from the published id and opens the draft if there is one.
       href={editUrl({
-        documentId: documentId.replace(/^drafts\./, ''),
+        documentId,
         documentType,
       })}
       rel='noopener noreferrer'
