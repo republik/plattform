@@ -13,6 +13,10 @@ import {
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get('slug')
   const documentId = req.nextUrl.searchParams.get('documentId')
+  // Set by getSocialImage() for an article opened through a gift link, so the
+  // preview carries the "Geschenk-Artikel" badge. Part of the cache key, so
+  // the gift and plain variants don't overwrite each other downstream.
+  const isGift = req.nextUrl.searchParams.get('gift') === '1'
 
   if (!slug && !documentId) {
     return new Response('Missing slug or documentId', { status: 400 })
@@ -73,6 +77,7 @@ export async function GET(req: NextRequest) {
         heading={data.heading}
         backgroundImageUrl={backgroundImageUrl}
         logoUrl={logoUrl}
+        isGift={isGift}
       />
     ),
     {

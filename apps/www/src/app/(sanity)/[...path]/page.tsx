@@ -11,9 +11,14 @@ import { notFound } from 'next/navigation'
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
   params,
+  searchParams,
 }: PageProps<'/[...path]'>): Promise<Metadata> {
   const { path } = await params
   const slug = `/${path.join('/')}`
+  // A gift link is shared as `<slug>?gift=<token>`, and its preview should say
+  // so. Reading searchParams costs nothing here: this route is already
+  // rendered per request, because `sanityClientFetch` reads `draftMode()`.
+  const isGift = !!(await searchParams).gift
 
   const data = await sanityClientFetch(
     SEO_QUERY,
@@ -32,7 +37,7 @@ export async function generateMetadata({
       title: data.title,
       description: data?.description,
       url: new URL(slug, process.env.NEXT_PUBLIC_BASE_URL),
-      images: getSocialImage(data, slug),
+      images: getSocialImage(data, slug, { isGift }),
     },
   }
 }

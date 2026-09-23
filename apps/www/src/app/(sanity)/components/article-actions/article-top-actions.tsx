@@ -15,11 +15,11 @@ import { useArticleActions } from './article-actions-context'
 import { BookmarkAction } from './bookmark-action'
 import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
+import { ShareOrGiftAction } from './gift-action'
 import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
 import { OpenInSanityAction } from './open-in-sanity'
 import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
-import { ShareAction } from './share-action'
 
 export type ArticleTopActionsProps = {
   article: ArticleDocumentType
@@ -69,7 +69,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         {...coverImages}
       />
       <BookmarkAction documentId={documentId} />
-      <ShareAction title={title} path={path} />
+      <ShareOrGiftAction documentId={documentId} title={title} path={path} />
       <DiscussionAction
         path={path}
         backendDiscussionId={article.discussion?.backendDiscussionId}
