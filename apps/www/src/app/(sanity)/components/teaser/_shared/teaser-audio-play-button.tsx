@@ -1,10 +1,10 @@
 'use client'
 
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { useIsAudioQueueAvailable } from '@/components/Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
-import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
-import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { useMe } from '@/lib/context/MeContext'
 import { IconPauseCircleOutline, IconPlayCircleOutline } from '@republik/icons'
 import { css } from '@republik/theme/css'
@@ -39,40 +39,47 @@ export function TeaserAudioPlayButton({
   } = useAudioContext()
   const isAudioQueueAvailable = useIsAudioQueueAvailable()
   const { isMember } = useMe()
+  const isDisabled = !isAudioQueueAvailable || !isMember || !audioItem
 
-  if (!isAudioQueueAvailable || !isMember || !audioItem) {
-    return null
-  }
-
-  const isActiveAudioItem = checkIfActivePlayerItem(
-    collectionsDocumentId(audioItem),
-  )
+  const isActiveAudioItem =
+    !isDisabled && checkIfActivePlayerItem(collectionsDocumentId(audioItem))
   const itemPlaying = isPlaying && isActiveAudioItem
 
   return (
     <button
+      style={{ cursor: isDisabled ? 'default' : 'pointer' }}
       className={css({
         position: 'relative', // place above the link overlay
         display: 'inline-flex',
         alignSelf: align === 'center' ? 'center' : 'flex-start',
-        cursor: 'pointer',
         color: 'inherit',
       })}
-      title={itemPlaying ? 'Pause' : 'Beitrag hören'}
+      title={
+        itemPlaying
+          ? 'Pause'
+          : isDisabled
+          ? 'Nur für Mitglieder'
+          : 'Beitrag hören'
+      }
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
+        if (isDisabled) return
         if (isActiveAudioItem) {
           toggleAudioPlayback()
         } else {
           toggleAudioPlayer(audioItem, AudioPlayerLocations.FRONT)
         }
       }}
+      disabled={isDisabled}
     >
       {itemPlaying ? (
         <IconPauseCircleOutline size={32} />
       ) : (
-        <IconPlayCircleOutline size={32} />
+        <IconPlayCircleOutline
+          size={32}
+          style={{ opacity: isDisabled ? 0.3 : 1 }}
+        />
       )}
     </button>
   )
