@@ -135,6 +135,11 @@ export interface ArticleDoc {
   byline?: PortableTextBlocks
   content?: PortableTextBlocks
   slug?: { current: string }
+  // Structured credits, kept in sync with `byline` by studio's
+  // sync-contributors Blueprint Function. Preferred over parsing the byline
+  // string for the spoken credits notice — see textToSpeech.ts, which still
+  // falls back to that parse while this field is being backfilled.
+  contributors?: { kind?: string; name?: string | null }[]
   syntheticVoice?: string
   syntheticVoiceEnabled?: boolean
   // Hash of the speakable fields as of the last successful generation (see
@@ -175,6 +180,7 @@ export const fetchArticle = (documentId: string) =>
   sanityClient().fetch<ArticleDoc | null>(
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
+      "contributors": contributors[]{ kind, "name": contributor->title },
       syntheticVoice, syntheticVoiceEnabled, audioContentHash,
       "audioGenerationResult": audioGenerationResult{status, updatedAt},
       "pendingAudioVersions": audioVersions[status == "pending"]{contentHash, generatedAt},

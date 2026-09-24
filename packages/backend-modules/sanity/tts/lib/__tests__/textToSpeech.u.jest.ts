@@ -32,11 +32,19 @@ const portableText = (text: string) => [block(text)]
 const paragraphs = (result: unknown[]) =>
   (result as any[])
     .filter((n) => n.type === 'paragraph')
-    .map((n) => ({
-      role: n.attrs.meta.role,
-      text: n.content[0].text,
-      attrs: n.attrs,
-    }))
+    .map((n) => ({ role: n.attrs.meta.role, text: n.content[0].text }))
+
+// The credits paragraph carries structured author names in its meta, which
+// the role/text projection above deliberately drops (keeping every other
+// assertion in this file a plain two-key comparison).
+const creditsOf = (result: unknown[]) => {
+  const node = (result as any[]).find(
+    (n) => n.type === 'paragraph' && n.attrs.meta.role === 'credits',
+  )
+  return (
+    node && { text: node.content[0].text, authors: node.attrs.meta.authors }
+  )
+}
 
 const pauseDurations = (result: unknown[]) =>
   (result as any[]).filter((n) => n.type === 'pause').map((n) => n.attrs.pause)
@@ -91,6 +99,58 @@ describe('buildSpeakableContent', () => {
   })
 
   describe('credits notice', () => {
+    it('prefers the structured contributors over parsing the byline', () => {
+      const result = buildSpeakableContent(
+        {
+          byline: portableText(
+            'Ein Beitrag von Jane Doe (Text) und Max Muster (Bild) 12.05.2023',
+          ),
+          contributors: [
+            { kind: 'Text', name: 'Erika Beispiel' },
+            // no role recorded at all — studio treats that as a text author
+            { name: 'Hans Muster' },
+            { kind: 'Übersetzung', name: 'Jean Exemple' },
+            { kind: 'voice', name: 'Vera Stimme' },
+            { kind: 'Bild', name: 'Beat Bild' },
+          ],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      const credits = creditsOf(result)
+      expect(credits?.authors).toEqual([
+        'Erika Beispiel',
+        'Hans Muster',
+        'Jean Exemple',
+      ])
+      expect(credits?.text).toBe(
+        'Ein Beitrag von Erika Beispiel, Hans Muster und Jean Exemple, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('falls back to the byline when contributors is empty or names nobody usable', () => {
+      const byline = portableText(
+        'Ein Beitrag von Jane Doe (Text) und Max Muster (Bild) 12.05.2023',
+      )
+      const fromEmpty = buildSpeakableContent(
+        { byline, contributors: [], content: portableText('Absatz.') },
+        'voice-a',
+      )
+      const fromImageOnly = buildSpeakableContent(
+        {
+          byline,
+          contributors: [{ kind: 'Bild', name: 'Beat Bild' }],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      for (const result of [fromEmpty, fromImageOnly]) {
+        const credits = creditsOf(result)
+        expect(credits?.authors).toEqual(['Jane Doe'])
+      }
+    })
+
     it('extracts only text/translation authors from a byline, dropping image credits', () => {
       const result = buildSpeakableContent(
         {
@@ -101,11 +161,11 @@ describe('buildSpeakableContent', () => {
         },
         'voice-a',
       )
-      const credits = paragraphs(result).find((p) => p.role === 'credits')
+      const credits = creditsOf(result)
       expect(credits?.text).toBe(
         'Ein Beitrag von Jane Doe, vorgelesen von einer synthetischen Stimme.',
       )
-      expect(credits?.attrs?.meta?.authors).toEqual(['Jane Doe'])
+      expect(credits?.authors).toEqual(['Jane Doe'])
     })
 
     it('falls back to the generic notice when the byline does not match the expected pattern', () => {
@@ -116,7 +176,7 @@ describe('buildSpeakableContent', () => {
         },
         'voice-a',
       )
-      const credits = paragraphs(result).find((p) => p.role === 'credits')
+      const credits = creditsOf(result)
       expect(credits?.text).toContain(
         'Dieser Beitrag wird von einer synthetischen Stimme vorgelesen.',
       )
@@ -127,7 +187,7 @@ describe('buildSpeakableContent', () => {
         { content: portableText('Absatz.') },
         'voice-a',
       )
-      const credits = paragraphs(result).find((p) => p.role === 'credits')
+      const credits = creditsOf(result)
       expect(credits?.text).toBe(
         'Dieser Beitrag wird von einer synthetischen Stimme vorgelesen.',
       )

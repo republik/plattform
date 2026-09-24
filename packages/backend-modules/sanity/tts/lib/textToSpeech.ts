@@ -31,6 +31,11 @@ export interface SpeakableSource {
   description?: PortableTextBlocks
   byline?: PortableTextBlocks
   content?: PortableTextBlocks
+  // Structured credits (studio's `contributorEntry`: a free-text `kind`
+  // plus a contributor reference), kept in sync with `byline` by studio's
+  // sync-contributors Function. The preferred source for the spoken credits
+  // notice — see authorsFromContributors below.
+  contributors?: { kind?: string; name?: string | null }[]
 }
 
 interface PortableTextChild {
@@ -99,13 +104,25 @@ const paragraph = (voice: string, text: string, role: string, meta = {}) => ({
   content: [{ type: 'text', text: addFullStop(text) }],
 })
 
+// Keeps only text/translation contributors, matching the old behaviour of
+// dropping photo/illustration credits from the audio notice. A missing or
+// empty `kind` counts as a text author: `kind` is free text, and studio's
+// own migration/merge logic treats "no role recorded" the same way.
+const keepTextContributor = (c: { kind?: string }) =>
+  !c.kind || /text|übersetzung/i.test(c.kind)
+
+const authorsFromContributors = (
+  contributors: SpeakableSource['contributors'],
+): string[] =>
+  (contributors ?? [])
+    .filter(keepTextContributor)
+    .map((c) => c.name)
+    .filter((name): name is string => Boolean(name))
+
+// Fallback for articles whose structured `contributors` isn't populated yet.
 // Ported from the old republik/tts service's huebschFormatter.js: `byline` is
-// still a freeform string (e.g. "Ein Beitrag von Jane Doe (Text) und John
-// Smith (Bild), 12.05.2023") — the structured `contributors` field on the
-// article document is a `// TODO: populate on publish` placeholder that no
-// live code path writes to, so this regex parse is still the only source of
-// real author data. Keeps only text/translation authors, matching the old
-// behaviour of dropping photo/illustration credits from the audio notice.
+// a freeform string (e.g. "Ein Beitrag von Jane Doe (Text) und John Smith
+// (Bild), 12.05.2023"), so the roles have to be parsed back out of it.
 const getAuthors = (byline: string) => {
   const authorsRe = /^.*?[vV]on (.+?) [0-9]{2}.[0-9]{2}.20[0-9]{2}.*/
   const match = byline.match(authorsRe)
@@ -377,7 +394,12 @@ export const buildSpeakableContent = (
     blocks.push(paragraph(voice, title, 'title'), pause(1.4))
   }
 
-  const authors = getAuthorsList(plainText(source.byline))
+  // Structured credits win when they name anyone at all; the byline parse
+  // stays as the fallback until `contributors` is populated everywhere.
+  const contributorAuthors = authorsFromContributors(source.contributors)
+  const authors = contributorAuthors.length
+    ? contributorAuthors
+    : getAuthorsList(plainText(source.byline))
   blocks.push(
     paragraph(voice, bylineText(authors), 'credits', { authors }),
     pause(1.4),
