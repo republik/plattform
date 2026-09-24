@@ -53,7 +53,7 @@ export const uploadToHuebsch = async (
   slug: string | undefined,
   title: string,
   webhookUrl: string,
-  options?: { description?: string; source?: string; collection?: string },
+  options?: { description?: string; source?: string; format?: string },
 ) => {
   const res = await fetch(intakeUrl(), {
     method: 'POST',
@@ -67,7 +67,11 @@ export const uploadToHuebsch = async (
           attrs: {
             title,
             webhook: webhookUrl,
-            meta: { collection: options?.collection },
+            // The legacy republik/tts service sent the Publikator format's
+            // repo id here; it's now derived from the article's Spitzmarke
+            // (see tts/lib/format.ts), with the same org-qualified fallback
+            // for an article that has none.
+            meta: { format: options?.format ?? 'republik/article' },
             // Huebsch validates slug's format when present ("alphanumeric,
             // hyphens and slashes, beginning with a slash") — it's an
             // identifier, not spoken content, and a document with no real

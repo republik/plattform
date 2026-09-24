@@ -16,6 +16,7 @@ import {
   hashSpeakableContent,
   plainText,
   plainTitle,
+  resolveFormatId,
   titleSlugFrom,
   uploadToHuebsch,
 } from '../tts'
@@ -159,7 +160,7 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
   const source = article.slug?.current
     ? `https://www.republik.ch${article.slug.current}`
     : undefined
-  const collection = article.collection ?? undefined
+  const format = resolveFormatId(article.heading?.title)
 
   // fire-and-forget: Huebsch reports back asynchronously via the webhook above
   uploadToHuebsch(
@@ -168,7 +169,7 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     slug,
     plainTitle(article.title),
     webhookUrl,
-    { description, source, collection },
+    { description, source, format },
   ).catch(async (e: unknown) => {
     // The claim's placeholder was already inserted above, but the request to
     // Huebsch itself never got off the ground — mark that specific attempt

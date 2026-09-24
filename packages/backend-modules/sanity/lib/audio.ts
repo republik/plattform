@@ -154,11 +154,16 @@ export interface ArticleDoc {
   // attrs.slug regardless. Aliased to segment/template (deriveSlug's
   // HeadingSlugConfig shape) in the query below, matching studio's own
   // HEADING_SLUG_CONFIG_QUERY convention.
+  // `title` is the Spitzmarke's own title — the source the format
+  // identifier sent to Huebsch as meta.format is slugified from (see
+  // tts/lib/format.ts). Series episodes need no special case: their
+  // Spitzmarke already points at the series page.
   publishDate?: string
-  heading?: { segment?: string | null; template?: string | null }
-  // Title of the featured articleCollection (same selection as the
-  // frontend's document query), passed to Huebsch as meta.collection.
-  collection?: string | null
+  heading?: {
+    segment?: string | null
+    template?: string | null
+    title?: string | null
+  }
 }
 
 export const fetchArticle = (documentId: string) =>
@@ -174,8 +179,7 @@ export const fetchArticle = (documentId: string) =>
       "audioGenerationResult": audioGenerationResult{status, updatedAt},
       "pendingAudioVersions": audioVersions[status == "pending"]{contentHash, generatedAt},
       publishDate,
-      "heading": heading->{"segment": slugSegment, "template": slugTemplate},
-      "collection": articleCollections[featured == true][0].collection->title
+      "heading": heading->{"segment": slugSegment, "template": slugTemplate, "title": pt::text(title)}
     }`,
     { id: documentId },
     { perspective: 'raw' },

@@ -60,6 +60,55 @@ describe('describeHuebschError', () => {
 })
 
 describe('uploadToHuebsch / parseHuebschResult (fetch stubbed)', () => {
+  it('uploadToHuebsch sends the format identifier as attrs.meta.format', async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ ok: true, val: 'accepted' }), {
+          status: 200,
+        }),
+      )
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    await uploadToHuebsch(
+      [{ type: 'sound' }],
+      'doc-1',
+      '/slug',
+      'Title',
+      'https://x/webhook',
+      { format: 'republik/format-briefing-aus-bern' },
+    )
+
+    const [, requestInit] = fetchMock.mock.calls[0]
+    const body = JSON.parse(requestInit.body as string)
+    expect(body.content[0].attrs.meta).toEqual({
+      format: 'republik/format-briefing-aus-bern',
+    })
+  })
+
+  it('uploadToHuebsch falls back to republik/article when no format is given', async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ ok: true, val: 'accepted' }), {
+          status: 200,
+        }),
+      )
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    await uploadToHuebsch(
+      [{ type: 'sound' }],
+      'doc-1',
+      '/slug',
+      'Title',
+      'https://x/webhook',
+    )
+
+    const [, requestInit] = fetchMock.mock.calls[0]
+    const body = JSON.parse(requestInit.body as string)
+    expect(body.content[0].attrs.meta.format).toBe('republik/article')
+  })
+
   it('uploadToHuebsch sends description/source in article attrs and resolves on success', async () => {
     const fetchMock = jest
       .fn()
