@@ -1,10 +1,10 @@
+import type { TeaserLargeProps } from '@/app/(sanity)/components/teaser/large/helpers'
 import { ImageTeaser } from '@/app/(sanity)/components/teaser/large/image-teaser'
 import { SplitTeaser } from '@/app/(sanity)/components/teaser/large/split-teaser'
 import { TextTeaser } from '@/app/(sanity)/components/teaser/large/text-teaser'
 import { VignetteTeaser } from '@/app/(sanity)/components/teaser/large/vignette-teaser'
-import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 
-export function TeaserLarge(props: TeaserLargeFragmentType) {
+export function TeaserLarge(props: TeaserLargeProps) {
   switch (props.teaser?.layout) {
     case 'IMAGE':
       return <ImageTeaser {...props} />

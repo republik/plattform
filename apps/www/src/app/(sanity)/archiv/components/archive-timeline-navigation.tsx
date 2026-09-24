@@ -1,8 +1,14 @@
 'use client'
 
-import { MIN_YEAR, getMonthName } from '@/app/(sanity)/archiv/lib/month-range'
-import { css, cx } from '@republik/theme/css'
+import {
+  MIN_YEAR,
+  currentZurichMonth,
+  getMonthName,
+  parseArchiveParams,
+} from '@/app/(sanity)/archiv/lib/month-range'
 import Link from '@/app/components/ui/link'
+import { css, cx } from '@republik/theme/css'
+import { useParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
 const timelineStyle = css({
@@ -39,8 +45,7 @@ function useScrollIntoView(selector: string) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const active = ref.current?.querySelector(selector)
-    active?.scrollIntoView({
+    ref.current?.querySelector(selector)?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
       inline: 'center',
@@ -50,37 +55,27 @@ function useScrollIntoView(selector: string) {
   return ref
 }
 
-export function ArchiveTimelineNavigation({
-  year,
-  month,
-  monthsWithContent,
-}: {
-  year: number
-  month: number
-  monthsWithContent: number[]
-}) {
-  const yearsRef = useScrollIntoView(`[data-year="${year}"]`)
-  const monthsRef = useScrollIntoView(`[data-month="${month}"]`)
+// Lives in the archive layout, so it stays mounted while a month loads.
+export function ArchiveTimelineNavigation() {
+  const selected = parseArchiveParams(useParams())
+  const yearsRef = useScrollIntoView(`[data-year="${selected?.year}"]`)
+  const monthsRef = useScrollIntoView(`[data-month="${selected?.month}"]`)
 
-  const now = new Date()
-  const maxYear = now.getFullYear()
+  if (!selected) return null
+  const { year, month } = selected
 
-  // Past years run to December; the current year stops at the current month —
-  // but never hides the month being viewed or one that has content, since
-  // articles can carry a future publish date.
-  const maxMonth =
-    year === maxYear
-      ? Math.max(now.getMonth() + 1, month, ...monthsWithContent)
-      : 12
-
+  const now = currentZurichMonth()
   const years = Array.from(
-    { length: maxYear - MIN_YEAR + 1 },
+    { length: now.year - MIN_YEAR + 1 },
     (_, i) => MIN_YEAR + i,
   )
-  const months = Array.from({ length: maxMonth }, (_, i) => i + 1)
+  const months = Array.from(
+    { length: year === now.year ? now.month : 12 },
+    (_, i) => i + 1,
+  )
 
   return (
-    <div
+    <nav
       className={css({
         display: 'flex',
         flexDirection: 'column',
@@ -111,13 +106,11 @@ export function ArchiveTimelineNavigation({
             className={cx(itemStyle, m === month ? activeStyle : inactiveStyle)}
             data-month={m}
             aria-current={m === month ? 'page' : undefined}
-            // Advisory only: empty months stay reachable and say so.
-            aria-disabled={!monthsWithContent.includes(m)}
           >
             {getMonthName(m)}
           </Link>
         ))}
       </div>
-    </div>
+    </nav>
   )
 }

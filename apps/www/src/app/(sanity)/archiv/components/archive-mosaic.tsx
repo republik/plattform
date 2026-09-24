@@ -1,83 +1,59 @@
 'use client'
 
-import { RENDER_WIDTH, UNSCALED_BELOW } from '@/app/(sanity)/archiv/lib/mosaic'
+import { RENDER_WIDTH } from '@/app/(sanity)/archiv/lib/mosaic'
 import { css } from '@republik/theme/css'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
+// Below 640px teasers render unscaled in their own mobile styles. Above, each
+// tile is laid out at RENDER_WIDTH and zoomed into its column; unlike a
+// transform, zoom affects layout, so tile heights follow on their own.
 const mosaicStyle = css({
-  // Kept equal to the tiles' bottom margin so the gutters are even.
+  // Matches the tiles' bottom margin.
   columnGap: '4',
   columns: '1 auto',
   md: { columns: '2 auto' },
   lg: { columns: '3 auto' },
   xlg: { columns: '4 auto' },
+  '@media (min-width: 640px)': {
+    '&:not([data-zoomed])': { visibility: 'hidden' },
+    '& [data-archive-tile-inner]': {
+      width: 'var(--archive-render-width)',
+      zoom: 'var(--archive-zoom)',
+    },
+  },
 })
 
-/**
- * Masonry container. Each tile is laid out at RENDER_WIDTH and shrunk into its
- * column; because a transform doesn't affect layout, the outer box is given the
- * height that shrinking produced, or the column would reserve the full one.
- */
 export function ArchiveMosaic({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [measured, setMeasured] = useState(false)
-
-  const measure = useCallback(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    const unscaled = window.innerWidth < UNSCALED_BELOW
-
-    for (const inner of container.querySelectorAll<HTMLElement>(
-      '[data-archive-tile-inner]',
-    )) {
-      const tile = inner.parentElement
-      if (!tile) continue
-
-      if (unscaled) {
-        inner.style.width = '100%'
-        inner.style.transform = 'none'
-        tile.style.height = 'auto'
-        continue
-      }
-
-      // offsetWidth, not getBoundingClientRect(): the latter reports the
-      // transformed width, so re-measuring while a tile is hovered would
-      // fold the hover's scale into the stored one and shrink it for good.
-      const scale = tile.offsetWidth / RENDER_WIDTH
-      inner.style.width = `${RENDER_WIDTH}px`
-      inner.style.transform = `scale(${scale})`
-      tile.style.height = `${inner.scrollHeight * scale}px`
-    }
-
-    setMeasured(true)
-  }, [])
 
   useEffect(() => {
     const container = containerRef.current
-    if (!container) return
+    const tile = container?.querySelector<HTMLElement>('[data-archive-tile]')
+    if (!container || !tile) return
 
-    measure()
-
-    // Watching the inner boxes as well as the container means late-loading
-    // images re-trigger the height calculation.
-    const observer = new ResizeObserver(measure)
+    // Zooming changes the container's height, so react to width changes only.
+    let width = 0
+    const observer = new ResizeObserver(() => {
+      if (tile.offsetWidth === width) return
+      width = tile.offsetWidth
+      container.style.setProperty(
+        '--archive-zoom',
+        String(width / RENDER_WIDTH),
+      )
+      container.dataset.zoomed = ''
+    })
     observer.observe(container)
-    for (const inner of container.querySelectorAll(
-      '[data-archive-tile-inner]',
-    )) {
-      observer.observe(inner)
-    }
 
     return () => observer.disconnect()
-  }, [measure])
+  }, [])
 
   return (
     <div
       ref={containerRef}
       className={mosaicStyle}
-      // Tiles sit at full width until the measurement lands.
-      style={{ opacity: measured ? 1 : 0 }}
+      style={
+        { '--archive-render-width': `${RENDER_WIDTH}px` } as React.CSSProperties
+      }
     >
       {children}
     </div>

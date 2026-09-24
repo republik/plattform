@@ -1,14 +1,11 @@
-import { RENDER_WIDTH } from '@/app/(sanity)/archiv/lib/mosaic'
+import { ARCHIVE_IMAGE_SIZES } from '@/app/(sanity)/archiv/lib/mosaic'
 import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css } from '@republik/theme/css'
 
 const tileStyle = css({
   position: 'relative',
-  // Block rather than inline-block: an inline-block sits on a text baseline and
-  // picks up the line box's leading, which would add a few stray pixels to the
-  // vertical gutter only. `break-inside` keeps the column from splitting a tile,
-  // which is what inline-block was otherwise buying us.
+  // Not inline-block: the line box's leading would widen the vertical gutter.
   display: 'block',
   breakInside: 'avoid',
   width: 'full',
@@ -21,11 +18,8 @@ const tileStyle = css({
 export function ArchiveTile({ teaser }: { teaser: TeaserLargeFragmentType }) {
   return (
     <div className={tileStyle} data-archive-tile>
-      <div
-        data-archive-tile-inner
-        style={{ width: RENDER_WIDTH, transformOrigin: '0% 0%' }}
-      >
-        <TeaserLarge {...teaser} />
+      <div data-archive-tile-inner>
+        <TeaserLarge {...teaser} imageSizes={ARCHIVE_IMAGE_SIZES} />
       </div>
     </div>
   )
