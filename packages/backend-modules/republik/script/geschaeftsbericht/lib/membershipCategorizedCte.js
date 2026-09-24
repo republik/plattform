@@ -1,0 +1,194 @@
+// Shared, validated core of the membership/subscription point-in-time
+// snapshot logic. Produces a `categorized` CTE with columns (id, userId,
+// category) for whichever memberships/subscriptions have a period covering
+// the date bound to $1. Callers append their own final SELECT against
+// `categorized` — see membershipsAndSubscriptions.js (aggregate counts) and
+// membershipEvolutionByMonth.js (raw id/category rows, for month-over-month
+// diffing).
+//
+// A membership/subscription counts as active on $1 if it has a period
+// (membershipPeriods row / invoice) that covers $1 directly — not merely
+// between the membership's earliest-ever and latest-ever period, since real
+// gaps exist between periods (failed payment, later resubscribe) and
+// aggregating across them would silently span those gaps (confirmed via
+// diagnostic: this overcounted monthly-cycle memberships by ~11% before the
+// fix). Unions the legacy pledge-based `memberships` tables with the new
+// Stripe-based `payments.subscriptions` tables and classifies both into the
+// same German report categories.
+//
+// $2 is the excluded-user-ids array (lib/excludedUsers.js) — internal/test
+// accounts filtered out of both old and new rows.
+//
+// A user migrating from the old system to the new one during a transition
+// can have an active row in BOTH old_rows and new_rows on the same date
+// (confirmed via diagnostic: 22 users as of 30.06.2025) — deduped below by
+// dropping the old-system row whenever the same user also has a new-system
+// row, since the new system is the more current source of truth for anyone
+// who's migrated.
+const CATEGORIZED_CTE = `
+WITH old_rows AS (
+  SELECT
+    m.id::text AS id,
+    m."userId",
+    mt.name AS type_name,
+    m."reducedPrice",
+    -- A membership is a gift if either:
+    --  1) it was bought via the dedicated ABO_GIVE package (always a gift,
+    --     regardless of who currently holds it), or
+    --  2) the pledge's payer differs from the person currently holding the
+    --     membership (a regular ABO directly gifted to someone else) — same
+    --     signal already used in RevenueStats/segments.js.
+    -- (packages."group" was a one-time 2018 backfill, not reliably set for
+    -- packages created in later campaigns — use packages."name" instead.)
+    --
+    -- IMPORTANT: evaluated against the CURRENT PERIOD's own pledge
+    -- (mp."pledgeId"), NOT the membership's fixed original pledge
+    -- (m."pledgeId"). A membership's own pledgeId never changes after
+    -- creation, but each renewal gets its own membershipPeriods row with
+    -- its own pledgeId — confirmed in
+    -- republik-crowdfundings/lib/generateMemberships.js (an explicit
+    -- "prolong" purchase) and lib/AutoPay.js (an autopay-driven renewal),
+    -- both of which insert new periods with pledgeId = the NEW charge's
+    -- pledge. Checking the ORIGINAL pledge only meant a gift stayed
+    -- "Mitgliedschaft als Geschenk" forever even once the recipient started
+    -- paying for their own renewals via autoPay — inflating the stock
+    -- indefinitely (1206 vs. the published 655). Checking the CURRENT
+    -- period's pledge instead correctly reclassifies those as ordinary
+    -- Jahresmitgliedschaft/reduziert once the recipient takes over, while a
+    -- membership still funded by someone else (the original gifter
+    -- re-gifting, or any other payer) keeps showing as a gift — confirmed
+    -- via diagnostic (diagnoseGiftCurrentPeriodPledge.js): 653 vs. the
+    -- published 655, down from 1206. Deliberately NOT applied to
+    -- ABO_GIVE_MONTHS below, which is categorized unconditionally by type
+    -- (no is_gift check involved there at all) and already matches the
+    -- published 146 exactly — this fix only affects the ABO branch.
+    EXISTS (
+      SELECT 1 FROM pledges p
+      JOIN packages pkg ON pkg.id = p."packageId"
+      WHERE p.id = mp."pledgeId"
+        AND (pkg."name" = 'ABO_GIVE' OR p."userId" != m."userId")
+    ) AS is_gift,
+    -- An unclaimed gift voucher (memberships.voucherCode still set) already
+    -- has an active membershipPeriods row from the moment it's purchased,
+    -- before anyone redeems it — confirmed against the actual query used
+    -- for last year's report (see README's "Gift-membership definition"
+    -- section): the published Geschenk figure counts redeemed and
+    -- unredeemed gifts as separate line items, not combined into one
+    -- point-in-time stock. Reported as its own category below, excluded
+    -- from MITGLIEDSCHAFTEN_CATEGORIES/ABONNEMENTE_CATEGORIES so it doesn't
+    -- inflate the main total.
+    m."voucherCode" IS NOT NULL AS is_unredeemed,
+    mp."beginDate",
+    mp."endDate"
+  FROM "memberships" m
+  JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
+  JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+  WHERE mp."beginDate" < $1 AND mp."endDate" >= $1
+    AND m."userId" != ALL($2::uuid[])
+    -- exclude memberships whose pledge was PURCHASED by an excluded/test
+    -- account too, not just ones HELD by one (found via diagnostic: the
+    -- "Dummy users" account shows up as purchaser, not holder, for 10
+    -- memberships otherwise held by real accounts — these are internal
+    -- test data, not real gifts)
+    AND NOT EXISTS (
+      SELECT 1 FROM pledges pex
+      WHERE pex.id = m."pledgeId" AND pex."userId" = ANY($2::uuid[])
+    )
+),
+new_rows AS (
+  SELECT
+    s.id::text AS id,
+    s."userId",
+    s.type::text AS type_name,
+    -- best-effort: any positive invoice discount is treated as "reduced"
+    EXISTS (
+      SELECT 1 FROM payments.invoices di
+      WHERE di."subscriptionId" = s.id
+        AND di."totalDiscountAmount" > 0
+        AND $1 BETWEEN di."periodStart" AND di."periodEnd"
+    ) AS is_reduced,
+    -- best-effort: gift voucher redeemed by this user within +/-14 days of
+    -- subscription start (no FK exists between giftVouchers and subscriptions)
+    EXISTS (
+      SELECT 1 FROM payments."giftVouchers" gv
+      WHERE gv."redeemedBy" = s."userId"
+        AND gv."redeemedAt" BETWEEN s."currentPeriodStart" - interval '14 days'
+                                 AND s."currentPeriodStart" + interval '14 days'
+    ) AS is_gift,
+    i."periodStart" AS "beginDate",
+    i."periodEnd" AS "endDate"
+  FROM payments.subscriptions s
+  JOIN payments.invoices i ON i."subscriptionId" = s.id
+  WHERE i."periodStart" < $1 AND i."periodEnd" >= $1
+    AND s."userId" != ALL($2::uuid[])
+    -- Without this, failed/abandoned payment attempts (status
+    -- 'incomplete'/'incomplete_expired' — e.g. a declined card retried
+    -- several times) get counted as active subscriptions just because
+    -- their invoice's period nominally covers the date, hugely inflating
+    -- counts for anyone who had payment trouble (found via diagnostic: one
+    -- user had 5 'incomplete_expired' rows plus 1 real 'active' row, all
+    -- simultaneously "active" by period dates alone).
+    --
+    -- IMPORTANT: exclude only 'incomplete'/'incomplete_expired' here, NOT
+    -- a broader allowlist like ('active','past_due','unpaid','paused') —
+    -- status is a CURRENT, mutable field, not a historical one. A
+    -- subscription genuinely paid and active on the snapshot date but
+    -- since cancelled shows status='canceled' TODAY (very common for
+    -- monthly subscriptions, which churn a lot) — excluding 'canceled'
+    -- wrongly treats "cancelled since" the same as "payment never
+    -- completed", which undercounted Monatsabonnement by ~59% when tried
+    -- (confirmed via diagnostic). 'incomplete'/'incomplete_expired' is the
+    -- correct, narrow signal: it means no payment ever succeeded, so the
+    -- invoice's period never represented real paid access in the first
+    -- place — that's true regardless of when you ask, unlike 'canceled'.
+    AND s.status NOT IN ('incomplete', 'incomplete_expired')
+    -- A cancelled/refunded-mid-period subscription's invoice keeps its
+    -- ORIGINAL nominal period (Stripe never retroactively shortens an
+    -- invoice's periodStart/periodEnd when a subscription is cancelled
+    -- partway through it) — e.g. created 2024-12-30, ended 2025-12-31, but
+    -- its last invoice's period still nominally runs to 2026-12-30.
+    -- Without this check, that person is counted as active for up to a
+    -- full year after they actually left. This is the same signal the
+    -- lifecycle CTE already treats as authoritative for its "last_end"
+    -- (lib/membershipLifecycleCte.js) — applied here too, since it's the
+    -- true end regardless of what the invoice period nominally says.
+    -- Confirmed via diagnostic (diagnoseReconciliation.js): 35 subscriptions
+    -- wrongly counted active this way as of 2025-06-30, grown to 599 as of
+    -- 2026-06-30.
+    AND (
+      COALESCE(s."endedAt", s."cancelAt") IS NULL
+      OR COALESCE(s."endedAt", s."cancelAt") > $1
+    )
+),
+categorized AS (
+  SELECT id, "userId", type_name, 'old' AS source,
+    CASE
+      WHEN type_name = 'ABO' AND is_unredeemed THEN 'Mitgliedschaft als Geschenk, uneingelöst'
+      WHEN type_name = 'ABO' AND is_gift THEN 'Mitgliedschaft als Geschenk'
+      WHEN type_name = 'ABO' AND "reducedPrice" THEN 'Jahresmitgliedschaft, reduziert'
+      WHEN type_name = 'ABO' THEN 'Jahresmitgliedschaft'
+      WHEN type_name = 'BENEFACTOR_ABO' THEN 'Gönnermitgliedschaft'
+      WHEN type_name = 'YEARLY_ABO' THEN 'Jahresabo (Mitgliederkampagne)'
+      WHEN type_name = 'MONTHLY_ABO' THEN 'Monatsabonnement'
+      WHEN type_name = 'ABO_GIVE_MONTHS' AND is_unredeemed THEN 'Monatsabonnement als Geschenk, uneingelöst'
+      WHEN type_name = 'ABO_GIVE_MONTHS' THEN 'Monatsabonnement als Geschenk'
+      ELSE 'Sonstige (alt): ' || type_name
+    END AS category
+  FROM old_rows
+  WHERE "userId" NOT IN (SELECT "userId" FROM new_rows)
+  UNION ALL
+  SELECT id, "userId", type_name, 'new' AS source,
+    CASE
+      WHEN type_name = 'YEARLY_SUBSCRIPTION' AND is_gift THEN 'Mitgliedschaft als Geschenk'
+      WHEN type_name = 'YEARLY_SUBSCRIPTION' AND is_reduced THEN 'Jahresmitgliedschaft, reduziert'
+      WHEN type_name = 'YEARLY_SUBSCRIPTION' THEN 'Jahresmitgliedschaft'
+      WHEN type_name = 'BENEFACTOR_SUBSCRIPTION' THEN 'Gönnermitgliedschaft'
+      WHEN type_name = 'MONTHLY_SUBSCRIPTION' AND is_gift THEN 'Monatsabonnement als Geschenk'
+      WHEN type_name = 'MONTHLY_SUBSCRIPTION' THEN 'Monatsabonnement'
+      ELSE 'Sonstige (neu): ' || type_name
+    END AS category
+  FROM new_rows
+)
+`
+
+module.exports = { CATEGORIZED_CTE }
