@@ -379,6 +379,31 @@ describe('buildSpeakableContent', () => {
       ).toBe(false)
     })
 
+    it('produces a single pause where its closing boundary meets a real divider', () => {
+      const result = buildSpeakableContent(
+        {
+          content: [
+            block('Vorher.'),
+            quote([block('Ein Zitat.')]),
+            { _type: 'divider' },
+            block('Nachher.'),
+          ],
+        },
+        'voice-a',
+      ) as any[]
+      const quoteIndex = result.findIndex(
+        (n) => n.content?.[0]?.text === 'Ein Zitat.',
+      )
+      const afterIndex = result.findIndex(
+        (n) => n.content?.[0]?.text === 'Nachher.',
+      )
+      expect(
+        result
+          .slice(quoteIndex + 1, afterIndex)
+          .filter((n) => n.type === 'pause'),
+      ).toHaveLength(1)
+    })
+
     it('is dropped entirely when its body is empty', () => {
       const result = buildSpeakableContent(
         { content: [quote([]), block('Absatz.')] },

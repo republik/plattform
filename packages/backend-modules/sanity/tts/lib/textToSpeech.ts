@@ -392,6 +392,30 @@ const flattenToBodyItems = (
   return items
 }
 
+// Two pause nodes back to back are heard as one long, dead gap. The legacy
+// republik/tts service collapsed them too (removeDoublePauses in its
+// lib/textParser). They arise wherever two pause sources meet — an aside's
+// virtual divider next to a real `divider`, say — so it's cheaper to fold
+// them away once at the end than to teach every source about its neighbours.
+// The longer of the two wins.
+const collapseDoublePauses = (nodes: unknown[]): unknown[] => {
+  const result: unknown[] = []
+  for (const node of nodes) {
+    const prev = result[result.length - 1] as
+      | { type?: string; attrs?: { pause?: number } }
+      | undefined
+    if ((node as { type?: string }).type === 'pause' && prev?.type === 'pause') {
+      const prevDuration = prev.attrs?.pause ?? 0
+      const nextDuration =
+        (node as { attrs?: { pause?: number } }).attrs?.pause ?? 0
+      prev.attrs = { pause: Math.max(prevDuration, nextDuration) }
+      continue
+    }
+    result.push(node)
+  }
+  return result
+}
+
 export interface BuildSpeakableContentOptions {
   chapterMarkers?: boolean
 }
@@ -465,8 +489,9 @@ export const buildSpeakableContent = (
     pendingDivider = false
   }
 
-  blocks.push(stinger)
-  return blocks
+  const collapsed = collapseDoublePauses(blocks)
+  collapsed.push(stinger)
+  return collapsed
 }
 
 export const plainTitle = (title: unknown) => plainText(title) || 'Ohne Titel'
