@@ -99,14 +99,18 @@ const flattenText = (value: unknown): string => {
 
 // Strips what shouldn't reach the voice: soft hyphens (U+00AD) and invisible
 // separators (U+2063), both typographic hints a TTS engine can only mangle,
-// and parenthetical asides — the legacy republik/tts service dropped those
-// too (removeEllipses in its lib/textParser), since they read as
-// interruptions rather than prose. Whitespace left behind is collapsed, so
-// removing an aside doesn't leave a double space mid-sentence.
+// and the "(...)" elision marker editors use inside a quoted excerpt to show
+// omitted material (e.g. "Und (...) dann") — ported from the legacy
+// republik/tts service's removeEllipses (lib/textParser/index.js), confirmed
+// against its own test fixtures to match only that literal marker, not
+// parenthetical asides in general: a role/party clarifier like "(FDP)" was
+// always spoken by the old system and must stay that way here. Whitespace
+// left behind is collapsed, so removing a marker doesn't leave a double
+// space mid-sentence.
 export const plainText = (value: unknown): string =>
   flattenText(value)
     .replace(/[­⁣]/g, '')
-    .replace(/\([^)]*\)/g, '')
+    .replace(/\(\s*(?:\.\.\.|…)\s*\)/g, '')
     .replace(/\s{2,}/g, ' ')
     .trim()
 

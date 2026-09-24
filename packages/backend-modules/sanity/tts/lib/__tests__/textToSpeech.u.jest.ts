@@ -675,10 +675,17 @@ describe('plainText / plainTitle', () => {
     expect(plainText(portableText('Bundes­rat⁣'))).toBe('Bundesrat')
   })
 
-  it('plainText removes parenthetical asides without leaving double spaces', () => {
+  it('plainText removes an "(...)" elision marker without leaving double spaces', () => {
+    expect(plainText(portableText('Und (...) dann'))).toBe('Und dann')
+    expect(plainText(portableText('Der Bundesrat entscheidet (…) heute'))).toBe(
+      'Der Bundesrat entscheidet heute',
+    )
+  })
+
+  it('plainText keeps a genuine parenthetical aside, e.g. a party clarifier', () => {
     expect(
-      plainText(portableText('Der Bundesrat (also die Regierung) entscheidet')),
-    ).toBe('Der Bundesrat entscheidet')
+      plainText(portableText('Karin Keller-Sutter (FDP) schlug 100 Prozent vor')),
+    ).toBe('Karin Keller-Sutter (FDP) schlug 100 Prozent vor')
   })
 
   it('plainText returns an empty string for nullish input', () => {
