@@ -120,20 +120,40 @@ const paragraph = (voice: string, text: string, role: string, meta = {}) => ({
   content: [{ type: 'text', text: addFullStop(text) }],
 })
 
-// Keeps only text/translation contributors, matching the old behaviour of
-// dropping photo/illustration credits from the audio notice. A missing or
-// empty `kind` counts as a text author: `kind` is free text, and studio's
-// own migration/merge logic treats "no role recorded" the same way.
-const keepTextContributor = (c: { kind?: string }) =>
-  !c.kind || /text|übersetzung/i.test(c.kind)
+// The spoken credits, split by role: text authors first, then translators
+// ("Ein Beitrag von Jana Muster, übersetzt von Betina Muster"). Photo and
+// illustration credits are dropped entirely, as they always were.
+interface Credits {
+  authors: string[]
+  translators: string[]
+}
 
-const authorsFromContributors = (
+// Roles are free text on both sides (studio's `contributorEntry.kind`, and
+// the "(Text)"/"(Übersetzung)" markers inside a byline), so both are matched
+// by substring. A missing or empty role counts as a text author: studio's
+// own migration/merge logic treats "no role recorded" the same way.
+//
+// The English spellings are matched too: `kind` is free text today, and the
+// translation role may well end up stored as "translation" rather than
+// "Übersetzung" — a credit silently disappearing from the audio is not an
+// acceptable way to find that out.
+const isTranslatorRole = (role?: string) =>
+  Boolean(role && /übersetz|uebersetz|translat/i.test(role))
+const isAuthorRole = (role?: string) => !role || /text/i.test(role)
+
+const creditsFromContributors = (
   contributors: SpeakableSource['contributors'],
-): string[] =>
-  (contributors ?? [])
-    .filter(keepTextContributor)
-    .map((c) => c.name)
-    .filter((name): name is string => Boolean(name))
+): Credits => {
+  const named = (contributors ?? []).filter(
+    (c): c is { kind?: string; name: string } => Boolean(c.name),
+  )
+  return {
+    authors: named.filter((c) => isAuthorRole(c.kind)).map((c) => c.name),
+    translators: named
+      .filter((c) => isTranslatorRole(c.kind))
+      .map((c) => c.name),
+  }
+}
 
 // Fallback for articles whose structured `contributors` isn't populated yet.
 // Ported from the old republik/tts service's huebschFormatter.js: `byline` is
@@ -158,9 +178,6 @@ const getAuthorRole = (author: string) => {
   return { name: authorRole[1], role: authorRole[2].toLowerCase() }
 }
 
-const keepTextAuthors = (author: { role: string }) =>
-  /text|übersetzung/.test(author.role)
-
 const makeCommaSeparatedString = (items: string[]) => {
   const listStart = items.slice(0, -1).join(', ')
   const listEnd = items.slice(-1)
@@ -168,23 +185,37 @@ const makeCommaSeparatedString = (items: string[]) => {
   return [listStart, listEnd].join(conjunction)
 }
 
-const getAuthorsList = (byline?: string) => {
-  if (!byline) return []
+const creditsFromByline = (byline?: string): Credits => {
+  if (!byline) return { authors: [], translators: [] }
   try {
-    return splitAuthors(getAuthors(byline))
+    const parsed = splitAuthors(getAuthors(byline))
       .map(getAuthorRole)
-      .filter(keepTextAuthors)
-      .map((author) => author.name.replace(/,$/, ''))
+      .map((author) => ({ ...author, name: author.name.replace(/,$/, '') }))
+    return {
+      authors: parsed.filter((a) => isAuthorRole(a.role)).map((a) => a.name),
+      translators: parsed
+        .filter((a) => isTranslatorRole(a.role))
+        .map((a) => a.name),
+    }
   } catch {
-    return []
+    return { authors: [], translators: [] }
   }
 }
 
-const bylineText = (authors: string[]): string => {
-  if (!authors?.length) return TTS_NOTICE
-  return `Ein Beitrag von ${makeCommaSeparatedString(
-    authors,
-  )}, vorgelesen von einer synthetischen Stimme.`
+// "Ein Beitrag von Jana Muster, übersetzt von Betina Muster, vorgelesen von
+// einer synthetischen Stimme." — translators get their own clause after the
+// text authors rather than being folded into one undifferentiated list.
+const bylineText = ({ authors, translators }: Credits): string => {
+  if (!authors.length && !translators.length) return TTS_NOTICE
+  return `${[
+    authors.length
+      ? `Ein Beitrag von ${makeCommaSeparatedString(authors)}`
+      : 'Ein Beitrag',
+    ...(translators.length
+      ? [`übersetzt von ${makeCommaSeparatedString(translators)}`]
+      : []),
+    'vorgelesen von einer synthetischen Stimme',
+  ].join(', ')}.`
 }
 
 interface VoiceSegment {
@@ -440,15 +471,19 @@ export const buildSpeakableContent = (
 
   // Structured credits win when they name anyone at all; the byline parse
   // stays as the fallback until `contributors` is populated everywhere.
-  const contributorAuthors = authorsFromContributors(source.contributors)
-  const authors = contributorAuthors.length
-    ? contributorAuthors
-    : // flattenText, not plainText: the byline is parsed here, not spoken,
-      // and plainText's aside-stripping would eat the "(Text)"/"(Bild)"
-      // role markers this parse depends on.
-      getAuthorsList(flattenText(source.byline))
+  // flattenText, not plainText, for that parse: the byline is read here, not
+  // spoken, and plainText's aside-stripping would eat the "(Text)"/
+  // "(Übersetzung)" role markers it depends on.
+  const fromContributors = creditsFromContributors(source.contributors)
+  const credits =
+    fromContributors.authors.length || fromContributors.translators.length
+      ? fromContributors
+      : creditsFromByline(flattenText(source.byline))
+  // meta.authors stays one flat list in spoken order (text authors, then
+  // translators) — the same shape Huebsch already receives.
+  const authors = [...credits.authors, ...credits.translators]
   blocks.push(
-    paragraph(voice, bylineText(authors), 'credits', { authors }),
+    paragraph(voice, bylineText(credits), 'credits', { authors }),
     pause(1.4),
   )
 

@@ -124,7 +124,82 @@ describe('buildSpeakableContent', () => {
         'Jean Exemple',
       ])
       expect(credits?.text).toBe(
-        'Ein Beitrag von Erika Beispiel, Hans Muster und Jean Exemple, ' +
+        'Ein Beitrag von Erika Beispiel und Hans Muster, ' +
+          'übersetzt von Jean Exemple, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('names translators in their own clause, after the text authors', () => {
+      const result = buildSpeakableContent(
+        {
+          contributors: [
+            { kind: 'Text', name: 'Jana Muster' },
+            { kind: 'Übersetzung', name: 'Betina Muster' },
+          ],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.text).toBe(
+        'Ein Beitrag von Jana Muster, übersetzt von Betina Muster, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('groups several translators into one clause', () => {
+      const result = buildSpeakableContent(
+        {
+          contributors: [
+            { kind: 'Text', name: 'Jana Muster' },
+            { kind: 'Übersetzung', name: 'Betina Muster' },
+            { kind: 'Übersetzung', name: 'Jean Exemple' },
+          ],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.text).toBe(
+        'Ein Beitrag von Jana Muster, ' +
+          'übersetzt von Betina Muster und Jean Exemple, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('recognises the translation role under its English spellings too', () => {
+      // `kind` is free text and may yet be stored as "translation" rather
+      // than "Übersetzung" — that must not silently drop the credit.
+      for (const kind of ['translation', 'Translator', 'uebersetzung']) {
+        const result = buildSpeakableContent(
+          {
+            contributors: [
+              { kind: 'Text', name: 'Jana Muster' },
+              { kind, name: 'Betina Muster' },
+            ],
+            content: portableText('Absatz.'),
+          },
+          'voice-a',
+        )
+        expect(creditsOf(result)?.text).toBe(
+          'Ein Beitrag von Jana Muster, übersetzt von Betina Muster, ' +
+            'vorgelesen von einer synthetischen Stimme.',
+        )
+      }
+    })
+
+    it('groups a byline-parsed translation the same way', () => {
+      const result = buildSpeakableContent(
+        {
+          byline: portableText(
+            'Ein Beitrag von Jana Muster (Text), Betina Muster ' +
+              '(Übersetzung) und Beat Bild (Bild) 12.05.2023',
+          ),
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.text).toBe(
+        'Ein Beitrag von Jana Muster, übersetzt von Betina Muster, ' +
           'vorgelesen von einer synthetischen Stimme.',
       )
     })
