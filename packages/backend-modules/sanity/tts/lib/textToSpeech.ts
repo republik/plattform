@@ -31,11 +31,17 @@ export interface SpeakableSource {
   description?: PortableTextBlocks
   byline?: PortableTextBlocks
   content?: PortableTextBlocks
+  // Structured credits (studio's `contributorEntry`: a free-text `kind`
+  // plus a contributor reference), kept in sync with `byline` by studio's
+  // sync-contributors Function. The preferred source for the spoken credits
+  // notice — see authorsFromContributors below.
+  contributors?: { kind?: string; name?: string | null }[]
 }
 
 interface PortableTextChild {
   _type?: string
   voice?: string
+
   [key: string]: unknown
 }
 
@@ -53,6 +59,7 @@ interface PortableTextNode {
   source?: string
   includeInSyntheticVoice?: boolean
   caption?: { legend?: PortableTextBlocks; credit?: PortableTextBlocks }
+
   [key: string]: unknown
 }
 
@@ -75,8 +82,11 @@ const addFullStop = (text: string) =>
   /[….?!:;]$/.test(text) ? text : `${text}.`
 
 // Most fields here are portable text arrays, but a few (pullQuote.text/
-// source, infoBox.title) are plain strings — handle both.
-export const plainText = (value: unknown): string => {
+// source, infoBox.title) are plain strings — handle both. Flattening only:
+// none of plainText's speech-oriented cleanup, so it stays usable for text
+// that's parsed rather than spoken (the byline's "(Text)"/"(Bild)" role
+// markers would not survive that cleanup).
+const flattenText = (value: unknown): string => {
   if (!value) return ''
   if (typeof value === 'string') return value.trim()
   try {
@@ -87,23 +97,72 @@ export const plainText = (value: unknown): string => {
   }
 }
 
-const paragraph = (voice: string, text: string, role: string) => ({
+// Strips what shouldn't reach the voice: soft hyphens (U+00AD) and invisible
+// separators (U+2063), both typographic hints a TTS engine can only mangle,
+// and the "(...)" elision marker editors use inside a quoted excerpt to show
+// omitted material (e.g. "Und (...) dann") — ported from the legacy
+// republik/tts service's removeEllipses (lib/textParser/index.js), confirmed
+// against its own test fixtures to match only that literal marker, not
+// parenthetical asides in general: a role/party clarifier like "(FDP)" was
+// always spoken by the old system and must stay that way here. Whitespace
+// left behind is collapsed, so removing a marker doesn't leave a double
+// space mid-sentence.
+export const plainText = (value: unknown): string =>
+  flattenText(value)
+    .replace(/[­⁣]/g, '')
+    .replace(/\(\s*(?:\.\.\.|…)\s*\)/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+
+const paragraph = (voice: string, text: string, role: string, meta = {}) => ({
   type: 'paragraph',
   attrs: {
     voiceName: voice,
     proofreadPromptName: 'Republik Sprechkorrektorat',
-    meta: { role },
+    meta: { ...meta, role },
   },
   content: [{ type: 'text', text: addFullStop(text) }],
 })
 
+// The spoken credits, split by role: text authors first, then translators
+// ("Ein Beitrag von Jana Muster, übersetzt von Betina Muster"). Photo and
+// illustration credits are dropped entirely, as they always were.
+interface Credits {
+  authors: string[]
+  translators: string[]
+}
+
+// Roles are free text on both sides (studio's `contributorEntry.kind`, and
+// the "(Text)"/"(Übersetzung)" markers inside a byline), so both are matched
+// by substring. A missing or empty role counts as a text author: studio's
+// own migration/merge logic treats "no role recorded" the same way.
+//
+// The English spellings are matched too: `kind` is free text today, and the
+// translation role may well end up stored as "translation" rather than
+// "Übersetzung" — a credit silently disappearing from the audio is not an
+// acceptable way to find that out.
+const isTranslatorRole = (role?: string) =>
+  Boolean(role && /übersetz|uebersetz|translat/i.test(role))
+const isAuthorRole = (role?: string) => !role || /text/i.test(role)
+
+const creditsFromContributors = (
+  contributors: SpeakableSource['contributors'],
+): Credits => {
+  const named = (contributors ?? []).filter(
+    (c): c is { kind?: string; name: string } => Boolean(c.name),
+  )
+  return {
+    authors: named.filter((c) => isAuthorRole(c.kind)).map((c) => c.name),
+    translators: named
+      .filter((c) => isTranslatorRole(c.kind))
+      .map((c) => c.name),
+  }
+}
+
+// Fallback for articles whose structured `contributors` isn't populated yet.
 // Ported from the old republik/tts service's huebschFormatter.js: `byline` is
-// still a freeform string (e.g. "Ein Beitrag von Jane Doe (Text) und John
-// Smith (Bild), 12.05.2023") — the structured `contributors` field on the
-// article document is a `// TODO: populate on publish` placeholder that no
-// live code path writes to, so this regex parse is still the only source of
-// real author data. Keeps only text/translation authors, matching the old
-// behaviour of dropping photo/illustration credits from the audio notice.
+// a freeform string (e.g. "Ein Beitrag von Jane Doe (Text) und John Smith
+// (Bild), 12.05.2023"), so the roles have to be parsed back out of it.
 const getAuthors = (byline: string) => {
   const authorsRe = /^.*?[vV]on (.+?) [0-9]{2}.[0-9]{2}.20[0-9]{2}.*/
   const match = byline.match(authorsRe)
@@ -123,9 +182,6 @@ const getAuthorRole = (author: string) => {
   return { name: authorRole[1], role: authorRole[2].toLowerCase() }
 }
 
-const keepTextAuthors = (author: { role: string }) =>
-  /text|übersetzung/.test(author.role)
-
 const makeCommaSeparatedString = (items: string[]) => {
   const listStart = items.slice(0, -1).join(', ')
   const listEnd = items.slice(-1)
@@ -133,20 +189,37 @@ const makeCommaSeparatedString = (items: string[]) => {
   return [listStart, listEnd].join(conjunction)
 }
 
-const creditsText = (byline: string): string => {
-  if (!byline) return TTS_NOTICE
+const creditsFromByline = (byline?: string): Credits => {
+  if (!byline) return { authors: [], translators: [] }
   try {
-    const authors = splitAuthors(getAuthors(byline))
+    const parsed = splitAuthors(getAuthors(byline))
       .map(getAuthorRole)
-      .filter(keepTextAuthors)
-      .map((author) => author.name.replace(/,$/, ''))
-
-    if (!authors.length) throw new Error('no text/translation authors found')
-
-    return `Ein Beitrag von ${makeCommaSeparatedString(authors)}, vorgelesen von einer synthetischen Stimme.`
+      .map((author) => ({ ...author, name: author.name.replace(/,$/, '') }))
+    return {
+      authors: parsed.filter((a) => isAuthorRole(a.role)).map((a) => a.name),
+      translators: parsed
+        .filter((a) => isTranslatorRole(a.role))
+        .map((a) => a.name),
+    }
   } catch {
-    return `${TTS_NOTICE} ${byline}`
+    return { authors: [], translators: [] }
   }
+}
+
+// "Ein Beitrag von Jana Muster, übersetzt von Betina Muster, vorgelesen von
+// einer synthetischen Stimme." — translators get their own clause after the
+// text authors rather than being folded into one undifferentiated list.
+const bylineText = ({ authors, translators }: Credits): string => {
+  if (!authors.length && !translators.length) return TTS_NOTICE
+  return `${[
+    authors.length
+      ? `Ein Beitrag von ${makeCommaSeparatedString(authors)}`
+      : 'Ein Beitrag',
+    ...(translators.length
+      ? [`übersetzt von ${makeCommaSeparatedString(translators)}`]
+      : []),
+    'vorgelesen von einer synthetischen Stimme',
+  ].join(', ')}.`
 }
 
 interface VoiceSegment {
@@ -228,8 +301,16 @@ type NodeTransform = (
 // registry.
 
 const blockTransform: NodeTransform = (node, ctx) => {
+  // The Sanity equivalent of the legacy markdown `NOTE` zone, which was
+  // never spoken. A general-purpose style available on any article/page
+  // block (image credits are just its most common use) — checked before
+  // splitting, since there's no point computing voice-tag segments for a
+  // block that's discarded outright.
+  if (node.style === 'note') return []
+
   const segments = splitBlockByVoiceTag(node, ctx.voice)
   if (!segments.length) return []
+
   const isHeading = node.style === 'heading'
   // 'question' is Huebsch's documented role for interview questions (see
   // intake-republik docs, "example keys"); `interviewQuestion` is the style
@@ -238,8 +319,8 @@ const blockTransform: NodeTransform = (node, ctx) => {
   const role = isHeading
     ? 'subtitle'
     : node.style === 'interviewQuestion'
-      ? 'question'
-      : ctx.defaultRole
+    ? 'question'
+    : ctx.defaultRole
   return [
     {
       kind: 'text',
@@ -346,6 +427,30 @@ const flattenToBodyItems = (
   return items
 }
 
+// Two pause nodes back to back are heard as one long, dead gap. The legacy
+// republik/tts service collapsed them too (removeDoublePauses in its
+// lib/textParser). They arise wherever two pause sources meet — an aside's
+// virtual divider next to a real `divider`, say — so it's cheaper to fold
+// them away once at the end than to teach every source about its neighbours.
+// The longer of the two wins.
+const collapseDoublePauses = (nodes: unknown[]): unknown[] => {
+  const result: unknown[] = []
+  for (const node of nodes) {
+    const prev = result[result.length - 1] as
+      | { type?: string; attrs?: { pause?: number } }
+      | undefined
+    if ((node as { type?: string }).type === 'pause' && prev?.type === 'pause') {
+      const prevDuration = prev.attrs?.pause ?? 0
+      const nextDuration =
+        (node as { attrs?: { pause?: number } }).attrs?.pause ?? 0
+      prev.attrs = { pause: Math.max(prevDuration, nextDuration) }
+      continue
+    }
+    result.push(node)
+  }
+  return result
+}
+
 export interface BuildSpeakableContentOptions {
   chapterMarkers?: boolean
 }
@@ -357,18 +462,32 @@ export const buildSpeakableContent = (
 ) => {
   const blocks: unknown[] = [jingle]
 
-  const title = plainText(source.title)
-  if (title) {
-    blocks.push(paragraph(voice, title, 'title'), pause(1.4))
-  }
-
+  // as per Republik rulebook: lead is spoken before title
   const lead = plainText(source.description)
   if (lead) {
     blocks.push(paragraph(voice, lead, 'lead'), pause(1.4))
   }
 
+  const title = plainText(source.title)
+  if (title) {
+    blocks.push(paragraph(voice, title, 'title'), pause(1.4))
+  }
+
+  // Structured credits win when they name anyone at all; the byline parse
+  // stays as the fallback until `contributors` is populated everywhere.
+  // flattenText, not plainText, for that parse: the byline is read here, not
+  // spoken, and plainText's aside-stripping would eat the "(Text)"/
+  // "(Übersetzung)" role markers it depends on.
+  const fromContributors = creditsFromContributors(source.contributors)
+  const credits =
+    fromContributors.authors.length || fromContributors.translators.length
+      ? fromContributors
+      : creditsFromByline(flattenText(source.byline))
+  // meta.authors stays one flat list in spoken order (text authors, then
+  // translators) — the same shape Huebsch already receives.
+  const authors = [...credits.authors, ...credits.translators]
   blocks.push(
-    paragraph(voice, creditsText(plainText(source.byline)), 'credits'),
+    paragraph(voice, bylineText(credits), 'credits', { authors }),
     pause(1.4),
   )
 
@@ -409,8 +528,9 @@ export const buildSpeakableContent = (
     pendingDivider = false
   }
 
-  blocks.push(stinger)
-  return blocks
+  const collapsed = collapseDoublePauses(blocks)
+  collapsed.push(stinger)
+  return collapsed
 }
 
 export const plainTitle = (title: unknown) => plainText(title) || 'Ohne Titel'
