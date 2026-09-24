@@ -2,6 +2,7 @@
 
 import { useMe } from '@/lib/context/MeContext'
 import { css, cx } from '@republik/theme/css'
+import { CircleCheck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
 import { readingContainer, readingPercentage } from './reading-region'
@@ -33,7 +34,7 @@ const statusStyle = css({
  * (`packages/styleguide/src/components/Progress/Circle.tsx`): a faint track
  * behind a `currentColor` arc that fills clockwise from 12 o'clock.
  */
-function ReadingPositionIcon({ percent }: { percent: number }) {
+export function ReadingPositionIcon({ percent }: { percent: number }) {
   const r = 10
   const circumference = 2 * Math.PI * r
   const clamped = Math.min(Math.max(percent, 0), 100)
@@ -68,7 +69,8 @@ function ReadingPositionIcon({ percent }: { percent: number }) {
   )
 }
 
-function useLiveReadingPercent(enabled: boolean) {
+/** The furthest the reader has scrolled on this page, in whole percent. */
+function useSessionMaxPercent(enabled: boolean) {
   const [percent, setPercent] = useState(0)
 
   useEffect(() => {
@@ -81,7 +83,8 @@ function useLiveReadingPercent(enabled: boolean) {
       frame = undefined
       const container = readingContainer()
       if (container) {
-        setPercent(Math.round(readingPercentage(container) * 100))
+        const current = Math.round(readingPercentage(container) * 100)
+        setPercent((max) => Math.max(max, current))
       }
     }
     const onScroll = () => {
@@ -104,18 +107,29 @@ function useLiveReadingPercent(enabled: boolean) {
 }
 
 /**
- * Live reading position: the ring, plus the percentage from `md` up. Keeps its
- * own state, so following the scroll doesn't re-render the actions next to it.
- * Members only: everyone else gets the excerpt, which would count as read
- * almost at once.
+ * The furthest reading position: the stored maximum, or further if the reader
+ * has got beyond it on this visit. The ring, plus the percentage from `md` up;
+ * a check once the text has been read. Keeps its own state, so following the
+ * scroll doesn't re-render the actions next to it. Members only: everyone else
+ * gets the excerpt, which would count as read almost at once.
  */
-export function ReadingProgressAction() {
+export function ReadingProgressAction({ stored }: { stored?: number }) {
   const { isMember, hasActiveMembership } = useMe()
   const canTrack = isMember && hasActiveMembership
-  const percent = useLiveReadingPercent(canTrack)
+  const sessionMax = useSessionMaxPercent(canTrack)
+  const percent = Math.max(stored ?? 0, sessionMax)
 
   if (!canTrack) {
     return null
+  }
+
+  if (percent >= 100) {
+    return (
+      <p className={cx(actionStyle, statusStyle)} data-status title='Gelesen'>
+        <CircleCheck size={ACTION_ICON_SIZE} />
+        <span className={actionLabelStyle}>Gelesen</span>
+      </p>
+    )
   }
 
   return (

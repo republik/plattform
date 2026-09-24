@@ -328,18 +328,23 @@ export function ArticleFloatingActions({
             : { width: slotWidth + 2 * VIEWPORT_BLEED }
         }
       >
-        {progress.resumeAt !== undefined && !progress.read && (
-          <div {...slotProps('resume')}>
-            <ResumeButton resumeAt={progress.resumeAt} />
-          </div>
-        )}
+        {progress.percent !== undefined &&
+          progress.resumeAt !== undefined &&
+          !progress.read && (
+            <div {...slotProps('resume')}>
+              <ResumeButton
+                percent={progress.percent}
+                resumeAt={progress.resumeAt}
+              />
+            </div>
+          )}
         {progress.read && (
           <div {...slotProps('read')}>
             <ReadStatus />
           </div>
         )}
         <div {...slotProps('actions')}>
-          <ReadingProgressAction />
+          <ReadingProgressAction stored={progress.percent} />
           <BookmarkAction documentId={documentId} />
           <ShareAction
             align='center'

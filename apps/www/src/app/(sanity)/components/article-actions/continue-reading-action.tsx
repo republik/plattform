@@ -4,9 +4,10 @@ import { useMe } from '@/lib/context/MeContext'
 import { useQuery } from '@apollo/client'
 import { UserDocumentProgressDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
-import { ArrowDown, CircleCheck } from 'lucide-react'
+import { CircleCheck } from 'lucide-react'
 import { useSyncExternalStore } from 'react'
-import { ACTION_ICON_SIZE, actionStyle } from './action-style'
+import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
+import { ReadingPositionIcon } from './reading-progress-action'
 import {
   readingContainer,
   readingRegion,
@@ -107,7 +108,13 @@ export function useReadingPosition({ documentId }: { documentId?: string }) {
   }
 }
 
-export function ResumeButton({ resumeAt }: { resumeAt: number }) {
+export function ResumeButton({
+  percent,
+  resumeAt,
+}: {
+  percent: number
+  resumeAt: number
+}) {
   return (
     <button
       className={cx(actionStyle, resumeStyle)}
@@ -116,7 +123,8 @@ export function ResumeButton({ resumeAt }: { resumeAt: number }) {
       title='Weiterlesen'
       type='button'
     >
-      <ArrowDown size={ACTION_ICON_SIZE} />
+      <ReadingPositionIcon percent={percent} />
+      <span className={actionLabelStyle}>{percent}%</span>
       Weiterlesen
     </button>
   )
