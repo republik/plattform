@@ -571,6 +571,16 @@ describe('plainText / plainTitle', () => {
     expect(plainText(portableText('  Hallo Welt  '))).toBe('Hallo Welt')
   })
 
+  it('plainText strips soft hyphens and invisible separators', () => {
+    expect(plainText(portableText('Bundes­rat⁣'))).toBe('Bundesrat')
+  })
+
+  it('plainText removes parenthetical asides without leaving double spaces', () => {
+    expect(
+      plainText(portableText('Der Bundesrat (also die Regierung) entscheidet')),
+    ).toBe('Der Bundesrat entscheidet')
+  })
+
   it('plainText returns an empty string for nullish input', () => {
     expect(plainText(undefined)).toBe('')
     expect(plainText(null)).toBe('')

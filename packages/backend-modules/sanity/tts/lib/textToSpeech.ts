@@ -82,8 +82,11 @@ const addFullStop = (text: string) =>
   /[….?!:;]$/.test(text) ? text : `${text}.`
 
 // Most fields here are portable text arrays, but a few (pullQuote.text/
-// source, infoBox.title) are plain strings — handle both.
-export const plainText = (value: unknown): string => {
+// source, infoBox.title) are plain strings — handle both. Flattening only:
+// none of plainText's speech-oriented cleanup, so it stays usable for text
+// that's parsed rather than spoken (the byline's "(Text)"/"(Bild)" role
+// markers would not survive that cleanup).
+const flattenText = (value: unknown): string => {
   if (!value) return ''
   if (typeof value === 'string') return value.trim()
   try {
@@ -93,6 +96,19 @@ export const plainText = (value: unknown): string => {
     return ''
   }
 }
+
+// Strips what shouldn't reach the voice: soft hyphens (U+00AD) and invisible
+// separators (U+2063), both typographic hints a TTS engine can only mangle,
+// and parenthetical asides — the legacy republik/tts service dropped those
+// too (removeEllipses in its lib/textParser), since they read as
+// interruptions rather than prose. Whitespace left behind is collapsed, so
+// removing an aside doesn't leave a double space mid-sentence.
+export const plainText = (value: unknown): string =>
+  flattenText(value)
+    .replace(/[­⁣]/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
 
 const paragraph = (voice: string, text: string, role: string, meta = {}) => ({
   type: 'paragraph',
@@ -403,7 +419,10 @@ export const buildSpeakableContent = (
   const contributorAuthors = authorsFromContributors(source.contributors)
   const authors = contributorAuthors.length
     ? contributorAuthors
-    : getAuthorsList(plainText(source.byline))
+    : // flattenText, not plainText: the byline is parsed here, not spoken,
+      // and plainText's aside-stripping would eat the "(Text)"/"(Bild)"
+      // role markers this parse depends on.
+      getAuthorsList(flattenText(source.byline))
   blocks.push(
     paragraph(voice, bylineText(authors), 'credits', { authors }),
     pause(1.4),
