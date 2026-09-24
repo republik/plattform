@@ -42,6 +42,29 @@ describe('resolveFormatId', () => {
   it('falls back to republik/article when a Spitzmarke slugifies to nothing', () => {
     expect(resolveFormatId('—?!')).toBe('republik/article')
   })
+
+  describe('TTS_FORMAT_REPO_PREFIX override', () => {
+    const ORIGINAL_PREFIX = process.env.TTS_FORMAT_REPO_PREFIX
+
+    afterEach(() => {
+      if (ORIGINAL_PREFIX === undefined) {
+        delete process.env.TTS_FORMAT_REPO_PREFIX
+      } else {
+        process.env.TTS_FORMAT_REPO_PREFIX = ORIGINAL_PREFIX
+      }
+    })
+
+    it('uses TTS_FORMAT_REPO_PREFIX in place of "republik" when set, e.g. for a clickable GitHub URL while testing', () => {
+      process.env.TTS_FORMAT_REPO_PREFIX = 'https://github.com/republik'
+
+      expect(resolveFormatId('Briefing aus Bern')).toBe(
+        'https://github.com/republik/format-briefing-aus-bern',
+      )
+      expect(resolveFormatId(undefined)).toBe(
+        'https://github.com/republik/article',
+      )
+    })
+  })
 })
 
 describe('slugify', () => {

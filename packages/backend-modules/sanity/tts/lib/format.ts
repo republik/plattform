@@ -42,13 +42,25 @@ export function slugify(value: string): string {
 }
 
 const DEFAULT_FORMAT = 'article'
+const DEFAULT_REPO_PREFIX = 'republik'
 
-// Slugifies the article's Spitzmarke title into the same republik/format-*
-// shape the legacy republik/tts service sent as content.meta.format. Always
-// derived from the Spitzmarke (not a stored repoId) since every format
-// created directly in Studio going forward has no repoId at all — only
-// content migrated from the old Publikator import ever gets one.
+// Overridable so the identifier can be sent as a full, clickable GitHub URL
+// (TTS_FORMAT_REPO_PREFIX=https://github.com/republik) for manual
+// verification against the real format repo while Huebsch's team is
+// unreachable to confirm the shape they actually expect — without changing
+// the default (bare "republik/format-<slug>", what the legacy republik/tts
+// service always sent) for everyone else. Read lazily, not cached at module
+// load, so it can be set per-process without a restart-sensitive import order.
+const repoPrefix = (): string =>
+  process.env.TTS_FORMAT_REPO_PREFIX || DEFAULT_REPO_PREFIX
+
+// Slugifies the article's Spitzmarke title into the same format-* shape the
+// legacy republik/tts service sent as content.meta.format. Always derived
+// from the Spitzmarke (not a stored repoId) since every format created
+// directly in Studio going forward has no repoId at all — only content
+// migrated from the old Publikator import ever gets one.
 export function resolveFormatId(spitzmarkeTitle?: string | null): string {
   const slug = spitzmarkeTitle ? slugify(spitzmarkeTitle) : ''
-  return slug ? `republik/format-${slug}` : `republik/${DEFAULT_FORMAT}`
+  const prefix = repoPrefix()
+  return slug ? `${prefix}/format-${slug}` : `${prefix}/${DEFAULT_FORMAT}`
 }
