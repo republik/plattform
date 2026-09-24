@@ -250,11 +250,15 @@ type NodeTransform = (
 // registry.
 
 const blockTransform: NodeTransform = (node, ctx) => {
+  // The Sanity equivalent of the legacy markdown `NOTE` zone, which was
+  // never spoken. A general-purpose style available on any article/page
+  // block (image credits are just its most common use) — checked before
+  // splitting, since there's no point computing voice-tag segments for a
+  // block that's discarded outright.
+  if (node.style === 'note') return []
+
   const segments = splitBlockByVoiceTag(node, ctx.voice)
   if (!segments.length) return []
-
-  // exclusively used for in-article image credits
-  if (node.style === 'note') return []
 
   const isHeading = node.style === 'heading'
   // 'question' is Huebsch's documented role for interview questions (see
