@@ -15,10 +15,10 @@
 // without the public function's actual output changing.
 
 import {
-  SpeakableContentError,
   buildSpeakableContent,
   plainText,
   plainTitle,
+  SpeakableContentError,
 } from '../textToSpeech'
 
 const block = (text: string, style = 'normal') => ({
@@ -32,7 +32,11 @@ const portableText = (text: string) => [block(text)]
 const paragraphs = (result: unknown[]) =>
   (result as any[])
     .filter((n) => n.type === 'paragraph')
-    .map((n) => ({ role: n.attrs.meta.role, text: n.content[0].text }))
+    .map((n) => ({
+      role: n.attrs.meta.role,
+      text: n.content[0].text,
+      attrs: n.attrs,
+    }))
 
 const pauseDurations = (result: unknown[]) =>
   (result as any[]).filter((n) => n.type === 'pause').map((n) => n.attrs.pause)
@@ -101,12 +105,13 @@ describe('buildSpeakableContent', () => {
       expect(credits?.text).toBe(
         'Ein Beitrag von Jane Doe, vorgelesen von einer synthetischen Stimme.',
       )
+      expect(credits?.attrs?.meta?.authors).toEqual(['Jane Doe'])
     })
 
-    it('falls back to the generic notice + raw byline when the byline does not match the expected pattern', () => {
+    it('falls back to the generic notice when the byline does not match the expected pattern', () => {
       const result = buildSpeakableContent(
         {
-          byline: portableText('von Jane Doe, 16. Juli 2026'), // comma before the date breaks the regex
+          byline: portableText('von Jane Doe, 16. Juli 2026'), // foreign date formating breaks the regex
           content: portableText('Absatz.'),
         },
         'voice-a',
@@ -115,7 +120,6 @@ describe('buildSpeakableContent', () => {
       expect(credits?.text).toContain(
         'Dieser Beitrag wird von einer synthetischen Stimme vorgelesen.',
       )
-      expect(credits?.text).toContain('von Jane Doe, 16. Juli 2026')
     })
 
     it('uses just the generic notice when there is no byline at all', () => {
@@ -192,9 +196,7 @@ describe('buildSpeakableContent', () => {
         'voice-a',
       )
       expect(paragraphs(result)).toEqual(
-        expect.arrayContaining([
-          { role: 'question', text: 'Was denken Sie?' },
-        ]),
+        expect.arrayContaining([{ role: 'question', text: 'Was denken Sie?' }]),
       )
     })
   })
@@ -244,7 +246,10 @@ describe('buildSpeakableContent', () => {
       const paras = result.filter(
         (n) => n.type === 'paragraph' && n.attrs.meta.role === 'paragraph',
       )
-      expect(paras.map((p) => p.attrs.voiceName)).toEqual(['voice-a', 'voice-b'])
+      expect(paras.map((p) => p.attrs.voiceName)).toEqual([
+        'voice-a',
+        'voice-b',
+      ])
       expect(paras.map((p) => p.content[0].text)).toEqual([
         'Frage?',
         'Antwort.',
@@ -298,7 +303,9 @@ describe('buildSpeakableContent', () => {
         'voice-a',
       )
       expect(paragraphs(result)).toEqual(
-        expect.arrayContaining([{ role: 'quote-attribution', text: 'Bildarchiv.' }]),
+        expect.arrayContaining([
+          { role: 'quote-attribution', text: 'Bildarchiv.' },
+        ]),
       )
     })
 
@@ -307,9 +314,9 @@ describe('buildSpeakableContent', () => {
         { content: [quote([block('Ein Zitat.')])] },
         'voice-a',
       )
-      expect(paragraphs(result).some((p) => p.role === 'quote-attribution')).toBe(
-        false,
-      )
+      expect(
+        paragraphs(result).some((p) => p.role === 'quote-attribution'),
+      ).toBe(false)
     })
 
     it('is dropped entirely when its body is empty', () => {
@@ -460,17 +467,23 @@ describe('buildSpeakableContent', () => {
     it.each([
       ['emailOnly', { _type: 'emailOnly', body: [block(forbidden)] }],
       ['if', { _type: 'if', present: 'hasAccess', body: [block(forbidden)] }],
-      ['ifNot', { _type: 'ifNot', present: 'hasAccess', body: [block(forbidden)] }],
-    ])('excludes %s content entirely — it never renders on the web article', (_name, node) => {
-      const result = buildSpeakableContent(
-        { content: [block('Absatz.'), node] },
-        'voice-a',
-      )
-      const allText = paragraphs(result)
-        .map((p) => p.text)
-        .join(' ')
-      expect(allText).not.toContain(forbidden)
-    })
+      [
+        'ifNot',
+        { _type: 'ifNot', present: 'hasAccess', body: [block(forbidden)] },
+      ],
+    ])(
+      'excludes %s content entirely — it never renders on the web article',
+      (_name, node) => {
+        const result = buildSpeakableContent(
+          { content: [block('Absatz.'), node] },
+          'voice-a',
+        )
+        const allText = paragraphs(result)
+          .map((p) => p.text)
+          .join(' ')
+        expect(allText).not.toContain(forbidden)
+      },
+    )
   })
 
   it('silently skips node types with no narratable representation (e.g. an embed)', () => {

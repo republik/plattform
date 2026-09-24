@@ -31,6 +31,7 @@ export interface SpeakableSource {
   description?: PortableTextBlocks
   byline?: PortableTextBlocks
   content?: PortableTextBlocks
+  collection?: string
 }
 
 interface PortableTextChild {
@@ -89,12 +90,12 @@ export const plainText = (value: unknown): string => {
   }
 }
 
-const paragraph = (voice: string, text: string, role: string) => ({
+const paragraph = (voice: string, text: string, role: string, meta = {}) => ({
   type: 'paragraph',
   attrs: {
     voiceName: voice,
     proofreadPromptName: 'Republik Sprechkorrektorat',
-    meta: { role },
+    meta: { ...meta, role },
   },
   content: [{ type: 'text', text: addFullStop(text) }],
 })
@@ -135,22 +136,23 @@ const makeCommaSeparatedString = (items: string[]) => {
   return [listStart, listEnd].join(conjunction)
 }
 
-const creditsText = (byline: string): string => {
-  if (!byline) return TTS_NOTICE
+const getAuthorsList = (byline?: string) => {
+  if (!byline) return []
   try {
-    const authors = splitAuthors(getAuthors(byline))
+    return splitAuthors(getAuthors(byline))
       .map(getAuthorRole)
       .filter(keepTextAuthors)
       .map((author) => author.name.replace(/,$/, ''))
-
-    if (!authors.length) throw new Error('no text/translation authors found')
-
-    return `Ein Beitrag von ${makeCommaSeparatedString(
-      authors,
-    )}, vorgelesen von einer synthetischen Stimme.`
   } catch {
-    return `${TTS_NOTICE} ${byline}`
+    return []
   }
+}
+
+const bylineText = (authors: string[]): string => {
+  if (!authors?.length) return TTS_NOTICE
+  return `Ein Beitrag von ${makeCommaSeparatedString(
+    authors,
+  )}, vorgelesen von einer synthetischen Stimme.`
 }
 
 interface VoiceSegment {
@@ -376,8 +378,9 @@ export const buildSpeakableContent = (
     blocks.push(paragraph(voice, title, 'title'), pause(1.4))
   }
 
+  const authors = getAuthorsList(plainText(source.byline))
   blocks.push(
-    paragraph(voice, creditsText(plainText(source.byline)), 'credits'),
+    paragraph(voice, bylineText(authors), 'credits', { authors }),
     pause(1.4),
   )
 
