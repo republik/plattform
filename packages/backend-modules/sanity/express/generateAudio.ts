@@ -1,26 +1,26 @@
-import { Request, Response } from 'express'
 import { logger } from '@orbiting/backend-modules-logger'
+import { Request, Response } from 'express'
 import {
-  fetchArticle,
-  reportAudioGenerationSuccess,
-  reportAudioGenerationError,
-  errorMessage,
-  hasPendingVersion,
   claimAudioGeneration,
+  errorMessage,
+  fetchArticle,
+  hasPendingVersion,
   markPendingVersionError,
+  reportAudioGenerationError,
+  reportAudioGenerationSuccess,
 } from '../lib/audio'
 import {
+  buildSignedWebhookPath,
   buildSpeakableContent,
+  deriveSlug,
+  hashSpeakableContent,
   plainText,
   plainTitle,
-  hashSpeakableContent,
-  buildSignedWebhookPath,
-  uploadToHuebsch,
   titleSlugFrom,
-  deriveSlug,
+  uploadToHuebsch,
 } from '../tts'
-import { errorBody } from './respond'
 import { isKillSwitchEnabled } from './killSwitch'
+import { errorBody } from './respond'
 
 // SANITY_AUDIO_GENERATION_ENABLED (pre-launch kill-switch, removable once
 // Sanity audio generation is live for real).
@@ -159,6 +159,7 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
   const source = article.slug?.current
     ? `https://www.republik.ch${article.slug.current}`
     : undefined
+  const collection = article.collection ?? undefined
 
   // fire-and-forget: Huebsch reports back asynchronously via the webhook above
   uploadToHuebsch(
@@ -167,7 +168,7 @@ export const generateAudioHandler = async (req: Request, res: Response) => {
     slug,
     plainTitle(article.title),
     webhookUrl,
-    { description, source },
+    { description, source, collection },
   ).catch(async (e: unknown) => {
     // The claim's placeholder was already inserted above, but the request to
     // Huebsch itself never got off the ground — mark that specific attempt

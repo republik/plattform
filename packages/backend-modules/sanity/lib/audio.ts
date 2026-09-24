@@ -14,7 +14,9 @@ function isDocumentNotFoundError(err: unknown): boolean {
   const items = (
     err as { details?: { items?: { error?: { type?: string } }[] } } | null
   )?.details?.items
-  return Boolean(items?.some((item) => item.error?.type === 'documentNotFoundError'))
+  return Boolean(
+    items?.some((item) => item.error?.type === 'documentNotFoundError'),
+  )
 }
 
 // True for either way a versioned document can turn out to be unwritable by
@@ -154,6 +156,9 @@ export interface ArticleDoc {
   // HEADING_SLUG_CONFIG_QUERY convention.
   publishDate?: string
   heading?: { segment?: string | null; template?: string | null }
+  // Title of the featured articleCollection (same selection as the
+  // frontend's document query), passed to Huebsch as meta.collection.
+  collection?: string | null
 }
 
 export const fetchArticle = (documentId: string) =>
@@ -169,7 +174,8 @@ export const fetchArticle = (documentId: string) =>
       "audioGenerationResult": audioGenerationResult{status, updatedAt},
       "pendingAudioVersions": audioVersions[status == "pending"]{contentHash, generatedAt},
       publishDate,
-      "heading": heading->{"segment": slugSegment, "template": slugTemplate}
+      "heading": heading->{"segment": slugSegment, "template": slugTemplate},
+      "collection": articleCollections[featured == true][0].collection->title
     }`,
     { id: documentId },
     { perspective: 'raw' },
@@ -330,7 +336,10 @@ export const markPendingVersionError = (
 // place (see recordAudioVersion) instead of appending a duplicate entry.
 // `raw` for the same reason as fetchArticle/fetchAudioContentHash above —
 // documentId is very often a drafts.* id.
-export const fetchPendingVersionKey = (documentId: string, contentHash: string) =>
+export const fetchPendingVersionKey = (
+  documentId: string,
+  contentHash: string,
+) =>
   sanityClient().fetch<string | undefined>(
     `*[_id == $id][0].audioVersions[status == "pending" && contentHash == $hash][0]._key`,
     { id: documentId, hash: contentHash },
@@ -388,7 +397,9 @@ export const recordAudioVersion = (
     if (pendingKey) {
       patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
     } else {
-      patch.setIfMissing({ audioVersions: [] }).append('audioVersions', [version])
+      patch
+        .setIfMissing({ audioVersions: [] })
+        .append('audioVersions', [version])
     }
     return patch.commit({ autoGenerateArrayKeys: true })
   }

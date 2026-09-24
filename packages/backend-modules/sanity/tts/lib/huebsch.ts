@@ -53,7 +53,7 @@ export const uploadToHuebsch = async (
   slug: string | undefined,
   title: string,
   webhookUrl: string,
-  options?: { description?: string; source?: string },
+  options?: { description?: string; source?: string; collection?: string },
 ) => {
   const res = await fetch(intakeUrl(), {
     method: 'POST',
@@ -67,7 +67,7 @@ export const uploadToHuebsch = async (
           attrs: {
             title,
             webhook: webhookUrl,
-            meta: { format: 'article' },
+            meta: { collection: options?.collection },
             // Huebsch validates slug's format when present ("alphanumeric,
             // hyphens and slashes, beginning with a slash") — it's an
             // identifier, not spoken content, and a document with no real
@@ -95,7 +95,9 @@ export const uploadToHuebsch = async (
 
   if (!res.ok || json?.ok === false) {
     throw new HuebschError(
-      `huebsch intake failed for ${documentId}: ${describeHuebschError(json?.val)}`,
+      `huebsch intake failed for ${documentId}: ${describeHuebschError(
+        json?.val,
+      )}`,
     )
   }
 
@@ -111,6 +113,7 @@ export interface HuebschResult {
   audioFile: ArrayBuffer
   durationMs?: number
   chapters?: HuebschChapter[]
+
   [key: string]: unknown
 }
 
@@ -123,7 +126,9 @@ export const parseHuebschResult = async (
 
   if (parsed?.ok === false) {
     throw new HuebschError(
-      `huebsch reported a failed generation: ${describeHuebschError(parsed.val)}`,
+      `huebsch reported a failed generation: ${describeHuebschError(
+        parsed.val,
+      )}`,
     )
   }
 

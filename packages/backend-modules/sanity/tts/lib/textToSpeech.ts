@@ -31,7 +31,6 @@ export interface SpeakableSource {
   description?: PortableTextBlocks
   byline?: PortableTextBlocks
   content?: PortableTextBlocks
-  collection?: string
 }
 
 interface PortableTextChild {
