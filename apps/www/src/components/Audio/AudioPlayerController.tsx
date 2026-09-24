@@ -25,7 +25,11 @@ import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
 import useTimeout from '@/lib/hooks/useTimeout'
 import { clamp } from './helpers/clamp'
-import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { audioCoverUrl } from './helpers/audioCoverImages'
+import { toNativeAppTrack } from './helpers/nativeAppTrack'
+import { AudioQueueItem } from './types/AudioQueueItem'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
@@ -151,11 +155,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [hasDelayedAutoPlay, setHasDelayedAutoPlay] = useState(false)
 
   const setOptimisticTimeUI = (playerItem: AudioQueueItem, initialTime = 0) => {
-    const audioSource = playerItem?.document?.meta?.audioSource
     // Optimistic UI update
-    if (audioSource) {
-      const duration = audioSource.durationMs / 1000
-      setDuration(duration || 0)
+    if (playerItem?.document) {
+      setDuration((playerItem.document.audioDurationMs ?? 0) / 1000)
       setCurrentTime(initialTime)
     }
   }
@@ -172,12 +174,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const saveActiveItemProgress = useCallback(
     async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
-      const { mediaId } = activePlayerItem?.document?.meta?.audioSource ?? {}
+      const mediaId = activePlayerItem?.mediaId
       if (duration < (forcedState?.currentTime ?? currentTime)) {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.ILLEGAL_PROGRESS_UPDATE,
-          activePlayerItem?.document?.meta?.path,
+          activePlayerItem?.document?.slug,
           {
             currentTime: forcedState?.currentTime ?? currentTime,
             duration,
@@ -246,8 +248,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const fetchInitialTime = async (item: AudioQueueItem): Promise<number> => {
-    const mediaId = item.document?.meta?.audioSource.mediaId
-    const duration = item.document?.meta?.audioSource.durationMs / 1000
+    const mediaId = item.mediaId
+    const duration = (item.document?.audioDurationMs ?? 0) / 1000
     console.log('Audio Controller: fetchInitialTime', {
       mediaId,
       duration,
@@ -281,11 +283,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         initialTime,
       })
       notifyApp(AudioEvent.SETUP_TRACK, {
-        item,
+        // Adapted, not sent as-is: the app expects the pre-Sanity shape.
+        item: toNativeAppTrack(item),
         autoPlay,
         initialTime,
         playbackRate,
-        coverImage: item.document.meta.coverForNativeApp,
+        coverImage: audioCoverUrl(item.document?.image, 1024),
       })
     },
     [playbackRate],
@@ -334,7 +337,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.PLAY_TRACK,
-          activePlayerItem?.document?.meta?.path,
+          activePlayerItem?.document?.slug,
         ])
       }
 
@@ -485,24 +488,31 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   // Handle track ending on media element
   const onQueueAdvance = async (autoPlay: boolean) => {
-    if (!activePlayerItem) {
+    // No id means the item is still optimistic: its queue slot doesn't exist
+    // server-side yet, so there's nothing to remove or advance past.
+    if (!activePlayerItem?.id) {
       return
     }
     try {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
 
+      const removedItemId = activePlayerItem.id
       const updatedQueue = (audioQueue || []).filter(
-        (item) => item.id !== activePlayerItem.id,
+        (item) => item.id !== removedItemId,
       )
 
       console.log('Audio Controller: onQueueAdvance', {
-        removingItemId: activePlayerItem.id,
+        removingItemId: removedItemId,
         queueLength: updatedQueue.length,
         autoPlay,
       })
 
-      await removeAudioQueueItem(activePlayerItem.id)
+      // Started here but awaited at the end: the mutation's optimistic
+      // response already takes the finished track out of the queue, and
+      // nothing below needs the server's answer. Awaiting it here put a full
+      // round trip between one track ending and the next one starting.
+      const removal = removeAudioQueueItem(removedItemId)
 
       audioQueueRef.current = [...updatedQueue]
       setInitialized(true)
@@ -514,7 +524,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ENDED,
-          activePlayerItem?.document?.meta?.path,
+          activePlayerItem?.document?.slug,
         ])
       } else {
         const nextItem = updatedQueue[0]
@@ -522,16 +532,19 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ADVANCE,
-          nextItem?.document?.meta?.path,
+          nextItem?.document?.slug,
         ])
       }
+
+      // Surfaces a failed removal, now that the next track is already going.
+      await removal
     } catch (error) {
       handleError(error)
     }
   }
 
   const addQueueItem = useCallback(
-    async (item: AudioPlayerItem, position?: number) => {
+    async (item: AudioQueueItemContent, position?: number) => {
       await addAudioQueueItem(item, position).catch(handleError)
     },
     [addAudioQueueItem],
@@ -543,7 +556,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         const queueItem = audioQueue?.find(({ id }) => id === audioQueueItemId)
 
         if (queueItem) {
-          const isHeadOfQueue = checkIfHeadOfQueue(queueItem.document.id)
+          const isHeadOfQueue = checkIfHeadOfQueue(
+            collectionsDocumentId(queueItem.document),
+          )
           if (isHeadOfQueue && audioQueue?.length > 1) {
             setupNextAudioItem(audioQueue[1], false).catch(handleError)
           }
@@ -568,9 +583,32 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   )
 
   const togglePlayer = useCallback(
-    async (item: AudioPlayerItem, location?: AudioPlayerLocations) => {
+    async (item: AudioQueueItemContent, location?: AudioPlayerLocations) => {
       try {
-        const isHeadOfQueue = checkIfHeadOfQueue(item.id)
+        // Nothing below touches the audio element until `handleSetupTrack`,
+        // at the end of `setupNextAudioItem` — and two network round trips
+        // sit in front of it (the queue mutation, then this item's media
+        // progress). Without pausing here the track the reader was listening
+        // to plays on through all of that, so the click appears to do
+        // nothing. `onPause` also saves the position they left off at.
+        await onPause()
+
+        // Show the clicked track before the round trips below, so the player
+        // swaps over on the click rather than a beat later. `id` is null
+        // until the mutation hands back the real slot, which
+        // `setupNextAudioItem` then sets in place of this.
+        const optimisticItem: AudioQueueItem = {
+          id: null,
+          sequence: 0,
+          mediaId: collectionsDocumentId(item),
+          userProgress: null,
+          document: item,
+        }
+        setActivePlayerItem(optimisticItem)
+        setOptimisticTimeUI(optimisticItem)
+        setIsVisible(true)
+
+        const isHeadOfQueue = checkIfHeadOfQueue(collectionsDocumentId(item))
         let nextUp: AudioQueueItem
         // If the item to be played is already the first item in the queue
         // already just set the active item directly
@@ -579,6 +617,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         } else {
           const queue = await addAudioQueueItem(item, 1)
           if (!queue || queue.length === 0) {
+            // Nothing was queued, so the optimistic item above would linger
+            // as a track that can never play.
+            setActivePlayerItem(null)
             return
           }
 
@@ -586,6 +627,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         }
         activeItemRef.current = nextUp
         await setupNextAudioItem(nextUp, true)
+        // Again, deliberately: the effect below hides the player whenever the
+        // queue reads as empty, and it can run on the queue update this
+        // mutation triggers — before the new item is in there.
         setIsVisible(true)
 
         if (inNativeApp) {
@@ -594,10 +638,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
         trackEvent([
           location,
-          nextUp?.document?.meta?.audioSource?.kind === 'syntheticReadAloud'
+          nextUp?.document?.syntheticVoiceEnabled
             ? AudioPlayerActions.PLAY_SYNTHETIC
             : AudioPlayerActions.PLAY_TRACK,
-          nextUp?.document?.meta?.path,
+          nextUp?.document?.slug,
         ])
       } catch (error) {
         handleError(error)
@@ -677,7 +721,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }, [audioQueue, activePlayerItem, isVisible])
 
   useAudioContextEvent<{
-    item: AudioPlayerItem
+    item: AudioQueueItemContent
     location?: AudioPlayerLocations
     onSettled?: (error?: unknown) => void
   }>(AudioContextEvent.TOGGLE_PLAYER, async ({ item, location, onSettled }) => {
@@ -690,7 +734,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   })
   useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYBACK, togglePlayback)
   useAudioContextEvent<{
-    item: AudioPlayerItem
+    item: AudioQueueItemContent
     position?: number
   }>(AudioContextEvent.ADD_AUDIO_QUEUE_ITEM, ({ item, position }) =>
     addQueueItem(item, position),
@@ -759,8 +803,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         duration:
           duration !== 0
             ? duration
-            : (activePlayerItem?.document?.meta?.audioSource?.durationMs || 0) /
-              1000,
+            : (activePlayerItem?.document?.audioDurationMs || 0) / 1000,
         playbackRate,
         actions: {
           onPlay,
@@ -778,7 +821,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
             trackEvent([
               AudioPlayerLocations.AUDIO_PLAYER,
               AudioPlayerActions.SKIP_TO_NEXT,
-              activePlayerItem?.document?.meta?.path,
+              activePlayerItem?.document?.slug,
             ])
           },
           handleError,

@@ -1,4 +1,4 @@
-import { AudioQueueItem } from './AudioPlayerItem'
+import { AudioQueueItem } from './AudioQueueItem'
 
 export enum AudioEvent {
   // Sent to app

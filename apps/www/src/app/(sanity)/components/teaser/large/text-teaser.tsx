@@ -3,9 +3,9 @@ import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/
 import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
+import Link from '@/app/components/ui/link'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from '@/app/components/ui/link'
 
 const teaserTitle = cva({
   base: {
@@ -146,17 +146,7 @@ export function TextTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
-        {teaser.audioSourceMp3 && (
-          <TeaserAudioPlayButton
-            targetId={targetId}
-            title={teaser.audioTitle}
-            path={target}
-            publishDate={publishDate}
-            mp3={teaser.audioSourceMp3}
-            durationMs={teaser.audioDurationMs}
-            align='center'
-          />
-        )}
+        <TeaserAudioPlayButton audioItem={teaser.audioItem} align='center' />
       </div>
     </div>
   )

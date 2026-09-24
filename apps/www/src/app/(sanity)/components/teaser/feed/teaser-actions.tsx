@@ -19,9 +19,10 @@ import { css } from '@republik/theme/css'
 import { EllipsisVertical } from 'lucide-react'
 
 export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
-  const mp3 =
-    teaser._type === 'article' ? teaser.audioSourceMp3 ?? undefined : undefined
-  const showAddToPlaylist = useAddToPlaylistAllowed(mp3)
+  const audioItem = teaser._type === 'article' ? teaser.audioItem : null
+  const showAddToPlaylist = useAddToPlaylistAllowed(
+    audioItem?.audioSourceMp3 ?? undefined,
+  )
 
   // Only articles carry audio/discussion data, and standalone teaser
   // documents point at other content — there's nothing of their own to
@@ -32,7 +33,6 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
 
   const documentId = collectionsDocumentId(teaser)
   const path = teaser.slug
-  const title = teaser.plainTitle ?? ''
 
   return (
     <div
@@ -58,13 +58,7 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
           gap: '5',
         })}
       >
-        <PlayAction
-          documentId={documentId}
-          durationMs={teaser.audioDurationMs ?? undefined}
-          mp3={teaser.audioSourceMp3 ?? undefined}
-          path={path}
-          title={title}
-        />
+        <PlayAction audioItem={audioItem} />
         <BookmarkAction documentId={documentId} />
         <DiscussionAction
           path={path}
@@ -86,11 +80,7 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
           >
             <Menu.Item asChild>
               <AddToPlaylistAction
-                documentId={documentId}
-                durationMs={teaser.audioDurationMs ?? undefined}
-                mp3={mp3}
-                path={path}
-                title={title}
+                audioItem={audioItem}
                 className={menuItemStyle}
               />
             </Menu.Item>

@@ -13,12 +13,17 @@ export const { createGetStaticProps, createGetStaticPaths } =
 
 export const createGetServerSideProps =
   makeSSRDataFetchingHelpers<MeObjectType>(initializeApollo, async (client) => {
-    const {
-      data: { me },
-    } = await client.query({
-      query: MeDocument,
-    })
-    return me
+    // Wrap GraphQL API calls in try/catch because Apollo Client will throw on networkError
+    try {
+      const {
+        data: { me },
+      } = await client.query({
+        query: MeDocument,
+      })
+      return me
+    } catch (e) {
+      return null
+    }
   })
 
 export type ProvidedUserAgentProps = { providedUserAgent?: string }

@@ -15,10 +15,10 @@
 // without the public function's actual output changing.
 
 import {
-  SpeakableContentError,
   buildSpeakableContent,
   plainText,
   plainTitle,
+  SpeakableContentError,
 } from '../textToSpeech'
 
 const block = (text: string, style = 'normal') => ({
@@ -33,6 +33,18 @@ const paragraphs = (result: unknown[]) =>
   (result as any[])
     .filter((n) => n.type === 'paragraph')
     .map((n) => ({ role: n.attrs.meta.role, text: n.content[0].text }))
+
+// The credits paragraph carries structured author names in its meta, which
+// the role/text projection above deliberately drops (keeping every other
+// assertion in this file a plain two-key comparison).
+const creditsOf = (result: unknown[]) => {
+  const node = (result as any[]).find(
+    (n) => n.type === 'paragraph' && n.attrs.meta.role === 'credits',
+  )
+  return (
+    node && { text: node.content[0].text, authors: node.attrs.meta.authors }
+  )
+}
 
 const pauseDurations = (result: unknown[]) =>
   (result as any[]).filter((n) => n.type === 'pause').map((n) => n.attrs.pause)
@@ -87,6 +99,133 @@ describe('buildSpeakableContent', () => {
   })
 
   describe('credits notice', () => {
+    it('prefers the structured contributors over parsing the byline', () => {
+      const result = buildSpeakableContent(
+        {
+          byline: portableText(
+            'Ein Beitrag von Jane Doe (Text) und Max Muster (Bild) 12.05.2023',
+          ),
+          contributors: [
+            { kind: 'Text', name: 'Erika Beispiel' },
+            // no role recorded at all — studio treats that as a text author
+            { name: 'Hans Muster' },
+            { kind: 'Übersetzung', name: 'Jean Exemple' },
+            { kind: 'voice', name: 'Vera Stimme' },
+            { kind: 'Bild', name: 'Beat Bild' },
+          ],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      const credits = creditsOf(result)
+      expect(credits?.authors).toEqual([
+        'Erika Beispiel',
+        'Hans Muster',
+        'Jean Exemple',
+      ])
+      expect(credits?.text).toBe(
+        'Ein Beitrag von Erika Beispiel und Hans Muster, ' +
+          'übersetzt von Jean Exemple, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('names translators in their own clause, after the text authors', () => {
+      const result = buildSpeakableContent(
+        {
+          contributors: [
+            { kind: 'Text', name: 'Jana Muster' },
+            { kind: 'Übersetzung', name: 'Betina Muster' },
+          ],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.text).toBe(
+        'Ein Beitrag von Jana Muster, übersetzt von Betina Muster, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('groups several translators into one clause', () => {
+      const result = buildSpeakableContent(
+        {
+          contributors: [
+            { kind: 'Text', name: 'Jana Muster' },
+            { kind: 'Übersetzung', name: 'Betina Muster' },
+            { kind: 'Übersetzung', name: 'Jean Exemple' },
+          ],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.text).toBe(
+        'Ein Beitrag von Jana Muster, ' +
+          'übersetzt von Betina Muster und Jean Exemple, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('recognises the translation role under its English spellings too', () => {
+      // `kind` is free text and may yet be stored as "translation" rather
+      // than "Übersetzung" — that must not silently drop the credit.
+      for (const kind of ['translation', 'Translator', 'uebersetzung']) {
+        const result = buildSpeakableContent(
+          {
+            contributors: [
+              { kind: 'Text', name: 'Jana Muster' },
+              { kind, name: 'Betina Muster' },
+            ],
+            content: portableText('Absatz.'),
+          },
+          'voice-a',
+        )
+        expect(creditsOf(result)?.text).toBe(
+          'Ein Beitrag von Jana Muster, übersetzt von Betina Muster, ' +
+            'vorgelesen von einer synthetischen Stimme.',
+        )
+      }
+    })
+
+    it('groups a byline-parsed translation the same way', () => {
+      const result = buildSpeakableContent(
+        {
+          byline: portableText(
+            'Ein Beitrag von Jana Muster (Text), Betina Muster ' +
+              '(Übersetzung) und Beat Bild (Bild) 12.05.2023',
+          ),
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.text).toBe(
+        'Ein Beitrag von Jana Muster, übersetzt von Betina Muster, ' +
+          'vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('falls back to the byline when contributors is empty or names nobody usable', () => {
+      const byline = portableText(
+        'Ein Beitrag von Jane Doe (Text) und Max Muster (Bild) 12.05.2023',
+      )
+      const fromEmpty = buildSpeakableContent(
+        { byline, contributors: [], content: portableText('Absatz.') },
+        'voice-a',
+      )
+      const fromImageOnly = buildSpeakableContent(
+        {
+          byline,
+          contributors: [{ kind: 'Bild', name: 'Beat Bild' }],
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      for (const result of [fromEmpty, fromImageOnly]) {
+        const credits = creditsOf(result)
+        expect(credits?.authors).toEqual(['Jane Doe'])
+      }
+    })
+
     it('extracts only text/translation authors from a byline, dropping image credits', () => {
       const result = buildSpeakableContent(
         {
@@ -97,25 +236,25 @@ describe('buildSpeakableContent', () => {
         },
         'voice-a',
       )
-      const credits = paragraphs(result).find((p) => p.role === 'credits')
+      const credits = creditsOf(result)
       expect(credits?.text).toBe(
         'Ein Beitrag von Jane Doe, vorgelesen von einer synthetischen Stimme.',
       )
+      expect(credits?.authors).toEqual(['Jane Doe'])
     })
 
-    it('falls back to the generic notice + raw byline when the byline does not match the expected pattern', () => {
+    it('falls back to the generic notice when the byline does not match the expected pattern', () => {
       const result = buildSpeakableContent(
         {
-          byline: portableText('von Jane Doe, 16. Juli 2026'), // comma before the date breaks the regex
+          byline: portableText('von Jane Doe, 16. Juli 2026'), // foreign date formating breaks the regex
           content: portableText('Absatz.'),
         },
         'voice-a',
       )
-      const credits = paragraphs(result).find((p) => p.role === 'credits')
+      const credits = creditsOf(result)
       expect(credits?.text).toContain(
         'Dieser Beitrag wird von einer synthetischen Stimme vorgelesen.',
       )
-      expect(credits?.text).toContain('von Jane Doe, 16. Juli 2026')
     })
 
     it('uses just the generic notice when there is no byline at all', () => {
@@ -123,7 +262,7 @@ describe('buildSpeakableContent', () => {
         { content: portableText('Absatz.') },
         'voice-a',
       )
-      const credits = paragraphs(result).find((p) => p.role === 'credits')
+      const credits = creditsOf(result)
       expect(credits?.text).toBe(
         'Dieser Beitrag wird von einer synthetischen Stimme vorgelesen.',
       )
@@ -192,9 +331,7 @@ describe('buildSpeakableContent', () => {
         'voice-a',
       )
       expect(paragraphs(result)).toEqual(
-        expect.arrayContaining([
-          { role: 'question', text: 'Was denken Sie?' },
-        ]),
+        expect.arrayContaining([{ role: 'question', text: 'Was denken Sie?' }]),
       )
     })
   })
@@ -244,7 +381,10 @@ describe('buildSpeakableContent', () => {
       const paras = result.filter(
         (n) => n.type === 'paragraph' && n.attrs.meta.role === 'paragraph',
       )
-      expect(paras.map((p) => p.attrs.voiceName)).toEqual(['voice-a', 'voice-b'])
+      expect(paras.map((p) => p.attrs.voiceName)).toEqual([
+        'voice-a',
+        'voice-b',
+      ])
       expect(paras.map((p) => p.content[0].text)).toEqual([
         'Frage?',
         'Antwort.',
@@ -298,7 +438,9 @@ describe('buildSpeakableContent', () => {
         'voice-a',
       )
       expect(paragraphs(result)).toEqual(
-        expect.arrayContaining([{ role: 'quote-attribution', text: 'Bildarchiv.' }]),
+        expect.arrayContaining([
+          { role: 'quote-attribution', text: 'Bildarchiv.' },
+        ]),
       )
     })
 
@@ -307,9 +449,34 @@ describe('buildSpeakableContent', () => {
         { content: [quote([block('Ein Zitat.')])] },
         'voice-a',
       )
-      expect(paragraphs(result).some((p) => p.role === 'quote-attribution')).toBe(
-        false,
+      expect(
+        paragraphs(result).some((p) => p.role === 'quote-attribution'),
+      ).toBe(false)
+    })
+
+    it('produces a single pause where its closing boundary meets a real divider', () => {
+      const result = buildSpeakableContent(
+        {
+          content: [
+            block('Vorher.'),
+            quote([block('Ein Zitat.')]),
+            { _type: 'divider' },
+            block('Nachher.'),
+          ],
+        },
+        'voice-a',
+      ) as any[]
+      const quoteIndex = result.findIndex(
+        (n) => n.content?.[0]?.text === 'Ein Zitat.',
       )
+      const afterIndex = result.findIndex(
+        (n) => n.content?.[0]?.text === 'Nachher.',
+      )
+      expect(
+        result
+          .slice(quoteIndex + 1, afterIndex)
+          .filter((n) => n.type === 'pause'),
+      ).toHaveLength(1)
     })
 
     it('is dropped entirely when its body is empty', () => {
@@ -460,17 +627,23 @@ describe('buildSpeakableContent', () => {
     it.each([
       ['emailOnly', { _type: 'emailOnly', body: [block(forbidden)] }],
       ['if', { _type: 'if', present: 'hasAccess', body: [block(forbidden)] }],
-      ['ifNot', { _type: 'ifNot', present: 'hasAccess', body: [block(forbidden)] }],
-    ])('excludes %s content entirely — it never renders on the web article', (_name, node) => {
-      const result = buildSpeakableContent(
-        { content: [block('Absatz.'), node] },
-        'voice-a',
-      )
-      const allText = paragraphs(result)
-        .map((p) => p.text)
-        .join(' ')
-      expect(allText).not.toContain(forbidden)
-    })
+      [
+        'ifNot',
+        { _type: 'ifNot', present: 'hasAccess', body: [block(forbidden)] },
+      ],
+    ])(
+      'excludes %s content entirely — it never renders on the web article',
+      (_name, node) => {
+        const result = buildSpeakableContent(
+          { content: [block('Absatz.'), node] },
+          'voice-a',
+        )
+        const allText = paragraphs(result)
+          .map((p) => p.text)
+          .join(' ')
+        expect(allText).not.toContain(forbidden)
+      },
+    )
   })
 
   it('silently skips node types with no narratable representation (e.g. an embed)', () => {
@@ -496,6 +669,23 @@ describe('buildSpeakableContent', () => {
 describe('plainText / plainTitle', () => {
   it('plainText flattens portable text to a trimmed string', () => {
     expect(plainText(portableText('  Hallo Welt  '))).toBe('Hallo Welt')
+  })
+
+  it('plainText strips soft hyphens and invisible separators', () => {
+    expect(plainText(portableText('Bundes­rat⁣'))).toBe('Bundesrat')
+  })
+
+  it('plainText removes an "(...)" elision marker without leaving double spaces', () => {
+    expect(plainText(portableText('Und (...) dann'))).toBe('Und dann')
+    expect(plainText(portableText('Der Bundesrat entscheidet (…) heute'))).toBe(
+      'Der Bundesrat entscheidet heute',
+    )
+  })
+
+  it('plainText keeps a genuine parenthetical aside, e.g. a party clarifier', () => {
+    expect(
+      plainText(portableText('Karin Keller-Sutter (FDP) schlug 100 Prozent vor')),
+    ).toBe('Karin Keller-Sutter (FDP) schlug 100 Prozent vor')
   })
 
   it('plainText returns an empty string for nullish input', () => {

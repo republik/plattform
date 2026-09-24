@@ -14,7 +14,9 @@ function isDocumentNotFoundError(err: unknown): boolean {
   const items = (
     err as { details?: { items?: { error?: { type?: string } }[] } } | null
   )?.details?.items
-  return Boolean(items?.some((item) => item.error?.type === 'documentNotFoundError'))
+  return Boolean(
+    items?.some((item) => item.error?.type === 'documentNotFoundError'),
+  )
 }
 
 // True for either way a versioned document can turn out to be unwritable by
@@ -133,6 +135,11 @@ export interface ArticleDoc {
   byline?: PortableTextBlocks
   content?: PortableTextBlocks
   slug?: { current: string }
+  // Structured credits, kept in sync with `byline` by studio's
+  // sync-contributors Blueprint Function. Preferred over parsing the byline
+  // string for the spoken credits notice — see textToSpeech.ts, which still
+  // falls back to that parse while this field is being backfilled.
+  contributors?: { kind?: string; name?: string | null }[]
   syntheticVoice?: string
   syntheticVoiceEnabled?: boolean
   // Hash of the speakable fields as of the last successful generation (see
@@ -152,8 +159,16 @@ export interface ArticleDoc {
   // attrs.slug regardless. Aliased to segment/template (deriveSlug's
   // HeadingSlugConfig shape) in the query below, matching studio's own
   // HEADING_SLUG_CONFIG_QUERY convention.
+  // `title` is the Spitzmarke's own title — the source the format
+  // identifier sent to Huebsch as meta.format is slugified from (see
+  // tts/lib/format.ts). Series episodes need no special case: their
+  // Spitzmarke already points at the series page.
   publishDate?: string
-  heading?: { segment?: string | null; template?: string | null }
+  heading?: {
+    segment?: string | null
+    template?: string | null
+    title?: string | null
+  }
 }
 
 export const fetchArticle = (documentId: string) =>
@@ -165,11 +180,12 @@ export const fetchArticle = (documentId: string) =>
   sanityClient().fetch<ArticleDoc | null>(
     `*[_id == $id][0]{
       _id, _rev, title, description, byline, content, slug,
+      "contributors": contributors[]{ kind, "name": contributor->title },
       syntheticVoice, syntheticVoiceEnabled, audioContentHash,
       "audioGenerationResult": audioGenerationResult{status, updatedAt},
       "pendingAudioVersions": audioVersions[status == "pending"]{contentHash, generatedAt},
       publishDate,
-      "heading": heading->{"segment": slugSegment, "template": slugTemplate}
+      "heading": heading->{"segment": slugSegment, "template": slugTemplate, "title": pt::text(title)}
     }`,
     { id: documentId },
     { perspective: 'raw' },
@@ -330,7 +346,10 @@ export const markPendingVersionError = (
 // place (see recordAudioVersion) instead of appending a duplicate entry.
 // `raw` for the same reason as fetchArticle/fetchAudioContentHash above —
 // documentId is very often a drafts.* id.
-export const fetchPendingVersionKey = (documentId: string, contentHash: string) =>
+export const fetchPendingVersionKey = (
+  documentId: string,
+  contentHash: string,
+) =>
   sanityClient().fetch<string | undefined>(
     `*[_id == $id][0].audioVersions[status == "pending" && contentHash == $hash][0]._key`,
     { id: documentId, hash: contentHash },
@@ -388,7 +407,9 @@ export const recordAudioVersion = (
     if (pendingKey) {
       patch.set({ [`audioVersions[_key == "${pendingKey}"]`]: version })
     } else {
-      patch.setIfMissing({ audioVersions: [] }).append('audioVersions', [version])
+      patch
+        .setIfMissing({ audioVersions: [] })
+        .append('audioVersions', [version])
     }
     return patch.commit({ autoGenerateArrayKeys: true })
   }

@@ -3,7 +3,6 @@ import { ArticleActionsProvider } from '@/app/(sanity)/components/article-action
 import { ArticleBottomActions } from '@/app/(sanity)/components/article-actions/article-bottom-actions'
 import { ArticleFloatingActions } from '@/app/(sanity)/components/article-actions/article-floating-actions'
 import { ArticleTopActions } from '@/app/(sanity)/components/article-actions/article-top-actions'
-import { JumpToReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
 import { CoverAudioButton } from '@/app/(sanity)/components/article-actions/cover-audio-button'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { ReadingPositionTracker } from '@/app/(sanity)/components/article-actions/reading-position-tracker'
@@ -77,14 +76,7 @@ export default async function ArticleDocument({
           {cover && (
             <EditorialImage value={cover}>
               {podcast?._id && (
-                <CoverAudioButton
-                  targetId={article._id}
-                  durationMs={article.audioDurationMs ?? undefined}
-                  mp3={article.audioSourceMp3 ?? undefined}
-                  path={slug}
-                  title={toPlainText(title)}
-                  publishDate={article.publishDate}
-                />
+                <CoverAudioButton audioItem={article.audioItem} />
               )}
             </EditorialImage>
           )}
@@ -109,10 +101,6 @@ export default async function ArticleDocument({
           </p>
 
           <ArticleTopActions article={article} />
-
-          {/* Floating, viewport-anchored — but inside the <article> it measures
-            against, and early in the tab order for an offer made on arrival. */}
-          <JumpToReadingPosition documentId={documentId} />
 
           <div className={css({ display: 'flex', gap: '2' })}>
             <EditLink documentId={article._id} documentType='article' />

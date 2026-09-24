@@ -1,3 +1,4 @@
+import { AUDIO_ITEM_FRAGMENT } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { TEASER_SMALL_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
@@ -44,7 +45,9 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   audioDurationMs,
   _type == "article" => {
     "plainTitle": pt::text(coalesce(teaserSmall.title, title)),
-    audioSourceMp3,
+    "audioItem": select(defined(audioSourceMp3) => @{
+      ${AUDIO_ITEM_FRAGMENT}
+    }),
     discussion->{
       backendDiscussionId,
     },
