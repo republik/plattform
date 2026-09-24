@@ -32,7 +32,7 @@ const markerStyle = css({
  * Percentage only, no `nodeId`: the legacy tracker stored the closest
  * `[data-pos]` anchor, and the Sanity portable-text renderer emits none. The
  * mutation requires the field, so it goes out empty, and
- * `JumpToReadingPosition` restores by percentage — the path it already took
+ * `ResumeButton` restores by percentage — the path it already took
  * whenever an anchor had disappeared from a re-edited article.
  */
 export function ReadingPositionTracker({ documentId }: { documentId: string }) {

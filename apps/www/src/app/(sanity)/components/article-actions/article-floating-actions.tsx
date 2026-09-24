@@ -12,11 +12,25 @@ import { createPortal } from 'react-dom'
 import { BookmarkAction } from './bookmark-action'
 import { collectionsDocumentId } from './document-id'
 import { MENU_SIDE_OFFSET } from './menu-style'
+import {
+  ReadStatus,
+  ResumeButton,
+  useNearTop,
+  useReadingPosition,
+} from './continue-reading-action'
+import { ReadingProgressAction } from './reading-progress-action'
 import { ShareAction } from './share-action'
 import { useArticleActions } from './article-actions-context'
 
 // Matches the header, so the bar and the header appear and disappear together.
 const MAX_HEADER_HEIGHT = 100
+
+// The panel's opacity fade (`panelStyle`).
+const FADE_MS = 300
+
+// The viewport's negative margin (`viewportStyle`): it reaches past the
+// content so focus rings aren't clipped.
+const VIEWPORT_BLEED = 4
 
 const panelStyle = css({
   position: 'fixed',
@@ -52,10 +66,10 @@ const panelStyle = css({
   alignItems: 'center',
   backgroundColor: 'background.overlay',
   borderRadius: 'full',
+  // As on the mini audio player: `md` reads too heavy over article content.
   boxShadow: 'overlay',
   color: 'text',
   display: 'flex',
-  gap: '5',
   paddingX: '5',
   paddingY: '3',
 
@@ -64,18 +78,65 @@ const panelStyle = css({
   // tab order and the accessibility tree, where it would otherwise duplicate the
   // top and bottom action rows.
   visibility: 'hidden',
-  transition: 'opacity 0.3s ease-out, visibility 0.3s ease-out',
+  transition:
+    'opacity 0.3s ease-out, visibility 0.3s ease-out, background-color 0.3s ease-out, color 0.3s ease-out',
   '&[data-visible]': {
     opacity: 1,
     visibility: 'visible',
+  },
+  // The offer made at the top stands out from the actions further down.
+  '&[data-mode="resume"], &[data-mode="read"]': {
+    backgroundColor: 'contrast',
+    color: 'text.inverted',
   },
 
   '@media print': { display: 'none' },
 })
 
+// Clips the slots while the width animates between them.
+const viewportStyle = css({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  margin: '-4px',
+  overflow: 'hidden',
+  padding: '4px',
+  position: 'relative',
+  transition: 'width 300ms ease-out',
+  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+})
+
+// All slots share the spot; the inactive ones sit centred on top of the active
+// one, out of the flow, and crossfade.
+const slotStyle = css({
+  alignItems: 'center',
+  display: 'flex',
+  flexShrink: 0,
+  gap: '5',
+  left: '50%',
+  opacity: 0,
+  position: 'absolute',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
+  transition: 'opacity 200ms ease-out, visibility 0s linear 200ms',
+  visibility: 'hidden',
+  width: 'max-content',
+  '&[data-active]': {
+    left: 'auto',
+    opacity: 1,
+    position: 'relative',
+    top: 'auto',
+    transform: 'none',
+    transition: 'opacity 200ms ease-out 100ms',
+    visibility: 'visible',
+  },
+})
+
 export type ArticleFloatingActionsProps = {
   article: ArticleDocumentType
 }
+
+type Mode = 'resume' | 'read' | 'actions'
 
 export function ArticleFloatingActions({
   article,
@@ -84,6 +145,9 @@ export function ArticleFloatingActions({
   const { paynoteInlineHeight } = usePaynotes()
   const { isIOSApp } = usePlatformInformation()
   const { topActionsCleared } = useArticleActions()
+  const documentId = collectionsDocumentId(article)
+  const progress = useReadingPosition({ documentId })
+  const nearTop = useNearTop()
 
   const scrollDirection = useScrollDirection({
     upThreshold: 25,
@@ -96,6 +160,84 @@ export function ArticleFloatingActions({
   // element. A body portal is immune to it.
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
+
+  // At the top the pill offers the stored position; further down, the actions.
+  const top = nearTop && !topActionsCleared
+  const topMode: Mode | undefined = progress.read
+    ? 'read'
+    : progress.resumeAt
+    ? 'resume'
+    : undefined
+  const nextMode: Mode | undefined = top
+    ? topMode
+    : topActionsCleared && scrollDirection === 'up'
+    ? 'actions'
+    : undefined
+
+  // The content last shown. It stays while the pill fades out, then switches
+  // to what the pill will most likely show next, so that swap happens out of
+  // sight.
+  const [shownMode, setShownMode] = useState<Mode>('actions')
+  const [hasFocus, setHasFocus] = useState(false)
+  // Content doesn't swap under a focused control; hiding still does.
+  const mode =
+    nextMode && hasFocus && nextMode !== shownMode ? shownMode : nextMode
+  const visible = mode !== undefined
+  const displayMode = mode ?? shownMode
+  const pendingMode = top ? topMode : 'actions'
+
+  useEffect(() => {
+    if (mode) {
+      setShownMode(mode)
+      return
+    }
+    setHasFocus(false)
+    if (!pendingMode) {
+      return
+    }
+    const timeout = setTimeout(() => setShownMode(pendingMode), FADE_MS)
+    return () => clearTimeout(timeout)
+  }, [mode, pendingMode])
+
+  // The position moves while the reader reads, so re-read it every time they
+  // come back to the top, the only moment it is offered.
+  const { refresh } = progress
+  const wasTop = useRef(top)
+  useEffect(() => {
+    const returned = top && !wasTop.current
+    wasTop.current = top
+    if (returned) {
+      refresh?.()
+    }
+  }, [top, refresh])
+
+  // CSS can't transition `width: auto`, so the width of each slot is measured
+  // and the pill animates between them.
+  const [slotWidths, setSlotWidths] = useState<Partial<Record<Mode, number>>>(
+    {},
+  )
+  const viewportRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const viewport = viewportRef.current
+    if (!viewport) {
+      return
+    }
+    const observer = new ResizeObserver((entries) => {
+      setSlotWidths((widths) => {
+        const next = { ...widths }
+        for (const entry of entries) {
+          const slot = (entry.target as HTMLElement).dataset.slot as Mode
+          next[slot] = entry.borderBoxSize[0].inlineSize
+        }
+        return next
+      })
+    })
+    viewport
+      .querySelectorAll('[data-slot]')
+      .forEach((slot) => observer.observe(slot))
+    return () => observer.disconnect()
+  }, [mounted, progress.read, progress.resumeAt])
+  const slotWidth = slotWidths[displayMode]
 
   // Radix anchors the share menu to the share button, but the menu should read
   // as a surface next to the *bar*: centred on it horizontally, and clearing its
@@ -144,16 +286,29 @@ export function ArticleFloatingActions({
     return null
   }
 
-  // `scrollDirection` is null until the first threshold crossing, so the bar
-  // starts out hidden.
-  const visible = scrollDirection === 'up' && topActionsCleared
+  const slotProps = (slot: Mode) => {
+    const active = slot === displayMode
+    return {
+      className: slotStyle,
+      'data-active': active || undefined,
+      'data-slot': slot,
+      inert: !active,
+    }
+  }
 
   return createPortal(
     <div
       ref={barRef}
       className={cx(panelStyle, isIOSApp && iosAppSafeAreaBottomStyle)}
       data-audio-visible={audioPlayerVisible || undefined}
+      data-mode={displayMode}
       data-visible={visible || undefined}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setHasFocus(false)
+        }
+      }}
+      onFocus={() => setHasFocus(true)}
       style={
         {
           // A non-finite value would invalidate the whole `calc()` and drop the
@@ -164,15 +319,38 @@ export function ArticleFloatingActions({
         } as CSSProperties
       }
     >
-      <BookmarkAction documentId={collectionsDocumentId(article)} />
-      <ShareAction
-        align='center'
-        menuOffsetX={shareMenuOffset.x}
-        menuSideOffset={shareMenuOffset.side}
-        path={article.slug}
-        title={article.plainTitle}
-        triggerRef={shareTriggerRef}
-      />
+      <div
+        className={viewportStyle}
+        ref={viewportRef}
+        style={
+          slotWidth === undefined
+            ? undefined
+            : { width: slotWidth + 2 * VIEWPORT_BLEED }
+        }
+      >
+        {progress.resumeAt !== undefined && !progress.read && (
+          <div {...slotProps('resume')}>
+            <ResumeButton resumeAt={progress.resumeAt} />
+          </div>
+        )}
+        {progress.read && (
+          <div {...slotProps('read')}>
+            <ReadStatus />
+          </div>
+        )}
+        <div {...slotProps('actions')}>
+          <ReadingProgressAction />
+          <BookmarkAction documentId={documentId} />
+          <ShareAction
+            align='center'
+            menuOffsetX={shareMenuOffset.x}
+            menuSideOffset={shareMenuOffset.side}
+            path={article.slug}
+            title={article.plainTitle}
+            triggerRef={shareTriggerRef}
+          />
+        </div>
+      </div>
     </div>,
     document.body,
   )

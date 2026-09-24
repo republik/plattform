@@ -1,138 +1,69 @@
 'use client'
 
-import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { useMe } from '@/lib/context/MeContext'
 import { useQuery } from '@apollo/client'
 import { UserDocumentProgressDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
-import { useEffect, useRef, useSyncExternalStore } from 'react'
-import { ACTION_ICON_SIZE, actionStyle, pillStyle } from './action-style'
-import { readingRegion, scrollPaddingTop } from './reading-region'
+import { ArrowDown, CircleCheck } from 'lucide-react'
+import { useSyncExternalStore } from 'react'
+import { ACTION_ICON_SIZE, actionStyle } from './action-style'
+import {
+  readingContainer,
+  readingRegion,
+  scrollPaddingTop,
+} from './reading-region'
 
-/** Tolerance for "at the very top", to survive sub-pixel scroll offsets. */
-const AT_TOP_THRESHOLD = 4
-
-const trackStyle = css({
-  color: 'divider',
-})
-
-const arcStyle = css({
-  transformBox: 'fill-box',
-  transformOrigin: 'center',
-  transform: 'rotate(-90deg)',
-  transition: 'stroke-dashoffset 0.35s',
-})
-
-/**
- * Floating layer anchored to the bottom of the viewport, centred, and
- * click-through everywhere but on the pill itself. It stays mounted while
- * hidden so it can fade out; the delayed `visibility` and `inert` (see the
- * component) keep it away from the pointer, the tab order and screen readers
- * in between.
- *
- * Below the mini audio player (`ZINDEX_POPOVER + 1`) and the paynote bar
- * (9998), above article content (`ZINDEX_CONTENT`) — see
- * `src/components/constants.js`.
- */
-const layerStyle = css({
-  bottom: 0,
-  display: 'flex',
-  justifyContent: 'center',
-  left: 0,
-  opacity: 0,
-  paddingBottom: 'calc(15px + env(safe-area-inset-bottom))',
-  paddingX: '4',
-  pointerEvents: 'none',
-  position: 'fixed',
-  right: 0,
-  transform: 'translateY(0.5rem)',
-  transition:
-    'opacity 200ms ease-out, transform 200ms ease-out, visibility 0s linear 200ms',
-  visibility: 'hidden',
-  zIndex: 16,
-  '&[data-visible="true"]': {
-    opacity: 1,
-    transform: 'none',
-    transition: 'opacity 200ms ease-out, transform 200ms ease-out',
-    visibility: 'visible',
-  },
-  '@media print': {
-    display: 'none',
+// Both take their colour from the inverted pill. Keyed on an attribute to
+// outrank `actionStyle`'s colour, cursor and hover: `cx` doesn't resolve
+// conflicting atomic classes.
+const resumeStyle = css({
+  '&[data-resume]': {
+    color: 'inherit',
+    _hover: { color: 'inherit', opacity: 0.8 },
   },
 })
 
-// The pill is the same as the play action's; only the layer around it is
-// click-through, so the button has to take pointer events back.
-const clickableStyle = css({
-  pointerEvents: 'auto',
+const readStyle = css({
+  '&[data-read]': {
+    color: 'inherit',
+    cursor: 'default',
+    margin: 0,
+    _hover: { color: 'inherit' },
+  },
 })
 
-/**
- * Percentage ring, adapted from the legacy `ProgressCircle`
- * (`packages/styleguide/src/components/Progress/Circle.tsx`): a `divider`
- * track behind a `currentColor` arc that fills clockwise from 12 o'clock.
- */
-function ReadingPositionIcon({ percent }: { percent: number }) {
-  const r = 10
-  const circumference = 2 * Math.PI * r
-  const clamped = Math.min(Math.max(percent, 0), 100)
-
-  return (
-    <svg
-      width={ACTION_ICON_SIZE}
-      height={ACTION_ICON_SIZE}
-      viewBox='0 0 24 24'
-      fill='none'
-    >
-      <circle
-        className={trackStyle}
-        cx='12'
-        cy='12'
-        r={r}
-        stroke='currentColor'
-        strokeWidth={2}
-      />
-      <circle
-        className={arcStyle}
-        cx='12'
-        cy='12'
-        r={r}
-        stroke='currentColor'
-        strokeWidth={2}
-        strokeLinecap='round'
-        strokeDasharray={circumference}
-        strokeDashoffset={circumference - (clamped / 100) * circumference}
-      />
-    </svg>
-  )
-}
-
-const subscribeToScroll = (onStoreChange: () => void) => {
+const subscribeToViewport = (onStoreChange: () => void) => {
   window.addEventListener('scroll', onStoreChange, { passive: true })
-  return () => window.removeEventListener('scroll', onStoreChange)
+  window.addEventListener('resize', onStoreChange)
+  return () => {
+    window.removeEventListener('scroll', onStoreChange)
+    window.removeEventListener('resize', onStoreChange)
+  }
 }
 
-const isAtScrollTop = () => window.scrollY <= AT_TOP_THRESHOLD
+const isNearTop = () => window.scrollY < window.innerHeight
 
-// Server snapshot: there's never a position to offer before hydration anyway.
-const notAtScrollTop = () => false
+const notNearTop = () => false
 
 /**
- * Whether the reader is at the very top of the page. Reading the offset through
- * `useSyncExternalStore` makes the first client render already correct, so a
- * reader who lands mid-article — restored scroll position, anchor link — never
- * sees the action flash into view.
+ * Whether the reader is within the first screen of the page. Read through
+ * `useSyncExternalStore` so the first client render is already correct, and a
+ * reader landing mid-article never sees the offer flash into view before the
+ * top-actions observer (`useArticleActions`) reports.
  */
-function useAtScrollTop() {
-  return useSyncExternalStore(subscribeToScroll, isAtScrollTop, notAtScrollTop)
+export function useNearTop() {
+  return useSyncExternalStore(subscribeToViewport, isNearTop, notNearTop)
 }
 
 /**
- * Percentage only — the counterpart to `ReadingPositionTracker`, measuring the
- * same region. There is no anchor branch: positions on Sanity articles carry no
- * `nodeId`, because the renderer emits no `[data-pos]` to name.
+ * Percentage only: positions on Sanity articles carry no `nodeId`, because the
+ * renderer emits no `[data-pos]` anchors.
  */
-function scrollToReadingPosition(container: Element, percentage: number) {
+function scrollToReadingPosition(percentage: number) {
+  const container = readingContainer()
+  if (!container) {
+    return
+  }
   const { top, height } = readingRegion(container)
 
   window.scrollTo({
@@ -144,16 +75,11 @@ function scrollToReadingPosition(container: Element, percentage: number) {
 }
 
 /**
- * Reading position of the current article, keyed by `sanity:<_id>` — the same
- * reference bookmarks use (see `collectionsDocumentId`). `userDocumentProgress`
- * accepts that id directly and returns the stored percentage without resolving a
- * (Sanity-backed articles have none) GraphQL `Document`.
- *
- * Only members have anything to resume — logged-out readers hit the paywall
- * before scrolling far enough to generate a position, and the query would
- * just come back null for them.
+ * Stored reading position, keyed by `sanity:<_id>` (see
+ * `collectionsDocumentId`). Members only: everyone else hits the paywall before
+ * a position is ever recorded.
  */
-function useReadingPosition({ documentId }: { documentId?: string }) {
+export function useReadingPosition({ documentId }: { documentId?: string }) {
   const { isMember, hasActiveMembership } = useMe()
   const canTrack = isMember && hasActiveMembership
   const skip = !documentId || !canTrack
@@ -164,14 +90,16 @@ function useReadingPosition({ documentId }: { documentId?: string }) {
   })
 
   const progress = data?.userDocumentProgress
-  // `max` is the furthest the reader ever got, `percentage` is where they last
-  // stopped. The ring reports the furthest — as the legacy action bar did —
-  // while the jump goes to the last position.
+  // `max` is the furthest the reader ever got, `percentage` where they last
+  // stopped: the ring shows the former, the jump goes to the latter.
   const furthest = progress?.max?.percentage ?? progress?.percentage
+  const percent =
+    furthest === undefined ? undefined : Math.round(furthest * 100)
 
   return {
-    /** Rounded percentage of the furthest position, undefined while there's none. */
-    percent: furthest === undefined ? undefined : Math.round(furthest * 100),
+    /** Furthest position in whole percent, undefined while there's none. */
+    percent,
+    read: percent !== undefined && percent >= 100,
     /** Where to scroll back to, 0…1. */
     resumeAt: progress?.percentage,
     /** Undefined while the query is skipped — `refetch` would run it anyway. */
@@ -179,60 +107,26 @@ function useReadingPosition({ documentId }: { documentId?: string }) {
   }
 }
 
-export function JumpToReadingPosition({ documentId }: { documentId?: string }) {
-  const ref = useRef<HTMLButtonElement>(null)
-  const { percent, resumeAt, refresh } = useReadingPosition({ documentId })
-  const atTop = useAtScrollTop()
-  // The mini player occupies the same corner of the viewport (full width on
-  // small screens), so it takes precedence.
-  const { audioPlayerVisible } = useAudioContext()
-
-  // The position moves while the reader reads, so the one this component
-  // mounted with goes stale. Re-read it every time they come back to the top,
-  // which is the only moment the action is offered again.
-  const wasAtTop = useRef(atTop)
-  useEffect(() => {
-    const returnedToTop = atTop && !wasAtTop.current
-    wasAtTop.current = atTop
-    if (returnedToTop) {
-      refresh?.()
-    }
-  }, [atTop, refresh])
-
-  // Nothing to resume, or nothing left to resume to.
-  if (percent === undefined || percent >= 100 || !resumeAt) {
-    return null
-  }
-
-  const visible = atTop && !audioPlayerVisible
-
+export function ResumeButton({ resumeAt }: { resumeAt: number }) {
   return (
-    <div className={layerStyle} data-visible={visible} inert={!visible}>
-      <button
-        className={cx(
-          actionStyle,
-          pillStyle,
-          clickableStyle,
-          // Same shadow the mini audio player uses for its own fixed-bottom
-          // wrapper (`AudioPlayer.tsx`) — much lower alpha than `md`, which
-          // reads too heavy floating over arbitrary article content.
-          css({ boxShadow: 'overlay' }),
-        )}
-        onClick={() => {
-          // The layer renders inside the <article>, which is the element the
-          // stored position is measured against.
-          const container = ref.current?.closest('article')
-          if (container) {
-            scrollToReadingPosition(container, resumeAt)
-          }
-        }}
-        ref={ref}
-        title='Weiterlesen'
-        type='button'
-      >
-        <ReadingPositionIcon percent={percent} />
-        Weiterlesen
-      </button>
-    </div>
+    <button
+      className={cx(actionStyle, resumeStyle)}
+      data-resume
+      onClick={() => scrollToReadingPosition(resumeAt)}
+      title='Weiterlesen'
+      type='button'
+    >
+      <ArrowDown size={ACTION_ICON_SIZE} />
+      Weiterlesen
+    </button>
+  )
+}
+
+export function ReadStatus() {
+  return (
+    <p className={cx(actionStyle, readStyle)} data-read>
+      <CircleCheck size={ACTION_ICON_SIZE} />
+      Gelesen
+    </p>
   )
 }
