@@ -36,6 +36,7 @@ export interface SpeakableSource {
 interface PortableTextChild {
   _type?: string
   voice?: string
+
   [key: string]: unknown
 }
 
@@ -53,6 +54,7 @@ interface PortableTextNode {
   source?: string
   includeInSyntheticVoice?: boolean
   caption?: { legend?: PortableTextBlocks; credit?: PortableTextBlocks }
+
   [key: string]: unknown
 }
 
@@ -143,7 +145,9 @@ const creditsText = (byline: string): string => {
 
     if (!authors.length) throw new Error('no text/translation authors found')
 
-    return `Ein Beitrag von ${makeCommaSeparatedString(authors)}, vorgelesen von einer synthetischen Stimme.`
+    return `Ein Beitrag von ${makeCommaSeparatedString(
+      authors,
+    )}, vorgelesen von einer synthetischen Stimme.`
   } catch {
     return `${TTS_NOTICE} ${byline}`
   }
@@ -230,6 +234,10 @@ type NodeTransform = (
 const blockTransform: NodeTransform = (node, ctx) => {
   const segments = splitBlockByVoiceTag(node, ctx.voice)
   if (!segments.length) return []
+
+  // exclusively used for in-article image credits
+  if (node.style === 'note') return []
+
   const isHeading = node.style === 'heading'
   // 'question' is Huebsch's documented role for interview questions (see
   // intake-republik docs, "example keys"); `interviewQuestion` is the style
@@ -238,8 +246,8 @@ const blockTransform: NodeTransform = (node, ctx) => {
   const role = isHeading
     ? 'subtitle'
     : node.style === 'interviewQuestion'
-      ? 'question'
-      : ctx.defaultRole
+    ? 'question'
+    : ctx.defaultRole
   return [
     {
       kind: 'text',
@@ -357,14 +365,15 @@ export const buildSpeakableContent = (
 ) => {
   const blocks: unknown[] = [jingle]
 
-  const title = plainText(source.title)
-  if (title) {
-    blocks.push(paragraph(voice, title, 'title'), pause(1.4))
-  }
-
+  // as per Republik rulebook: lead is spoken before title
   const lead = plainText(source.description)
   if (lead) {
     blocks.push(paragraph(voice, lead, 'lead'), pause(1.4))
+  }
+
+  const title = plainText(source.title)
+  if (title) {
+    blocks.push(paragraph(voice, title, 'title'), pause(1.4))
   }
 
   blocks.push(
