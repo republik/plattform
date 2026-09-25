@@ -12,9 +12,6 @@ const {
   measureTree,
 } = require('../../../lib/Comment/threaded-comments')
 const getSortKey = require('../../../lib/sortKey')
-const {
-  isDiscussionBlockedFor,
-} = require('../../../lib/membersOnlyDiscussions')
 
 module.exports = async (discussion, args, context, info) => {
   const { pgdb, loaders } = context
@@ -61,14 +58,6 @@ module.exports = async (discussion, args, context, info) => {
     return {
       id: discussion.id,
       totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
-    }
-  }
-
-  if (isDiscussionBlockedFor(discussion, context.user)) {
-    return {
-      id: discussion.id,
-      totalCount: 0,
-      nodes: [],
     }
   }
 
