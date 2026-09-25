@@ -4,6 +4,7 @@ import { logger } from '@orbiting/backend-modules-logger'
 
 import { errorBody } from './respond'
 import { isKillSwitchEnabled } from './killSwitch'
+import { PUBLISH_NOTIFICATION_JOB_OPTIONS } from '../lib/workers/publishNotificationJobOptions'
 
 // SANITY_PUBLISH_NOTIFICATIONS_ENABLED (pre-launch kill-switch, removable
 // once Sanity publish notifications are live for real).
@@ -18,12 +19,20 @@ export const isPublishNotificationsEnabled = () =>
   isKillSwitchEnabled('SANITY_PUBLISH_NOTIFICATIONS_ENABLED')
 
 // Handles the request sent by the studio repo's functions/sync-notifications
-// Blueprint Function: POST { documentId }. Just enqueues the work and
-// responds immediately — mirrors publikator's finalizePublication, which
-// enqueues 'scheduler:publication:notify' rather than calling notifyPublish
-// inline, so a publish/notify request never blocks on subscriber resolution
-// and sending (push/email). See sanity/lib/workers/PublishNotificationWorker.ts
-// for where the actual work happens.
+// Blueprint Function: POST { documentId, notificationTrigger }. Just enqueues
+// the work and responds immediately — mirrors publikator's
+// finalizePublication, which enqueues 'scheduler:publication:notify' rather
+// than calling notifyPublish inline, so a publish/notify request never blocks
+// on subscriber resolution and sending (push/email). See
+// sanity/lib/workers/PublishNotificationWorker.ts for where the actual work
+// happens.
+//
+// Sanity's Blueprint Function delivery is at-least-once, so the same
+// (documentId, notificationTrigger) pair can arrive more than once for a
+// single real publish. notificationTrigger is only ever refreshed when an
+// editor deliberately requests a new notification, so the pair uniquely
+// identifies one notification request — we dedupe on it via pg-boss's
+// singletonKey so a redelivery never triggers a second send.
 export const publishNotificationHandler = async (
   req: Request,
   res: Response,
@@ -33,18 +42,36 @@ export const publishNotificationHandler = async (
     return res.status(400).json(errorBody('missing documentId'))
   }
 
+  const notificationTrigger = req.body?.notificationTrigger
+  if (!notificationTrigger || typeof notificationTrigger !== 'string') {
+    return res.status(400).json(errorBody('missing notificationTrigger'))
+  }
+
   if (!isPublishNotificationsEnabled()) {
     logger.info(
-      { documentId },
+      { documentId, notificationTrigger },
       'sanity publish-notification received while disabled, skipping',
     )
     return res.json({ success: true })
   }
 
-  await Queue.getInstance().send('sanity:publish-notification', {
-    $version: 'v1',
-    documentId,
-  })
+  // Spreads PUBLISH_NOTIFICATION_JOB_OPTIONS in rather than passing
+  // singletonKey alone: Queue.send does `options ?? worker.options`, so any
+  // explicit options object here replaces the worker's configured retry
+  // policy rather than merging with it. Mirrors publikatorSync/index.ts's
+  // commit-debounce singletonKey usage.
+  await Queue.getInstance().send(
+    'sanity:publish-notification',
+    {
+      $version: 'v1',
+      documentId,
+      notificationTrigger,
+    },
+    {
+      ...PUBLISH_NOTIFICATION_JOB_OPTIONS,
+      singletonKey: `${documentId}:${notificationTrigger}`,
+    },
+  )
 
   return res.json({ success: true })
 }
