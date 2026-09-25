@@ -13,7 +13,6 @@ const {
   slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
 const { clipNamesInText } = require('../../lib/nameClipper')
-const { isDiscussionBlockedFor } = require('../../lib/membersOnlyDiscussions')
 
 const { DISPLAY_AUTHOR_SECRET } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
@@ -32,11 +31,6 @@ const textForComment = async (comment, context) => {
 
   let newContent = content
   if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
-    const discussion = await context.loaders.Discussion.byId.load(discussionId)
-    if (isDiscussionBlockedFor(discussion, me)) {
-      return null
-    }
-
     const namesToClip =
       await context.loaders.Discussion.byIdCommenterNamesToClip.load(
         discussionId,
