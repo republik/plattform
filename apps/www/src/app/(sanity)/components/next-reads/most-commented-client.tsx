@@ -91,7 +91,7 @@ function MostCommentedGrid({ teasers }: { teasers: TeaserListItemType[] }) {
 }
 
 function hasImage(teaser: TeaserListItemType): boolean {
-  return !!teaser.image?.asset
+  return teaser._type === 'article' && !teaser.heading && !!teaser.image?.asset
 }
 
 function MostCommentedRead({
