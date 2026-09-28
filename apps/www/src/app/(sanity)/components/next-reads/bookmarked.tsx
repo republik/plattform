@@ -7,13 +7,12 @@ import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-ima
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
 import { Button } from '@/app/components/ui/button'
+import Link from '@/app/components/ui/link'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useTranslation } from '@/lib/withT'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
-import logo from '@republik/theme/logo.json'
 import { stegaClean } from 'next-sanity'
-import Link from '@/app/components/ui/link'
 import {
   nextReadHeader,
   nextReadItemTypography,
@@ -141,22 +140,7 @@ const FirstBookmarkItem = ({
           <LinkOverlay teaser={teaser} />
         </span>
       </h4>
-      <TeaserImage
-        image={teaser.image}
-        alt=''
-        width={650}
-        height={488}
-        className={css({
-          width: '100%',
-          maxWidth: '400px',
-          aspectRatio: '3/4',
-          objectFit: 'cover',
-          md: {
-            aspectRatio: '4/3',
-            maxWidth: '650px',
-          },
-        })}
-      />
+      <TeaserImage image={teaser.image} alt='' width={650} height={488} />
       {hasContent(teaser.byline) && (
         <p className='author'>
           <InlinePortableText value={teaser.byline} />
@@ -226,7 +210,13 @@ const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
         </h4>
         <TeaserDuration teaser={teaser} />
       </div>
-      <TeaserCover teaser={teaser} size={312} />
+      <TeaserImage
+        image={teaser.image}
+        alt=''
+        width={312}
+        height={234}
+        fallback={true}
+      />
     </div>
   )
 }
@@ -237,56 +227,4 @@ function TeaserDuration({ teaser }: { teaser: TeaserListItemType }) {
   if (!durationMs) return null
 
   return <p className='duration'>{Math.round(durationMs / 60_000)} min</p>
-}
-
-function TeaserCover({
-  teaser,
-  size,
-}: {
-  teaser: TeaserListItemType
-  size: number
-}) {
-  return (
-    <div
-      className={css({
-        aspectRatio: '1 / 1',
-        width: '100%',
-        flexShrink: 0,
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      })}
-      style={{ maxWidth: size }}
-    >
-      {teaser.image?.asset ? (
-        <TeaserImage
-          image={teaser.image}
-          alt=''
-          width={size}
-          height={size}
-          className={css({ width: '100%', height: '100%', objectFit: 'cover' })}
-        />
-      ) : (
-        <div
-          className={css({
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#000',
-          })}
-        >
-          <svg
-            viewBox={logo.BRAND_MARK_VIEWBOX}
-            role='presentation'
-            className={css({ width: '40%', fill: '#fff' })}
-          >
-            <path d={logo.BRAND_MARK_PATH} />
-          </svg>
-        </div>
-      )}
-    </div>
-  )
 }
