@@ -8,7 +8,7 @@ function downloadAudioSourceFile(item: AudioQueueItemContent) {
 
   const anchorElement = document.createElement('a')
   anchorElement.style.display = 'none'
-  anchorElement.href = downloadSource + '?download=1'
+  anchorElement.href = downloadSource + '?download=1&dl=' // download=1 is for asset server, dl= for Sanity CDN
   anchorElement.download = ''
   anchorElement.target = '_blank'
   anchorElement.textContent = 'Download'
