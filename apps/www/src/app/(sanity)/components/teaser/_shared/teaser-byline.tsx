@@ -8,10 +8,15 @@ const formatDate = timeFormat('%d.%m.%Y')
 // "A", "A und B", "A, B und C"
 const contributorsList = new Intl.ListFormat('de', { type: 'conjunction' })
 
+// Only authors and photographers make it into the byline; kinds are free
+// text, e.g. "Text", "Bilder" or "Text und Bilder"
+const BYLINE_KINDS = /text|bilder/i
+
 export function formatContributors(
   teaser: TeaserListItemType,
 ): string | undefined {
   const names = (teaser.contributors ?? [])
+    .filter((c) => !!c.kind && BYLINE_KINDS.test(c.kind))
     .map((c) => c.name)
     .filter((name): name is string => !!name)
 
