@@ -25,7 +25,11 @@ function teaserHref(teaser: TeaserListItemType): string | undefined {
   return href ?? undefined
 }
 
-export function BookmarkedFeed({ teasers }: { teasers: TeaserListItemType[] }) {
+export function BookmarkedFeedClient({
+  teasers,
+}: {
+  teasers: TeaserListItemType[]
+}) {
   if (!teasers.length) return null
 
   return (
@@ -191,8 +195,6 @@ const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
           md: {
             display: 'flex',
             flex: 1,
-            // Without this, a long title's min-content width beats the
-            // flex-basis of 0 and that item ends up wider than its siblings.
             minWidth: 0,
             maxWidth: '312px',
             flexDirection: 'column-reverse',

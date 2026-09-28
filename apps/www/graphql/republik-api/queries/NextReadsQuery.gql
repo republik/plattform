@@ -1,4 +1,4 @@
-query NextReadsSanity($documentId: ID!) {
+query NextReads($documentId: ID!) {
   nextReadsSanity(documentId: $documentId) {
     id
     documents {
