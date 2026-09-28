@@ -32,7 +32,17 @@ export const isPublishNotificationsEnabled = () =>
 // single real publish. notificationTrigger is only ever refreshed when an
 // editor deliberately requests a new notification, so the pair uniquely
 // identifies one notification request — we dedupe on it via pg-boss's
-// singletonKey so a redelivery never triggers a second send.
+// singletonKey.
+//
+// singletonKey alone is not enough: this queue runs pg-boss's default
+// 'standard' policy, which doesn't enforce singletonKey uniqueness at all,
+// and even short/singleton/stately only dedupe while the original job is
+// still queued/active — not once it has completed, which is well before a
+// redelivery can show up. singletonHours pairs singletonKey with a
+// singleton_on time bucket (job_i4), which stays unique regardless of job
+// state for the given window. 12h is pg-boss's default archive interval —
+// singletonSeconds/Minutes/Hours can't exceed it without also raising
+// archiveCompletedAfterSeconds globally on the PgBoss instance.
 export const publishNotificationHandler = async (
   req: Request,
   res: Response,
@@ -70,6 +80,7 @@ export const publishNotificationHandler = async (
     {
       ...PUBLISH_NOTIFICATION_JOB_OPTIONS,
       singletonKey: `${documentId}:${notificationTrigger}`,
+      singletonHours: 12,
     },
   )
 

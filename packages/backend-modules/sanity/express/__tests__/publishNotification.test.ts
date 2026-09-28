@@ -77,6 +77,10 @@ describe('publishNotificationHandler', () => {
       }),
       expect.objectContaining({
         singletonKey: 'doc-1:2026-09-25T02:45:00.000Z',
+        // singletonKey alone isn't enforced on this queue's 'standard'
+        // policy — singletonHours is what actually makes the key unique
+        // (via pg-boss's singleton_on index), independent of job state.
+        singletonHours: 12,
         // Queue.send does `options ?? worker.options` — an explicit options
         // object here must still carry the worker's retry policy, or it
         // silently replaces (not merges with) worker.options.
