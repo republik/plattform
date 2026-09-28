@@ -1,4 +1,3 @@
-import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { CONTRIBUTORS_FRAGMENT } from '@/app/(sanity)/groq/contributors-fragment'
 import { TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
@@ -12,7 +11,6 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   _type,
   "title": teaserSmallConfig.title,
   "description": teaserSmallConfig.description,
-  "byline": teaserSmallConfig.${BYLINE_FRAGMENT},
   "href": select(
     target[0]->_type == "article" => target[0]->slug.current,
     target[0]->_type == "page" => target[0]->slug.current,

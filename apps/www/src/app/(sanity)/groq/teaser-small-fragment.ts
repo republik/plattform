@@ -1,23 +1,13 @@
 import { AUDIO_ITEM_FRAGMENT } from '@/app/(sanity)/groq/audio-queue-items-query'
-import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { CONTRIBUTORS_FRAGMENT } from '@/app/(sanity)/groq/contributors-fragment'
 import { TEASER_SMALL_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
-
-/* "heading": select(
-  defined(teaserSmall.heading) || defined(heading) => {
-  "_id": heading->_id,
-    "title": coalesce(teaserSmall.heading, pt::text(heading->title)),
-    "slug": heading->slug.current,
-}
-), */
 
 export const TEASER_SMALL_FRAGMENT = /* groq */ `
   _id,
   _type,
   "title": coalesce(teaserSmall.title, title),
   "description": coalesce(teaserSmall.description, description),
-  "byline": teaserSmall.${BYLINE_FRAGMENT},
   "slug": slug.current,
   "image": teaserSmall.image,
   publishDate,
@@ -39,9 +29,6 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   "color": teaserSmall.color,
   "backgroundColor": teaserSmall.backgroundColor,
   "headingColor": teaserSmall.headingColor,
-  // Top level rather than under the _type == "article" condition below: teaser
-  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a
-  // field only present on one branch can't be read without narrowing first.
   // Null for pages, which have no audio.
   audioDurationMs,
   "contributors": ${CONTRIBUTORS_FRAGMENT},
