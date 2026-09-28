@@ -15,6 +15,19 @@ import { Fragment } from 'react'
 
 const formatDate = timeFormat('%d.%m.%Y')
 
+// "A", "A und B", "A, B und C"
+const contributorsList = new Intl.ListFormat('de', { type: 'conjunction' })
+
+function formatContributors(teaser: TeaserListItemType): string | undefined {
+  const names = (teaser.contributors ?? [])
+    .map((c) => c.name)
+    .filter((name): name is string => !!name)
+
+  if (!names.length) return undefined
+
+  return `Von ${contributorsList.format(names)}`
+}
+
 export default function FeedTeaser({
   teaser,
   skipPublishDate,
@@ -23,6 +36,8 @@ export default function FeedTeaser({
   skipPublishDate?: boolean
 }) {
   if (!teaser) return null
+
+  const formattedContributors = formatContributors(teaser)
 
   return (
     <div
@@ -62,12 +77,10 @@ export default function FeedTeaser({
             <InlinePortableText value={teaser.description} />
           </p>
         )}
-        {(hasContent(teaser.byline) || !skipPublishDate) && (
+        {(!!formattedContributors || !skipPublishDate) && (
           <p className='byline'>
             {[
-              hasContent(teaser.byline) && (
-                <InlinePortableText key='byline' value={teaser.byline} />
-              ),
+              formattedContributors,
               !skipPublishDate && teaser.publishDate && (
                 <span key='date'>
                   {formatDate(new Date(stegaClean(teaser.publishDate)))}

@@ -1,5 +1,6 @@
 import { AUDIO_ITEM_FRAGMENT } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
+import { CONTRIBUTORS_FRAGMENT } from '@/app/(sanity)/groq/contributors-fragment'
 import { TEASER_SMALL_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
@@ -43,6 +44,7 @@ export const TEASER_SMALL_FRAGMENT = /* groq */ `
   // field only present on one branch can't be read without narrowing first.
   // Null for pages, which have no audio.
   audioDurationMs,
+  "contributors": ${CONTRIBUTORS_FRAGMENT},
   _type == "article" => {
     "plainTitle": pt::text(coalesce(teaserSmall.title, title)),
     "audioItem": select(defined(audioSourceMp3) => @{
