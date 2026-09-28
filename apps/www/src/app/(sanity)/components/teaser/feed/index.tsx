@@ -1,6 +1,7 @@
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
+import { TeaserByline } from '@/app/(sanity)/components/teaser/_shared/teaser-byline'
 import {
   TeaserListItemType,
   upcomingTeaser,
@@ -8,25 +9,7 @@ import {
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
 import { TeaserActions } from '@/app/(sanity)/components/teaser/feed/teaser-actions'
-import { timeFormat } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
-import { stegaClean } from 'next-sanity'
-import { Fragment } from 'react'
-
-const formatDate = timeFormat('%d.%m.%Y')
-
-// "A", "A und B", "A, B und C"
-const contributorsList = new Intl.ListFormat('de', { type: 'conjunction' })
-
-function formatContributors(teaser: TeaserListItemType): string | undefined {
-  const names = (teaser.contributors ?? [])
-    .map((c) => c.name)
-    .filter((name): name is string => !!name)
-
-  if (!names.length) return undefined
-
-  return `Von ${contributorsList.format(names)}`
-}
 
 export default function FeedTeaser({
   teaser,
@@ -36,8 +19,6 @@ export default function FeedTeaser({
   skipPublishDate?: boolean
 }) {
   if (!teaser) return null
-
-  const formattedContributors = formatContributors(teaser)
 
   return (
     <div
@@ -77,25 +58,7 @@ export default function FeedTeaser({
             <InlinePortableText value={teaser.description} />
           </p>
         )}
-        {(!!formattedContributors || !skipPublishDate) && (
-          <p className='byline'>
-            {[
-              formattedContributors,
-              !skipPublishDate && teaser.publishDate && (
-                <span key='date'>
-                  {formatDate(new Date(stegaClean(teaser.publishDate)))}
-                </span>
-              ),
-            ]
-              .filter(Boolean)
-              .map((part, index) => (
-                <Fragment key={index}>
-                  {index > 0 && ', '}
-                  {part}
-                </Fragment>
-              ))}
-          </p>
-        )}
+        <TeaserByline teaser={teaser} skipPublishDate={skipPublishDate} />
       </div>
       <TeaserActions teaser={teaser} />
     </div>
