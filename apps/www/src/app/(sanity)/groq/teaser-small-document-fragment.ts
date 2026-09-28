@@ -1,4 +1,4 @@
-import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
+import { CONTRIBUTORS_FRAGMENT } from '@/app/(sanity)/groq/contributors-fragment'
 import { TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
@@ -6,14 +6,11 @@ import { defineQuery } from 'next-sanity'
 // TEASER_SMALL_FRAGMENT so both can be rendered by the same components.
 // Teasers have no own page: "href" resolves the first target (article/page
 // reference or plain link) and is null when the teaser links nowhere.
-
-// Duplication of color to maximise type compatibility with teaser-small-fragment
 export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   _id,
   _type,
   "title": teaserSmallConfig.title,
   "description": teaserSmallConfig.description,
-  "byline": teaserSmallConfig.${BYLINE_FRAGMENT},
   "href": select(
     target[0]->_type == "article" => target[0]->slug.current,
     target[0]->_type == "page" => target[0]->slug.current,
@@ -21,6 +18,7 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   ),
   "image": teaserSmallConfig.image,
   "audioDurationMs": target[0]->audioDurationMs,
+  "contributors": target[0]->${CONTRIBUTORS_FRAGMENT},
   publishDate,
   upcomingOnly,
   "targetPublishDate": target[0]->publishDate,
