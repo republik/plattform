@@ -3,6 +3,7 @@
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
+import { TeaserByline } from '@/app/(sanity)/components/teaser/_shared/teaser-byline'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { Heading } from '@/app/(sanity)/components/teaser/feed/heading'
@@ -145,11 +146,7 @@ const FirstBookmarkItem = ({
         </span>
       </h4>
       <TeaserImage image={teaser.image} alt='' width={650} height={488} />
-      {hasContent(teaser.byline) && (
-        <p className='author'>
-          <InlinePortableText value={teaser.byline} />
-        </p>
-      )}
+      <TeaserByline teaser={teaser} skipPublishDate />
       <TeaserDuration teaser={teaser} />
       {hasContent(teaser.description) && (
         <p
@@ -216,7 +213,7 @@ const BookmarkItem = ({ teaser }: { teaser: TeaserListItemType }) => {
         image={teaser.image}
         alt=''
         width={312}
-        height={234}
+        height={312}
         fallback={true}
       />
     </div>

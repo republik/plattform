@@ -3,6 +3,7 @@
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/link-overlay'
+import { TeaserByline } from '@/app/(sanity)/components/teaser/_shared/teaser-byline'
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import {
@@ -139,11 +140,7 @@ function MostCommentedCoverText({ teaser }: { teaser: TeaserListItemType }) {
           <InlinePortableText value={teaser.description} />
         </p>
       )}
-      {hasContent(teaser.byline) && (
-        <p className='author'>
-          <InlinePortableText value={teaser.byline} />
-        </p>
-      )}
+      <TeaserByline teaser={teaser} skipPublishDate />
     </div>
   )
 }
