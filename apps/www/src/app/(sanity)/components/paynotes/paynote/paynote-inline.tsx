@@ -1,10 +1,10 @@
 'use client'
 
-import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import {
   HERBST26_HEADLINE,
   isHerbst26Active,
 } from '@/app/(sanity)/components/paynotes/herbst26'
+import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useMe } from '@/lib/context/MeContext'
 import { css, cx } from '@republik/theme/css'
@@ -50,6 +50,9 @@ function PaynoteInline() {
           background: 'background.marketing',
           color: 'text',
           padding: '8',
+          _print: {
+            display: 'none',
+          },
         })}
       >
         <div
