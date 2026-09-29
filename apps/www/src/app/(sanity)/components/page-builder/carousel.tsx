@@ -1,12 +1,12 @@
 import {
-    isExpiredUpcomingTeaser,
-    TeaserListItemType,
+  isExpiredUpcomingTeaser,
+  TeaserListItemType,
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { CarouselTeaser } from '@/app/(sanity)/components/teaser/carousel'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import {
-    TEASERS_SMALL_QUERY_ASC,
-    TEASERS_SMALL_QUERY_DESC,
+  TEASERS_SMALL_QUERY_ASC,
+  TEASERS_SMALL_QUERY_DESC,
 } from '@/app/(sanity)/groq/teasers-small-query'
 import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { css } from '@republik/theme/css'
@@ -15,13 +15,11 @@ import type { CSSProperties } from 'react'
 
 const DEFAULT_TEASERS_LIMIT = 12
 
-// Full-bleed section that optionally carries a custom background / text color
-// (falls back to transparent / inherited when none is set).
 const carouselSection = css({
   gridColumn: 'full',
   backgroundColor: 'var(--carousel-bg, transparent)',
   color: 'var(--carousel-color, inherit)',
-  p: '4',
+  py: '4',
 })
 
 const carousel = css({
@@ -88,7 +86,7 @@ export async function Carousel({
           className={css({
             textStyle: 'sansSerifRegular',
             fontSize: '22px',
-            my: '4',
+            m: '4',
             md: {
               fontSize: '30px',
             },

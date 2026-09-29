@@ -8,6 +8,7 @@ import { MostCommentedFeed } from '@/app/(sanity)/components/next-reads/most-com
 import { MostReadFeed } from '@/app/(sanity)/components/next-reads/most-read'
 import { getClient } from '@/app/lib/apollo/client'
 import { getMe } from '@/app/lib/auth/me'
+import { css } from '@republik/theme/css'
 
 const MOST_READ_FEED_ID = 'POPULAR_LAST_7_DAYS'
 const MOST_COMMENTED_FEED_ID = 'POPULAR_OF_THE_LAST_20_DAYS_WITH_COMMENTS_COUNT'
@@ -61,7 +62,7 @@ export async function AutomaticRecommendations({
       .slice(0, 5)
 
     return (
-      <div>
+      <div className={css({ _print: { display: 'none' } })}>
         <MostReadFeed ids={mostReadIds} />
         {bookmarkIds.length > 0 ? (
           <BookmarkedFeed ids={bookmarkIds} />

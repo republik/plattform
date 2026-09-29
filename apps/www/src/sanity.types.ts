@@ -450,6 +450,7 @@ export type ContributorEntry = {
   _type: 'contributorEntry'
   kind?: string
   contributor?: ContributorReference
+  source?: string
 }
 
 export type LegacyMeta = {

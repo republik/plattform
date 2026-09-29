@@ -71,6 +71,12 @@ export function CarouselTeaser({
         display: 'flex',
         flex: '1 0 248px',
         maxWidth: '400px',
+        _first: {
+          pl: '1',
+        },
+        _last: {
+          pr: '1',
+        },
       })}
     >
       <div

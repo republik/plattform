@@ -146,16 +146,20 @@ const imageCredits = cva({
     imagePadding: {
       TRUE: {
         position: 'absolute',
-        left: 0,
+        left: '2',
         top: '100%',
         mt: '1',
+        md: {
+          left: 0,
+        },
       },
       FALSE: {
         mt: '1',
-        pl: '1',
+        pl: '2',
         md: {
           position: 'absolute',
           bottom: '1',
+          pl: '1',
           transform: 'rotate(-90deg)',
           transformOrigin: 'bottom left',
         },
@@ -251,10 +255,11 @@ export function SplitTeaser({
       <div
         className={css({
           gridArea: 'content',
-          padding: '8',
+          px: '4',
+          py: '10',
           display: 'flex',
           flexDirection: 'column',
-          gap: '3',
+          gap: '2',
           md: {
             px: '0',
             py: '6',
