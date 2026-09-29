@@ -1,6 +1,6 @@
 'use client'
 
-import { trackEvent } from '@/app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
@@ -42,6 +42,7 @@ export function ShareAction({
   const emailSubject = `Republik: ${title}`
   const { isNativeApp } = usePlatformInformation()
   const postMessage = usePostMessage()
+  const trackEvent = useTrackEvent()
   const [linkCopied, setLinkCopied] = useState(false)
 
   // The app has its own native share sheet — no picker to render, just hand
@@ -52,7 +53,7 @@ export function ShareAction({
         ref={triggerRef}
         className={actionStyle}
         onClick={() => {
-          trackEvent(['ActionBar', 'share', url])
+          trackEvent({ action: 'share', name: url })
           postMessage({
             type: 'share',
             payload: { title, url, subject: emailSubject, dialogTitle: 'Teilen' },
@@ -103,7 +104,7 @@ export function ShareAction({
     <Menu.Root
       modal={false}
       onOpenChange={(open) => {
-        if (open) trackEvent(['ActionBar', 'share', url])
+        if (open) trackEvent({ action: 'share', name: url })
       }}
     >
       <Menu.Trigger ref={triggerRef} aria-label='Teilen' className={actionStyle}>
@@ -126,7 +127,9 @@ export function ShareAction({
             <a
               className={menuItemStyle}
               href={href}
-              onClick={() => trackEvent(['ShareOverlay', name, url])}
+              onClick={() =>
+                trackEvent({ action: `shareButton:${name}`, name: url })
+              }
               rel='noreferrer'
               target='_blank'
             >
@@ -141,7 +144,7 @@ export function ShareAction({
             href={url}
             onClick={(e) => {
               e.preventDefault()
-              trackEvent(['ShareOverlay', 'copyLink', url])
+              trackEvent({ action: 'shareButton:copyLink', name: url })
               copyToClipboard(url).then(() => setLinkCopied(true))
             }}
           >
