@@ -15,6 +15,9 @@ export const PaynoteContainer = ({
       borderTop: '2px solid',
       borderColor: 'text.black',
       mb: '16',
+      _print: {
+        display: 'none',
+      },
     })}
   >
     {children}

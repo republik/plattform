@@ -21,7 +21,7 @@ export function EditorsRecommendations({
         borderTopWidth: '1px',
         borderTopStyle: 'solid',
         borderTopColor: 'contrast',
-        '@media print': { display: 'none' },
+        _print: { display: 'none' },
       })}
     >
       <div className={nextReadHeader}>
