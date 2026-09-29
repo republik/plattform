@@ -124,7 +124,7 @@ export function ResumeButton({
       type='button'
     >
       <ReadingPositionIcon percent={percent} />
-      <span className={actionLabelStyle}>{percent}%</span>
+      <span className={actionLabelStyle}>{percent}&thinsp;%</span>
       Weiterlesen
     </button>
   )

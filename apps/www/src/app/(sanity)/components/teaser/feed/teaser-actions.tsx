@@ -1,6 +1,9 @@
 'use client'
 
-import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/article-actions/action-style'
+import {
+  ACTION_ICON_SIZE,
+  actionStyle,
+} from '@/app/(sanity)/components/article-actions/action-style'
 import {
   AddToPlaylistAction,
   useAddToPlaylistAllowed,
@@ -16,13 +19,17 @@ import { PlayAction } from '@/app/(sanity)/components/article-actions/play-actio
 import type { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { css } from '@republik/theme/css'
-import { EllipsisVertical } from 'lucide-react'
+import { CheckIcon, CheckLineIcon, EllipsisVertical } from 'lucide-react'
+import { useReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
+import { IconCheck } from '@republik/icons'
 
 export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
   const audioItem = teaser._type === 'article' ? teaser.audioItem : null
   const showAddToPlaylist = useAddToPlaylistAllowed(
     audioItem?.audioSourceMp3 ?? undefined,
   )
+  const documentId = collectionsDocumentId(teaser)
+  const progress = useReadingPosition({ documentId })
 
   // Only articles carry audio/discussion data, and standalone teaser
   // documents point at other content — there's nothing of their own to
@@ -31,7 +38,6 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
     return null
   }
 
-  const documentId = collectionsDocumentId(teaser)
   const path = teaser.slug
 
   return (
@@ -65,28 +71,52 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
           backendDiscussionId={teaser.discussion?.backendDiscussionId}
           inlineDiscussion={teaser.inlineDiscussion ?? false}
         />
+        {showAddToPlaylist && (
+          <Menu.Root modal={false}>
+            <Menu.Trigger
+              aria-label='Weitere Aktionen'
+              className={menuTriggerStyle}
+            >
+              <EllipsisVertical size={ACTION_ICON_SIZE} />
+            </Menu.Trigger>
+            <Menu.Content
+              align='end'
+              sideOffset={MENU_SIDE_OFFSET}
+              collisionPadding={16}
+              title='Weitere Aktionen'
+            >
+              <Menu.Item asChild>
+                <AddToPlaylistAction
+                  audioItem={audioItem}
+                  className={menuItemStyle}
+                />
+              </Menu.Item>
+            </Menu.Content>
+          </Menu.Root>
+        )}
       </div>
 
-      {showAddToPlaylist && (
-        <Menu.Root modal={false}>
-          <Menu.Trigger aria-label='Weitere Aktionen' className={menuTriggerStyle}>
-            <EllipsisVertical size={ACTION_ICON_SIZE} />
-          </Menu.Trigger>
-          <Menu.Content
-            align='end'
-            sideOffset={MENU_SIDE_OFFSET}
-            collisionPadding={16}
-            title='Weitere Aktionen'
+      <div className={css({ display: 'flex', gap: '5', alignItems: 'center' })}>
+        {progress?.percent !== undefined && (
+          <div
+            className={css({
+              display: 'flex',
+              alignItems: 'center',
+              gap: '2',
+              fontSize: 's',
+              color: 'textSoft',
+            })}
           >
-            <Menu.Item asChild>
-              <AddToPlaylistAction
-                audioItem={audioItem}
-                className={menuItemStyle}
-              />
-            </Menu.Item>
-          </Menu.Content>
-        </Menu.Root>
-      )}
+            {progress.read ? (
+              <>
+                <CheckIcon size={ACTION_ICON_SIZE} /> Gelesen
+              </>
+            ) : (
+              `${progress.percent} % gelesen`
+            )}{' '}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
