@@ -2,12 +2,11 @@ import {
   ProgressState,
   UserBookmarksDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { ARTICLES_BY_IDS_QUERY } from '@/app/(sanity)/groq/articles-by-ids-query'
 import {
   BookmarksFeedClient,
   type TeaserFeedData,
 } from '@/app/(sanity)/lesezeichen/components/bookmarks-feed-client'
-import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
+import { fetchBookmarkTeasersByIds } from '@/app/(sanity)/lesezeichen/components/fetch-bookmark-teasers'
 import { getClient } from '@/app/lib/apollo/client'
 
 export async function BookmarksFeed({ collection }: { collection: string }) {
@@ -35,19 +34,14 @@ export async function BookmarksFeed({ collection }: { collection: string }) {
       }
 
       const items = data.collectionItems?.nodes ?? []
-
-      const teasers = await sanityClientFetch(
-        ARTICLES_BY_IDS_QUERY,
-        {
-          ids: items.map((b) => b.sanityId),
-        },
-        { tag: 'bookmarks-feed' },
+      const teasers = await fetchBookmarkTeasersByIds(
+        items.map((b) => b.sanityId),
       )
 
       return {
         hasMore: data.collectionItems?.pageInfo?.hasNextPage ?? false,
         after: data.collectionItems?.pageInfo?.endCursor,
-        teasers: teasers ?? [],
+        teasers,
       }
     } catch (e) {
       throw new Error(e.message)
