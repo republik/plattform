@@ -21,17 +21,21 @@ an account.
 
 One table, created by migration `20260922120000-gift-articles`:
 
-### `giftArticleLinks`
+### `gift_article_links`
+
+snake_case, unlike most of this schema — this table gets queried by hand and in
+Metabase, where camelCase identifiers have to be quoted every time. The
+resolvers map to the camelCase GraphQL fields.
 
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid (PK) | |
-| `granterUserId` | uuid (FK → users) | ON DELETE CASCADE |
-| `documentId` | text | bare, published Sanity `_id` — same form as `collectionDocumentItems."sanityId"` |
-| `documentPath` | text | slug snapshot, only used to build the link's URL |
+| `granter_user_id` | uuid (FK → users) | ON DELETE CASCADE |
+| `document_id` | text | bare, published Sanity `_id` — same value as `collectionDocumentItems."sanityId"` |
+| `document_path` | text | slug snapshot, only used to build the link's URL |
 | `token` | text (UNIQUE) | `crypto.randomUUID()`, travels as the `?gift=` query param |
-| `createdAt` | timestamptz | defaults to `now()` |
-| `expiresAt` | timestamptz | `createdAt + 14 days` |
+| `created_at` | timestamptz | defaults to `now()` |
+| `expires_at` | timestamptz | `created_at + 14 days` |
 
 The article is identified by its Sanity id, not by its path: a slug can change,
 and a granter reading the draft and a recipient reading the published version
@@ -40,7 +44,7 @@ sends (`sanity:<id>`, `drafts.<id>`, or a bare `_id`) down to the published id,
 and hands it back out over GraphQL as the `sanity:`-prefixed ref the frontend's
 `collectionsDocumentId()` builds.
 
-No foreign key on `documentId` — Sanity documents don't live in this database.
+No foreign key on `document_id` — Sanity documents don't live in this database.
 
 ## Attribution
 

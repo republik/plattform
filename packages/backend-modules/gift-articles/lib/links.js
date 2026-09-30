@@ -18,14 +18,15 @@ const GIFT_LINK_TTL_DAYS = 14
 const toStoredDocumentId = (input) =>
   publishedId(isSanityRef(input) ? fromSanityRef(input) : input)
 
+// Row columns are snake_case (see the migration); the GraphQL type is not.
 const formatLink = (row) => ({
   id: row.id,
   token: row.token,
-  url: `${FRONTEND_BASE_URL}${row.documentPath}?gift=${row.token}`,
-  documentId: toSanityRef(row.documentId),
-  documentPath: row.documentPath,
-  createdAt: row.createdAt,
-  expiresAt: row.expiresAt,
+  url: `${FRONTEND_BASE_URL}${row.document_path}?gift=${row.token}`,
+  documentId: toSanityRef(row.document_id),
+  documentPath: row.document_path,
+  createdAt: row.created_at,
+  expiresAt: row.expires_at,
 })
 
 module.exports = {

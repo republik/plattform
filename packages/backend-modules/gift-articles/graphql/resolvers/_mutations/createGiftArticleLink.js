@@ -35,11 +35,11 @@ module.exports = async (_, { documentId, documentPath }, context) => {
     // granter gets a fresh 14 days instead of a link that is already dead.
     const [existing] = await tx.query(
       `SELECT *
-         FROM "giftArticleLinks"
-        WHERE "granterUserId" = :userId
-          AND "documentId" = :sanityId
-          AND "expiresAt" > now()
-        ORDER BY "createdAt" DESC
+         FROM gift_article_links
+        WHERE granter_user_id = :userId
+          AND document_id = :sanityId
+          AND expires_at > now()
+        ORDER BY created_at DESC
         LIMIT 1`,
       { userId: me.id, sanityId },
     )
@@ -49,12 +49,12 @@ module.exports = async (_, { documentId, documentPath }, context) => {
       return formatLink(existing)
     }
 
-    const row = await tx.public.giftArticleLinks.insertAndGet({
-      granterUserId: me.id,
-      documentId: sanityId,
-      documentPath,
+    const row = await tx.public.gift_article_links.insertAndGet({
+      granter_user_id: me.id,
+      document_id: sanityId,
+      document_path: documentPath,
       token: crypto.randomUUID(),
-      expiresAt: new Date(
+      expires_at: new Date(
         Date.now() + GIFT_LINK_TTL_DAYS * 24 * 60 * 60 * 1000,
       ),
     })
