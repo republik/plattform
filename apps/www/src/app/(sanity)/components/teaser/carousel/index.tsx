@@ -125,7 +125,7 @@ export function CarouselTeaser({
                   color,
               }}
             >
-              {heading}
+              {stegaClean(heading)}
             </h5>
           )}
           {skipDescription ? (
