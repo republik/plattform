@@ -105,6 +105,7 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     // for this article, unlike publikator's per-group re-derivation from a
     // different repo each time (a Sanity article has exactly one `heading`).
     const format = article.format
+    const skipEmailForNewsletter = !!article.hasNewsletter
 
     let event: any
 
@@ -137,22 +138,26 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
           users: subscribers,
           content: {
             app: { ...appContent, title },
-            mail: (u: any) => ({
-              to: u.email,
-              subject: title,
-              fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-              fromName: process.env.DEFAULT_MAIL_FROM_NAME,
-              templateName: 'publish_article_notification',
-              globalMergeVars: [
-                { name: 'TITLE', content: articleTitle },
-                { name: 'FORMAT_TITLE', content: format?.title },
-                { name: 'FORMAT_URL', content: formatUrl },
-                { name: 'FORMAT_COLOR', content: DEFAULT_FORMAT_COLOR },
-                { name: 'DESCRIPTION', content: descriptionText },
-                { name: 'CREDITS', content: bylineText },
-                { name: 'URL', content: articleUrl },
-              ],
-            }),
+            // Do not send email for newsletter articles (push only), as
+            // publikator's notifyPublish did for newsletter formats.
+            mail: skipEmailForNewsletter
+              ? undefined
+              : (u: any) => ({
+                  to: u.email,
+                  subject: title,
+                  fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+                  fromName: process.env.DEFAULT_MAIL_FROM_NAME,
+                  templateName: 'publish_article_notification',
+                  globalMergeVars: [
+                    { name: 'TITLE', content: articleTitle },
+                    { name: 'FORMAT_TITLE', content: format?.title },
+                    { name: 'FORMAT_URL', content: formatUrl },
+                    { name: 'FORMAT_COLOR', content: DEFAULT_FORMAT_COLOR },
+                    { name: 'DESCRIPTION', content: descriptionText },
+                    { name: 'CREDITS', content: bylineText },
+                    { name: 'URL', content: articleUrl },
+                  ],
+                }),
           },
         },
         context,
