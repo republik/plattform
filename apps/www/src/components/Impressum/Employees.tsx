@@ -3,7 +3,7 @@ import { entries, nest } from 'd3-collection'
 
 import { mediaQueries, fontStyles } from '@project-r/styleguide'
 import { EmployeeRecord } from '#graphql/cms/__generated__/gql/graphql'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import Image from 'next/image'
 
 const styles = {

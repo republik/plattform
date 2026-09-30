@@ -6,12 +6,14 @@ import {
   resolveNotificationRecipients,
 } from '../article'
 import { plainText } from '../../tts'
+import { PUBLISH_NOTIFICATION_JOB_OPTIONS } from './publishNotificationJobOptions'
 
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
 
 export interface PublishNotificationPayload {
   $version: 'v1'
   documentId: string
+  notificationTrigger: string
 }
 
 const DEFAULT_FORMAT_COLOR = '#282828'
@@ -41,18 +43,24 @@ const groupSubscribersByObjectId = (subscribers: any[], key: string) =>
 // subscribers shouldn't block a web request.
 export class PublishNotificationWorker extends BaseWorker<PublishNotificationPayload> {
   readonly queue = 'sanity:publish-notification'
-  readonly options: SendOptions = { retryLimit: 0 }
+  readonly options: SendOptions = PUBLISH_NOTIFICATION_JOB_OPTIONS
 
   async perform(jobs: Job<PublishNotificationPayload>[]) {
     for (const job of jobs) {
       if (job.data.$version !== 'v1') {
         throw Error('unable to perform this job version. Expected v1')
       }
-      await this.notifyPublish(job.data.documentId)
+      await this.notifyPublish(
+        job.data.documentId,
+        job.data.notificationTrigger,
+      )
     }
   }
 
-  private async notifyPublish(documentId: string) {
+  private async notifyPublish(
+    documentId: string,
+    notificationTrigger: string,
+  ) {
     // BaseWorker types `context` as ConnectionContext, but workers only ever
     // *perform* in the scheduler process, and that is where the queue is
     // registered with a full GraphqlContext (apps/api/server.js calls
@@ -63,7 +71,10 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
 
     const article = await fetchArticleForNotification(documentId)
     if (!article) {
-      this.logger.error({ documentId }, 'article not found')
+      this.logger.error(
+        { documentId, notificationTrigger },
+        'article not found',
+      )
       return
     }
 

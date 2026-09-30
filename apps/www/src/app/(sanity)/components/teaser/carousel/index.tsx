@@ -33,9 +33,11 @@ function getCarouselHeading(teaser: TeaserListItemType): string {
   if (teaser._type === 'teaserSmall') {
     return teaser.label
   }
-  return (
-    teaser.label || teaser.articleCollection?.title || teaser.heading?.title
-  )
+  // if an article is part of a series, we show the series name in the feed
+  if (teaser.articleCollection?.series) {
+    return teaser.articleCollection.title
+  }
+  return teaser.label || teaser.heading?.title
 }
 
 export function CarouselTeaser({
@@ -69,6 +71,12 @@ export function CarouselTeaser({
         display: 'flex',
         flex: '1 0 248px',
         maxWidth: '400px',
+        _first: {
+          pl: '1',
+        },
+        _last: {
+          pr: '1',
+        },
       })}
     >
       <div
@@ -117,7 +125,7 @@ export function CarouselTeaser({
                   color,
               }}
             >
-              {heading}
+              {stegaClean(heading)}
             </h5>
           )}
           {skipDescription ? (

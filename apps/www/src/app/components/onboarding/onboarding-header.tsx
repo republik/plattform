@@ -1,7 +1,7 @@
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 import { ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { ReactNode } from 'react'
 
 export function OnboardingBackButton({ href }: { href: string }) {

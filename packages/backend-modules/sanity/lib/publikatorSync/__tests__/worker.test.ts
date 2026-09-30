@@ -49,11 +49,17 @@ jest.mock('../formatFields', () => ({
 
 const linkLegacySyntheticAudio = jest
   .fn()
-  .mockImplementation((doc: unknown) => Promise.resolve(doc))
+  .mockImplementation((doc: unknown) => Promise.resolve({ doc }))
 
 jest.mock('../legacyAudio', () => ({
   linkLegacySyntheticAudio: (...args: unknown[]) =>
     linkLegacySyntheticAudio(...args),
+}))
+
+const recordAudioVersion = jest.fn().mockResolvedValue(undefined)
+
+jest.mock('../../audio', () => ({
+  recordAudioVersion: (...args: unknown[]) => recordAudioVersion(...args),
 }))
 
 const linkLegacyDiscussion = jest.fn().mockResolvedValue(undefined)
@@ -87,7 +93,8 @@ describe('PublikatorSyncWorker', () => {
     getDocument.mockReset()
     linkLegacySyntheticAudio
       .mockReset()
-      .mockImplementation((doc: unknown) => Promise.resolve(doc))
+      .mockImplementation((doc: unknown) => Promise.resolve({ doc }))
+    recordAudioVersion.mockReset().mockResolvedValue(undefined)
     linkLegacyDiscussion.mockReset().mockResolvedValue(undefined)
     resolveFormatRepoId.mockReset().mockReturnValue(undefined)
     resolveFormatDerivedFields.mockReset().mockImplementation((doc: unknown) => doc)
@@ -219,6 +226,41 @@ describe('PublikatorSyncWorker', () => {
     expect(createOrReplace).toHaveBeenCalledTimes(1)
   })
 
+  it('publish: records a new legacy audio version against the published id, after the document is written', async () => {
+    linkLegacySyntheticAudio.mockImplementationOnce((doc: unknown) =>
+      Promise.resolve({
+        doc,
+        newVersion: {
+          audioSourceMp3: 'https://assets.example/audio/foo.mp3',
+          durationMs: 90000,
+          generatedAt: '2026-01-01T00:00:00.000Z',
+        },
+      }),
+    )
+    const findOne = jest
+      .fn()
+      .mockResolvedValue({ id: 'c42', repoId: 'republik/foo', meta: {} })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      {
+        data: {
+          $version: 'v1',
+          repoId: 'republik/foo',
+          commitId: 'c42',
+          action: 'publish',
+        },
+      },
+    ])
+
+    expect(recordAudioVersion).toHaveBeenCalledTimes(1)
+    const [sanityDocId] = recordAudioVersion.mock.calls[0]
+    expect(sanityDocId).not.toMatch(/^drafts\./)
+    expect(createOrReplace.mock.invocationCallOrder[0]).toBeLessThan(
+      recordAudioVersion.mock.invocationCallOrder[0],
+    )
+  })
+
   it('unpublish: only touches an already-`article`-typed published document', async () => {
     getDocument.mockResolvedValue({ _id: 'x', _type: 'page', title: 'nope' })
     const worker = makeWorker({})
@@ -280,6 +322,91 @@ describe('PublikatorSyncWorker', () => {
     expect(createOrReplace).toHaveBeenCalledTimes(1)
     const [written] = createOrReplace.mock.calls[0]
     expect(written._syncedFromCommitId).toBe('c1')
+  })
+
+  it('commit: records a new legacy audio version after the document is written, not before', async () => {
+    linkLegacySyntheticAudio.mockImplementationOnce((doc: unknown) =>
+      Promise.resolve({
+        doc,
+        newVersion: {
+          audioSourceMp3: 'https://assets.example/audio/foo.mp3',
+          durationMs: 90000,
+          generatedAt: '2026-01-01T00:00:00.000Z',
+        },
+      }),
+    )
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+    ])
+
+    expect(recordAudioVersion).toHaveBeenCalledTimes(1)
+    const [sanityDocId, currentFields, version, pendingKey] =
+      recordAudioVersion.mock.calls[0]
+    expect(sanityDocId).toMatch(/^drafts\./)
+    expect(currentFields).toEqual({
+      audioSourceMp3: 'https://assets.example/audio/foo.mp3',
+      audioDurationMs: 90000,
+      estimatedConsumptionMinutes: 2,
+    })
+    expect(version).toEqual({
+      url: 'https://assets.example/audio/foo.mp3',
+      durationMs: 90000,
+      generatedAt: '2026-01-01T00:00:00.000Z',
+    })
+    expect(pendingKey).toBeUndefined()
+    expect(createOrReplace.mock.invocationCallOrder[0]).toBeLessThan(
+      recordAudioVersion.mock.invocationCallOrder[0],
+    )
+  })
+
+  it('commit: does not record a legacy audio version when linking returned none', async () => {
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await worker.perform([
+      { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+    ])
+
+    expect(recordAudioVersion).not.toHaveBeenCalled()
+  })
+
+  it('commit: still syncs the article when recording the legacy audio version throws', async () => {
+    linkLegacySyntheticAudio.mockImplementationOnce((doc: unknown) =>
+      Promise.resolve({
+        doc,
+        newVersion: {
+          audioSourceMp3: 'https://assets.example/audio/foo.mp3',
+          durationMs: 90000,
+          generatedAt: '2026-01-01T00:00:00.000Z',
+        },
+      }),
+    )
+    recordAudioVersion.mockRejectedValueOnce(new Error('sanity down'))
+    const findOne = jest.fn().mockResolvedValue({
+      id: 'c1',
+      repoId: 'republik/foo',
+      meta: { template: 'article' },
+    })
+    const worker = makeWorker({ publikator: { commits: { findOne } } })
+
+    await expect(
+      worker.perform([
+        { data: { $version: 'v1', repoId: 'republik/foo', action: 'commit' } },
+      ]),
+    ).resolves.toBeUndefined()
+
+    expect(createOrReplace).toHaveBeenCalledTimes(1)
   })
 
   it('commit: fetches the format fields with the format repoId and pgdb, then applies them, before uploading assets', async () => {

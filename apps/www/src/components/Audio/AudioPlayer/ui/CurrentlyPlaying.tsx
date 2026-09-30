@@ -1,10 +1,11 @@
-import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItem } from '@/components/Audio/types/AudioQueueItem'
 import { fontStyles } from '@project-r/styleguide'
 import { IconDownload } from '@republik/icons'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
-import { dateFormatter, formatMinutes } from '../shared'
-import AudioCover from './AudioCover'
+import { audioCoverStyle, dateFormatter, formatMinutes } from '../shared'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
 
@@ -33,7 +34,7 @@ type CurrentlyPlayingProps = {
   item: AudioQueueItem
   t: any
   handleOpen: (path: string) => void
-  handleDownload: (item: AudioQueueItem['document']) => Promise<void>
+  handleDownload: (item: AudioQueueItemContent) => Promise<void>
 }
 
 const CurrentlyPlaying = ({
@@ -42,40 +43,24 @@ const CurrentlyPlaying = ({
   handleOpen,
   handleDownload,
 }: CurrentlyPlayingProps) => {
-  const {
-    document: {
-      meta: {
-        title,
-        publishDate,
-        audioSource,
-        image,
-        path,
-        format,
-        audioCoverCrop,
-        coverMd,
-        cover,
-        coverDark,
-      },
-    },
-  } = item
-  const { durationMs } = audioSource
+  const { title, publishDate, slug, image, audioDurationMs } = item.document
   return (
     <div>
       <div {...styles.root}>
-        <AudioCover
-          cover={coverMd ?? cover}
-          coverDark={coverDark}
-          size={90}
+        <TeaserImage
           image={image}
-          format={format?.meta}
-          audioCoverCrop={audioCoverCrop}
-          alt={title}
+          width={90}
+          height={90}
+          alt=''
+          fallback
+          className={audioCoverStyle}
+          style={{ width: 90, height: 90 }}
         />
         <div {...styles.detailWrapper}>
           {title && (
             <AudioPlayerTitle
               title={title}
-              onClick={() => handleOpen(path)}
+              onClick={() => handleOpen(slug)}
               lineClamp={3}
               fontSize={17}
             />
@@ -85,19 +70,7 @@ const CurrentlyPlaying = ({
             <span>
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}
             </span>
-            <span>{formatMinutes(durationMs / 1000)}min</span>
-            <span
-              style={{
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                WebkitLineClamp: 1,
-                wordBreak: 'break-all',
-              }}
-            >
-              {item.document?.meta?.audioSource.kind === 'syntheticReadAloud' &&
-                'synthetisch'}
-            </span>
+            <span>{formatMinutes((audioDurationMs ?? 0) / 1000)}min</span>
           </div>
         </div>
         <AudioCalloutMenu

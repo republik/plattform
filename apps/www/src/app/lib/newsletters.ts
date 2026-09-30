@@ -6,13 +6,18 @@ export async function getNewsletterSubscriptionStatus({
 }: {
   newsletterName: string
 }) {
-  const client = await getClient()
-  const { data } = await client.query({
-    query: CaNewsletterDocument,
-    variables: {
-      name: newsletterName,
-    },
-  })
+  // Wrap GraphQL API calls in try/catch because Apollo Client will throw on networkError
+  try {
+    const client = await getClient()
+    const { data } = await client.query({
+      query: CaNewsletterDocument,
+      variables: {
+        name: newsletterName,
+      },
+    })
 
-  return !!data?.me?.newsletterSettings?.subscriptions?.[0]?.subscribed
+    return !!data?.me?.newsletterSettings?.subscriptions?.[0]?.subscribed
+  } catch (e) {
+    return false
+  }
 }

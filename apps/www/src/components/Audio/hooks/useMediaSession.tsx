@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-import { getImageCropURL } from '../helpers/getImageCropURL'
-import { AudioQueueItem } from '../types/AudioPlayerItem'
+import { audioCoverUrl } from '../helpers/audioCoverImages'
+import { AudioQueueItem } from '../types/AudioQueueItem'
 
 type PlayerState = {
   duration: number
@@ -50,7 +49,7 @@ export function useMediaSession(
     const mediaSession = navigator.mediaSession
 
     mediaSession.metadata = new MediaMetadata({
-      title: playerItem.document?.meta?.title ?? 'Ein Beitrag der Republik',
+      title: playerItem.document?.title ?? 'Ein Beitrag der Republik',
       artist: 'Republik Magazin',
       album: 'Republik «Vorgelesen»',
       artwork: [
@@ -110,14 +109,7 @@ export function useMediaSession(
 
 function getMediaImage(audioItem: AudioQueueItem, size: number) {
   return {
-    src:
-      getImageCropURL(
-        audioItem.document.meta.image ||
-          CDN_FRONTEND_BASE_URL + '/static/audioplayer-fallback.png',
-        size,
-        audioItem.document.meta.audioCoverCrop,
-      ) + '&format=webp',
+    src: audioCoverUrl(audioItem.document?.image, size),
     sizes: `${size}x${size}`,
-    type: 'image/webp',
   }
 }

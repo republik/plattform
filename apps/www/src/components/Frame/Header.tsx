@@ -30,7 +30,7 @@ import {
   LOGO_WIDTH_MOBILE,
 } from '../constants'
 import { IconBack } from '@republik/icons'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { IpAllowlistBanner } from '@/app/components/ip-allowlist-banner'
 import { useMe } from '@/lib/context/MeContext'
 

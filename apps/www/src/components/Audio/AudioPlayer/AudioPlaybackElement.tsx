@@ -1,47 +1,24 @@
-import { AudioPlayerProps } from '../AudioPlayerController'
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import useInterval from '@/lib/hooks/useInterval'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { AudioPlayerProps } from '../AudioPlayerController'
 import { useMediaSession } from '../hooks/useMediaSession'
-import { AudioQueueItem } from '../types/AudioPlayerItem'
+import { AudioQueueItem } from '../types/AudioQueueItem'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 
 /**
- * Programmatically set the audio sources of an audio element based on the audioSource object
- * @param elem html audio-element for which the sources should be set
- * @param audioSource object containing the audio sources
+ * Point the audio element at a track's mp3. Sanity stores a single mp3 per
+ * article — the ogg/aac alternatives only ever existed in the legacy backend.
  */
-function setAudioSources(
-  elem: HTMLAudioElement,
-  audioSource: AudioQueueItem['document']['meta']['audioSource'],
-) {
-  const sources = {
-    'audio/mp3': audioSource.mp3,
-    'audio/ogg': audioSource.ogg,
-    'audio/aac': audioSource.aac,
-  }
+function setAudioSource(elem: HTMLAudioElement, mp3: string) {
+  console.log('Audio Elem: setAudioSource', { elem, mp3 })
 
-  const sourceElements = Object.keys(sources)
-    .map((type) => {
-      if (sources[type] === null) {
-        return null
-      }
-      const source = document.createElement('source')
-      source.type = type
-      source.src = sources[type]
-      return source
-    })
-    .filter(Boolean)
-
-  console.log('Audio Elem: setAudioSources', {
-    elem,
-    audioSource,
-    sources,
-    sourceElements,
-  })
+  const source = document.createElement('source')
+  source.type = 'audio/mp3'
+  source.src = mp3
 
   elem.innerHTML = '' // Hack to remove all previous sources
-  elem.append(...sourceElements)
+  elem.append(source)
 }
 
 export type AudioElementState = {
@@ -166,8 +143,14 @@ const AudioPlaybackElement = ({
         return
       }
 
+      const mp3 = playerItem?.document?.audioSourceMp3
+      if (!mp3) {
+        console.error('Audio Elem: track has no mp3 to play')
+        return
+      }
+
       setActivePlayerItem(playerItem)
-      setAudioSources(mediaRef.current, playerItem.document.meta.audioSource)
+      setAudioSource(mediaRef.current, mp3)
       mediaRef.current.preload = autoPlay ? 'auto' : 'metadata'
 
       setIsLoading(true)

@@ -1,3 +1,4 @@
+import { ContentErrorBoundary } from '@/app/(sanity)/components/content-error-boundary'
 import { BestOfDialogue } from '@/app/(sanity)/components/page-builder/best-of-dialogue'
 import { MyRepublik } from '@/app/(sanity)/components/page-builder/my-republik'
 import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
@@ -28,11 +29,23 @@ export function FrontBlock({
       return <TeaserItem reference={block.reference} />
 
     case 'myRepublik':
-      return <MyRepublik />
-
+      return (
+        <ContentErrorBoundary
+          title='Dieser Bereich konnte nicht geladen werden.'
+          location='myRepublik'
+        >
+          <MyRepublik />
+        </ContentErrorBoundary>
+      )
     case 'bestOfDialogue':
-      return <BestOfDialogue />
-
+      return (
+        <ContentErrorBoundary
+          title='Dieser Bereich konnte nicht geladen werden.'
+          location='bestOfDialogue'
+        >
+          <BestOfDialogue />
+        </ContentErrorBoundary>
+      )
     default:
       return null
   }

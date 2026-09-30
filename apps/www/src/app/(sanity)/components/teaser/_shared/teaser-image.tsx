@@ -1,4 +1,5 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { AUDIO_COVER_FALLBACK_PATH } from '@/lib/constants'
 import type { TeaserSmall } from '@/sanity.types'
 import { cva, cx } from '@republik/theme/css'
 import { Image, type ImageProps } from 'next-sanity/image'
@@ -25,14 +26,30 @@ export function TeaserImage({
   image,
   width,
   height,
+  fallback,
   ...imageProps
 }: {
   image: TeaserSmall['teaserSmallConfig']['image']
   width: number
   height: number
+  // fallback: used for audio player and next reads bookmarks
+  fallback?: boolean
 } & Omit<ImageProps, 'src' | 'width' | 'height'>) {
   if (!image?.asset) {
-    return null
+    if (!fallback) {
+      return null
+    }
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        className={cx(imageStyle(), imageProps.className)}
+        style={imageProps.style}
+        src={AUDIO_COVER_FALLBACK_PATH}
+        alt=''
+        width={width}
+        height={height}
+      />
+    )
   }
 
   // If an image with crop/hotspot is provided, those will be applied automatically

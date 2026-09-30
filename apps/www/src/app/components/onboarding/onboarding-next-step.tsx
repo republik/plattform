@@ -1,6 +1,6 @@
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { ReactNode } from 'react'
 
 export function OnboardingNextStep({

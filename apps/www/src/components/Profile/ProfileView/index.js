@@ -21,7 +21,7 @@ import {
 import { IconMailOutline, IconNoteAdd, IconVpnKey } from '@republik/icons'
 import { css } from 'glamor'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import Credential from '../../Credential'
 import ProfileCommentsAndDocuments from './ProfileCommentsAndDocuments'
 import ProfileUrls from './ProfileUrls'

@@ -14,7 +14,7 @@ import { useTranslation } from '@/lib/withT'
 import { A, Interaction, mediaQueries } from '@project-r/styleguide'
 
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 

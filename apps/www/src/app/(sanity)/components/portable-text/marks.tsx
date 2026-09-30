@@ -1,6 +1,6 @@
+import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import type { PortableTextMarkComponentProps } from 'next-sanity'
-import Link from 'next/link'
 import type { ReactNode } from 'react'
 
 export function Strong({ children }: { children?: ReactNode }) {
@@ -39,26 +39,31 @@ const linkStyle = css({
   cursor: 'pointer',
 })
 
-export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
+export function InternalLink({
+  text,
+  children,
+  value,
+}: PortableTextMarkComponentProps) {
   const href = value?.slug
 
   if (!href) {
     console.warn('Internal link without href', value, { text })
   }
 
-  return href ? (
-    <Link href={href} className={linkStyle}>
-      {text}
+  return (
+    <Link href={href ?? '#'} className={linkStyle}>
+      {children}
     </Link>
-  ) : (
-    text
   )
 }
 
-export function ExternalLink({ text, value }: PortableTextMarkComponentProps) {
+export function ExternalLink({
+  children,
+  value,
+}: PortableTextMarkComponentProps) {
   return (
     <a href={value.href} target='_blank' rel='noreferrer' className={linkStyle}>
-      {text}
+      {children}
     </a>
   )
 }

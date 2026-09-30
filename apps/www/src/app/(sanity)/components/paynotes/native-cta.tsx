@@ -5,7 +5,7 @@ import { css } from '@republik/theme/css'
 
 import { postMessage, useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const nativeCtaStyle = css({
   textStyle: 'body',

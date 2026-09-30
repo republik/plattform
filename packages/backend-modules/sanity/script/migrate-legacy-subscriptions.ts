@@ -67,13 +67,45 @@ const migrateSubscriptions = async (pgdb: PgDb, confirmed: boolean) => {
     if (!doc) continue
 
     const sanityRef = toSanityRef(doc._id)
-    await runInScopedTransaction(pgdb, confirmed, (tx) =>
-      tx.public.subscriptions.update(
-        { objectType: 'Document', objectDocumentId: repoId },
-        { objectDocumentId: sanityRef },
-      ),
+
+    // A user may already hold a separate subscription keyed on sanityRef
+    // directly (e.g. they subscribed again after the content moved, before
+    // this backfill ran). Rewriting the legacy row's objectDocumentId to the
+    // same sanityRef would then collide with that row on the
+    // ("userId", "objectDocumentId") unique constraint -- drop the
+    // already-migrated duplicate first and keep the legacy row (updated
+    // below), same resolution as migrate-legacy-collection-items.ts.
+    const { droppedDuplicates } = await runInScopedTransaction(
+      pgdb,
+      confirmed,
+      async (tx) => {
+        const droppedDuplicates: { id: string }[] = await tx.query(
+          `
+            DELETE FROM subscriptions AS dup
+            USING subscriptions AS legacy
+            WHERE dup."objectType" = 'Document'
+              AND dup."objectDocumentId" = :sanityRef
+              AND legacy."objectType" = 'Document'
+              AND legacy."objectDocumentId" = :repoId
+              AND dup."userId" = legacy."userId"
+            RETURNING dup."id"
+          `,
+          { sanityRef, repoId },
+        )
+
+        await tx.public.subscriptions.update(
+          { objectType: 'Document', objectDocumentId: repoId },
+          { objectDocumentId: sanityRef },
+        )
+
+        return { droppedDuplicates }
+      },
     )
-    console.log(`subscriptions: ${repoId} -> ${sanityRef}`)
+
+    console.log(
+      `subscriptions: ${repoId} -> ${sanityRef} ` +
+        `(dropped ${droppedDuplicates.length} already-migrated duplicate(s))`,
+    )
   }
 }
 

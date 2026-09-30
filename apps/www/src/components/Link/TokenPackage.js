@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 import withInNativeApp from '@/lib/withInNativeApp'
 

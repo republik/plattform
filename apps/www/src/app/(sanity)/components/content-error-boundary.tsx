@@ -2,9 +2,22 @@
 
 import { Button } from '@/app/components/ui/button'
 import { css } from '@republik/theme/css'
+import * as Sentry from '@sentry/nextjs'
 import { catchError, type ErrorInfo } from 'next/error'
+import { useEffect } from 'react'
 
-function ErrorFallback(props: { title: string }, { error, retry }: ErrorInfo) {
+function ErrorFallback(
+  { title, location }: { title: string; location?: string },
+  { error, retry }: ErrorInfo,
+) {
+  useEffect(() => {
+    Sentry.captureException(error, {
+      tags: {
+        context: 'ContentErrorBoundary',
+        location,
+      },
+    })
+  }, [error])
   return (
     <div
       className={css({
@@ -14,9 +27,10 @@ function ErrorFallback(props: { title: string }, { error, retry }: ErrorInfo) {
         gap: '4',
         color: 'textSoft',
         textStyle: 'sans',
+        py: '4',
       })}
     >
-      <h2>{props.title}</h2>
+      <h2>{title}</h2>
       <Button variant='outline' size='small' onClick={() => retry()}>
         Neu laden
       </Button>

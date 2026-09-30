@@ -9,7 +9,7 @@ import {
 import { timeDay } from 'd3-time'
 
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { timeFormat } from '@/lib/utils/format'

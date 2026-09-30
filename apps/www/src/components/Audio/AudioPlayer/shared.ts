@@ -1,5 +1,6 @@
+import { css } from '@republik/theme/css'
 import { timeFormat } from 'd3-time-format'
-import { AudioQueueItem } from '../types/AudioPlayerItem'
+import { AudioQueueItem } from '../types/AudioQueueItem'
 
 type AudioPlayerActions = {
   onPlay: () => void
@@ -36,4 +37,14 @@ export const renderTime = (time) => {
 
 export const dateFormatter = timeFormat('%d.%m.%y')
 
-export const FALLBACK_IMG_SRC = '/static/android-chrome-512x512.png'
+
+/**
+ * Cover art in the player is always square. The slot pins its rendered size
+ * with an inline `style`, overriding `TeaserImage`'s own full-width base; the
+ * crop Sanity returns is square already, so `objectFit` only guards against
+ * an image that isn't.
+ */
+export const audioCoverStyle = css({
+  flexShrink: 0,
+  objectFit: 'cover',
+})

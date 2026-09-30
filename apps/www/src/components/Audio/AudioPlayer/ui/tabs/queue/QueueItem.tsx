@@ -1,4 +1,5 @@
-import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItem } from '@/components/Audio/types/AudioQueueItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
@@ -44,7 +45,7 @@ type QueueItemProps = {
   isActive?: boolean
   onClick: (item: AudioQueueItem) => Promise<void>
   onRemove: (item: AudioQueueItem) => Promise<void>
-  onDownload: (item: AudioQueueItem['document']) => Promise<void>
+  onDownload: (item: AudioQueueItemContent) => Promise<void>
   onOpen: (path: string) => Promise<void>
 }
 
@@ -77,6 +78,7 @@ const QueueItem = ({
     >
       <AudioListItem
         item={item.document}
+        userProgress={item.userProgress}
         isActive={isActive}
         onClick={() => onClick(item)}
         beforeActionItem={
@@ -109,7 +111,7 @@ const QueueItem = ({
           {
             Icon: IconLink,
             label: t('AudioPlayer/Queue/GoToItem'),
-            onClick: () => onOpen(item.document.meta.path),
+            onClick: () => onOpen(item.document.slug),
           },
         ]}
       />

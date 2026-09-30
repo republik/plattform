@@ -6,7 +6,7 @@ import {
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const styles = {
   link: css({

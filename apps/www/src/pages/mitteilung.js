@@ -12,7 +12,7 @@ import { css } from 'glamor'
 
 import compose from 'lodash/flowRight'
 import Head from 'next/head'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useRouter, withRouter } from 'next/router'
 
 import AuthNotification from '@/components/Auth/Notification'

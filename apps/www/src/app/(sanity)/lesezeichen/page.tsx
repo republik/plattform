@@ -3,7 +3,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { getMe } from '@/app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { redirect } from 'next/navigation'
 
 const linkStyle = css({

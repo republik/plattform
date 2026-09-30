@@ -28,6 +28,8 @@ jest.mock('../../tts', () => ({
   uploadToHuebsch: (...args: unknown[]) => uploadToHuebsch(...args),
   titleSlugFrom: (slug: string | undefined, fallback: string) => slug ?? fallback,
   deriveSlug: () => '/2026/01/01/title',
+  resolveFormatId: (title?: string | null) =>
+    title ? `republik/format-${title}` : 'republik/article',
 }))
 
 import { generateAudioHandler } from '../generateAudio'

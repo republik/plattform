@@ -6,7 +6,7 @@ import { getMe } from '@/app/lib/auth/me'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {

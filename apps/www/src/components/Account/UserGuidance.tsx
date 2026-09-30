@@ -5,7 +5,7 @@ import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import SignOut from '../Auth/SignOut'
 
 const UserGuidance = ({ me }) => {

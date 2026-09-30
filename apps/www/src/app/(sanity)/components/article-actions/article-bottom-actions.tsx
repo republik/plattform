@@ -23,9 +23,8 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
-
   const showAddToPlaylist = useAddToPlaylistAllowed(
-    article.audioSourceMp3 ?? undefined,
+    article.audioItem?.audioSourceMp3 ?? undefined,
   )
 
   return (
@@ -66,11 +65,7 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
           >
             <Menu.Item asChild>
               <AddToPlaylistAction
-                documentId={documentId}
-                durationMs={article.audioDurationMs ?? undefined}
-                mp3={article.audioSourceMp3 ?? undefined}
-                path={path}
-                title={title}
+                audioItem={article.audioItem}
                 className={menuItemStyle}
               />
             </Menu.Item>

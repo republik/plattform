@@ -2,7 +2,7 @@
 
 import { css } from '@republik/theme/css'
 import { IconClose } from '@republik/icons'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 type RegularBannerProps = {
   id: string

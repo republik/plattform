@@ -3,7 +3,7 @@ import { graphql } from '@apollo/client/react/hoc'
 
 import { A, colors, InlineSpinner } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { errorToString } from '@/lib/utils/errors'

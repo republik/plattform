@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { css, cx } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 

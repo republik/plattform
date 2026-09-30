@@ -1,3 +1,4 @@
+import { AUDIO_ITEM_FRAGMENT } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { CTA_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/cta-block-fragment'
 import { MENU_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/menu-block-fragment'
@@ -68,9 +69,10 @@ const DOCUMENT_FIELDS = /* groq */ `{
     _type == "article" => {
       repoId,
       "plainTitle": pt::text(title),
-      audioSourceMp3,
-      audioDurationMs,
       teaserSmall{ image },
+      "audioItem": select(defined(audioSourceMp3) => @{
+        ${AUDIO_ITEM_FRAGMENT}
+      }),
       _updatedAt,
       publishDate,
       // Plain text and SEO overrides, used for the JSON-LD linked data
@@ -106,8 +108,8 @@ const DOCUMENT_FIELDS = /* groq */ `{
         // Same profile slug as the byline links
         "slug": coalesce(contributor->slug.current, contributor->userId),
         "name": contributor->title,
-        "description": contributor->description,
-        "portrait": contributor->portrait
+        "role": contributor->role,
+        "portraitImage": contributor->portraitImage
       },
       "articleCollection": articleCollections[featured == true][0].collection->{
         _id,

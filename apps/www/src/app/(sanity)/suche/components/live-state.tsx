@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 
 import { useTranslation } from '@/lib/withT'

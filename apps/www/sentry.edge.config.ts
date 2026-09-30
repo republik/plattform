@@ -8,15 +8,18 @@ import * as Sentry from '@sentry/nextjs'
 if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    tracesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.01,
 
     ignoreErrors: [
       'Script error.',
       'Error: aborted',
       /Failed to load/i,
       /Failed to fetch/i,
-      /fetch failed/i,
       /Load failed/i,
+      /fetch failed/i,
+      /Received status code 503/i,
       /NetworkError when attempting to fetch resource/i,
+      /Invariant: attempted to hard navigate to the same URL/i,
       /Sie müssen sich zuerst anmelden/i,
       /__firefox__/i,
     ],

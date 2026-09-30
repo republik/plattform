@@ -8,7 +8,7 @@ import type { PageDocumentType } from '@/app/(sanity)/groq/document-query'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export default async function PageDocument({
   page,

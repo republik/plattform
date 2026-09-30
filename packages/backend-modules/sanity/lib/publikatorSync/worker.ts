@@ -2,6 +2,7 @@
 import { BaseWorker, Job } from '@orbiting/backend-modules-job-queue'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { SendOptions } from 'pg-boss'
+import { recordAudioVersion } from '../audio'
 import { sanityClient } from '../client'
 import { repoIdToSanityId } from '../legacyId'
 import {
@@ -17,7 +18,7 @@ import { DiscussionRef, linkLegacyDiscussion } from './discussionRef'
 import { buildEditorialSignOffs, fetchChecklistMilestones } from './editorialSignOffs'
 import { isArticleLikeMeta } from './eligibility'
 import { fetchFormatFields } from './formatFields'
-import { linkLegacySyntheticAudio } from './legacyAudio'
+import { linkLegacySyntheticAudio, LegacyAudioLink } from './legacyAudio'
 
 export type PublikatorSyncPayload =
   | { $version: 'v1'; repoId: string; action: 'commit' }
@@ -141,13 +142,16 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     const doc = await resolveContributorRefs(assetResolvedDoc)
 
     if (data.action === 'commit') {
-      const draftDoc = await this.linkLegacyAudioSafely(
+      const { doc: draftDoc, newVersion } = await this.linkLegacyAudioSafely(
         doc,
         commit.id,
         draftId,
         pgdb,
       )
       await sanityClient().createOrReplace({ _id: draftId, ...draftDoc })
+      if (newVersion) {
+        await this.recordLegacyAudioVersionSafely(draftId, newVersion)
+      }
       return
     }
 
@@ -166,7 +170,7 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     // settings) and an orphaned empty one. Linking it here, before this
     // createOrReplace, means `discussion` is already defined by the time
     // that function's trigger condition would be checked.
-    const publishedDoc = await this.linkLegacyAudioSafely(
+    const { doc: publishedDoc, newVersion } = await this.linkLegacyAudioSafely(
       doc,
       commit.id,
       id,
@@ -182,6 +186,9 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
       ...publishedDoc,
       ...(discussionRef ? { discussion: discussionRef } : {}),
     })
+    if (newVersion) {
+      await this.recordLegacyAudioVersionSafely(id, newVersion)
+    }
     await this.deleteIfExists(draftId)
   }
 
@@ -251,7 +258,7 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
     commitId: string | undefined,
     sanityDocId: string,
     pgdb: ConnectionContext['pgdb'],
-  ): Promise<DraftArticleDoc> {
+  ): Promise<LegacyAudioLink> {
     try {
       return await linkLegacySyntheticAudio(doc, commitId, sanityDocId, pgdb)
     } catch (error) {
@@ -259,7 +266,40 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
         { error, sanityDocId },
         'sanity sync: legacy audio link failed (article content still synced)',
       )
-      return doc
+      return { doc }
+    }
+  }
+
+  // Applied AFTER the createOrReplace that writes the rest of the document —
+  // see LegacyAudioLink's doc comment for why recording this any earlier
+  // would just get wiped out by that same createOrReplace call. Same
+  // best-effort reasoning as linkLegacyAudioSafely above: a failure here
+  // must not fail the whole sync — the article's current audio fields are
+  // already linked either way, this only affects its version history.
+  private async recordLegacyAudioVersionSafely(
+    sanityDocId: string,
+    version: { audioSourceMp3: string; durationMs: number; generatedAt: string },
+  ): Promise<void> {
+    try {
+      await recordAudioVersion(
+        sanityDocId,
+        {
+          audioSourceMp3: version.audioSourceMp3,
+          audioDurationMs: version.durationMs,
+          estimatedConsumptionMinutes: Math.round(version.durationMs / 60000),
+        },
+        {
+          url: version.audioSourceMp3,
+          durationMs: version.durationMs,
+          generatedAt: version.generatedAt,
+        },
+        undefined, // no pending placeholder to replace — this always appends
+      )
+    } catch (error) {
+      this.logger.warn(
+        { error, sanityDocId },
+        'sanity sync: recording legacy audio version failed (current fields still linked)',
+      )
     }
   }
 

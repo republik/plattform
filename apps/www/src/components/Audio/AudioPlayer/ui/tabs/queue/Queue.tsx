@@ -26,7 +26,9 @@ import {
   AudioPlayerActions,
 } from '../../../../types/AudioActionTracking'
 import { trackEvent } from '@/app/lib/analytics/event-tracking'
-import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItem } from '@/components/Audio/types/AudioQueueItem'
 import { IconButton } from '@project-r/styleguide'
 import { IconRemoveCircle } from '@republik/icons'
 
@@ -46,7 +48,7 @@ type QueueProps = {
   activeItem: AudioQueueItem
   items: AudioQueueItem[]
   handleOpenArticle: (path: string) => Promise<void>
-  handleDownload: (item: AudioQueueItem['document']) => Promise<void>
+  handleDownload: (item: AudioQueueItemContent) => Promise<void>
   setForceScrollLock: Dispatch<SetStateAction<boolean>>
 }
 
@@ -102,7 +104,7 @@ const Queue = ({
       trackEvent([
         AudioPlayerLocations.AUDIO_PLAYER,
         AudioPlayerActions.REMOVE_QUEUE_ITEM,
-        item?.document?.meta?.path,
+        item?.document?.slug,
       ])
     } catch (e) {
       console.error(e)
@@ -190,7 +192,9 @@ const Queue = ({
                 key={item.id}
                 t={t}
                 item={item}
-                isActive={!!checkIfHeadOfQueue(item.document.id)}
+                isActive={
+                  !!checkIfHeadOfQueue(collectionsDocumentId(item.document))
+                }
                 onClick={handleClick}
                 onRemove={handleRemove}
                 onDownload={handleDownload}

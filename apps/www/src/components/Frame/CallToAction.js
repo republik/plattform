@@ -5,7 +5,7 @@ import { useInNativeApp } from '@/lib/withInNativeApp'
 import { mediaQueries, useColorContext } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT } from '../constants'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const CallToAction = ({ formatColor }) => {
   const [colorScheme] = useColorContext()

@@ -3,7 +3,7 @@ import { graphql } from '@apollo/client/react/hoc'
 
 import { Button, Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import useInNativeApp from '@/lib/withInNativeApp'
 import withT from '@/lib/withT'
 import Loader from '../../Loader'

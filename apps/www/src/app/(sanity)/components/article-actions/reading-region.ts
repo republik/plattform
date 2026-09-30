@@ -5,8 +5,8 @@
  * prompts, recommendations — stays outside, so a reader who finishes the text
  * arrives at 100% instead of stalling somewhere in the eighties.
  *
- * The writer (`ReadingPositionTracker`) and the reader
- * (`JumpToReadingPosition`) both measure through here: a stored percentage only
+ * The writer (`ReadingPositionTracker`) and the reader (the resume action in
+ * the floating pill) both measure through here: a stored percentage only
  * means anything against the box it was recorded against.
  */
 
@@ -14,6 +14,16 @@ const READING_END_SELECTOR = '[data-reading-end]'
 
 /** Marks the end of the content. Spread onto the element, see the tracker. */
 export const readingEndAttribute = { 'data-reading-end': '' }
+
+/**
+ * The `<article>` holding the measured region, for callers that don't render
+ * inside it — the floating action bar is portaled to `<body>`.
+ */
+export function readingContainer() {
+  return (
+    document.querySelector(READING_END_SELECTOR)?.closest('article') ?? null
+  )
+}
 
 export function readingRegion(container: Element) {
   const { top, bottom } = container.getBoundingClientRect()

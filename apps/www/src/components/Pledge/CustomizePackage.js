@@ -32,7 +32,7 @@ import {
 } from '@project-r/styleguide'
 
 import ManageMembership from '../Account/Memberships/Manage'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
 

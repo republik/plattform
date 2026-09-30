@@ -7,6 +7,7 @@ export {
 export { hashSpeakableContent } from './lib/contentHash'
 export { titleSlugFrom, compactTimestamp } from './lib/filename'
 export { deriveSlug } from './lib/deriveSlug'
+export { resolveFormatId } from './lib/format'
 export type { HeadingSlugConfig } from './lib/deriveSlug'
 export { buildSignedWebhookPath, verifyWebhookSignature } from './lib/webhookSignature'
 export {

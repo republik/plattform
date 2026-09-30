@@ -1,38 +1,31 @@
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import {
+  AUDIO_COVER_FALLBACK_PATH,
+  CDN_FRONTEND_BASE_URL,
+} from '@/lib/constants'
 
-export type CoverImageSource = {
-  asset?: unknown
-  imageDark?: { asset?: unknown }
-} | null
-
-export type AudioCoverImages = {
-  cover?: string
-  coverDark?: string
-}
+// Absolute, unlike the in-page fallback: the native app's lock screen and the
+// browser's Media Session both need a URL they can fetch on their own.
+const AUDIO_COVER_FALLBACK_URL = `${CDN_FRONTEND_BASE_URL}${AUDIO_COVER_FALLBACK_PATH}`
 
 /**
- * Resolves an article's audio-cover image following the same fallback chain
- * as the old per-format cover: the article's compact-teaser image, else its
- * own cover, else its featured collection's image (the "Kolumne"/"Briefing"
- * equivalent) — and builds one square light/dark crop, reused at every size
- * the audio player renders at (40/62/90px). 180px is small enough that a
- * separate crop per size isn't worth it — the smaller slots just downscale it.
+ * A square cover URL for the places that need a plain string rather than an
+ * element: the native app's lock-screen artwork and the browser's Media
+ * Session metadata. In the UI itself the image is rendered by `TeaserImage`
+ * straight from the Sanity image object, so no URL is built by hand there.
  */
-export function getAudioCoverImages(source: {
-  teaserSmallImage?: CoverImageSource
-  cover?: CoverImageSource
-  collectionImage?: CoverImageSource
-}): AudioCoverImages {
-  const sourceImage: CoverImageSource =
-    (source.teaserSmallImage?.asset && source.teaserSmallImage) ||
-    (source.cover?.asset && source.cover) ||
-    (source.collectionImage?.asset && source.collectionImage) ||
-    undefined
-  if (!sourceImage?.asset) return {}
-  return {
-    cover: urlFor(sourceImage).width(180).height(180).url(),
-    coverDark: sourceImage.imageDark?.asset
-      ? urlFor(sourceImage.imageDark).width(180).height(180).url()
-      : undefined,
+export function audioCoverUrl(
+  image: AudioQueueItemContent['image'],
+  size: number,
+): string {
+  if (!image?.asset) {
+    return AUDIO_COVER_FALLBACK_URL
+  }
+  try {
+    return urlFor(image).width(size).height(size).url()
+  } catch (e) {
+    console.warn(e)
+    return AUDIO_COVER_FALLBACK_URL
   }
 }

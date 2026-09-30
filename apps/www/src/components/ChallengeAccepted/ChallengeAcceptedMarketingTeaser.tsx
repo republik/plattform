@@ -15,7 +15,7 @@ import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challen
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 function ChallengeAcceptedMarketingTeaser() {
   const [colorScheme] = useColorContext()

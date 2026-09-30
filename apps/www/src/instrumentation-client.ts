@@ -7,6 +7,8 @@ import * as Sentry from '@sentry/nextjs'
 if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    tracesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.01,
+
     ignoreErrors: [
       'Script error.',
       'Error: aborted',

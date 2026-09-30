@@ -13,7 +13,7 @@ import {
   IconSpotify,
 } from '@republik/icons'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export default function FollowPodcast({
   podcast,

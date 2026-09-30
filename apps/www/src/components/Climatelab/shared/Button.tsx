@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react'
 import { css } from 'glamor'
-import NextLink from 'next/link'
+import NextLink from '@/app/components/ui/link'
 import {
   fontStyles,
   useColorContext,

@@ -1,23 +1,21 @@
 'use client'
-import {
-  createContext,
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-  Dispatch,
-  SetStateAction,
-  useMemo,
-} from 'react'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 
-import createPersistedState from '@/lib/hooks/use-persisted-state'
-import { useInNativeApp, postMessage } from '@/lib/withInNativeApp'
-
-import { useMediaProgress } from './MediaProgress'
-import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
-import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
+import { postMessage } from '@/lib/withInNativeApp'
 import EventEmitter from 'events'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useIsAudioQueueAvailable } from './hooks/useAudioQueue'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
+import { AudioQueueItem } from './types/AudioQueueItem'
+
+/**
+ * Where the removed legacy web player persisted its last track. Nothing
+ * reads it any more, but returning readers still carry one, so it's swept
+ * below rather than left behind. Safe to drop once that has had time to run
+ * everywhere — say, a release or two.
+ */
+const LEGACY_PLAYER_STORAGE_KEY = 'republik-audioplayer-audiostate'
 
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
@@ -27,7 +25,7 @@ export enum AudioContextEvent {
 }
 
 type ToggleAudioPlayerFunc = (
-  playerItem: AudioPlayerItem,
+  playerItem: AudioQueueItemContent,
   location?: AudioPlayerLocations,
 ) => void
 
@@ -65,20 +63,17 @@ export function useAudioContextEvent<E = Event>(
 type AudioContextValue = {
   activePlayerItem: AudioQueueItem | null
   setActivePlayerItem: Dispatch<SetStateAction<AudioQueueItem | null>>
-  legacyPlayerItem: AudioPlayerItem | undefined
   audioPlayerVisible: boolean
   setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
   isExpanded: boolean
   setIsExpanded: Dispatch<SetStateAction<boolean>>
   isPlaying: boolean
   setIsPlaying: Dispatch<SetStateAction<boolean>>
-  autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   toggleAudioPlayback: () => void
   checkIfActivePlayerItem: (documentId: string) => boolean
-  addAudioQueueItem: (item: AudioPlayerItem, position?: number) => void
+  addAudioQueueItem: (item: AudioQueueItemContent, position?: number) => void
   removeAudioQueueItem: (audioQueueItemId: string) => void
-  onCloseAudioPlayer: () => void
 }
 
 const notImplemented = () => {
@@ -97,53 +92,30 @@ export const AudioContext = createContext<AudioContextValue>({
   checkIfActivePlayerItem: notImplemented,
   addAudioQueueItem: notImplemented,
   removeAudioQueueItem: notImplemented,
-  onCloseAudioPlayer: notImplemented,
   activePlayerItem: null,
   setActivePlayerItem: notImplemented,
-  legacyPlayerItem: undefined,
-  autoPlayActive: false,
 })
 
 export const useAudioContext = () => useContext<AudioContextValue>(AudioContext)
 
-const usePersistedLegacyPlayerItem = createPersistedState<AudioPlayerItem>(
-  'republik-audioplayer-audiostate',
-)
-
 const AudioProvider = ({ children }) => {
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
-  const [legacyPlayerItem, setLegacyPlayerItem] = usePersistedLegacyPlayerItem<
-    AudioPlayerItem | undefined
-  >(undefined)
-  const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
-    useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const clearTimeoutId = useRef<NodeJS.Timeout | null>(null)
 
   const isAudioQueueAvailable = useIsAudioQueueAvailable()
-  const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (
-    playerItem: AudioPlayerItem,
+    playerItem: AudioQueueItemContent,
     location?: AudioPlayerLocations,
   ) => {
-    const {
-      meta: { audioSource, path, title },
-    } = playerItem
-    const url = (
-      (inNativeIOSApp && audioSource.aac) ||
-      audioSource.mp3 ||
-      audioSource.ogg
-    )?.trim()
+    const { slug, title } = playerItem
+    const url = playerItem.audioSourceMp3?.trim()
     if (!url) {
       return
     }
-    const mediaId = audioSource.mediaId
-
     if (isAudioQueueAvailable) {
       // AudioEventEmitter.emit doesn't wait for (or propagate errors from)
       // listeners, so without this bridge the promise below would resolve
@@ -157,43 +129,39 @@ const AudioProvider = ({ children }) => {
         })
       })
     } else {
-      if (inNativeApp) {
-        let currentTime
-        if (mediaId) {
-          currentTime = await getMediaProgress({ mediaId })
-        }
-        // The below constructed payload is required by the legacy in-app
-        // audio player.
-        const payload = {
-          audioSource,
+      // The queue is unavailable only in a native app below v2.2.0, so this
+      // branch is always in-app: hand the track to the app's own player in
+      // the payload shape that version expects.
+      postMessage({
+        type: 'play-audio',
+        payload: {
+          // Same reasoning as `toNativeAppTrack`: this shape is frozen by app
+          // versions and cannot be updated without an app update
+          audioSource: {
+            mediaId: null,
+            kind: playerItem.syntheticVoiceEnabled
+              ? 'syntheticReadAloud'
+              : 'readAloud',
+            mp3: url,
+            aac: null,
+            ogg: null,
+            durationMs: playerItem.audioDurationMs ?? null,
+            userProgress: null,
+          },
           url,
           title,
-          sourcePath: path,
-          mediaId,
-        }
-        postMessage({
-          type: 'play-audio',
-          payload: {
-            ...payload,
-            currentTime,
-          },
-        })
-      }
-      setLegacyPlayerItem(playerItem)
-      setAutoPlayAudioPlayerItem(playerItem)
+          sourcePath: slug,
+          mediaId: null,
+          currentTime: null,
+        },
+      })
     }
-    clearTimeout(clearTimeoutId.current)
   }
 
-  const onCloseAudioPlayer = () => {
-    setAudioPlayerVisible(false)
-    clearTimeoutId.current = setTimeout(() => {
-      setActivePlayerItem(undefined)
-      setLegacyPlayerItem(undefined)
-    }, 300)
-  }
-
-  const addAudioQueueItem = (item: AudioPlayerItem, position?: number) => {
+  const addAudioQueueItem = (
+    item: AudioQueueItemContent,
+    position?: number,
+  ) => {
     AudioEventEmitter.emit(AudioContextEvent.ADD_AUDIO_QUEUE_ITEM, {
       item,
       position,
@@ -211,47 +179,40 @@ const AudioProvider = ({ children }) => {
     AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYBACK)
   }
 
+  useEffect(() => {
+    try {
+      window.localStorage.removeItem(LEGACY_PLAYER_STORAGE_KEY)
+    } catch (e) {
+      // Blocked or unavailable storage — then there's nothing to clean up.
+    }
+  }, [])
+
   const checkIfActivePlayerItem = useMemo(
     () => (documentId: string) => {
-      return activePlayerItem?.document?.id === documentId
+      const activeDocument = activePlayerItem?.document
+      return (
+        !!activeDocument && collectionsDocumentId(activeDocument) === documentId
+      )
     },
     [activePlayerItem],
   )
-
-  // Legacy in-app audio player this will open up the player for the last played element
-  // This may be deleted sometime in the future once every app version below v2.2.0 is discontinued
-  useEffect(() => {
-    setAudioPlayerVisible(!!legacyPlayerItem)
-  }, [legacyPlayerItem])
-
-  // This clears the persisted active-player state in the browser or the native app.
-  // If a value was persisted the above effect kept on opening the player.
-  useEffect(() => {
-    if (isAudioQueueAvailable) {
-      setLegacyPlayerItem(null)
-    }
-  }, [isAudioQueueAvailable])
 
   return (
     <AudioContext.Provider
       value={{
         activePlayerItem,
         setActivePlayerItem,
-        legacyPlayerItem,
         audioPlayerVisible,
         setAudioPlayerVisible,
         isExpanded,
         setIsExpanded,
         isPlaying,
         setIsPlaying,
-        autoPlayActive:
-          autoPlayAudioPlayerItem?.id === activePlayerItem?.document?.id,
         toggleAudioPlayer,
         toggleAudioPlayback,
         checkIfActivePlayerItem,
         addAudioQueueItem,
         removeAudioQueueItem,
-        onCloseAudioPlayer,
       }}
     >
       {children}

@@ -5,7 +5,7 @@ import { useMe } from '@/lib/context/MeContext'
 import { IconAccountBox } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export function Avatar() {
   const { meLoading, me } = useMe()

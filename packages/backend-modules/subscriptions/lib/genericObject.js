@@ -6,7 +6,6 @@ const { getParsedDocumentId } = require('../../search/lib/Documents')
 // dependency the other way would form a cycle. Keep in sync if the prefix
 // ever changes.
 const SANITY_ID_PREFIX = 'sanity:'
-const isSanityRef = (value) => value.startsWith(SANITY_ID_PREFIX)
 const fromSanityRef = (value) => value.slice(SANITY_ID_PREFIX.length)
 
 // SANITY_DOCUMENT_REFS_ENABLED (pre-launch kill-switch, removable once the
@@ -40,7 +39,14 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
   if (type === 'Document') {
     const { repoId } = getParsedDocumentId(id)
     return (
-      loaders.Document.byRepoId
+      // byRepoIdPreferSanity, not byRepoId: this resolver only ever needs a
+      // teaser (title/path) for display, so it prefers a repoId's Sanity
+      // copy the moment one exists, even if Elasticsearch also still has
+      // it -- unlike byRepoId's consumers (e.g. publish-notification
+      // content generation), which need the live Publikator copy regardless
+      // of whether Sanity has an imported snapshot too (see
+      // documents/loaders/Document.js for why that distinction matters).
+      loaders.Document.byRepoIdPreferSanity
         .load(repoId)
         // `o.meta.repoId` (not the parsed input `repoId`) is the canonical
         // storage key — for a publikator document these are always equal;
@@ -55,14 +61,30 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
           // (no mdast/content), so it's surfaced as its own union member
           // rather than as `Document` — the frontend needs `__typename` to
           // tell the two apart and fetch preview data from Sanity directly.
-          if (isSanityRef(obj.objectId)) {
+          //
+          // Branch on `obj.sanityRef`, not on whether `obj.objectId` itself
+          // is `sanity:`-prefixed: a legacy repoId whose content has since
+          // moved to Sanity resolves through the loader's Sanity branch too
+          // (see documents/loaders/Document.js's "rescued" case), but keeps
+          // `objectId` unprefixed until the migration script rewrites the
+          // stored row — checking `objectId`'s shape would let that case
+          // fall through to `normalize(obj)` below and leak the loader's
+          // minimal, non-GraphQL `Document` stub to the frontend.
+          if (obj.sanityRef) {
             if (!isSanityDocumentRefsEnabled()) {
               return undefined
             }
             return {
-              id: fromSanityRef(obj.objectId),
+              id: fromSanityRef(obj.sanityRef),
               type: obj.sanityType,
-              objectId: obj.objectId,
+              // The canonical `sanity:`-prefixed ref, not `obj.objectId`
+              // (which stays the legacy bare repoId for a rescued-legacy row
+              // -- see documents/loaders/Document.js). Callers that key off
+              // this (e.g. subscribedByMe's `resolvedId`, used to look up an
+              // existing subscription by `objectDocumentId`) need the form
+              // new rows are actually stored under, or they'd silently miss
+              // a subscription created after the content moved to Sanity.
+              objectId: obj.sanityRef,
               __typename: 'SanityDocumentRef',
             }
           }

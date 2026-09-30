@@ -12,7 +12,9 @@ import {
   RemoveAudioQueueItemDocument,
   ReorderAudioQueueDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { AudioQueueItem } from '@/components/Audio/types/AudioQueueItem'
 import { useMe } from '@/lib/context/MeContext'
 import { reportError } from '@/lib/errors/reportError'
 import createPersistedState from '@/lib/hooks/use-persisted-state'
@@ -22,8 +24,6 @@ import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { NEW_AUDIO_API_VERSION } from '../constants'
-import { getAudioCoverImages } from '../helpers/audioCoverImages'
-import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -64,68 +64,29 @@ async function getAudioQueueItemsByIds(
 }
 
 /**
- * Shapes a Sanity `AUDIO_QUEUE_ITEMS_QUERY` result into an `AudioPlayerItem`.
- * Cover art falls back through the same chain as the old per-format fallback:
- * the article's compact-teaser image, else its own cover, else its featured
- * collection's image (the "Kolumne"/"Briefing" equivalent).
- */
-function toAudioPlayerItem(content: AudioQueueItemContent): AudioPlayerItem {
-  const id = `sanity:${content._id}`
-  const { cover, coverDark } = getAudioCoverImages({
-    teaserSmallImage: content.teaserSmall?.image,
-    cover: content.cover,
-    collectionImage: content.collectionImage,
-  })
-  return {
-    id,
-    meta: {
-      title: content.title,
-      path: content.path,
-      publishDate: content.publishDate,
-      cover,
-      coverDark,
-      audioSource: {
-        mediaId: id,
-        mp3: content.audioSourceMp3,
-        durationMs: content.audioDurationMs ?? 0,
-      },
-    },
-  } as unknown as AudioPlayerItem
-}
-
-/**
- * Attach cached metadata to a ref, so the rest of the player (which expects
- * `document.meta...`) doesn't need to know refs exist. `mediaId` and
- * `userProgress` come from the server, which is authoritative for both —
- * overriding whatever placeholder the caller guessed when it built the item.
+ * Join a ref with the Sanity content it points at. `mediaId` and
+ * `userProgress` come from the server, which is authoritative for both.
  */
 function mergeQueueItem(
   ref: AudioQueueItemRefFragment,
-  knownItem: AudioPlayerItem | undefined,
+  knownItem: AudioQueueItemContent | undefined,
 ): AudioQueueItem {
   return {
     id: ref.id,
     sequence: ref.sequence,
-    document: knownItem
-      ? {
-          ...knownItem,
-          meta: {
-            ...knownItem.meta,
-            audioSource: {
-              ...knownItem.meta.audioSource,
-              mediaId: ref.mediaId ?? knownItem.meta.audioSource.mediaId,
-              userProgress: ref.userProgress ?? null,
-            },
-          },
-        }
-      : null,
+    mediaId: ref.mediaId ?? refDocumentId(ref),
+    userProgress: ref.userProgress,
+    document: knownItem ?? null,
   }
 }
+
+const isPlayable = (item: AudioQueueItem | null): boolean =>
+  !!item?.document?.audioSourceMp3
 
 /**
  * useAudioQueue acts as a provider for the audio queue and all it's mutations.
  * Additionally, it provides the user-progress for all queued audio-items.
- *d
+ *
  * For users with an active membership, the queue is synchronized with the server.
  * For users without an active membership, the queue is persisted in local storage.
  * The local storage however doesn't allow for more than one item to be saved.
@@ -136,7 +97,7 @@ export type AudioQueueContextValue = {
   audioQueueHasError?: ApolloError | null
   refetchAudioQueue: () => Promise<unknown>
   addAudioQueueItem: (
-    item: AudioPlayerItem,
+    item: AudioQueueItemContent,
     position?: number,
   ) => Promise<AudioQueueItem[]>
   removeAudioQueueItem: (audioItemId: string) => Promise<void>
@@ -145,7 +106,7 @@ export type AudioQueueContextValue = {
   reorderAudioQueue: (reorderedQueueItems: AudioQueueItem[]) => Promise<void>
   isAudioQueueAvailable: boolean
   checkIfHeadOfQueue: (documentId: string) => AudioQueueItem
-  checkIfInQueue: (audioItemId: string) => AudioQueueItem
+  checkIfInQueue: (documentId: string) => AudioQueueItem
   getAudioQueueItemIndex: (documentId: string) => number
 }
 
@@ -172,16 +133,13 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     AudioQueueItemRefFragmentDoc,
     audioQueueData?.userAudioQueue || [],
   )
-  // The queue API returns bare refs, so each item's title/cover/publishDate is
-  // fetched from Sanity.
-  // Items are also remembered when a caller adds or plays one, so the player
-  // can render before the fetch lands. Those are stubs built from whatever
-  // props the play button had (`PlayAction` has no publishDate, and none of
-  // the feed teasers pass a cover), which is why the fetch below runs for
-  // every ref rather than only unknown ones, and why its result overwrites.
-  const [knownItems, setKnownItems] = useState<Map<string, AudioPlayerItem>>(
-    new Map(),
-  )
+  // The queue API returns bare refs, so each item's content is fetched from
+  // Sanity. Items are also remembered when a caller adds or plays one, so the
+  // player can render before that fetch lands — the caller already holds the
+  // same Sanity content, having rendered a teaser or article page from it.
+  const [knownItems, setKnownItems] = useState<
+    Map<string, AudioQueueItemContent>
+  >(new Map())
   // A ref mirroring the state above. `handleAddQueueItem` remembers an item and
   // then, in the same call, maps the mutation's refs through `mergeQueueItem` —
   // a setState hasn't landed by then, so reading the state Map would always
@@ -190,8 +148,8 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
 
   const writeKnownItems = (
     update: (
-      previous: Map<string, AudioPlayerItem>,
-    ) => Map<string, AudioPlayerItem>,
+      previous: Map<string, AudioQueueItemContent>,
+    ) => Map<string, AudioQueueItemContent>,
   ) => {
     const next = update(knownItemsRef.current)
     knownItemsRef.current = next
@@ -201,9 +159,11 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
   // state: updating it must not trigger a render of its own.
   const fetchedIds = useRef<Set<string>>(new Set())
 
-  const rememberItem = (documentId: string, item: AudioPlayerItem) => {
-    if (!documentId || !item?.meta?.audioSource) return
-    writeKnownItems((previous) => new Map(previous).set(documentId, item))
+  const rememberItem = (item: AudioQueueItemContent) => {
+    if (!item?._id || !item.audioSourceMp3) return
+    writeKnownItems((previous) =>
+      new Map(previous).set(collectionsDocumentId(item), item),
+    )
   }
 
   const [pendingFetches, setPendingFetches] = useState(0)
@@ -225,9 +185,7 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
 
         writeKnownItems((previous) => {
           const next = new Map(previous)
-          items.forEach((item) =>
-            next.set(`sanity:${item._id}`, toAudioPlayerItem(item)),
-          )
+          items.forEach((item) => next.set(collectionsDocumentId(item), item))
           return next
         })
       })
@@ -239,13 +197,15 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sanityIds.join(',')])
 
-  const audioQueueItems = audioQueueRefs.map((ref) => {
+  // used for remove excess items, including invisible ones
+  const allQueueItems = audioQueueRefs.map((ref) => {
     const documentId = refDocumentId(ref)
     return mergeQueueItem(
       ref,
       documentId ? knownItems.get(documentId) : undefined,
     )
   })
+  const audioQueueItems = allQueueItems.filter(isPlayable)
   const isLoading = meLoading || audioQueueIsLoading || pendingFetches > 0
 
   const [localAudioItem, setLocalAudioItem] =
@@ -315,26 +275,29 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
 
   /**
    * Add an audio item to the queue or to the local storage if the user is not a member.
-   * @param item partial of a document with all the required meta fields
+   * @param item the article's Sanity content, as the player renders it
    * @param position position in the queue. To push to front of queue, pass 1
    */
   const handleAddQueueItem = async (
-    item: AudioPlayerItem,
+    item: AudioQueueItemContent,
     position?: number,
   ): Promise<AudioQueueItem[]> => {
-    rememberItem(item.id, item)
+    rememberItem(item)
+    const documentId = collectionsDocumentId(item)
 
     if (me) {
-      // Enforce queue limit by removing oldest item (end of queue) before adding
-      if (audioQueueItems.length >= MAX_QUEUE_SIZE) {
-        const lastItem = audioQueueItems[audioQueueItems.length - 1]
-        await removeAudioQueueItemMutation({ variables: { id: lastItem.id } })
+      // Enforce the queue limit by removing an item before adding.
+      if (allQueueItems.length >= MAX_QUEUE_SIZE) {
+        const evicted =
+          allQueueItems.find((item) => !isPlayable(item)) ??
+          audioQueueItems[audioQueueItems.length - 1]
+        await removeAudioQueueItemMutation({ variables: { id: evicted.id } })
       }
 
       const { data } = await addAudioQueueItemMutation({
         variables: {
           entity: {
-            id: item.id,
+            id: documentId,
             type: AudioQueueEntityType.Document,
           },
           sequence: position,
@@ -344,17 +307,22 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
         AudioQueueItemRefFragmentDoc,
         data?.audioQueueItems || [],
       )
-      return refs.map((ref) =>
-        mergeQueueItem(
-          ref,
-          knownItemsRef.current.get(refDocumentId(ref) ?? ''),
-        ),
-      )
+      // Filtered like every other queue this hook hands out.
+      return refs
+        .map((ref) =>
+          mergeQueueItem(
+            ref,
+            knownItemsRef.current.get(refDocumentId(ref) ?? ''),
+          ),
+        )
+        .filter(isPlayable)
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
         id: uuid(),
-        document: item,
         sequence: 0,
+        mediaId: documentId,
+        userProgress: null,
+        document: item,
       }
       setLocalAudioItem(mockAudioQueueItem)
       return [mockAudioQueueItem]
@@ -418,45 +386,49 @@ export const useAudioQueueState = (): AudioQueueContextValue => {
     }
   }
 
+  /**
+   * The join key a queue slot's content is addressed by, or null if unknown.
+   * The `_id` check also covers a locally persisted item written by an older
+   * build, which held the legacy document shape.
+   */
+  const itemDocumentId = (item: AudioQueueItem | null): string | null =>
+    item?.document?._id ? collectionsDocumentId(item.document) : null
+
   function checkIfHeadOfQueue(documentId: string): AudioQueueItem {
-    if (!me && localAudioItem?.document?.id === documentId) {
+    if (!me && itemDocumentId(localAudioItem) === documentId) {
       return localAudioItem
     }
-    if (audioQueueItems[0]?.document?.id === documentId) {
+    if (itemDocumentId(audioQueueItems[0]) === documentId) {
       return audioQueueItems[0]
     }
   }
 
   function checkIfInQueue(documentId: string): AudioQueueItem {
-    if (!me && localAudioItem?.document?.id === documentId) {
+    if (!me && itemDocumentId(localAudioItem) === documentId) {
       return localAudioItem
     }
     return audioQueueItems.find(
-      (audioQueueItem) => audioQueueItem.document?.id === documentId,
+      (audioQueueItem) => itemDocumentId(audioQueueItem) === documentId,
     )
   }
 
   function getAudioQueueItemIndex(documentId: string): number {
-    if (!me && localAudioItem?.document?.id === documentId) {
+    if (!me && itemDocumentId(localAudioItem) === documentId) {
       return 0
     }
-    return audioQueueItems.findIndex((item) => item.document?.id === documentId)
+    return audioQueueItems.findIndex(
+      (item) => itemDocumentId(item) === documentId,
+    )
   }
 
   const resolvedQueue = !me
-    ? [localAudioItem].filter(Boolean)
+    ? [localAudioItem].filter(isPlayable)
     : audioQueueData
     ? audioQueueItems ?? []
     : null
 
   return {
-    // Items without metadata (queued elsewhere, not fetched yet),
-    // or whose audio has since been removed/unpublished in Sanity (mp3 gone,
-    // ref still lingering in userAudioQueue), are hidden rather than
-    // rendered broken.
-    audioQueue: resolvedQueue?.filter(
-      (item) => item.document?.meta?.audioSource?.mp3,
-    ),
+    audioQueue: resolvedQueue,
     audioQueueIsLoading: isLoading,
     audioQueueHasError: !me ? null : audioQueueHasError,
     refetchAudioQueue: !me ? () => null : refetchAudioQueue,

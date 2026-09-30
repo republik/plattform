@@ -15,7 +15,7 @@ import {
   Editorial,
   useColorContext,
 } from '@project-r/styleguide'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { IconChevronRight } from '@republik/icons'
 
 const styles = {

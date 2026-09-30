@@ -1,25 +1,23 @@
 import AudioListItem from '../shared/AudioListItem'
 
-import { IconButton, Spinner } from '@project-r/styleguide'
-import {
-  AudioPlayerItem,
-  AudioQueueItem,
-} from '../../../../types/AudioPlayerItem'
-import useAudioQueue from '../../../../hooks/useAudioQueue'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { useTranslation } from '@/lib/withT'
+import { IconButton, Spinner } from '@project-r/styleguide'
+import { IconDownload, IconLink, IconPlaylistAdd } from '@republik/icons'
 import { useState } from 'react'
 import { useAudioContext } from '../../../../AudioProvider'
+import useAudioQueue from '../../../../hooks/useAudioQueue'
 import {
-  AudioPlayerLocations,
   AudioPlayerActions,
+  AudioPlayerLocations,
 } from '../../../../types/AudioActionTracking'
-import { trackEvent } from '@/app/lib/analytics/event-tracking'
-import { IconDownload, IconLink, IconPlaylistAdd } from '@republik/icons'
 
 type ArticleItemProps = {
-  article: AudioQueueItem['document']
+  article: AudioQueueItemContent
   handleOpenArticle: (path: string) => Promise<void>
-  handleDownload: (item: AudioQueueItem['document']) => Promise<void>
+  handleDownload: (item: AudioQueueItemContent) => Promise<void>
 }
 
 const LatestArticleItem = ({
@@ -33,7 +31,10 @@ const LatestArticleItem = ({
     useAudioQueue()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handlePlay = async (article: AudioPlayerItem) => {
+  const documentId = collectionsDocumentId(article)
+  const queueItem = checkIfInQueue(documentId)
+
+  const handlePlay = async () => {
     try {
       setIsLoading(true)
       toggleAudioPlayer(article, AudioPlayerLocations.AUDIO_PLAYER)
@@ -43,10 +44,7 @@ const LatestArticleItem = ({
     }
   }
 
-  const handleAddToQueue = async (
-    article: AudioPlayerItem,
-    position?: number,
-  ) => {
+  const handleAddToQueue = async (position?: number) => {
     try {
       setIsLoading(true)
       await addAudioQueueItem(article, position)
@@ -57,7 +55,7 @@ const LatestArticleItem = ({
         position === 2
           ? AudioPlayerActions.ADD_NEXT_QUEUE_ITEM
           : AudioPlayerActions.ADD_QUEUE_ITEM,
-        article?.meta?.path,
+        article.slug,
       ])
     } catch (error) {
       // TODO: handle error
@@ -67,7 +65,8 @@ const LatestArticleItem = ({
   return (
     <AudioListItem
       item={article}
-      isActive={!!checkIfHeadOfQueue(article.id)}
+      userProgress={queueItem?.userProgress}
+      isActive={!!checkIfHeadOfQueue(documentId)}
       beforeActionItem={
         isLoading ? (
           <div style={{ position: 'relative', width: 24, height: 24 }}>
@@ -77,8 +76,8 @@ const LatestArticleItem = ({
           <IconButton
             Icon={IconPlaylistAdd}
             title={t('AudioPlayer/Queue/Add')}
-            onClick={() => handleAddToQueue(article)}
-            disabled={!!checkIfInQueue(article.id)}
+            onClick={() => handleAddToQueue()}
+            disabled={!!queueItem}
             style={{ marginRight: 0, alignSelf: 'stretch' }}
           />
         )
@@ -87,10 +86,8 @@ const LatestArticleItem = ({
         {
           Icon: IconPlaylistAdd,
           label: t('AudioPlayer/Queue/AddToQueueAsNext'),
-          onClick: () => handleAddToQueue(article, 2),
-          hidden:
-            checkIfInQueue(article.id) &&
-            getAudioQueueItemIndex(article.id) <= 1,
+          onClick: () => handleAddToQueue(2),
+          hidden: !!queueItem && getAudioQueueItemIndex(documentId) <= 1,
         },
         {
           Icon: IconDownload,
@@ -100,10 +97,10 @@ const LatestArticleItem = ({
         {
           Icon: IconLink,
           label: t('AudioPlayer/Queue/GoToItem'),
-          onClick: () => handleOpenArticle(article.meta.path),
+          onClick: () => handleOpenArticle(article.slug),
         },
       ]}
-      onClick={() => handlePlay(article)}
+      onClick={handlePlay}
     />
   )
 }

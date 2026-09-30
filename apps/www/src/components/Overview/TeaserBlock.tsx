@@ -7,7 +7,7 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import { renderMdast } from '@republik/mdast-react-render'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 import HrefLink from '../Link/Href'
 

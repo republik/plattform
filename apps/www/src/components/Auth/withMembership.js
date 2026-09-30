@@ -1,6 +1,6 @@
 import { A, Interaction } from '@project-r/styleguide'
 import { OPEN_ACCESS } from '@/lib/constants'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { Fragment } from 'react'
 import { useMe } from '@/lib/context/MeContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'

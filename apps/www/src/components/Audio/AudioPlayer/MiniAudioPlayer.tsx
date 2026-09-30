@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { AudioPlayerProps } from './shared'
+import { audioCoverStyle, AudioPlayerProps } from './shared'
 import Time from './ui/Time'
 import {
   IconButton,
@@ -9,7 +9,7 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
-import AudioCover from '../AudioPlayer/ui/AudioCover'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import AudioError from './ui/AudioError'
 import { IconClose, IconExpandLess, IconPause, IconPlay } from '@republik/icons'
 
@@ -88,18 +88,7 @@ const MiniAudioPlayer = ({
   }
 
   const {
-    document: {
-      meta: {
-        title,
-        path,
-        image,
-        format,
-        audioCoverCrop,
-        coverSm,
-        cover,
-        coverDark,
-      },
-    },
+    document: { title, slug, image },
   } = activeItem
 
   return (
@@ -120,14 +109,14 @@ const MiniAudioPlayer = ({
             style={{ marginRight: 0 }}
           />
         )}
-        <AudioCover
-          cover={coverSm ?? cover}
-          coverDark={coverDark}
-          size={40}
+        <TeaserImage
           image={image}
-          format={format?.meta}
-          audioCoverCrop={audioCoverCrop}
-          alt={title}
+          width={40}
+          height={40}
+          alt=''
+          fallback
+          className={audioCoverStyle}
+          style={{ width: 40, height: 40 }}
         />
         {!hasError ? (
           <>
@@ -135,7 +124,7 @@ const MiniAudioPlayer = ({
               <AudioPlayerTitle
                 lineClamp={1}
                 title={title}
-                onClick={() => handleOpenArticle(path)}
+                onClick={() => handleOpenArticle(slug)}
               />
               <Time currentTime={currentTime} duration={duration} />
             </div>

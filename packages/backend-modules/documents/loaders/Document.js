@@ -27,10 +27,20 @@ const {
 // need to reject the wrong kind of document (collections accept only articles,
 // while subscriptions legitimately target formats — so the loader itself stays
 // permissive). Not a GraphQL field; nothing exposes this stub as a `Document`.
+//
+// `sanityRef` is the canonical `sanity:`-prefixed ref for `doc`, independent
+// of which key (`documentRef`) actually matched it -- a legacy repoId whose
+// content has since moved to Sanity (the "rescued" case below) keeps
+// `documentRef`/`meta.repoId` unprefixed on purpose (see that case's own
+// comment), so callers that need to tell "is this Sanity-backed" apart from
+// a still-publikator row, and build a real Sanity reference for it, must
+// read this field rather than inspect `documentRef`'s shape (see
+// subscriptions/lib/genericObject.js).
 const toDocumentShape = (documentRef, doc) => ({
   id: documentRef,
   repoId: documentRef,
   sanityType: doc._type,
+  sanityRef: toSanityRef(doc._id),
   meta: { repoId: documentRef, title: doc.title, path: doc.slug?.current },
   __typename: 'Document',
 })
@@ -123,6 +133,88 @@ module.exports = (context) => ({
         ...esRows,
         ...directSanityRows.filter(Boolean),
         ...rescuedRows.filter(Boolean),
+      ]
+    },
+    null,
+    (key, rows) => rows.find((row) => row.meta.repoId === key),
+  ),
+  // Same repoId/Sanity-ref resolution as `byRepoId`, but with priority
+  // reversed: a repoId whose content exists in Sanity resolves to that
+  // (deliberately not gated on whether Elasticsearch also still has it --
+  // Studio's one-time import already covers most repos, and ES isn't purged
+  // on import, so `byRepoId`'s "ES wins if present" would otherwise keep
+  // resolving already-migrated content as if it hadn't moved). Only falls
+  // back to the Elasticsearch/Publikator copy for a repoId Sanity has
+  // nothing for yet.
+  //
+  // Deliberately its own loader, not a change to `byRepoId` itself:
+  // `byRepoId` is shared by consumers that need the *live*, actively-edited
+  // Publikator copy regardless of whether Sanity also has an imported
+  // snapshot -- notably publikator/lib/Notifications.js's `notifyPublish`,
+  // which reads `doc.meta.shortTitle`/`doc.meta.description` off it to build
+  // real push/email content; this loader's Sanity-backed rows only ever
+  // carry `toDocumentShape`'s minimal title/path. Flipping `byRepoId`
+  // itself would silently degrade that content for every repo Studio has
+  // ever imported. This loader is for Notification.object/Subscription.object
+  // display only (see subscriptions/lib/genericObject.js), which only needs
+  // a teaser and wants to point at Sanity as soon as it can -- collapse this
+  // into `byRepoId` once Publikator is fully retired and nothing needs the
+  // live-Publikator-first behavior anymore.
+  byRepoIdPreferSanity: createDataLoader(
+    async (repoIds) => {
+      const sanityRefKeys = repoIds.filter(isSanityRef)
+      const plainKeys = repoIds.filter((id) => !isSanityRef(id))
+
+      const sanityDocs = await fetchDocumentsByIds([
+        ...sanityRefKeys.map(fromSanityRef),
+        ...plainKeys,
+        ...plainKeys.map(legacySanityId).filter(Boolean),
+      ])
+      const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
+      const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
+
+      const directSanityRows = sanityRefKeys.map((key) => {
+        const doc = sanityDocFor(fromSanityRef(key))
+        return doc && toDocumentShape(key, doc)
+      })
+
+      const plainKeyResults = plainKeys.map((key) => {
+        // Case 1: `key` is itself a raw Sanity _id (a brand-new sanity-native
+        // follow/bookmark).
+        const directDoc = sanityDocFor(key)
+        if (directDoc) return toDocumentShape(toSanityRef(key), directDoc)
+
+        // Case 2: `key` is a repoId Sanity already has content for --
+        // prefer it over Elasticsearch even if ES still has a copy too.
+        const legacyDoc = sanityDocFor(legacySanityId(key))
+        if (legacyDoc) return toDocumentShape(key, legacyDoc)
+
+        // Case 3: nothing in Sanity for this repoId yet -- resolved below
+        // via Elasticsearch.
+        return null
+      })
+
+      const missingKeys = plainKeys.filter((key, i) => !plainKeyResults[i])
+
+      const esRows = missingKeys.length
+        ? await search(
+            null,
+            {
+              filter: {
+                repoId: missingKeys,
+                type: 'Document',
+              },
+              first: missingKeys.length * 2,
+              unrestricted: true,
+            },
+            context,
+          ).then((connection) => connection.nodes.map((node) => node.entity))
+        : []
+
+      return [
+        ...directSanityRows.filter(Boolean),
+        ...plainKeyResults.filter(Boolean),
+        ...esRows,
       ]
     },
     null,

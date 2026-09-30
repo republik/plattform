@@ -4,7 +4,7 @@ import { useDiscussion } from '../context/DiscussionContext'
 import { getFocusHref, getFocusUrl } from '../shared/CommentLink'
 import { useMemo } from 'react'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { rerouteDiscussion } from '../shared/DiscussionLink'
 import { useTranslation } from '@/lib/withT'
 

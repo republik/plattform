@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { usePathname } from 'next/navigation'
 
 type NavLinkProps = {

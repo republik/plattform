@@ -15,7 +15,7 @@ import { css } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Check, Plus } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useState } from 'react'
 
 function MobileButton({

@@ -34,7 +34,7 @@ export const actionLabelStyle = css({
   '[data-compact-actions] &': { display: 'none' },
 })
 
-// For actions that always carry their label: play and continue-reading. A
+// For actions that always carry their label, like play. A
 // `data-compact-actions` ancestor turns the pill back into a plain icon.
 export const pillStyle = css({
   alignItems: 'center',

@@ -1,7 +1,7 @@
 import { ErrorPage } from '@/app/components/layout/error-page'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 export const metadata: Metadata = {
   title: 'Seite nicht gefunden',

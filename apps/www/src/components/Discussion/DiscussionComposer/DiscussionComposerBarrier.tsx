@@ -4,7 +4,7 @@ import {
   timeahead,
   useCurrentMinute,
 } from '@project-r/styleguide'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { ReactElement, ReactNode } from 'react'
 import { useMe } from '@/lib/context/MeContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'

@@ -7,7 +7,7 @@ import * as HoverCard from '@radix-ui/react-hover-card'
 import * as Popover from '@radix-ui/react-popover'
 import { IconLink } from '@republik/icons'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { type ComponentPropsWithoutRef, type ReactNode, useState } from 'react'
 
 const OPEN_DELAY = 300

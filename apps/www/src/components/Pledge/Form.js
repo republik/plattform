@@ -17,7 +17,7 @@ import Loader from '../Loader'
 
 import { A, Interaction, RawHtml } from '@project-r/styleguide'
 
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import Accordion from './Accordion'
 import CustomizePackage, {
   getOptionFieldKey,

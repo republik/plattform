@@ -14,6 +14,9 @@ export const APP_OPTIONS =
 export const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL
 export const CDN_FRONTEND_BASE_URL =
   process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL ?? ''
+/** Stand-in cover for an audio track whose article has no teaser image. */
+export const AUDIO_COVER_FALLBACK_PATH = '/static/audioplayer-fallback.png'
+
 export const RENDER_FRONTEND_BASE_URL =
   process.env.NEXT_PUBLIC_RENDER_FRONTEND_BASE_URL || PUBLIC_BASE_URL
 

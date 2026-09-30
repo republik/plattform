@@ -1,6 +1,6 @@
 import { IconClose } from '@republik/icons'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { CTAComponentBaseProps } from '../CustomComponentBase'
 import { IconButton, useColorContext } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '@/lib/constants'

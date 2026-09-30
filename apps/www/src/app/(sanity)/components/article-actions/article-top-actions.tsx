@@ -4,7 +4,6 @@ import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import { FontSizeStepper } from '@/app/components/ui/font-size-stepper'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
-import { getAudioCoverImages } from '@/components/Audio/helpers/audioCoverImages'
 import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'
 import { css, cx } from '@republik/theme/css'
 import { AArrowUp, EllipsisVertical } from 'lucide-react'
@@ -17,6 +16,7 @@ import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
 import { ShareOrGiftAction } from './gift-action'
 import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
+import { OpenInSanityAction } from './open-in-sanity'
 import { PdfDownloadAction } from './pdf-download-action'
 import { PlayAction } from './play-action'
 
@@ -28,11 +28,6 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   const documentId = collectionsDocumentId(article)
   const path = article.slug
   const title = article.plainTitle
-  const coverImages = getAudioCoverImages({
-    teaserSmallImage: article.teaserSmall?.image,
-    cover: article.cover,
-    collectionImage: article.articleCollection?.image,
-  })
 
   // Not signed in, or trial ended: reader is looking at a paywall, so the
   // full text isn't theirs to download.
@@ -59,14 +54,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         }),
       )}
     >
-      <PlayAction
-        documentId={documentId}
-        durationMs={article.audioDurationMs ?? undefined}
-        mp3={article.audioSourceMp3 ?? undefined}
-        path={path}
-        title={title}
-        {...coverImages}
-      />
+      <PlayAction audioItem={article.audioItem} />
       <BookmarkAction documentId={documentId} />
       <ShareOrGiftAction documentId={documentId} title={title} path={path} />
       <DiscussionAction
@@ -88,6 +76,13 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
           collisionPadding={16}
           title='Weitere Aktionen'
         >
+          <Menu.Item asChild>
+            <OpenInSanityAction
+              documentId={article._id}
+              documentType={article._type}
+              className={menuItemStyle}
+            />
+          </Menu.Item>
           {!hasPaywall && (
             <Menu.Item asChild>
               <PdfDownloadAction
@@ -99,13 +94,8 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
           )}
           <Menu.Item asChild>
             <AddToPlaylistAction
-              documentId={documentId}
-              durationMs={article.audioDurationMs ?? undefined}
-              mp3={article.audioSourceMp3 ?? undefined}
-              path={path}
-              title={title}
+              audioItem={article.audioItem}
               className={menuItemStyle}
-              {...coverImages}
             />
           </Menu.Item>
           <Menu.Item className={menuItemStyle} closeOnSelect={false}>

@@ -3,7 +3,6 @@ const { withSentryConfig } = require('@sentry/nextjs')
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withPlausibleProxy } = require('next-plausible')
-
 const isProduction = process.env.NODE_ENV === 'production'
 
 const deploymentId =

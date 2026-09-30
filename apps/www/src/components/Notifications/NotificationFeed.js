@@ -15,7 +15,7 @@ import {
 import { nest } from 'd3-collection'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useMemo } from 'react'
 import DateLabel from '../Feed/DateLabel'
 import InfiniteScroll from '../Frame/InfiniteScroll'

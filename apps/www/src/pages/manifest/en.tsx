@@ -1,5 +1,5 @@
 import { withRouter } from 'next/router'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import {
   Editorial,
   BrandMark as R,

@@ -9,7 +9,7 @@ import {
   RawHtml,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import PropTypes from 'prop-types'
 import { Component, Fragment } from 'react'
 import withInNativeApp from '@/lib/withInNativeApp'

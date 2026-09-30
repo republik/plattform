@@ -6,10 +6,10 @@ import {
 } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
+import Link from '@/app/components/ui/link'
 
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Link from 'next/link'
 
 const teaserStyle = cva({
   base: {
@@ -146,16 +146,20 @@ const imageCredits = cva({
     imagePadding: {
       TRUE: {
         position: 'absolute',
-        left: 0,
+        left: '2',
         top: '100%',
         mt: '1',
+        md: {
+          left: 0,
+        },
       },
       FALSE: {
         mt: '1',
-        pl: '1',
+        pl: '2',
         md: {
           position: 'absolute',
           bottom: '1',
+          pl: '1',
           transform: 'rotate(-90deg)',
           transformOrigin: 'bottom left',
         },
@@ -251,10 +255,11 @@ export function SplitTeaser({
       <div
         className={css({
           gridArea: 'content',
-          padding: '8',
+          px: '4',
+          py: '10',
           display: 'flex',
           flexDirection: 'column',
-          gap: '3',
+          gap: '2',
           md: {
             px: '0',
             py: '6',
@@ -283,17 +288,10 @@ export function SplitTeaser({
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />
         </p>
-        {teaser.audioSourceMp3 && (
-          <TeaserAudioPlayButton
-            targetId={targetId}
-            title={teaser.audioTitle}
-            path={target}
-            publishDate={publishDate}
-            mp3={teaser.audioSourceMp3}
-            durationMs={teaser.audioDurationMs}
-            align={teaser.textAlignment === 'CENTER' ? 'center' : 'left'}
-          />
-        )}
+        <TeaserAudioPlayButton
+          audioItem={teaser.audioItem}
+          align={teaser.textAlignment === 'CENTER' ? 'center' : 'left'}
+        />
       </div>
     </div>
   )

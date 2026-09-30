@@ -1,14 +1,14 @@
-import { AudioQueueItem } from '../types/AudioPlayerItem'
+import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 
-function downloadAudioSourceFile(item: AudioQueueItem['document']) {
-  const {
-    meta: { audioSource },
-  } = item
-  const downloadSource = audioSource.mp3 || audioSource.aac || audioSource.ogg
+function downloadAudioSourceFile(item: AudioQueueItemContent) {
+  const downloadSource = item?.audioSourceMp3
+  if (!downloadSource) {
+    return
+  }
 
   const anchorElement = document.createElement('a')
   anchorElement.style.display = 'none'
-  anchorElement.href = downloadSource + '?download=1'
+  anchorElement.href = downloadSource + '?download=1&dl=' // download=1 is for asset server, dl= for Sanity CDN
   anchorElement.download = ''
   anchorElement.target = '_blank'
   anchorElement.textContent = 'Download'

@@ -6,7 +6,7 @@ import {
 } from '@project-r/styleguide'
 import { IconClose } from '@republik/icons'
 import { css } from 'glamor'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import withForcedColorScheme from '@/lib/withForcedColorScheme'
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 

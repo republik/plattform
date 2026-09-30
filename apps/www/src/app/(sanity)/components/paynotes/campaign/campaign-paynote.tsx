@@ -11,7 +11,7 @@ import {
 } from '@/app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 
 function CampaignPaynote() {
   const trackEvent = useTrackEvent()

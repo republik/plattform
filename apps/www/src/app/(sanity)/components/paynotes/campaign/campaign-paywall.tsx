@@ -10,7 +10,7 @@ import {
   useTrackEvent,
 } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import Link from '@/app/components/ui/link'
 import { useEffect, useState } from 'react'
 
 const PROMISE_COPIES = [
