@@ -1,15 +1,15 @@
 'use client'
 
+import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { useAudioContext } from '@/components/Audio/AudioProvider'
 import { AudioPlayerLocations } from '@/components/Audio/types/AudioActionTracking'
-import type { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
-import { collectionsDocumentId } from './document-id'
 import { useMe } from '@/lib/context/MeContext'
+import { IconPauseCircleOutline, IconPlayCircleOutline } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
-import { CirclePause, CirclePlay } from 'lucide-react'
 import { useState } from 'react'
 import { ACTION_ICON_SIZE, actionStyle, pillStyle } from './action-style'
+import { collectionsDocumentId } from './document-id'
 
 export function PlayAction({
   audioItem,
@@ -75,11 +75,11 @@ export function PlayAction({
       type='button'
     >
       {isActive && isPlaying ? (
-        <CirclePause size={ACTION_ICON_SIZE} />
+        <IconPauseCircleOutline size={ACTION_ICON_SIZE + 2} />
       ) : (
-        <CirclePlay
+        <IconPlayCircleOutline
           className={failed ? css({ color: 'error' }) : undefined}
-          size={ACTION_ICON_SIZE}
+          size={ACTION_ICON_SIZE + 2}
         />
       )}
       {minutes ? `${minutes} Min.` : 'Anhören'}
