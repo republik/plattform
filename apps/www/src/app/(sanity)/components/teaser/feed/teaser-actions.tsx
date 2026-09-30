@@ -1,16 +1,14 @@
 'use client'
 
-import {
-  ACTION_ICON_SIZE,
-  actionStyle,
-} from '@/app/(sanity)/components/article-actions/action-style'
+import { ACTION_ICON_SIZE } from '@/app/(sanity)/components/article-actions/action-style'
 import {
   AddToPlaylistAction,
   useAddToPlaylistAllowed,
 } from '@/app/(sanity)/components/article-actions/add-to-playlist-action'
 import { BookmarkAction } from '@/app/(sanity)/components/article-actions/bookmark-action'
-import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import { useReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
 import { DiscussionAction } from '@/app/(sanity)/components/article-actions/discussion-action'
+import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import {
   MENU_SIDE_OFFSET,
   menuTriggerStyle,
@@ -19,9 +17,7 @@ import { PlayAction } from '@/app/(sanity)/components/article-actions/play-actio
 import type { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { css } from '@republik/theme/css'
-import { CheckIcon, CheckLineIcon, EllipsisVertical } from 'lucide-react'
-import { useReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
-import { IconCheck } from '@republik/icons'
+import { CheckIcon, EllipsisVertical } from 'lucide-react'
 
 export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
   const audioItem = teaser._type === 'article' ? teaser.audioItem : null
@@ -102,14 +98,15 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
             className={css({
               display: 'flex',
               alignItems: 'center',
-              gap: '2',
+              gap: '0.2em',
               fontSize: 's',
               color: 'textSoft',
             })}
           >
             {progress.read ? (
               <>
-                <CheckIcon size={ACTION_ICON_SIZE} /> Gelesen
+                <CheckIcon size={ACTION_ICON_SIZE} />
+                gelesen
               </>
             ) : (
               `${progress.percent} % gelesen`
