@@ -9,7 +9,8 @@ import { usePaynotes } from './paynotes-context'
 
 /**
  * Same marketing block as the inline paynote, centred: a headline on the
- * accent highlight, a line of copy, and the standard offers.
+ * accent highlight, a line of copy, and the standard offers. Spans the
+ * article grid edge to edge; the text inside stays at reading width.
  */
 function GiftPaynoteBlock({
   headline,
@@ -26,6 +27,7 @@ function GiftPaynoteBlock({
     <div
       data-theme='light'
       className={css({
+        gridColumn: 'full',
         background: 'background.marketing',
         color: 'text',
         padding: '8',
