@@ -109,7 +109,7 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
                 gelesen
               </>
             ) : (
-              `${progress.percent} % gelesen`
+              <>{progress.percent}&thinsp;% gelesen</>
             )}{' '}
           </div>
         )}
