@@ -20,6 +20,9 @@ export interface ArticleForNotification {
     collection: { _id: string; title?: string } | null
   }[]
   contributors?: { contributor: { userId: string } | null }[]
+  // Whether the article links a newsletter (its `newsletter` reference) —
+  // such articles already reach readers by email.
+  hasNewsletter?: boolean
   // Contributors linked from the byline (internalLink annotations). The
   // `contributors` field isn't always filled in (or its contributor lacks a
   // userId), while the byline reliably links the people credited — used as a
@@ -36,6 +39,7 @@ export const fetchArticleForNotification = (documentId: string) =>
       "format": heading->{ "title": pt::text(title), "path": slug.current },
       articleCollections[]{ "collection": collection->{ _id, title } },
       contributors[]{ "contributor": contributor->{ userId } },
+      "hasNewsletter": defined(newsletter._ref),
       "bylineContributors": byline[].markDefs[_type == "internalLink"].reference->{ _type, userId }
     }`,
     { id: documentId },
