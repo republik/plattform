@@ -3,79 +3,90 @@
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
-import React, { useState, useTransition } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+
+export type TeaserFeedPage = {
+  teasers: TeaserListItemType[]
+  hasMore: boolean
+  cursor?: number
+}
 
 export function TeaserFeedClient({
-  initialTeasers,
+  initialPage,
   teaserList,
-  pageSize,
   loadMoreAction,
 }: {
-  initialTeasers: TeaserListItemType[]
+  initialPage: TeaserFeedPage
   teaserList: TeaserListBlockFragmentType
-  pageSize: number
-  loadMoreAction: (offset: number) => Promise<TeaserListItemType[]>
+  loadMoreAction: (cursor?: number) => Promise<TeaserFeedPage>
 }) {
   const { total, title, maxItems } = teaserList
 
-  const [teasers, setTeasers] = useState(initialTeasers)
-  // position in the source list; can be ahead of teasers.length because
-  // expired teasers are filtered out after fetching
-  const [offset, setOffset] = useState(pageSize)
-  const [isPending, startTransition] = useTransition()
+  const [page, setPage] = useState(initialPage)
+  const [teasers, setTeasers] = useState(initialPage.teasers)
+  const [nextCursor, setNextCursor] = useState<number>()
+  const sentinelRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
 
-  function onLoadMore() {
-    startTransition(async () => {
-      const more = await loadMoreAction(offset)
-      setTeasers((prev) => prev.concat(more))
-      setOffset((prev) => prev + pageSize)
-    })
-  }
+  useEffect(() => {
+    if (nextCursor === undefined) return
+
+    let cancelled = false
+
+    loadMoreAction(nextCursor)
+      .then((next) => {
+        if (cancelled) return
+        setTeasers((prev) => prev.concat(next.teasers))
+        setPage(next)
+        setNextCursor(undefined)
+      })
+      .catch((error) => {
+        console.error(error)
+        if (!cancelled) setNextCursor(undefined)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [loadMoreAction, nextCursor])
 
   const shownTeasers = teasers.slice(0, maxItems ?? undefined)
 
   // - we still have more teasers to load
   // - we haven't hit the user-defined cap
-  const showLoadMoreButton =
-    total > offset && shownTeasers.length < (maxItems ?? Infinity)
+  const hasMore =
+    page.hasMore && shownTeasers.length < (maxItems ?? Infinity)
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    const cursor = page.cursor
+    if (!sentinel || !hasMore || cursor === undefined) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setNextCursor(cursor)
+      },
+      { rootMargin: '600px' },
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasMore, page.cursor])
 
   return (
-    <>
-      <div>
-        <h2 className={css({ textStyle: 'subtitleBold', mb: '8', mt: '16' })}>
-          {title ||
-            t.pluralize('feed/title', {
-              count: total,
-            })}
-        </h2>
-
-        {shownTeasers.map((teaser) => (
-          <FeedTeaser key={teaser._id} teaser={teaser} />
-        ))}
-      </div>
-
-      {showLoadMoreButton && (
-        <Button
-          type='button'
-          variant='link'
-          className={css({
-            color: 'primary',
-            textDecoration: 'none',
-            textAlign: 'left',
+    <div>
+      <h2 className={css({ textStyle: 'subtitleBold', mb: '8', mt: '16' })}>
+        {title ||
+          t.pluralize('feed/title', {
+            count: total,
           })}
-          onClick={onLoadMore}
-          disabled={isPending}
-        >
-          {t('feed/loadMore', {
-            count: shownTeasers.length,
-            remaining: total - offset,
-          })}
-        </Button>
-      )}
-    </>
+      </h2>
+
+      {shownTeasers.map((teaser) => (
+        <FeedTeaser key={teaser._id} teaser={teaser} />
+      ))}
+      {hasMore && <div ref={sentinelRef} aria-hidden />}
+    </div>
   )
 }
