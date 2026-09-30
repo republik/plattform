@@ -20,6 +20,13 @@ export interface ArticleForNotification {
     collection: { _id: string; title?: string } | null
   }[]
   contributors?: { contributor: { userId: string } | null }[]
+  // Contributors linked from the byline (internalLink annotations). The
+  // `contributors` field isn't always filled in (or its contributor lacks a
+  // userId), while the byline reliably links the people credited — used as a
+  // fallback source of author user ids.
+  bylineContributors?:
+    | ({ _type?: string; userId?: string | null } | null)[]
+    | null
 }
 
 export const fetchArticleForNotification = (documentId: string) =>
@@ -28,7 +35,8 @@ export const fetchArticleForNotification = (documentId: string) =>
       _id, title, pushNotificationText, description, byline, slug,
       "format": heading->{ "title": pt::text(title), "path": slug.current },
       articleCollections[]{ "collection": collection->{ _id, title } },
-      contributors[]{ "contributor": contributor->{ userId } }
+      contributors[]{ "contributor": contributor->{ userId } },
+      "bylineContributors": byline[].markDefs[_type == "internalLink"].reference->{ _type, userId }
     }`,
     { id: documentId },
     { perspective: 'raw' },
@@ -69,6 +77,24 @@ const resolveLegacyRepoIdsForSanityIds = async (
     })
 }
 
+// Author (backend user) ids of an article: its `contributors` plus the
+// contributors linked from the byline, deduped.
+export const getAuthorUserIds = (article: ArticleForNotification): string[] => {
+  const fromContributors = (article.contributors ?? []).map(
+    (entry) => entry.contributor?.userId,
+  )
+  const fromByline = (article.bylineContributors ?? [])
+    .filter((ref) => ref?._type === 'contributor')
+    .map((ref) => ref?.userId)
+  return [
+    ...new Set(
+      [...fromContributors, ...fromByline].filter((id): id is string =>
+        Boolean(id),
+      ),
+    ),
+  ]
+}
+
 // Who a publish notification for this article reaches: subscribers of its
 // articleCollections (topics/series — see that field's own description,
 // "Abonnenten dieser Sammlungen erhalten eine Benachrichtigung") plus
@@ -103,9 +129,7 @@ export const resolveNotificationRecipients = async (
     ...collectionSanityIds.map(toSanityRef),
     ...legacyRepoIds,
   ]
-  const authorUserIds = (article.contributors ?? [])
-    .map((entry) => entry.contributor?.userId)
-    .filter((id): id is string => Boolean(id))
+  const authorUserIds = getAuthorUserIds(article)
 
   const [collectionSubs, authorSubs] = await Promise.all([
     Subscriptions.getSubscriptionsForUserAndObjects(
