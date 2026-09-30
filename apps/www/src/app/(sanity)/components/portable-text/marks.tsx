@@ -4,11 +4,11 @@ import type { PortableTextMarkComponentProps } from 'next-sanity'
 import type { ReactNode } from 'react'
 
 export function Strong({ children }: { children?: ReactNode }) {
-  return <strong className={css({ fontWeight: 700 })}>{children}</strong>
+  return <strong>{children}</strong>
 }
 
 export function Em({ children }: { children?: ReactNode }) {
-  return <em className={css({ fontStyle: 'italic' })}>{children}</em>
+  return <em>{children}</em>
 }
 
 const subSupBaseAttrs = {
