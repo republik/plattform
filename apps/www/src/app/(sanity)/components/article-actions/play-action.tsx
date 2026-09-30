@@ -9,6 +9,7 @@ import { useMe } from '@/lib/context/MeContext'
 import { css, cx } from '@republik/theme/css'
 import { CirclePause, CirclePlay } from 'lucide-react'
 import { useState } from 'react'
+import { usePaynotes } from '../paynotes/paynotes-context'
 import { ACTION_ICON_SIZE, actionStyle, pillStyle } from './action-style'
 
 export function PlayAction({
@@ -19,7 +20,9 @@ export function PlayAction({
 }) {
   // Inactive until membership is known or for non-members
   const { isMember, hasActiveMembership } = useMe()
-  const canPlay = isMember && hasActiveMembership
+  const { paynoteKind } = usePaynotes()
+  const canPlay =
+    (isMember && hasActiveMembership) || paynoteKind === 'GIFT_PAYNOTE'
 
   const {
     toggleAudioPlayer,

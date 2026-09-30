@@ -102,6 +102,7 @@ export default async function ArticleDocument({
           </p>
 
           <ArticleTopActions article={article} />
+          <GiftPaynote />
 
           <div className={css({ display: 'flex', gap: '2' })}>
             <EditLink documentId={article._id} documentType='article' />
