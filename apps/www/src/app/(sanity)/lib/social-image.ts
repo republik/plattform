@@ -24,7 +24,7 @@ export function getSocialImage(
   slug: string,
   /**
    * The article was opened through a gift link. Only the rendered share image
-   * can carry the badge; a document with a static social image keeps it.
+   * carries the badge; a static social image is returned unchanged.
    */
   { isGift = false }: { isGift?: boolean } = {},
 ): SocialImage | null {

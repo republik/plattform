@@ -125,11 +125,8 @@ export type Layout = 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
 export type TextPosition = 'top' | 'center' | 'bottom'
 
 /**
- * Marks the image of a gift link, so the article reads as a present in the
- * timeline it was posted to rather than as any other share.
- *
- * Drawn by hand rather than pulled from an icon set: satori rasterizes plain
- * SVG elements, but not a React icon component's own internals.
+ * Marks the share image of a gift link. The icon is inline SVG because satori
+ * rasterizes plain SVG elements, but not a React icon component's internals.
  */
 function GiftBadge({
   background,

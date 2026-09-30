@@ -15,10 +15,8 @@ export type ShareTarget = {
 }
 
 /**
- * The places an article can be handed to someone else. Shared by the plain
- * share menu and the gift menu, which pass the same list a different URL —
- * the gift one carries a `?gift=` token that unlocks the article for whoever
- * follows it.
+ * Where an article can be sent. Used by the share menu with the article's own
+ * URL, and by the gift menu with a `?gift=` one.
  */
 export function getShareTargets(
   url: string,

@@ -9,12 +9,10 @@ const { FRONTEND_BASE_URL } = process.env
 
 const GIFT_LINK_TTL_DAYS = 14
 
-// Stored form of the article reference: the bare, published Sanity `_id`, the
-// same value `collectionDocumentItems."sanityId"` holds. The client sends the
-// `sanity:`-prefixed ref its `collectionsDocumentId()` builds, and a preview
-// reader would send the `drafts.`-prefixed id of the very same article — both
-// have to collapse onto one key, or a gift link would depend on how the
-// granter happened to open the piece.
+// Normalises a client-supplied reference to the stored form: the bare,
+// published Sanity `_id`, the same value `collectionDocumentItems."sanityId"`
+// holds. Accepts the `sanity:`-prefixed ref `collectionsDocumentId()` builds
+// and the `drafts.`-prefixed id a preview reader sends.
 const toStoredDocumentId = (input) =>
   publishedId(isSanityRef(input) ? fromSanityRef(input) : input)
 

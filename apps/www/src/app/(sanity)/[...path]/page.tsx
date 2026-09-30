@@ -15,9 +15,7 @@ export async function generateMetadata({
 }: PageProps<'/[...path]'>): Promise<Metadata> {
   const { path } = await params
   const slug = `/${path.join('/')}`
-  // A gift link is shared as `<slug>?gift=<token>`, and its preview should say
-  // so. Reading searchParams costs nothing here: this route is already
-  // rendered per request, because `sanityClientFetch` reads `draftMode()`.
+  // A gift link is shared as `<slug>?gift=<token>`; its preview says so.
   const isGift = !!(await searchParams).gift
 
   const data = await sanityClientFetch(

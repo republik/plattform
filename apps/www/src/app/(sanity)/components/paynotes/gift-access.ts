@@ -18,13 +18,10 @@ export type GiftAccess = {
 }
 
 /**
- * Redeemed gift links, keyed by the article's Sanity document id — not by its
- * path, which can change under a reader who redeemed the link days ago.
- *
- * localStorage, not a cookie or the backend: access is granted to a *browser*,
- * for a recipient who by definition has no account. Every read is wrapped,
- * because a browser in private mode (or with site data blocked) throws rather
- * than returning null.
+ * Redeemed gift links, keyed by the article's Sanity document id. Held in
+ * localStorage, so access belongs to the browser — the recipient has no
+ * account. Reads are wrapped: in private mode, or with site data blocked, the
+ * accessor throws instead of returning null.
  */
 type GiftAccessStore = Record<string, GiftAccess>
 
@@ -40,15 +37,13 @@ function writeStore(store: GiftAccessStore): void {
   try {
     localStorage.setItem(GIFT_ACCESS_KEY, JSON.stringify(store))
   } catch {
-    // Nothing to do: the reader keeps access for this page load either way,
-    // they just won't come back to it.
+    // The reader keeps access for this page load; it won't survive a reload.
   }
 }
 
 /**
- * How long a run-out link is still remembered. A returning reader is told the
- * gift expired rather than meeting the plain paywall — but only for a while,
- * so the store doesn't accumulate an entry per gifted article forever.
+ * How long a run-out link stays in the store, so a returning reader is still
+ * told the gift expired. Also what keeps the store from growing forever.
  */
 const FORGET_AFTER_MS = 90 * 24 * 60 * 60 * 1000
 
@@ -66,10 +61,8 @@ export function storeGiftAccess(access: GiftAccess): void {
 }
 
 /**
- * The redeemed link for this article, live or run out — the caller decides
- * which of the two paynotes that means. An expired entry is kept rather than
- * dropped, so a returning reader is told the link ran out instead of silently
- * meeting the paywall.
+ * The redeemed link for this article, live or run out; `isGiftAccessValid`
+ * tells the two apart.
  */
 export function getGiftAccess(documentId: string | null): GiftAccess | null {
   if (!documentId) {
@@ -83,9 +76,8 @@ export function isGiftAccessValid(access: GiftAccess | null): boolean {
 }
 
 /**
- * Gift-to-conversion attribution rides along with the UTM parameters, so it
- * reaches the shop (and from there the `meta` of a trial, pledge or signup)
- * through the machinery that is already there.
+ * Writes the gift into the UTM session storage, from where it travels with the
+ * UTM parameters to the shop and into the `meta` of a trial, pledge or signup.
  */
 export function storeGiftAttribution(token: string, documentId: string): void {
   try {
@@ -94,6 +86,6 @@ export function storeGiftAttribution(token: string, documentId: string): void {
     params.gift_document_id = documentId
     window.sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(params))
   } catch {
-    // Attribution is nice to have; access is not conditional on it.
+    // Best effort; access does not depend on it.
   }
 }

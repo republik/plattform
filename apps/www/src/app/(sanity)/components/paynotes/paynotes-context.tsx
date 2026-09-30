@@ -48,10 +48,7 @@ type PaynotesContextValues = {
   hasPaywall?: boolean
   setDocumentTypeForPaynotes: (documentType: DocumentType) => void
   setReadingAccess: (readingAccess: Article['readingAccess']) => void
-  /**
-   * Sanity document ref of the article on screen, registered by `ContentWall`.
-   * Gift links are keyed by it, so the provider can't know it on its own.
-   */
+  /** Sanity document ref of the article on screen, set by `ContentWall`. */
   setGiftDocumentId: (documentId: string | null) => void
   /** The redeemed gift link for that article, if there is one. */
   giftAccess: GiftAccess | null
@@ -172,25 +169,13 @@ export const PaynotesProvider = ({ children }) => {
     ) {
       return setPaynoteKind(null)
     }
-    // GIFT LINKS:
-    //
-    // Above every other article branch, including the Herbst-26 special: the
-    // reader got here through someone's personal link, and being greeted by a
-    // generic campaign paynote instead would make no sense of that. No
-    // campaign pricing is lost either way — the gift paynote renders the same
-    // `Offers`. Below the checks above, so an article that is open anyway
-    // doesn't announce itself as a present.
-    //
-    // Gift state is only ever set for an article (`ContentWall` registers the
-    // document id), so this can't catch a front or a dialog.
-    //
-    // Unlocks the text rather than walling it (GIFT_PAYNOTE is not in
-    // PAYWALL_KINDS) — that is the whole gift, and it also means the read
-    // doesn't burn one of the reader's metered articles below.
+    // gift link: leaves the text readable (GIFT_PAYNOTE is not in
+    // PAYWALL_KINDS) and returns before the metering below. Only ever set for
+    // an article, since `ContentWall` is what registers the document id.
     if (hasGiftAccess) {
       return setPaynoteKind('GIFT_PAYNOTE')
     }
-    // Redeemed here once, but the 14 days are up: say so, and wall the text.
+    // gift link redeemed here once, but the 14 days are up: wall the text
     if (giftExpired) {
       return setPaynoteKind('GIFT_EXPIRED')
     }

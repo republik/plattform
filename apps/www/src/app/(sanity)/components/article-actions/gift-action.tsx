@@ -70,14 +70,12 @@ function GiftAction({
   )
   const giftUrl = data?.createGiftArticleLink.url ?? null
 
-  // Minting is idempotent — the backend hands back the member's existing live
-  // link for this article — so it can happen up front, as the menu opens,
-  // rather than on the way out of it. That matters: a share target opened
-  // *after* an await is a popup the browser didn't see the user ask for, and
-  // gets blocked.
+  // Idempotent: the backend hands back the member's existing live link for
+  // this article. Runs when the menu opens, so every target below already has
+  // a real href by the time it is clicked.
   const mintLink = async (): Promise<string | null> => {
-    // Closing and reopening the menu while the first request is still out
-    // would otherwise send a second one.
+    // Closing and reopening the menu while the request is still out would
+    // otherwise send a second one.
     if (giftUrl || loading) {
       return giftUrl
     }
@@ -90,8 +88,7 @@ function GiftAction({
     }
   }
 
-  // The app has its own share sheet, so there is no menu to open early — mint
-  // on the tap itself, which is a handler the app is happy to act on.
+  // The app has its own share sheet: no menu, so the link is minted on the tap.
   if (isNativeApp) {
     return (
       <button

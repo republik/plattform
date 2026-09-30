@@ -10,8 +10,8 @@
 -- Sanity documents don't live in this database.
 --
 -- document_path is a snapshot of the slug at hand-out time, kept only to build
--- the link's URL. It is deliberately not the identity of the article -- a slug
--- can change, document_id cannot.
+-- the link's URL. It is not the identity of the article -- a slug can change,
+-- document_id cannot.
 CREATE TABLE public.gift_article_links (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   granter_user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,

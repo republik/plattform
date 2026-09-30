@@ -3,10 +3,9 @@ const { toSanityRef } = require('@orbiting/backend-modules-sanity')
 // Shown in place of the granter's name when they don't have a public profile.
 const ANONYMOUS_GRANTER = 'Ein Republik-Mitglied'
 
-// Public on purpose: the whole point of a gift link is that the recipient can
-// open it without an account.
+// Public: recipients redeem links without an account.
 module.exports = async (_, { token }, { pgdb }) => {
-  // gift_article_links is snake_case, users is not — the granter's columns are
+  // gift_article_links is snake_case, users is not: the granter's columns are
   // aliased so one row doesn't come back in two naming conventions.
   const [row] = await pgdb.query(
     `SELECT g.document_id,
@@ -31,9 +30,8 @@ module.exports = async (_, { token }, { pgdb }) => {
 
   return {
     valid,
-    // Which article the link unlocks is stated either way: the frontend needs
-    // it to tell "this link ran out" from "this link is for another article",
-    // and the recipient is looking at the article regardless.
+    // Reported whether or not the link is live, so the frontend can tell
+    // "this one ran out" from "this one is for another article".
     documentId: toSanityRef(row.document_id),
     documentPath: row.document_path,
     expiresAt: row.expires_at,
