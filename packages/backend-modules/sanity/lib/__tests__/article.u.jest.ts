@@ -65,6 +65,29 @@ describe('resolveNotificationRecipients', () => {
     expect(userCall[1].ids).toEqual(['user-1'])
   })
 
+  it('falls back to contributors linked from the byline, deduped and skipping non-contributors', async () => {
+    await resolveNotificationRecipients(
+      {
+        _id: 'article-1',
+        articleCollections: [],
+        contributors: [{ contributor: { userId: 'user-1' } }],
+        bylineContributors: [
+          { _type: 'contributor', userId: 'user-1' },
+          { _type: 'contributor', userId: 'user-2' },
+          { _type: 'contributor', userId: null },
+          { _type: 'article' },
+          null,
+        ],
+      },
+      { pgdb },
+    )
+
+    const userCall = getSubscriptionsForUserAndObjects.mock.calls.find(
+      (call) => call[1].type === 'User',
+    )
+    expect(userCall[1].ids).toEqual(['user-1', 'user-2'])
+  })
+
   it("also matches subscriptions still keyed on a migrated collection's legacy repoId", async () => {
     const migratedRepoId = 'republik/format-x'
     const migratedSanityId = legacySanityId(migratedRepoId) as string

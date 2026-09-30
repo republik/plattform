@@ -91,7 +91,10 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     const articleUrl = article.slug?.current
       ? `${process.env.FRONTEND_BASE_URL}${article.slug.current}`
       : process.env.FRONTEND_BASE_URL
+    // `body` is the second line of the push (title stays the per-collection /
+    // per-author heading); publikator's notifyPublish sends one too.
     const appContent = {
+      body: articleTitle,
       url: articleUrl,
       type: 'article',
       tag: article._id,
