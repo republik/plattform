@@ -6,6 +6,7 @@ import {
   resolveNotificationRecipients,
 } from '../article'
 import { plainText } from '../../tts'
+import { legacySanityId, toSanityRef } from '../document'
 import { PUBLISH_NOTIFICATION_JOB_OPTIONS } from './publishNotificationJobOptions'
 
 const { sendNotification } = require('@orbiting/backend-modules-subscriptions')
@@ -57,10 +58,7 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     }
   }
 
-  private async notifyPublish(
-    documentId: string,
-    notificationTrigger: string,
-  ) {
+  private async notifyPublish(documentId: string, notificationTrigger: string) {
     // BaseWorker types `context` as ConnectionContext, but workers only ever
     // *perform* in the scheduler process, and that is where the queue is
     // registered with a full GraphqlContext (apps/api/server.js calls
@@ -81,7 +79,10 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     const { collectionSubscribers, authorSubscribers } =
       await resolveNotificationRecipients(article, context)
 
-    const eventInfo = { objectType: 'Document', objectId: `sanity:${article._id}` }
+    const eventInfo = {
+      objectType: 'Document',
+      objectId: `sanity:${article._id}`,
+    }
     const articleTitle = plainText(article.title)
     // Flattened once for the whole job, not per recipient: `plainText` walks a
     // portable-text tree, and these end up inside a per-user `mail` callback.
@@ -119,6 +120,25 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
     for (const collectionId of Object.keys(subscribersByCollectionId)) {
       const subscribers = subscribersByCollectionId[collectionId]
 
+      // Push heading: "Neuer Beitrag in «Format»", the Format being the
+      // article's `heading`, else the title of the collection this group
+      // follows (matched by its stored ref, `sanity:`-prefixed or legacy
+      // repoId). The editorial `pushNotificationText` is the push body
+      // instead of replacing the heading, so the Format stays visible.
+      const collectionTitle = article.articleCollections?.find(
+        (entry) =>
+          entry.collection &&
+          (toSanityRef(entry.collection._id) === collectionId ||
+            legacySanityId(collectionId) === entry.collection._id),
+      )?.collection?.title
+      const pushFormatTitle = format?.title || collectionTitle
+      const pushTitle = pushFormatTitle
+        ? t('api/notifications/doc/format/title', {
+            formatTitle: `«${pushFormatTitle}»`,
+          })
+        : articleTitle
+      // Email subject keeps publikator's text: teaser first, else
+      // "Neuer Beitrag in «Format»: «Titel»".
       const title =
         notificationTitle ||
         (format?.title
@@ -137,7 +157,11 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
           event: event ? { id: event.id } : eventInfo,
           users: subscribers,
           content: {
-            app: { ...appContent, title },
+            app: {
+              ...appContent,
+              title: pushTitle,
+              body: notificationTitle || appContent.body,
+            },
             // Do not send email for newsletter articles (push only), as
             // publikator's notifyPublish did for newsletter formats.
             mail: skipEmailForNewsletter
