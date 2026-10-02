@@ -100,7 +100,9 @@ export default async function ArticleDocument({
             <InlinePortableText value={byline} />
           </p>
 
-          <ArticleTopActions article={article} />
+          <EventTrackingContext category='ActionBar'>
+            <ArticleTopActions article={article} />
+          </EventTrackingContext>
 
           <div className={css({ display: 'flex', gap: '2' })}>
             <EditLink documentId={article._id} documentType='article' />
@@ -118,7 +120,9 @@ export default async function ArticleDocument({
           {/* End of the text: everything below is outside the measured region. */}
           <ReadingPositionTracker documentId={documentId} />
 
-          <ArticleBottomActions article={article} />
+          <EventTrackingContext category='ActionBar'>
+            <ArticleBottomActions article={article} />
+          </EventTrackingContext>
 
           <PaynoteInline />
 
@@ -140,7 +144,9 @@ export default async function ArticleDocument({
           <AutomaticRecommendations currentDocumentId={article._id} />
         </Suspense>
 
-        <ArticleFloatingActions article={article} />
+        <EventTrackingContext category='ActionBar'>
+          <ArticleFloatingActions article={article} />
+        </EventTrackingContext>
       </ArticleActionsProvider>
     </EventTrackingContext>
   )

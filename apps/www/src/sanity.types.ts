@@ -378,7 +378,6 @@ export type ArticleTemplate = {
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
   showTextProgress?: boolean
   theme?: Theme
-  autoCreateDiscussion?: boolean
   mailchimpCampaignId?: string
   mailchimpCampaignUrl?: string
   repoId?: string
@@ -827,7 +826,6 @@ export type Article = {
   theme?: Theme
   discussion?: DiscussionReference
   inlineDiscussion?: boolean
-  autoCreateDiscussion?: boolean
   mailchimpCampaignId?: string
   mailchimpCampaignUrl?: string
   repoId?: string
