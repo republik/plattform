@@ -13,6 +13,8 @@ import {
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get('slug')
   const documentId = req.nextUrl.searchParams.get('documentId')
+  // Set by getSocialImage(); renders the "Geschenk-Artikel" badge.
+  const isGift = req.nextUrl.searchParams.get('gift') === '1'
 
   if (!slug && !documentId) {
     return new Response('Missing slug or documentId', { status: 400 })
@@ -73,6 +75,7 @@ export async function GET(req: NextRequest) {
         heading={data.heading}
         backgroundImageUrl={backgroundImageUrl}
         logoUrl={logoUrl}
+        isGift={isGift}
       />
     ),
     {

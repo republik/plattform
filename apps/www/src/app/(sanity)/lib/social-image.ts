@@ -22,13 +22,18 @@ type SocialImage = {
 export function getSocialImage(
   data: SocialImageSource | null | undefined,
   slug: string,
+  /**
+   * The article was opened through a gift link. Only the rendered share image
+   * carries the badge; a static social image is returned unchanged.
+   */
+  { isGift = false }: { isGift?: boolean } = {},
 ): SocialImage | null {
   try {
     if (data?.useImageBuilder) {
       // Rendered "Share Image" (old style) generated on the fly by /api/og.
       return {
         url: new URL(
-          `/api/og?slug=${encodeURIComponent(slug)}`,
+          `/api/og?slug=${encodeURIComponent(slug)}${isGift ? '&gift=1' : ''}`,
           process.env.NEXT_PUBLIC_BASE_URL,
         ).toString(),
         width: SOCIAL_IMAGE_WIDTH,

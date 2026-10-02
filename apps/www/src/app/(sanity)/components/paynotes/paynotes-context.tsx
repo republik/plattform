@@ -14,6 +14,8 @@ import {
 } from 'next/navigation'
 import { createContext, Suspense, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'
+import type { GiftAccess } from './gift-access'
+import { useGiftAccess } from './use-gift-access'
 
 export type PaynoteKindType =
   | null
@@ -29,11 +31,14 @@ export type PaynoteKindType =
   | 'CAMPAIGN_PAYNOTE'
   | 'CAMPAIGN_PAYWALL'
   | 'CAMPAIGN_BANNER' // not a paynote per se, but logic depends on the same params
+  | 'GIFT_PAYNOTE' // article unlocked by a gift link
+  | 'GIFT_EXPIRED' // gift link ran out
 
 const PAYWALL_KINDS: PaynoteKindType[] = [
   'REGWALL',
   'PAYWALL',
   'CAMPAIGN_PAYWALL',
+  'GIFT_EXPIRED',
 ]
 
 type DocumentType = null | 'article' | 'discussion' | 'page'
@@ -43,6 +48,10 @@ type PaynotesContextValues = {
   hasPaywall?: boolean
   setDocumentTypeForPaynotes: (documentType: DocumentType) => void
   setReadingAccess: (readingAccess: Article['readingAccess']) => void
+  /** Sanity document ref of the article on screen, set by `ContentWall`. */
+  setGiftDocumentId: (documentId: string | null) => void
+  /** The redeemed gift link for that article, if there is one. */
+  giftAccess: GiftAccess | null
   paynoteInlineHeight: number
   setPaynoteInlineHeight: (height: number) => void
 }
@@ -117,6 +126,12 @@ export const PaynotesProvider = ({ children }) => {
   const [readingAccess, setReadingAccess] =
     useState<Article['readingAccess']>('REGWALL')
 
+  const [giftDocumentId, setGiftDocumentId] = useState<string | null>(null)
+  const { giftAccess, hasGiftAccess, giftExpired } = useGiftAccess(
+    searchParams?.get('gift') ?? null,
+    giftDocumentId,
+  )
+
   const isCampaignActive = campaign?.isActive
 
   useEffect(() => {
@@ -154,6 +169,17 @@ export const PaynotesProvider = ({ children }) => {
     ) {
       return setPaynoteKind(null)
     }
+    // gift link: leaves the text readable (GIFT_PAYNOTE is not in
+    // PAYWALL_KINDS) and returns before the metering below. Only ever set for
+    // an article, since `ContentWall` is what registers the document id.
+    if (hasGiftAccess) {
+      return setPaynoteKind('GIFT_PAYNOTE')
+    }
+    // gift link redeemed here once, but the 14 days are up: wall the text
+    if (giftExpired) {
+      return setPaynoteKind('GIFT_EXPIRED')
+    }
+
     // dialog page: we show a special paynote
     if (isDialogPage(pathname) || documentType === 'discussion') {
       return setPaynoteKind('DIALOG')
@@ -257,6 +283,8 @@ export const PaynotesProvider = ({ children }) => {
     setReadingAccess,
     isCampaignActive,
     hasAllowlistAccess,
+    hasGiftAccess,
+    giftExpired,
   ])
 
   return (
@@ -266,6 +294,8 @@ export const PaynotesProvider = ({ children }) => {
         hasPaywall: PAYWALL_KINDS.includes(paynoteKind),
         setDocumentTypeForPaynotes,
         setReadingAccess,
+        setGiftDocumentId,
+        giftAccess,
         paynoteInlineHeight,
         setPaynoteInlineHeight,
       }}
