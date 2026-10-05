@@ -40,8 +40,11 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
         _type == "expandableLink" => {
           "slug": ${REFERENCE_SLUG},
           "referenceTitle": ${REFERENCE_TITLE}
-        }
-      }
+        },
+      },
+      _type == "button" => {
+        "slug": ${REFERENCE_SLUG}
+      },
     },
 
     _type == "toc" => {
@@ -51,6 +54,9 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
     _type == "authorBlock" => {
       ...,
       contributor->
+    },
+    _type == "button" => {
+      "slug": ${REFERENCE_SLUG}
     },
     _type == "audio" => {
       ...,
