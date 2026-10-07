@@ -4,10 +4,10 @@ import { withRouter } from 'next/router'
 import withAuthorization from '../../../../components/Auth/withAuthorization'
 
 import Publication from '../../../../components/Publication'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import withT from '../../../../lib/withT'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
-import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const Page = ({ router, t }) => {
   const repoId = getRepoIdFromQuery(router.query)
@@ -16,5 +16,5 @@ const Page = ({ router, t }) => {
 }
 
 export default withDefaultSSR(
-  compose(withAuthorization(['editor']), withT, withRouter)(Page),
+  compose(withAuthorization, withT, withRouter)(Page),
 )

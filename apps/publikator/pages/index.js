@@ -1,18 +1,17 @@
-import { withRouter } from 'next/router'
-import compose from 'lodash/flowRight'
-import { css } from 'glamor'
-
 import { A } from '@project-r/styleguide'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
 
 import Link from 'next/link'
-import withT from '../lib/withT'
+import { withRouter } from 'next/router'
 
 import withAuthorization from '../components/Auth/withAuthorization'
 import Calendar from '../components/Calendar'
 import Frame from '../components/Frame'
-import RepoTable from '../components/Repo/Table'
 import RepoAdd from '../components/Repo/Add'
+import RepoTable from '../components/Repo/Table'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import withT from '../lib/withT'
 
 const styles = {
   defaultContainer: css({
@@ -98,6 +97,4 @@ const Index = ({
   </Frame>
 )
 
-export default withDefaultSSR(
-  compose(withRouter, withAuthorization(['editor']))(Index),
-)
+export default withDefaultSSR(compose(withRouter, withAuthorization)(Index))
