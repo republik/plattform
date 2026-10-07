@@ -25,7 +25,7 @@ const EditPageSwitch = ({ data }) => {
 
 export default withDefaultSSR(
   compose(
-    withAuthorization(['editor']),
+    withAuthorization,
     withRouter,
     withCommitData,
     withLatestCommit,

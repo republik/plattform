@@ -1,9 +1,8 @@
+import { BrandMark, Interaction } from '@project-r/styleguide'
+import { css } from 'glamor'
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
 import Me from './Me'
-import { css } from 'glamor'
-
-import { Interaction, BrandMark } from '@project-r/styleguide'
 
 const styles = {
   center: css({
@@ -18,17 +17,14 @@ const styles = {
   }),
 }
 
-const withAuthorization = (authorizedRoles) => (Component) =>
+const withAuthorization = (Component) =>
   withT(
     withMe((props) => {
       const { me, t } = props
-      if (
-        me &&
-        me.roles &&
-        me.roles.some((role) => authorizedRoles.indexOf(role) !== -1)
-      ) {
+      if (me && me.roles && me.roles.includes('admin')) {
         return <Component {...props} />
       }
+      // TODO: redirect to republik.sanity.studio
       return (
         <div {...styles.center}>
           <div {...styles.brandMark}>
