@@ -20,14 +20,24 @@ module.exports = async (_, { mediaIds }, context) => {
     return mediaIds.map(() => null)
   }
 
-  // Each lookup goes through the CollectionMediaItem dataloader, which
-  // collapses them into a single query. Ids past the cap are answered with
-  // null rather than rejected, so the result stays aligned with the input.
-  return Promise.all(
-    mediaIds.map((mediaId, index) =>
-      index >= MAX_IDS
-        ? null
-        : Collection.getMediaProgressItem({ mediaId, userId: me.id }, context),
-    ),
-  ).then((items) => items.map((item) => item || null))
+  const collection = await Collection.byNameForUser(
+    ProgressOptOut.COLLECTION_NAME,
+    me.id,
+    context,
+  )
+  if (!collection) {
+    return mediaIds.map(() => null)
+  }
+
+  // Ids past the cap are answered with null rather than rejected, so the
+  // result stays aligned with the input.
+  const items = await Collection.findMediaItemsByIds(
+    {
+      collectionId: collection.id,
+      userId: me.id,
+      mediaIds: mediaIds.slice(0, MAX_IDS),
+    },
+    context,
+  )
+  return mediaIds.map((_, index) => items[index] ?? null)
 }

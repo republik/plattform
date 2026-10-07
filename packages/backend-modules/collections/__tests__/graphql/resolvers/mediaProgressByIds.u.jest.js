@@ -3,7 +3,8 @@ const Collection = require('../../../lib/Collection')
 const ProgressOptOut = require('../../../lib/ProgressOptOut')
 
 jest.mock('../../../lib/Collection', () => ({
-  getMediaProgressItem: jest.fn(),
+  byNameForUser: jest.fn(),
+  findMediaItemsByIds: jest.fn(),
 }))
 jest.mock('../../../lib/ProgressOptOut', () => ({
   COLLECTION_NAME: 'progress',
@@ -16,18 +17,29 @@ describe('mediaProgressByIds', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     ProgressOptOut.status.mockResolvedValue(false)
+    Collection.byNameForUser.mockResolvedValue({ id: 'collection-1' })
   })
 
   it('returns one entry per id in input order, null where missing', async () => {
-    Collection.getMediaProgressItem.mockImplementation(async ({ mediaId }) =>
-      mediaId === 'b' ? { id: 'p-b', secs: 42 } : undefined,
-    )
+    Collection.findMediaItemsByIds.mockResolvedValue([
+      null,
+      { id: 'p-b', secs: 42 },
+      null,
+    ])
     const result = await mediaProgressByIds(
       null,
       { mediaIds: ['a', 'b', 'c'] },
       context(),
     )
     expect(result).toEqual([null, { id: 'p-b', secs: 42 }, null])
+    expect(Collection.findMediaItemsByIds).toHaveBeenCalledWith(
+      {
+        collectionId: 'collection-1',
+        userId: 'user-1',
+        mediaIds: ['a', 'b', 'c'],
+      },
+      expect.anything(),
+    )
   })
 
   it('returns nulls without querying when signed out', async () => {
@@ -37,7 +49,7 @@ describe('mediaProgressByIds', () => {
       context(null),
     )
     expect(result).toEqual([null, null])
-    expect(Collection.getMediaProgressItem).not.toHaveBeenCalled()
+    expect(Collection.findMediaItemsByIds).not.toHaveBeenCalled()
   })
 
   it('returns nulls when the user opted out of progress', async () => {
@@ -48,16 +60,30 @@ describe('mediaProgressByIds', () => {
       context(),
     )
     expect(result).toEqual([null])
-    expect(Collection.getMediaProgressItem).not.toHaveBeenCalled()
+    expect(Collection.findMediaItemsByIds).not.toHaveBeenCalled()
   })
 
   it('answers ids past the 100 cap with null instead of throwing', async () => {
-    Collection.getMediaProgressItem.mockResolvedValue({ id: 'p', secs: 1 })
+    Collection.findMediaItemsByIds.mockImplementation(async ({ mediaIds }) =>
+      mediaIds.map(() => ({ id: 'p', secs: 1 })),
+    )
     const mediaIds = Array.from({ length: 101 }, (_, i) => String(i))
     const result = await mediaProgressByIds(null, { mediaIds }, context())
     expect(result).toHaveLength(101)
     expect(result[99]).toEqual({ id: 'p', secs: 1 })
     expect(result[100]).toBeNull()
-    expect(Collection.getMediaProgressItem).toHaveBeenCalledTimes(100)
+    expect(
+      Collection.findMediaItemsByIds.mock.calls[0][0].mediaIds,
+    ).toHaveLength(100)
+  })
+
+  it('returns nulls when the progress collection is missing', async () => {
+    Collection.byNameForUser.mockResolvedValue(null)
+    const result = await mediaProgressByIds(
+      null,
+      { mediaIds: ['a'] },
+      context(),
+    )
+    expect(result).toEqual([null])
   })
 })
