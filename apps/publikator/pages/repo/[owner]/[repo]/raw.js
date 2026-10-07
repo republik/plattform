@@ -83,7 +83,7 @@ export default withDefaultSSR(
   compose(
     withRouter,
     withT,
-    withAuthorization(['admin']),
+    withAuthorization,
     withUncommitedChanges({
       options: ({ router }) => ({
         variables: {
