@@ -177,3 +177,43 @@ describe('findDocumentItemsByCollectionNames', () => {
     expect(captured.sql).toContain('"updatedAt" >= :afterDate')
   })
 })
+
+describe('findMediaItemsByIds', () => {
+  const contextWith = (rows) => {
+    const find = jest.fn(async () => rows)
+    return {
+      find,
+      context: { pgdb: { public: { collectionMediaItems: { find } } } },
+    }
+  }
+
+  it('asks for all ids in one query and keeps input order, nulls and duplicates', async () => {
+    const { find, context } = contextWith([
+      { mediaId: 'b', data: { secs: 42 } },
+      { mediaId: 'a', data: { secs: 7 } },
+    ])
+
+    const result = await Collection.findMediaItemsByIds(
+      { collectionId: 'c1', userId: 'u1', mediaIds: ['a', 'x', 'b', 'a'] },
+      context,
+    )
+
+    expect(find).toHaveBeenCalledTimes(1)
+    expect(find).toHaveBeenCalledWith({
+      collectionId: 'c1',
+      userId: 'u1',
+      mediaId: ['a', 'x', 'b'],
+    })
+    expect(result.map((item) => item && item.secs)).toEqual([7, null, 42, 7])
+  })
+
+  it('does not query for an empty list', async () => {
+    const { find, context } = contextWith([])
+    const result = await Collection.findMediaItemsByIds(
+      { collectionId: 'c1', userId: 'u1', mediaIds: [] },
+      context,
+    )
+    expect(result).toEqual([])
+    expect(find).not.toHaveBeenCalled()
+  })
+})
