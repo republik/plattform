@@ -378,6 +378,7 @@ export type ArticleTemplate = {
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
   showTextProgress?: boolean
   theme?: Theme
+  autoCreateDiscussion?: boolean
   mailchimpCampaignId?: string
   mailchimpCampaignUrl?: string
   repoId?: string
@@ -449,6 +450,7 @@ export type ContributorEntry = {
   _type: 'contributorEntry'
   kind?: string
   contributor?: ContributorReference
+  source?: string
 }
 
 export type LegacyMeta = {
@@ -756,6 +758,102 @@ export type ExpandableLink = {
   reference?: ArticleReference | PageReference | ContributorReference
 }
 
+export type Link = {
+  _type: 'link'
+  href?: string
+  title?: string
+}
+
+export type Variable = {
+  _type: 'variable'
+  name: 'firstName' | 'lastName'
+}
+
+export type IfNot = {
+  _type: 'ifNot'
+  present: 'hasAccess' | 'lastName'
+  body?: NestedEditor
+}
+
+export type If = {
+  _type: 'if'
+  present: 'hasAccess' | 'lastName'
+  body?: NestedEditor
+}
+
+export type EmailOnly = {
+  _type: 'emailOnly'
+  body?: NestedEditor
+}
+
+export type WebOnly = {
+  _type: 'webOnly'
+  body?: NestedEditor
+}
+
+export type PullQuote = {
+  _type: 'pullQuote'
+  text?: string
+  source?: string
+  image?: AsideImage
+  size?: 'narrow' | 'float' | 'breakout'
+}
+
+export type BlockQuote = {
+  _type: 'blockQuote'
+  body?: NestedEditor
+  caption?: Caption
+}
+
+export type InfoBox = {
+  _type: 'infoBox'
+  title?: string
+  body?: NestedEditor
+  image?: AsideImage
+  includeInSyntheticVoice?: boolean
+  collapsible?: boolean
+  size?: 'float' | 'breakout'
+  figureSize?: 'S' | 'M' | 'L'
+  figureFloat?: boolean
+}
+
+export type AuthorBlock = {
+  _type: 'authorBlock'
+  contributor: ContributorReference
+  role?: string
+  large?: boolean
+  greeting?: string
+}
+
+export type Button = {
+  _type: 'button'
+  text?: string
+  reference?: ArticleReference | PageReference | ContributorReference
+  url?: string
+}
+
+export type Contributor = {
+  _id: string
+  _type: 'contributor'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  portraitImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  title: string
+  role?: string
+  gender?: 'm' | 'f' | 'd' | 'na'
+  prolitterisId?: string
+  prolitterisFirstname?: string
+  prolitterisLastname?: string
+  userId?: string
+}
+
 export type DiscussionReference = {
   _ref: string
   _type: 'reference'
@@ -825,6 +923,7 @@ export type Article = {
   theme?: Theme
   discussion?: DiscussionReference
   inlineDiscussion?: boolean
+  autoCreateDiscussion?: boolean
   mailchimpCampaignId?: string
   mailchimpCampaignUrl?: string
   repoId?: string
@@ -918,101 +1017,6 @@ export type Seo = {
     _type: 'image'
   }
   imageBuilder?: SeoImageBuilder
-}
-
-export type Link = {
-  _type: 'link'
-  href?: string
-  title?: string
-}
-
-export type Variable = {
-  _type: 'variable'
-  name: 'firstName' | 'lastName'
-}
-
-export type IfNot = {
-  _type: 'ifNot'
-  present: 'hasAccess' | 'lastName'
-  body?: NestedEditor
-}
-
-export type If = {
-  _type: 'if'
-  present: 'hasAccess' | 'lastName'
-  body?: NestedEditor
-}
-
-export type EmailOnly = {
-  _type: 'emailOnly'
-  body?: NestedEditor
-}
-
-export type WebOnly = {
-  _type: 'webOnly'
-  body?: NestedEditor
-}
-
-export type PullQuote = {
-  _type: 'pullQuote'
-  text?: string
-  source?: string
-  image?: AsideImage
-  size?: 'narrow' | 'float' | 'breakout'
-}
-
-export type BlockQuote = {
-  _type: 'blockQuote'
-  body?: NestedEditor
-  caption?: Caption
-}
-
-export type InfoBox = {
-  _type: 'infoBox'
-  title?: string
-  body?: NestedEditor
-  image?: AsideImage
-  includeInSyntheticVoice?: boolean
-  collapsible?: boolean
-  size?: 'float' | 'breakout'
-  figureSize?: 'S' | 'M' | 'L'
-  figureFloat?: boolean
-}
-
-export type AuthorBlock = {
-  _type: 'authorBlock'
-  contributor: ContributorReference
-  role?: string
-  large?: boolean
-  greeting?: string
-}
-
-export type Contributor = {
-  _id: string
-  _type: 'contributor'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  portraitImage?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  title: string
-  role?: string
-  gender?: 'm' | 'f' | 'd' | 'na'
-  prolitterisId?: string
-  prolitterisFirstname?: string
-  prolitterisLastname?: string
-  userId?: string
-}
-
-export type Button = {
-  _type: 'button'
-  text?: string
-  url?: string
 }
 
 export type SeriesNav = {
@@ -1567,12 +1571,6 @@ export type AllSanitySchemaTypes =
   | VoiceTag
   | InternalLink
   | ExpandableLink
-  | DiscussionReference
-  | Article
-  | Discussion
-  | Theme
-  | EditorialImage
-  | Seo
   | Link
   | Variable
   | IfNot
@@ -1583,8 +1581,14 @@ export type AllSanitySchemaTypes =
   | BlockQuote
   | InfoBox
   | AuthorBlock
-  | Contributor
   | Button
+  | Contributor
+  | DiscussionReference
+  | Article
+  | Discussion
+  | Theme
+  | EditorialImage
+  | Seo
   | SeriesNav
   | Toc
   | StoryComponent
@@ -1850,39 +1854,12 @@ export type TEASER_LARGE_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/articles-by-author-query.ts
 // Variable: ARTICLES_BY_AUTHOR_QUERY
-// Query: *[_type == "contributor" && userId == $userId][0]{    "articles": *[        _type == "article" &&  defined(slug.current) &&  defined(publishDate) &&  references(^._id) &&  ^._id in contributors[].contributor._ref &&      (        !defined($lastPublishDate) ||        publishDate < $lastPublishDate ||        (publishDate == $lastPublishDate && _id > $lastId)      )    ] | order(publishDate desc, _id asc) [0...$limit] {        _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },    }  }.articles
+// Query: *[_type == "contributor" && userId == $userId][0]{    "articles": *[        _type == "article" &&  defined(slug.current) &&  defined(publishDate) &&  references(^._id) &&  ^._id in contributors[].contributor._ref &&      (        !defined($lastPublishDate) ||        publishDate < $lastPublishDate ||        (publishDate == $lastPublishDate && _id > $lastId)      )    ] | order(publishDate desc, _id asc) [0...$limit] {        _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },    }  }.articles
 export type ARTICLES_BY_AUTHOR_QUERY_RESULT = Array<{
   _id: string
   _type: 'article'
   title: TextOnlyInlineEditor
   description: TextOnlyInlineEditor | null
-  byline: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs: Array<
-      | {
-          _key: string
-          _type: 'internalLink'
-          reference: ArticleReference | ContributorReference | PageReference
-          slug: string | null
-        }
-      | {
-          _key: string
-          _type: 'link'
-          href?: string
-          title?: string
-        }
-    > | null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   slug: string | null
   image: {
     asset?: SanityImageAssetReference
@@ -1912,6 +1889,11 @@ export type ARTICLES_BY_AUTHOR_QUERY_RESULT = Array<{
   backgroundColor: Color | null
   headingColor: Color | null
   audioDurationMs: number | null
+  contributors: Array<{
+    _id: string | null
+    name: string | null
+    kind: string | null
+  }> | null
   plainTitle: string
   audioItem: {
     _id: string
@@ -1943,39 +1925,12 @@ export type ARTICLES_BY_AUTHOR_COUNT_QUERY_RESULT = number | null
 
 // Source: src/app/(sanity)/groq/articles-by-ids-query.ts
 // Variable: ARTICLES_BY_IDS_QUERY
-// Query: *[    _type == "article" &&    _id in $ids  ] {      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
+// Query: *[    _type == "article" &&    _id in $ids  ] {      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
 export type ARTICLES_BY_IDS_QUERY_RESULT = Array<{
   _id: string
   _type: 'article'
   title: TextOnlyInlineEditor
   description: TextOnlyInlineEditor | null
-  byline: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs: Array<
-      | {
-          _key: string
-          _type: 'internalLink'
-          reference: ArticleReference | ContributorReference | PageReference
-          slug: string | null
-        }
-      | {
-          _key: string
-          _type: 'link'
-          href?: string
-          title?: string
-        }
-    > | null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   slug: string | null
   image: {
     asset?: SanityImageAssetReference
@@ -2005,6 +1960,11 @@ export type ARTICLES_BY_IDS_QUERY_RESULT = Array<{
   backgroundColor: Color | null
   headingColor: Color | null
   audioDurationMs: number | null
+  contributors: Array<{
+    _id: string | null
+    name: string | null
+    kind: string | null
+  }> | null
   plainTitle: string
   audioItem: {
     _id: string
@@ -2031,39 +1991,12 @@ export type ARTICLES_BY_IDS_QUERY_RESULT = Array<{
 
 // Source: src/app/(sanity)/groq/articles-query.ts
 // Variable: ARTICLES_QUERY
-// Query: *[    _type == "article" &&    defined(slug.current) &&    defined(publishDate) &&    coalesce(showInFeed, true) &&    (      !defined($lastPublishDate) ||      publishDate < $lastPublishDate ||      (publishDate == $lastPublishDate && _id > $lastId)    )  ] | order(publishDate desc, _id asc) [0...$limit] {      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
+// Query: *[    _type == "article" &&    defined(slug.current) &&    defined(publishDate) &&    coalesce(showInFeed, true) &&    (      !defined($lastPublishDate) ||      publishDate < $lastPublishDate ||      (publishDate == $lastPublishDate && _id > $lastId)    )  ] | order(publishDate desc, _id asc) [0...$limit] {      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
 export type ARTICLES_QUERY_RESULT = Array<{
   _id: string
   _type: 'article'
   title: TextOnlyInlineEditor
   description: TextOnlyInlineEditor | null
-  byline: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs: Array<
-      | {
-          _key: string
-          _type: 'internalLink'
-          reference: ArticleReference | ContributorReference | PageReference
-          slug: string | null
-        }
-      | {
-          _key: string
-          _type: 'link'
-          href?: string
-          title?: string
-        }
-    > | null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   slug: string | null
   image: {
     asset?: SanityImageAssetReference
@@ -2093,6 +2026,11 @@ export type ARTICLES_QUERY_RESULT = Array<{
   backgroundColor: Color | null
   headingColor: Color | null
   audioDurationMs: number | null
+  contributors: Array<{
+    _id: string | null
+    name: string | null
+    kind: string | null
+  }> | null
   plainTitle: string
   audioItem: {
     _id: string
@@ -2245,7 +2183,7 @@ export type CTA_BLOCK_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/document-query.ts
 // Variable: DOCUMENT_BY_SLUG_QUERY
-// Query: *[_type in ["article", "page"] && slug.current == $slug][0]{    _id,    _type,    title,    description,    "slug": slug.current,    _updatedAt,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    theme {      name,      accentColor,      darkMode    },    _type == "article" => {      repoId,      "plainTitle": pt::text(title),      teaserSmall{ image },      "audioItem": select(defined(audioSourceMp3) => @{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }),      _updatedAt,      publishDate,      // Plain text and SEO overrides, used for the JSON-LD linked data      "plainTitle": pt::text(title),      "plainDescription": pt::text(description),      seo {        title,        description,        image,        useImageBuilder      },      discussion->{        backendDiscussionId,      },      inlineDiscussion,      readingAccess,        byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },      newsletter->{        title,        description,        frequency,        image,        name,      },      podcast->{        _id      },        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  },      contributors[]{        _id,        kind,        "userId": contributor->userId,        // Same profile slug as the byline links        "slug": coalesce(contributor->slug.current, contributor->userId),        "name": contributor->title,        "role": contributor->role,        "portraitImage": contributor->portraitImage      },      "articleCollection": articleCollections[featured == true][0].collection->{        _id,        title,        description,        image,        series      },      articleRecommendations[]->{          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },      }    },    _type == "page" => {      pageBuilder[]{        _key,        _type,        _type == "menu" => {            hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current,        "color": theme.accentColor.hex      }    }  }        },        _type == "callToAction" => {            target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }        },        _type == "editorBlock" => {            content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }        },        _type == "teaserList" => {            appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref        },        _type == "teaserLarge" => {          "reference": @->{  _id,  _type,  "targetType": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "targetId": target[0]->_id,  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,    "audioItem": select(      defined(target[0]->audioSourceMp3) => target[0]->{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }    ),  }}        },      }    }  }
+// Query: *[_type in ["article", "page"] && slug.current == $slug][0]{    _id,    _type,    title,    description,    "slug": slug.current,    _updatedAt,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    theme {      name,      accentColor,      darkMode    },    _type == "article" => {      repoId,      "plainTitle": pt::text(title),      teaserSmall{ image },      "audioItem": select(defined(audioSourceMp3) => @{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }),      _updatedAt,      publishDate,      // Plain text and SEO overrides, used for the JSON-LD linked data      "plainTitle": pt::text(title),      "plainDescription": pt::text(description),      seo {        "title": pt::text(title),        "description": pt::text(description),        image,        useImageBuilder      },      discussion->{        backendDiscussionId,      },      inlineDiscussion,      readingAccess,        byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },      newsletter->{        title,        description,        frequency,        image,        name,      },      podcast->{        _id      },        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        },      },      _type == "button" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "button" => {      "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  },      contributors[]{        _id,        kind,        "userId": contributor->userId,        // Same profile slug as the byline links        "slug": coalesce(contributor->slug.current, contributor->userId),        "name": contributor->title,        "role": contributor->role,        "portraitImage": contributor->portraitImage      },      "articleCollection": articleCollections[featured == true][0].collection->{        _id,        title,        description,        image,        series      },      articleRecommendations[]->{          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },      }    },    _type == "page" => {      pageBuilder[]{        _key,        _type,        _type == "menu" => {            hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current,        "color": theme.accentColor.hex      }    }  }        },        _type == "callToAction" => {            target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }        },        _type == "editorBlock" => {            content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        },      },      _type == "button" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "button" => {      "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }        },        _type == "teaserList" => {            appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref        },        _type == "teaserLarge" => {          "reference": @->{  _id,  _type,  "targetType": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "targetId": target[0]->_id,  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,    "audioItem": select(      defined(target[0]->audioSourceMp3) => target[0]->{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }    ),  }}        },      }    }  }
 export type DOCUMENT_BY_SLUG_QUERY_RESULT =
   | {
       _id: string
@@ -2313,8 +2251,8 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
       publishDate: string | null
       plainDescription: string
       seo: {
-        title: PlainTextInlineEditor | null
-        description: PlainTextInlineEditor | null
+        title: string
+        description: string
         image: {
           asset?: SanityImageAssetReference
           media?: unknown
@@ -2518,8 +2456,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -2541,9 +2482,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             _key: string
             _type: 'button'
             text?: string
+            reference?: ArticleReference | ContributorReference | PageReference
             url?: string
             markDefs: null
             body: null
+            slug: string | null
           }
         | {
             _key: string
@@ -2672,8 +2615,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -2807,8 +2753,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -2872,8 +2821,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -2950,8 +2902,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -3086,8 +3041,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -3146,34 +3104,6 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             _type: 'article'
             title: TextOnlyInlineEditor
             description: TextOnlyInlineEditor | null
-            byline: Array<{
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'normal'
-              listItem?: never
-              markDefs: Array<
-                | {
-                    _key: string
-                    _type: 'internalLink'
-                    reference:
-                      ArticleReference | ContributorReference | PageReference
-                    slug: string | null
-                  }
-                | {
-                    _key: string
-                    _type: 'link'
-                    href?: string
-                    title?: string
-                  }
-              > | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }> | null
             slug: string | null
             image: {
               asset?: SanityImageAssetReference
@@ -3203,6 +3133,11 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             backgroundColor: Color | null
             headingColor: Color | null
             audioDurationMs: number | null
+            contributors: Array<{
+              _id: string | null
+              name: string | null
+              kind: string | null
+            }> | null
             plainTitle: string
             audioItem: {
               _id: string
@@ -3231,34 +3166,6 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             _type: 'page'
             title: TextOnlyInlineEditor
             description: TextOnlyInlineEditor | null
-            byline: Array<{
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'normal'
-              listItem?: never
-              markDefs: Array<
-                | {
-                    _key: string
-                    _type: 'internalLink'
-                    reference:
-                      ArticleReference | ContributorReference | PageReference
-                    slug: string | null
-                  }
-                | {
-                    _key: string
-                    _type: 'link'
-                    href?: string
-                    title?: string
-                  }
-              > | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }> | null
             slug: string
             image: {
               asset?: SanityImageAssetReference
@@ -3284,6 +3191,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             backgroundColor: Color | null
             headingColor: Color | null
             audioDurationMs: null
+            contributors: null
           }
       > | null
     }
@@ -3454,8 +3362,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                         _key: string
                         _type: 'button'
                         text?: string
+                        reference?:
+                          | ArticleReference
+                          | ContributorReference
+                          | PageReference
                         url?: string
                         markDefs: null
+                        slug: string | null
                       }
                     | {
                         _key: string
@@ -3477,9 +3390,12 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
                   body: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -3692,8 +3608,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                         _key: string
                         _type: 'button'
                         text?: string
+                        reference?:
+                          | ArticleReference
+                          | ContributorReference
+                          | PageReference
                         url?: string
                         markDefs: null
+                        slug: string | null
                       }
                     | {
                         _key: string
@@ -3824,7 +3745,7 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
 
 // Source: src/app/(sanity)/groq/document-query.ts
 // Variable: DOCUMENT_BY_ID_QUERY
-// Query: *[_type in ["article", "page"] && _id == $id][0]{    _id,    _type,    title,    description,    "slug": slug.current,    _updatedAt,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    theme {      name,      accentColor,      darkMode    },    _type == "article" => {      repoId,      "plainTitle": pt::text(title),      teaserSmall{ image },      "audioItem": select(defined(audioSourceMp3) => @{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }),      _updatedAt,      publishDate,      // Plain text and SEO overrides, used for the JSON-LD linked data      "plainTitle": pt::text(title),      "plainDescription": pt::text(description),      seo {        title,        description,        image,        useImageBuilder      },      discussion->{        backendDiscussionId,      },      inlineDiscussion,      readingAccess,        byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },      newsletter->{        title,        description,        frequency,        image,        name,      },      podcast->{        _id      },        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  },      contributors[]{        _id,        kind,        "userId": contributor->userId,        // Same profile slug as the byline links        "slug": coalesce(contributor->slug.current, contributor->userId),        "name": contributor->title,        "role": contributor->role,        "portraitImage": contributor->portraitImage      },      "articleCollection": articleCollections[featured == true][0].collection->{        _id,        title,        description,        image,        series      },      articleRecommendations[]->{          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },      }    },    _type == "page" => {      pageBuilder[]{        _key,        _type,        _type == "menu" => {            hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current,        "color": theme.accentColor.hex      }    }  }        },        _type == "callToAction" => {            target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }        },        _type == "editorBlock" => {            content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }        },        _type == "teaserList" => {            appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref        },        _type == "teaserLarge" => {          "reference": @->{  _id,  _type,  "targetType": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "targetId": target[0]->_id,  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,    "audioItem": select(      defined(target[0]->audioSourceMp3) => target[0]->{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }    ),  }}        },      }    }  }
+// Query: *[_type in ["article", "page"] && _id == $id][0]{    _id,    _type,    title,    description,    "slug": slug.current,    _updatedAt,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    theme {      name,      accentColor,      darkMode    },    _type == "article" => {      repoId,      "plainTitle": pt::text(title),      teaserSmall{ image },      "audioItem": select(defined(audioSourceMp3) => @{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }),      _updatedAt,      publishDate,      // Plain text and SEO overrides, used for the JSON-LD linked data      "plainTitle": pt::text(title),      "plainDescription": pt::text(description),      seo {        "title": pt::text(title),        "description": pt::text(description),        image,        useImageBuilder      },      discussion->{        backendDiscussionId,      },      inlineDiscussion,      readingAccess,        byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },      newsletter->{        title,        description,        frequency,        image,        name,      },      podcast->{        _id      },        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        },      },      _type == "button" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "button" => {      "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  },      contributors[]{        _id,        kind,        "userId": contributor->userId,        // Same profile slug as the byline links        "slug": coalesce(contributor->slug.current, contributor->userId),        "name": contributor->title,        "role": contributor->role,        "portraitImage": contributor->portraitImage      },      "articleCollection": articleCollections[featured == true][0].collection->{        _id,        title,        description,        image,        series      },      articleRecommendations[]->{          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },      }    },    _type == "page" => {      pageBuilder[]{        _key,        _type,        _type == "menu" => {            hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current,        "color": theme.accentColor.hex      }    }  }        },        _type == "callToAction" => {            target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }        },        _type == "editorBlock" => {            content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        },      },      _type == "button" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "button" => {      "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }        },        _type == "teaserList" => {            appearance,  color,  backgroundColor,  imageStyle,  skipDescription,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref        },        _type == "teaserLarge" => {          "reference": @->{  _id,  _type,  "targetType": target[0]->_type,  // link can either be a plain link OR a referenced doc  "target": coalesce(target[0]->slug.current, target[0].href),  "targetId": target[0]->_id,  "publishDate": target[0]->publishDate,  "theme": {    "name": target[0]->theme.name,    "accentColor": target[0]->theme.accentColor,  },  // heading: own string override, else the referenced doc's format title  "heading": select(    defined(heading) => { "title": heading },    defined(target[0]->heading) => {      "title": pt::text(target[0]->heading->title)    }  ),  "teaser": {    layout,    "title": coalesce(title, target[0]->title),    "description": coalesce(description, target[0]->description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }, target[0]->  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  }),    "image": coalesce(image, target[0]->image),    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,    "audioItem": select(      defined(target[0]->audioSourceMp3) => target[0]->{          _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image      }    ),  }}        },      }    }  }
 export type DOCUMENT_BY_ID_QUERY_RESULT =
   | {
       _id: string
@@ -3892,8 +3813,8 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
       publishDate: string | null
       plainDescription: string
       seo: {
-        title: PlainTextInlineEditor | null
-        description: PlainTextInlineEditor | null
+        title: string
+        description: string
         image: {
           asset?: SanityImageAssetReference
           media?: unknown
@@ -4097,8 +4018,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -4120,9 +4044,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             _key: string
             _type: 'button'
             text?: string
+            reference?: ArticleReference | ContributorReference | PageReference
             url?: string
             markDefs: null
             body: null
+            slug: string | null
           }
         | {
             _key: string
@@ -4251,8 +4177,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -4386,8 +4315,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -4451,8 +4383,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -4529,8 +4464,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -4665,8 +4603,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -4725,34 +4666,6 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             _type: 'article'
             title: TextOnlyInlineEditor
             description: TextOnlyInlineEditor | null
-            byline: Array<{
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'normal'
-              listItem?: never
-              markDefs: Array<
-                | {
-                    _key: string
-                    _type: 'internalLink'
-                    reference:
-                      ArticleReference | ContributorReference | PageReference
-                    slug: string | null
-                  }
-                | {
-                    _key: string
-                    _type: 'link'
-                    href?: string
-                    title?: string
-                  }
-              > | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }> | null
             slug: string | null
             image: {
               asset?: SanityImageAssetReference
@@ -4782,6 +4695,11 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             backgroundColor: Color | null
             headingColor: Color | null
             audioDurationMs: number | null
+            contributors: Array<{
+              _id: string | null
+              name: string | null
+              kind: string | null
+            }> | null
             plainTitle: string
             audioItem: {
               _id: string
@@ -4810,34 +4728,6 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             _type: 'page'
             title: TextOnlyInlineEditor
             description: TextOnlyInlineEditor | null
-            byline: Array<{
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'normal'
-              listItem?: never
-              markDefs: Array<
-                | {
-                    _key: string
-                    _type: 'internalLink'
-                    reference:
-                      ArticleReference | ContributorReference | PageReference
-                    slug: string | null
-                  }
-                | {
-                    _key: string
-                    _type: 'link'
-                    href?: string
-                    title?: string
-                  }
-              > | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }> | null
             slug: string
             image: {
               asset?: SanityImageAssetReference
@@ -4863,6 +4753,7 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             backgroundColor: Color | null
             headingColor: Color | null
             audioDurationMs: null
+            contributors: null
           }
       > | null
     }
@@ -5033,8 +4924,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                         _key: string
                         _type: 'button'
                         text?: string
+                        reference?:
+                          | ArticleReference
+                          | ContributorReference
+                          | PageReference
                         url?: string
                         markDefs: null
+                        slug: string | null
                       }
                     | {
                         _key: string
@@ -5056,9 +4952,12 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'button'
                   text?: string
+                  reference?:
+                    ArticleReference | ContributorReference | PageReference
                   url?: string
                   markDefs: null
                   body: null
+                  slug: string | null
                 }
               | {
                   _key: string
@@ -5271,8 +5170,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                         _key: string
                         _type: 'button'
                         text?: string
+                        reference?:
+                          | ArticleReference
+                          | ContributorReference
+                          | PageReference
                         url?: string
                         markDefs: null
+                        slug: string | null
                       }
                     | {
                         _key: string
@@ -5637,7 +5541,7 @@ export type MENU_BLOCK_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/portable-text-content-fragment.ts
 // Variable: PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY
-// Query: *[_type == "page"][0]{    "block": pageBuilder[_type == "editorBlock"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }    }  }
+// Query: *[_type == "page"][0]{    "block": pageBuilder[_type == "editorBlock"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        },      },      _type == "button" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "button" => {      "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }    }  }
 export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
   block: {
     content: Array<
@@ -5739,8 +5643,11 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 _key: string
                 _type: 'button'
                 text?: string
+                reference?:
+                  ArticleReference | ContributorReference | PageReference
                 url?: string
                 markDefs: null
+                slug: string | null
               }
             | {
                 _key: string
@@ -5762,9 +5669,11 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
           _key: string
           _type: 'button'
           text?: string
+          reference?: ArticleReference | ContributorReference | PageReference
           url?: string
           markDefs: null
           body: null
+          slug: string | null
         }
       | {
           _key: string
@@ -5975,8 +5884,11 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 _key: string
                 _type: 'button'
                 text?: string
+                reference?:
+                  ArticleReference | ContributorReference | PageReference
                 url?: string
                 markDefs: null
+                slug: string | null
               }
             | {
                 _key: string
@@ -6056,7 +5968,7 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/portable-text-content-fragment.ts
 // Variable: ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY
-// Query: *[_type == "article"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        }      }    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }  }
+// Query: *[_type == "article"][0]{        content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },      _type == "expandableLink" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),        "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))      }    },    body[] { // Nested PT, e.g. in infoboxes      ...,      markDefs[]{        ...,        _type == "internalLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)        },        _type == "expandableLink" => {          "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current),          "referenceTitle": select(  reference->_type == "contributor" => reference->title,  pt::text(reference->title))        },      },      _type == "button" => {        "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)      },    },    _type == "toc" => {      ...,      "headings": ^.content[_type == "block" && style == "heading"]    },    _type == "authorBlock" => {      ...,      contributor->    },    _type == "button" => {      "slug": select(  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),  reference->slug.current)    },    _type == "audio" => {      ...,      "fileUrl": file.asset->url    },  }  }
 export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
   content: Array<
     | {
@@ -6194,8 +6106,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'button'
               text?: string
+              reference?:
+                ArticleReference | ContributorReference | PageReference
               url?: string
               markDefs: null
+              slug: string | null
             }
           | {
               _key: string
@@ -6217,9 +6132,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
         _key: string
         _type: 'button'
         text?: string
+        reference?: ArticleReference | ContributorReference | PageReference
         url?: string
         markDefs: null
         body: null
+        slug: string | null
       }
     | {
         _key: string
@@ -6346,8 +6263,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'button'
               text?: string
+              reference?:
+                ArticleReference | ContributorReference | PageReference
               url?: string
               markDefs: null
+              slug: string | null
             }
           | {
               _key: string
@@ -6479,8 +6399,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'button'
               text?: string
+              reference?:
+                ArticleReference | ContributorReference | PageReference
               url?: string
               markDefs: null
+              slug: string | null
             }
           | {
               _key: string
@@ -6542,8 +6465,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'button'
               text?: string
+              reference?:
+                ArticleReference | ContributorReference | PageReference
               url?: string
               markDefs: null
+              slug: string | null
             }
           | {
               _key: string
@@ -6618,8 +6544,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'button'
               text?: string
+              reference?:
+                ArticleReference | ContributorReference | PageReference
               url?: string
               markDefs: null
+              slug: string | null
             }
           | {
               _key: string
@@ -6752,8 +6681,11 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'button'
               text?: string
+              reference?:
+                ArticleReference | ContributorReference | PageReference
               url?: string
               markDefs: null
+              slug: string | null
             }
           | {
               _key: string
@@ -6865,7 +6797,7 @@ export type OG_SHARE_IMAGE_QUERY_RESULT =
 
 // Source: src/app/(sanity)/groq/series-menu-query.ts
 // Variable: SERIES_MENU_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    "articleCollection": articleCollections[featured == true][0].collection->{      _id,      title,      description,      image,      series,      "episodes": *[        (          _type == "article" &&          ^._id in articleCollections[].collection._ref        ) || (          _type == "teaserSmall" &&          collection._ref == ^._id        )      ] | order(publishDate asc) {        _type == "article" => {            _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },        },        _type == "teaserSmall" => {            _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,        }      }    },  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    "articleCollection": articleCollections[featured == true][0].collection->{      _id,      title,      description,      image,      series,      "episodes": *[        (          _type == "article" &&          ^._id in articleCollections[].collection._ref        ) || (          _type == "teaserSmall" &&          collection._ref == ^._id        )      ] | order(publishDate asc) {        _type == "article" => {            _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },        },        _type == "teaserSmall" => {            _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,        }      }    },  }
 export type SERIES_MENU_QUERY_RESULT = {
   _id: string
   articleCollection: {
@@ -6893,34 +6825,6 @@ export type SERIES_MENU_QUERY_RESULT = {
           _type: 'article'
           title: TextOnlyInlineEditor
           description: TextOnlyInlineEditor | null
-          byline: Array<{
-            children?: Array<{
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }>
-            style?: 'normal'
-            listItem?: never
-            markDefs: Array<
-              | {
-                  _key: string
-                  _type: 'internalLink'
-                  reference:
-                    ArticleReference | ContributorReference | PageReference
-                  slug: string | null
-                }
-              | {
-                  _key: string
-                  _type: 'link'
-                  href?: string
-                  title?: string
-                }
-            > | null
-            level?: number
-            _type: 'block'
-            _key: string
-          }> | null
           slug: string | null
           image: {
             asset?: SanityImageAssetReference
@@ -6950,6 +6854,11 @@ export type SERIES_MENU_QUERY_RESULT = {
           backgroundColor: Color | null
           headingColor: Color | null
           audioDurationMs: number | null
+          contributors: Array<{
+            _id: string | null
+            name: string | null
+            kind: string | null
+          }> | null
           plainTitle: string
           audioItem: {
             _id: string
@@ -6978,34 +6887,6 @@ export type SERIES_MENU_QUERY_RESULT = {
           _type: 'teaserSmall'
           title: TextOnlyInlineEditor | null
           description: TextOnlyInlineEditor | null
-          byline: Array<{
-            children?: Array<{
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }>
-            style?: 'normal'
-            listItem?: never
-            markDefs: Array<
-              | {
-                  _key: string
-                  _type: 'internalLink'
-                  reference:
-                    ArticleReference | ContributorReference | PageReference
-                  slug: string | null
-                }
-              | {
-                  _key: string
-                  _type: 'link'
-                  href?: string
-                  title?: string
-                }
-            > | null
-            level?: number
-            _type: 'block'
-            _key: string
-          }> | null
           href: null | string
           image: {
             asset?: SanityImageAssetReference
@@ -7016,6 +6897,11 @@ export type SERIES_MENU_QUERY_RESULT = {
             _type: 'image'
           } | null
           audioDurationMs: number | null
+          contributors: Array<{
+            _id: string | null
+            name: string | null
+            kind: string | null
+          }> | null
           publishDate: null
           upcomingOnly: boolean | null
           targetPublishDate: string | null
@@ -7034,7 +6920,7 @@ export type SERIES_MENU_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/series-nav-query.ts
 // Variable: SERIES_NAV_QUERY
-// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    slug,    "episodes": *[      (        _type == "article" &&        ^._id in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^._id      )    ] | order(publishDate asc) {      _type == "article" => {          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },      },      _type == "teaserSmall" => {          _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,      }    }  }
+// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    slug,    "episodes": *[      (        _type == "article" &&        ^._id in articleCollections[].collection._ref      ) || (        _type == "teaserSmall" &&        collection._ref == ^._id      )    ] | order(publishDate asc) {      _type == "article" => {          _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },      },      _type == "teaserSmall" => {          _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,      }    }  }
 export type SERIES_NAV_QUERY_RESULT = {
   _id: string
   title: string
@@ -7060,34 +6946,6 @@ export type SERIES_NAV_QUERY_RESULT = {
         _type: 'article'
         title: TextOnlyInlineEditor
         description: TextOnlyInlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference:
-                  ArticleReference | ContributorReference | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
         slug: string | null
         image: {
           asset?: SanityImageAssetReference
@@ -7117,6 +6975,11 @@ export type SERIES_NAV_QUERY_RESULT = {
         backgroundColor: Color | null
         headingColor: Color | null
         audioDurationMs: number | null
+        contributors: Array<{
+          _id: string | null
+          name: string | null
+          kind: string | null
+        }> | null
         plainTitle: string
         audioItem: {
           _id: string
@@ -7145,34 +7008,6 @@ export type SERIES_NAV_QUERY_RESULT = {
         _type: 'teaserSmall'
         title: TextOnlyInlineEditor | null
         description: TextOnlyInlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference:
-                  ArticleReference | ContributorReference | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
         href: null | string
         image: {
           asset?: SanityImageAssetReference
@@ -7183,6 +7018,11 @@ export type SERIES_NAV_QUERY_RESULT = {
           _type: 'image'
         } | null
         audioDurationMs: number | null
+        contributors: Array<{
+          _id: string | null
+          name: string | null
+          kind: string | null
+        }> | null
         publishDate: null
         upcomingOnly: boolean | null
         targetPublishDate: string | null
@@ -7349,39 +7189,12 @@ export type TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/teaser-small-document-fragment.ts
 // Variable: TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY
-// Query: *[_type == "teaserSmall"]{      _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,  }
+// Query: *[_type == "teaserSmall"]{      _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,  }
 export type TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT = Array<{
   _id: string
   _type: 'teaserSmall'
   title: TextOnlyInlineEditor | null
   description: TextOnlyInlineEditor | null
-  byline: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs: Array<
-      | {
-          _key: string
-          _type: 'internalLink'
-          reference: ArticleReference | ContributorReference | PageReference
-          slug: string | null
-        }
-      | {
-          _key: string
-          _type: 'link'
-          href?: string
-          title?: string
-        }
-    > | null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   href: null | string
   image: {
     asset?: SanityImageAssetReference
@@ -7392,6 +7205,11 @@ export type TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT = Array<{
     _type: 'image'
   } | null
   audioDurationMs: number | null
+  contributors: Array<{
+    _id: string | null
+    name: string | null
+    kind: string | null
+  }> | null
   publishDate: null
   upcomingOnly: boolean | null
   targetPublishDate: string | null
@@ -7407,40 +7225,13 @@ export type TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT = Array<{
 
 // Source: src/app/(sanity)/groq/teaser-small-fragment.ts
 // Variable: TEASER_SMALL_FRAGMENT_QUERY
-// Query: *[_type in ["article", "page"]]{      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
+// Query: *[_type in ["article", "page"]]{      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
 export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
   | {
       _id: string
       _type: 'article'
       title: TextOnlyInlineEditor
       description: TextOnlyInlineEditor | null
-      byline: Array<{
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal'
-        listItem?: never
-        markDefs: Array<
-          | {
-              _key: string
-              _type: 'internalLink'
-              reference: ArticleReference | ContributorReference | PageReference
-              slug: string | null
-            }
-          | {
-              _key: string
-              _type: 'link'
-              href?: string
-              title?: string
-            }
-        > | null
-        level?: number
-        _type: 'block'
-        _key: string
-      }> | null
       slug: string | null
       image: {
         asset?: SanityImageAssetReference
@@ -7470,6 +7261,11 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       backgroundColor: Color | null
       headingColor: Color | null
       audioDurationMs: number | null
+      contributors: Array<{
+        _id: string | null
+        name: string | null
+        kind: string | null
+      }> | null
       plainTitle: string
       audioItem: {
         _id: string
@@ -7498,33 +7294,6 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       _type: 'page'
       title: TextOnlyInlineEditor
       description: TextOnlyInlineEditor | null
-      byline: Array<{
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal'
-        listItem?: never
-        markDefs: Array<
-          | {
-              _key: string
-              _type: 'internalLink'
-              reference: ArticleReference | ContributorReference | PageReference
-              slug: string | null
-            }
-          | {
-              _key: string
-              _type: 'link'
-              href?: string
-              title?: string
-            }
-        > | null
-        level?: number
-        _type: 'block'
-        _key: string
-      }> | null
       slug: string
       image: {
         asset?: SanityImageAssetReference
@@ -7550,45 +7319,19 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       backgroundColor: Color | null
       headingColor: Color | null
       audioDurationMs: null
+      contributors: null
     }
 >
 
 // Source: src/app/(sanity)/groq/teaser-small-preview-query.ts
 // Variable: TEASER_SMALL_PREVIEW_QUERY
-// Query: *[_type in ["article", "page"] && _id == $id][0]{      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
+// Query: *[_type in ["article", "page"] && _id == $id][0]{      _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },  }
 export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
   | {
       _id: string
       _type: 'article'
       title: TextOnlyInlineEditor
       description: TextOnlyInlineEditor | null
-      byline: Array<{
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal'
-        listItem?: never
-        markDefs: Array<
-          | {
-              _key: string
-              _type: 'internalLink'
-              reference: ArticleReference | ContributorReference | PageReference
-              slug: string | null
-            }
-          | {
-              _key: string
-              _type: 'link'
-              href?: string
-              title?: string
-            }
-        > | null
-        level?: number
-        _type: 'block'
-        _key: string
-      }> | null
       slug: string | null
       image: {
         asset?: SanityImageAssetReference
@@ -7618,6 +7361,11 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       backgroundColor: Color | null
       headingColor: Color | null
       audioDurationMs: number | null
+      contributors: Array<{
+        _id: string | null
+        name: string | null
+        kind: string | null
+      }> | null
       plainTitle: string
       audioItem: {
         _id: string
@@ -7646,33 +7394,6 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       _type: 'page'
       title: TextOnlyInlineEditor
       description: TextOnlyInlineEditor | null
-      byline: Array<{
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal'
-        listItem?: never
-        markDefs: Array<
-          | {
-              _key: string
-              _type: 'internalLink'
-              reference: ArticleReference | ContributorReference | PageReference
-              slug: string | null
-            }
-          | {
-              _key: string
-              _type: 'link'
-              href?: string
-              title?: string
-            }
-        > | null
-        level?: number
-        _type: 'block'
-        _key: string
-      }> | null
       slug: string
       image: {
         asset?: SanityImageAssetReference
@@ -7698,12 +7419,13 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       backgroundColor: Color | null
       headingColor: Color | null
       audioDurationMs: null
+      contributors: null
     }
   | null
 
 // Source: src/app/(sanity)/groq/teasers-small-query.ts
 // Variable: TEASERS_SMALL_QUERY_DESC
-// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaserSmall" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate desc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
+// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaserSmall" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate desc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
 export type TEASERS_SMALL_QUERY_DESC_RESULT =
   | {
       block: null
@@ -7719,36 +7441,6 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       _type: 'article'
                       title: TextOnlyInlineEditor
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       slug: string | null
                       image: {
                         asset?: SanityImageAssetReference
@@ -7783,6 +7475,11 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       backgroundColor: Color | null
                       headingColor: Color | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       plainTitle: string
                       audioItem: {
                         _id: string
@@ -7811,36 +7508,6 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       _type: 'page'
                       title: TextOnlyInlineEditor
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       slug: string
                       image: {
                         asset?: SanityImageAssetReference
@@ -7871,42 +7538,13 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       backgroundColor: Color | null
                       headingColor: Color | null
                       audioDurationMs: null
+                      contributors: null
                     }
                   | {
                       _id: string
                       _type: 'teaserSmall'
                       title: TextOnlyInlineEditor | null
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       href: null | string
                       image: {
                         asset?: SanityImageAssetReference
@@ -7917,6 +7555,11 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                         _type: 'image'
                       } | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       publishDate: null
                       upcomingOnly: boolean | null
                       targetPublishDate: string | null
@@ -7937,36 +7580,6 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       _type: 'article'
                       title: TextOnlyInlineEditor
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       slug: string | null
                       image: {
                         asset?: SanityImageAssetReference
@@ -8001,6 +7614,11 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       backgroundColor: Color | null
                       headingColor: Color | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       plainTitle: string
                       audioItem: {
                         _id: string
@@ -8029,36 +7647,6 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       _type: 'teaserSmall'
                       title: TextOnlyInlineEditor | null
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       href: null | string
                       image: {
                         asset?: SanityImageAssetReference
@@ -8069,6 +7657,11 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                         _type: 'image'
                       } | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       publishDate: null
                       upcomingOnly: boolean | null
                       targetPublishDate: string | null
@@ -8093,7 +7686,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
 
 // Source: src/app/(sanity)/groq/teasers-small-query.ts
 // Variable: TEASERS_SMALL_QUERY_ASC
-// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaser" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaserSmall" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate asc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "byline": teaserSmall.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Top level rather than under the _type == "article" condition below: teaser  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a  // field only present on one branch can't be read without narrowing first.  // Null for pages, which have no audio.  audioDurationMs,  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "byline": teaserSmallConfig.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),          reference->slug.current        )      }    }  },  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
+// Query: *[_id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{          _type in ["article", "page"] => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaser" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        },        source.sourceType == "COLLECTION" => *[          (            _type == "article" &&            ^.source.collection._ref in articleCollections[].collection._ref          ) || (            _type == "teaserSmall" &&            collection._ref == ^.source.collection._ref          )        ] | order(publishDate asc) [$start...$end] {          _type == "article" => {              _id,  _type,  "title": coalesce(teaserSmall.title, title),  "description": coalesce(teaserSmall.description, description),  "slug": slug.current,  "image": teaserSmall.image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current  },  "articleCollection": articleCollections[featured == true][0].collection->{    _id,    title,    series  },  "label": teaserSmall.heading,  theme {    name,    accentColor,  },  "color": teaserSmall.color,  "backgroundColor": teaserSmall.backgroundColor,  "headingColor": teaserSmall.headingColor,  // Null for pages, which have no audio.  audioDurationMs,  "contributors":   contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  _type == "article" => {    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),    "audioItem": select(defined(audioSourceMp3) => @{        _id,  "title": pt::text(title),  "slug": slug.current,  publishDate,  audioSourceMp3,  audioDurationMs,  syntheticVoiceEnabled,  "image": teaserSmall.image    }),    discussion->{      backendDiscussionId,    },    inlineDiscussion,  },          },          _type == "teaserSmall" => {              _id,  _type,  "title": teaserSmallConfig.title,  "description": teaserSmallConfig.description,  "href": select(    target[0]->_type == "article" => target[0]->slug.current,    target[0]->_type == "page" => target[0]->slug.current,    defined(target[0].href) => target[0].href  ),  "image": teaserSmallConfig.image,  "audioDurationMs": target[0]->audioDurationMs,  "contributors": target[0]->  contributors[]{    "_id": contributor->_id,    "name": contributor->title,    kind  },  publishDate,  upcomingOnly,  "targetPublishDate": target[0]->publishDate,  "label": teaserSmallConfig.heading,  "theme": {    "accentColor": teaserSmallConfig.headingColor,    "name": "EDITORIAL",  },  "color": teaserSmallConfig.color,  "backgroundColor": teaserSmallConfig.backgroundColor,  "headingColor": teaserSmallConfig.headingColor,          }        }, []      ),    }  }
 export type TEASERS_SMALL_QUERY_ASC_RESULT =
   | {
       block: null
@@ -8109,36 +7702,6 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       _type: 'article'
                       title: TextOnlyInlineEditor
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       slug: string | null
                       image: {
                         asset?: SanityImageAssetReference
@@ -8173,6 +7736,11 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       backgroundColor: Color | null
                       headingColor: Color | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       plainTitle: string
                       audioItem: {
                         _id: string
@@ -8201,36 +7769,6 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       _type: 'page'
                       title: TextOnlyInlineEditor
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       slug: string
                       image: {
                         asset?: SanityImageAssetReference
@@ -8261,6 +7799,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       backgroundColor: Color | null
                       headingColor: Color | null
                       audioDurationMs: null
+                      contributors: null
                     }
                   | {}
                 >
@@ -8270,36 +7809,6 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       _type: 'article'
                       title: TextOnlyInlineEditor
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       slug: string | null
                       image: {
                         asset?: SanityImageAssetReference
@@ -8334,6 +7843,11 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       backgroundColor: Color | null
                       headingColor: Color | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       plainTitle: string
                       audioItem: {
                         _id: string
@@ -8362,36 +7876,6 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       _type: 'teaserSmall'
                       title: TextOnlyInlineEditor | null
                       description: TextOnlyInlineEditor | null
-                      byline: Array<{
-                        children?: Array<{
-                          marks?: Array<string>
-                          text?: string
-                          _type: 'span'
-                          _key: string
-                        }>
-                        style?: 'normal'
-                        listItem?: never
-                        markDefs: Array<
-                          | {
-                              _key: string
-                              _type: 'internalLink'
-                              reference:
-                                | ArticleReference
-                                | ContributorReference
-                                | PageReference
-                              slug: string | null
-                            }
-                          | {
-                              _key: string
-                              _type: 'link'
-                              href?: string
-                              title?: string
-                            }
-                        > | null
-                        level?: number
-                        _type: 'block'
-                        _key: string
-                      }> | null
                       href: null | string
                       image: {
                         asset?: SanityImageAssetReference
@@ -8402,6 +7886,11 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                         _type: 'image'
                       } | null
                       audioDurationMs: number | null
+                      contributors: Array<{
+                        _id: string | null
+                        name: string | null
+                        kind: string | null
+                      }> | null
                       publishDate: null
                       upcomingOnly: boolean | null
                       targetPublishDate: string | null
@@ -8430,36 +7919,36 @@ declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true) &&\n    publishDate >= $from &&\n    publishDate < $until\n  ] | order(publishDate asc, _id asc) {\n    "teaser": *[_type == "teaserLarge" && references(^._id)]\n      | order(_updatedAt desc)[0] {\n        \n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n\n      }\n  }[defined(teaser)].teaser': ARCHIVE_MONTH_TEASERS_QUERY_RESULT
     '*[_type == "teaserLarge" && _id == $id][0]{\n    \n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n\n  }': TEASER_LARGE_QUERY_RESULT
-    '\n  *[_type == "contributor" && userId == $userId][0]{\n    "articles": *[\n      \n  _type == "article" &&\n  defined(slug.current) &&\n  defined(publishDate) &&\n  references(^._id) &&\n  ^._id in contributors[].contributor._ref\n &&\n      (\n        !defined($lastPublishDate) ||\n        publishDate < $lastPublishDate ||\n        (publishDate == $lastPublishDate && _id > $lastId)\n      )\n    ] | order(publishDate desc, _id asc) [0...$limit] {\n      \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n    }\n  }.articles': ARTICLES_BY_AUTHOR_QUERY_RESULT
+    '\n  *[_type == "contributor" && userId == $userId][0]{\n    "articles": *[\n      \n  _type == "article" &&\n  defined(slug.current) &&\n  defined(publishDate) &&\n  references(^._id) &&\n  ^._id in contributors[].contributor._ref\n &&\n      (\n        !defined($lastPublishDate) ||\n        publishDate < $lastPublishDate ||\n        (publishDate == $lastPublishDate && _id > $lastId)\n      )\n    ] | order(publishDate desc, _id asc) [0...$limit] {\n      \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n    }\n  }.articles': ARTICLES_BY_AUTHOR_QUERY_RESULT
     '\n  *[_type == "contributor" && userId == $userId][0]{\n    "totalCount": count(*[\n  _type == "article" &&\n  defined(slug.current) &&\n  defined(publishDate) &&\n  references(^._id) &&\n  ^._id in contributors[].contributor._ref\n])\n  }.totalCount': ARTICLES_BY_AUTHOR_COUNT_QUERY_RESULT
-    '\n  *[\n    _type == "article" &&\n    _id in $ids\n  ] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': ARTICLES_BY_IDS_QUERY_RESULT
-    '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true) &&\n    (\n      !defined($lastPublishDate) ||\n      publishDate < $lastPublishDate ||\n      (publishDate == $lastPublishDate && _id > $lastId)\n    )\n  ] | order(publishDate desc, _id asc) [0...$limit] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': ARTICLES_QUERY_RESULT
+    '\n  *[\n    _type == "article" &&\n    _id in $ids\n  ] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': ARTICLES_BY_IDS_QUERY_RESULT
+    '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true) &&\n    (\n      !defined($lastPublishDate) ||\n      publishDate < $lastPublishDate ||\n      (publishDate == $lastPublishDate && _id > $lastId)\n    )\n  ] | order(publishDate desc, _id asc) [0...$limit] {\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': ARTICLES_QUERY_RESULT
     '\n  *[_type == "article" && _id in $ids]{\n    \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n  }\n': AUDIO_QUEUE_ITEMS_QUERY_RESULT
     '\n  *[\n    _type == "article" &&\n    defined(audioSourceMp3) &&\n    (\n      !defined($lastPublishDate) ||\n      publishDate < $lastPublishDate ||\n      (publishDate == $lastPublishDate && _id > $lastId)\n    )\n  ] | order(publishDate desc, _id asc) [0...$limit] {\n    \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n  }\n': LATEST_AUDIO_ARTICLES_QUERY_RESULT
     '*[_type == "article"][0]{\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n\n  }': BYLINE_FRAGMENT_QUERY_RESULT
     '\n  *[_type == "articleCollection" && _id in $ids]{\n    _id,\n    title,\n    description,\n    image\n  }\n': COLLECTIONS_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "callToAction"][0]{\n      \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n    }\n  }': CTA_BLOCK_FRAGMENT_QUERY_RESULT
-    '*[_type in ["article", "page"] && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    _updatedAt,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n\n    _type == "article" => {\n      repoId,\n      "plainTitle": pt::text(title),\n      teaserSmall{ image },\n      "audioItem": select(defined(audioSourceMp3) => @{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }),\n      _updatedAt,\n      publishDate,\n      // Plain text and SEO overrides, used for the JSON-LD linked data\n      "plainTitle": pt::text(title),\n      "plainDescription": pt::text(description),\n      seo {\n        title,\n        description,\n        image,\n        useImageBuilder\n      },\n      discussion->{\n        backendDiscussionId,\n      },\n      inlineDiscussion,\n      readingAccess,\n      \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n      newsletter->{\n        title,\n        description,\n        frequency,\n        image,\n        name,\n      },\n      podcast->{\n        _id\n      },\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n,\n      contributors[]{\n        _id,\n        kind,\n        "userId": contributor->userId,\n        // Same profile slug as the byline links\n        "slug": coalesce(contributor->slug.current, contributor->userId),\n        "name": contributor->title,\n        "role": contributor->role,\n        "portraitImage": contributor->portraitImage\n      },\n      "articleCollection": articleCollections[featured == true][0].collection->{\n        _id,\n        title,\n        description,\n        image,\n        series\n      },\n      articleRecommendations[]->{\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      }\n    },\n\n    _type == "page" => {\n      pageBuilder[]{\n        _key,\n        _type,\n        _type == "menu" => {\n          \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current,\n        "color": theme.accentColor.hex\n      }\n    }\n  }\n\n        },\n        _type == "callToAction" => {\n          \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n        },\n        _type == "editorBlock" => {\n          \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n        },\n        _type == "teaserList" => {\n          \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n        },\n        _type == "teaserLarge" => {\n          "reference": @->{\n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n}\n        },\n      }\n    }\n  }\n  ': DOCUMENT_BY_SLUG_QUERY_RESULT
-    '*[_type in ["article", "page"] && _id == $id][0]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    _updatedAt,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n\n    _type == "article" => {\n      repoId,\n      "plainTitle": pt::text(title),\n      teaserSmall{ image },\n      "audioItem": select(defined(audioSourceMp3) => @{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }),\n      _updatedAt,\n      publishDate,\n      // Plain text and SEO overrides, used for the JSON-LD linked data\n      "plainTitle": pt::text(title),\n      "plainDescription": pt::text(description),\n      seo {\n        title,\n        description,\n        image,\n        useImageBuilder\n      },\n      discussion->{\n        backendDiscussionId,\n      },\n      inlineDiscussion,\n      readingAccess,\n      \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n      newsletter->{\n        title,\n        description,\n        frequency,\n        image,\n        name,\n      },\n      podcast->{\n        _id\n      },\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n,\n      contributors[]{\n        _id,\n        kind,\n        "userId": contributor->userId,\n        // Same profile slug as the byline links\n        "slug": coalesce(contributor->slug.current, contributor->userId),\n        "name": contributor->title,\n        "role": contributor->role,\n        "portraitImage": contributor->portraitImage\n      },\n      "articleCollection": articleCollections[featured == true][0].collection->{\n        _id,\n        title,\n        description,\n        image,\n        series\n      },\n      articleRecommendations[]->{\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      }\n    },\n\n    _type == "page" => {\n      pageBuilder[]{\n        _key,\n        _type,\n        _type == "menu" => {\n          \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current,\n        "color": theme.accentColor.hex\n      }\n    }\n  }\n\n        },\n        _type == "callToAction" => {\n          \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n        },\n        _type == "editorBlock" => {\n          \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n        },\n        _type == "teaserList" => {\n          \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n        },\n        _type == "teaserLarge" => {\n          "reference": @->{\n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n}\n        },\n      }\n    }\n  }\n  ': DOCUMENT_BY_ID_QUERY_RESULT
+    '*[_type in ["article", "page"] && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    _updatedAt,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n\n    _type == "article" => {\n      repoId,\n      "plainTitle": pt::text(title),\n      teaserSmall{ image },\n      "audioItem": select(defined(audioSourceMp3) => @{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }),\n      _updatedAt,\n      publishDate,\n      // Plain text and SEO overrides, used for the JSON-LD linked data\n      "plainTitle": pt::text(title),\n      "plainDescription": pt::text(description),\n      seo {\n        "title": pt::text(title),\n        "description": pt::text(description),\n        image,\n        useImageBuilder\n      },\n      discussion->{\n        backendDiscussionId,\n      },\n      inlineDiscussion,\n      readingAccess,\n      \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n      newsletter->{\n        title,\n        description,\n        frequency,\n        image,\n        name,\n      },\n      podcast->{\n        _id\n      },\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        },\n      },\n      _type == "button" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "button" => {\n      "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n,\n      contributors[]{\n        _id,\n        kind,\n        "userId": contributor->userId,\n        // Same profile slug as the byline links\n        "slug": coalesce(contributor->slug.current, contributor->userId),\n        "name": contributor->title,\n        "role": contributor->role,\n        "portraitImage": contributor->portraitImage\n      },\n      "articleCollection": articleCollections[featured == true][0].collection->{\n        _id,\n        title,\n        description,\n        image,\n        series\n      },\n      articleRecommendations[]->{\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      }\n    },\n\n    _type == "page" => {\n      pageBuilder[]{\n        _key,\n        _type,\n        _type == "menu" => {\n          \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current,\n        "color": theme.accentColor.hex\n      }\n    }\n  }\n\n        },\n        _type == "callToAction" => {\n          \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n        },\n        _type == "editorBlock" => {\n          \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        },\n      },\n      _type == "button" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "button" => {\n      "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n        },\n        _type == "teaserList" => {\n          \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n        },\n        _type == "teaserLarge" => {\n          "reference": @->{\n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n}\n        },\n      }\n    }\n  }\n  ': DOCUMENT_BY_SLUG_QUERY_RESULT
+    '*[_type in ["article", "page"] && _id == $id][0]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    _updatedAt,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n\n    _type == "article" => {\n      repoId,\n      "plainTitle": pt::text(title),\n      teaserSmall{ image },\n      "audioItem": select(defined(audioSourceMp3) => @{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }),\n      _updatedAt,\n      publishDate,\n      // Plain text and SEO overrides, used for the JSON-LD linked data\n      "plainTitle": pt::text(title),\n      "plainDescription": pt::text(description),\n      seo {\n        "title": pt::text(title),\n        "description": pt::text(description),\n        image,\n        useImageBuilder\n      },\n      discussion->{\n        backendDiscussionId,\n      },\n      inlineDiscussion,\n      readingAccess,\n      \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n      newsletter->{\n        title,\n        description,\n        frequency,\n        image,\n        name,\n      },\n      podcast->{\n        _id\n      },\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        },\n      },\n      _type == "button" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "button" => {\n      "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n,\n      contributors[]{\n        _id,\n        kind,\n        "userId": contributor->userId,\n        // Same profile slug as the byline links\n        "slug": coalesce(contributor->slug.current, contributor->userId),\n        "name": contributor->title,\n        "role": contributor->role,\n        "portraitImage": contributor->portraitImage\n      },\n      "articleCollection": articleCollections[featured == true][0].collection->{\n        _id,\n        title,\n        description,\n        image,\n        series\n      },\n      articleRecommendations[]->{\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      }\n    },\n\n    _type == "page" => {\n      pageBuilder[]{\n        _key,\n        _type,\n        _type == "menu" => {\n          \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current,\n        "color": theme.accentColor.hex\n      }\n    }\n  }\n\n        },\n        _type == "callToAction" => {\n          \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n        },\n        _type == "editorBlock" => {\n          \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        },\n      },\n      _type == "button" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "button" => {\n      "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n        },\n        _type == "teaserList" => {\n          \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n        },\n        _type == "teaserLarge" => {\n          "reference": @->{\n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n}\n        },\n      }\n    }\n  }\n  ': DOCUMENT_BY_ID_QUERY_RESULT
     '\n  *[\n    _type in ["article", "page"] &&\n    _id == $id\n  ][0] {\n    "slug": slug.current\n  }.slug': DOCUMENT_SLUG_BY_ID_RESULT
     '\n  *[\n    _type == "article" &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    coalesce(showInFeed, true)\n  ] | order(publishDate desc) [0...100] {\n    _id,\n    "path": slug.current,\n    "title": pt::text(title),\n    "description": pt::text(description),\n    publishDate\n  }': FEED_QUERY_RESULT
     '\n  *[\n    _type == "teaserLarge" &&\n    target[0]->_type == "article" &&\n    defined(target[0]->publishDate) &&\n    !(_id in *[_type == "front"] | order(publishDate desc)[0].pageBuilder[]._ref)\n  ] | order(target[0]->publishDate desc) [$start...$end] {\n    \n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n\n  }\n': FRONT_FEED_QUERY_RESULT
     '*[_type == "front"] | order(publishDate desc)[0]{\n    _id,\n    title,\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "teaserList" => {\n        \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n}\n      },\n    },\n  }': FRONT_LATEST_QUERY_RESULT
     '*[_type == "front" && _id == $id][0]{\n    _id,\n    title,\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "teaserList" => {\n        \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n}\n      },\n    },\n  }': FRONT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "menu"][0]{\n      \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current,\n        "color": theme.accentColor.hex\n      }\n    }\n  }\n\n    }\n  }': MENU_BLOCK_FRAGMENT_QUERY_RESULT
-    '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n    }\n  }': PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
-    '*[_type == "article"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        }\n      }\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n  }': ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
+    '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        },\n      },\n      _type == "button" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "button" => {\n      "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n    }\n  }': PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
+    '*[_type == "article"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n      _type == "expandableLink" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n        "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n      }\n    },\n    body[] { // Nested PT, e.g. in infoboxes\n      ...,\n      markDefs[]{\n        ...,\n        _type == "internalLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n        },\n        _type == "expandableLink" => {\n          "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n),\n          "referenceTitle": select(\n  reference->_type == "contributor" => reference->title,\n  pt::text(reference->title)\n)\n        },\n      },\n      _type == "button" => {\n        "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n      },\n    },\n\n    _type == "toc" => {\n      ...,\n      "headings": ^.content[_type == "block" && style == "heading"]\n    },\n    _type == "authorBlock" => {\n      ...,\n      contributor->\n    },\n    _type == "button" => {\n      "slug": select(\n  reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n  reference->slug.current\n)\n    },\n    _type == "audio" => {\n      ...,\n      "fileUrl": file.asset->url\n    },\n  }\n\n  }': ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
     '*[slug.current == $slug][0]{\n    "title": coalesce(pt::text(seo.title), pt::text(title)),\n    "description": coalesce(pt::text(seo.description), pt::text(description)),\n    "image": coalesce(seo.image, cover, teaserSmall.image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': SEO_QUERY_RESULT
     '*[slug.current == $slug || _id == $id || _id == "drafts." + $id][0]{\n    "title": coalesce(pt::text(seo.title), pt::text(title)),\n    "description": coalesce(pt::text(seo.description), pt::text(description)),\n    "image": coalesce(seo.image, cover, teaserSmall.image),\n    "useImageBuilder": seo.useImageBuilder,\n    "imageBuilder": seo.imageBuilder,\n    "heading": pt::text(heading->title),\n    theme {\n      name,\n      accentColor,\n      darkMode\n    }\n  }': OG_SHARE_IMAGE_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image,\n      series,\n      "episodes": *[\n        (\n          _type == "article" &&\n          ^._id in articleCollections[].collection._ref\n        ) || (\n          _type == "teaserSmall" &&\n          collection._ref == ^._id\n        )\n      ] | order(publishDate asc) {\n        _type == "article" => {\n          \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n        },\n        _type == "teaserSmall" => {\n          \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n        }\n      }\n    },\n  }': SERIES_MENU_QUERY_RESULT
-    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n    slug,\n\n    "episodes": *[\n      (\n        _type == "article" &&\n        ^._id in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^._id\n      )\n    ] | order(publishDate asc) {\n      _type == "article" => {\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      },\n      _type == "teaserSmall" => {\n        \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n      }\n    }\n  }': SERIES_NAV_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image,\n      series,\n      "episodes": *[\n        (\n          _type == "article" &&\n          ^._id in articleCollections[].collection._ref\n        ) || (\n          _type == "teaserSmall" &&\n          collection._ref == ^._id\n        )\n      ] | order(publishDate asc) {\n        _type == "article" => {\n          \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n        },\n        _type == "teaserSmall" => {\n          \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n        }\n      }\n    },\n  }': SERIES_MENU_QUERY_RESULT
+    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n    slug,\n\n    "episodes": *[\n      (\n        _type == "article" &&\n        ^._id in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^._id\n      )\n    ] | order(publishDate asc) {\n      _type == "article" => {\n        \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n      },\n      _type == "teaserSmall" => {\n        \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n      }\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '\n  *[\n    _type in ["article", "page"] &&\n    defined(slug.current) &&\n    defined(publishDate) &&\n    publishDate >= $from && publishDate < $to\n  ] | order(publishDate desc) {\n    _type,\n    "path": slug.current,\n    "title": pt::text(title),\n    publishDate,\n    _updatedAt\n  }': SITEMAP_BY_YEAR_QUERY_RESULT
     '*[_type == "teaserLarge"][0]{\n    \n  _id,\n  _type,\n  "targetType": target[0]->_type,\n  // link can either be a plain link OR a referenced doc\n  "target": coalesce(target[0]->slug.current, target[0].href),\n  "targetId": target[0]->_id,\n  "publishDate": target[0]->publishDate,\n  "theme": {\n    "name": target[0]->theme.name,\n    "accentColor": target[0]->theme.accentColor,\n  },\n  // heading: own string override, else the referenced doc\'s format title\n  "heading": select(\n    defined(heading) => { "title": heading },\n    defined(target[0]->heading) => {\n      "title": pt::text(target[0]->heading->title)\n    }\n  ),\n  "teaser": {\n    layout,\n    "title": coalesce(title, target[0]->title),\n    "description": coalesce(description, target[0]->description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n, target[0]->\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n),\n    "image": coalesce(image, target[0]->image),\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n    "audioItem": select(\n      defined(target[0]->audioSourceMp3) => target[0]->{\n        \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n      }\n    ),\n  }\n\n  }': TEASER_LARGE_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "teaserList"][0]{\n      \n  appearance,\n  color,\n  backgroundColor,\n  imageStyle,\n  skipDescription,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaserSmall" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n    }\n  }': TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT
-    '*[_type == "teaserSmall"]{\n    \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n  }': TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT
-    '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': TEASER_SMALL_FRAGMENT_QUERY_RESULT
-    '*[_type in ["article", "page"] && _id == $id][0]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': TEASER_SMALL_PREVIEW_QUERY_RESULT
-    '\n  *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaserSmall" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate desc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_DESC_RESULT
-    '\n   *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaser" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaserSmall" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate asc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Top level rather than under the _type == "article" condition below: teaser\n  // lists render a union of this and TEASER_SMALL_DOCUMENT_FRAGMENT, and a\n  // field only present on one branch can\'t be read without narrowing first.\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "byline": teaserSmallConfig.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),\n          reference->slug.current\n        )\n      }\n    }\n  }\n,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_ASC_RESULT
+    '*[_type == "teaserSmall"]{\n    \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n  }': TEASER_SMALL_DOCUMENT_FRAGMENT_QUERY_RESULT
+    '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': TEASER_SMALL_FRAGMENT_QUERY_RESULT
+    '*[_type in ["article", "page"] && _id == $id][0]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n  }': TEASER_SMALL_PREVIEW_QUERY_RESULT
+    '\n  *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaserSmall" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate desc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_DESC_RESULT
+    '\n   *[_id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          _type in ["article", "page"] => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaser" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        },\n        source.sourceType == "COLLECTION" => *[\n          (\n            _type == "article" &&\n            ^.source.collection._ref in articleCollections[].collection._ref\n          ) || (\n            _type == "teaserSmall" &&\n            collection._ref == ^.source.collection._ref\n          )\n        ] | order(publishDate asc) [$start...$end] {\n          _type == "article" => {\n            \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current\n  },\n  "articleCollection": articleCollections[featured == true][0].collection->{\n    _id,\n    title,\n    series\n  },\n  "label": teaserSmall.heading,\n  theme {\n    name,\n    accentColor,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": teaserSmall.headingColor,\n  // Null for pages, which have no audio.\n  audioDurationMs,\n  "contributors": \n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  _type == "article" => {\n    "plainTitle": pt::text(coalesce(teaserSmall.title, title)),\n    "audioItem": select(defined(audioSourceMp3) => @{\n      \n  _id,\n  "title": pt::text(title),\n  "slug": slug.current,\n  publishDate,\n  audioSourceMp3,\n  audioDurationMs,\n  syntheticVoiceEnabled,\n  "image": teaserSmall.image\n\n    }),\n    discussion->{\n      backendDiscussionId,\n    },\n    inlineDiscussion,\n  },\n\n          },\n          _type == "teaserSmall" => {\n            \n  _id,\n  _type,\n  "title": teaserSmallConfig.title,\n  "description": teaserSmallConfig.description,\n  "href": select(\n    target[0]->_type == "article" => target[0]->slug.current,\n    target[0]->_type == "page" => target[0]->slug.current,\n    defined(target[0].href) => target[0].href\n  ),\n  "image": teaserSmallConfig.image,\n  "audioDurationMs": target[0]->audioDurationMs,\n  "contributors": target[0]->\n  contributors[]{\n    "_id": contributor->_id,\n    "name": contributor->title,\n    kind\n  }\n,\n  publishDate,\n  upcomingOnly,\n  "targetPublishDate": target[0]->publishDate,\n  "label": teaserSmallConfig.heading,\n  "theme": {\n    "accentColor": teaserSmallConfig.headingColor,\n    "name": "EDITORIAL",\n  },\n  "color": teaserSmallConfig.color,\n  "backgroundColor": teaserSmallConfig.backgroundColor,\n  "headingColor": teaserSmallConfig.headingColor,\n\n          }\n        }, []\n      ),\n    }\n  }\n': TEASERS_SMALL_QUERY_ASC_RESULT
   }
 }

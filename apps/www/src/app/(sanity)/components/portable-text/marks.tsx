@@ -4,11 +4,11 @@ import type { PortableTextMarkComponentProps } from 'next-sanity'
 import type { ReactNode } from 'react'
 
 export function Strong({ children }: { children?: ReactNode }) {
-  return <strong className={css({ fontWeight: 700 })}>{children}</strong>
+  return <strong>{children}</strong>
 }
 
 export function Em({ children }: { children?: ReactNode }) {
-  return <em className={css({ fontStyle: 'italic' })}>{children}</em>
+  return <em>{children}</em>
 }
 
 const subSupBaseAttrs = {
@@ -39,7 +39,11 @@ const linkStyle = css({
   cursor: 'pointer',
 })
 
-export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
+export function InternalLink({
+  text,
+  children,
+  value,
+}: PortableTextMarkComponentProps) {
   const href = value?.slug
 
   if (!href) {
@@ -48,15 +52,18 @@ export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
 
   return (
     <Link href={href ?? '#'} className={linkStyle}>
-      {text}
+      {children}
     </Link>
   )
 }
 
-export function ExternalLink({ text, value }: PortableTextMarkComponentProps) {
+export function ExternalLink({
+  children,
+  value,
+}: PortableTextMarkComponentProps) {
   return (
     <a href={value.href} target='_blank' rel='noreferrer' className={linkStyle}>
-      {text}
+      {children}
     </a>
   )
 }

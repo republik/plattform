@@ -91,11 +91,11 @@ const nestedComponentsWithoutLinks: Partial<PortableTextReactComponents> = {
     em: Em,
     sub: Sub,
     sup: Sup,
-    link: ({ text }: PortableTextMarkComponentProps) => {
-      return text
+    link: ({ children }: PortableTextMarkComponentProps) => {
+      return <>{children}</>
     },
-    internalLink: ({ text }: PortableTextMarkComponentProps) => {
-      return text
+    internalLink: ({ children }: PortableTextMarkComponentProps) => {
+      return <>{children}</>
     },
   },
 }

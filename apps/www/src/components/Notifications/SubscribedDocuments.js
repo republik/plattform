@@ -70,27 +70,30 @@ const SubscribedDocuments = ({
   unsubFromDoc,
   data: { myDocumentSubscriptions, loading, error },
 }) => {
-  const subscriptions = myDocumentSubscriptions?.subscribedTo.nodes.filter(
-    (subscription) =>
-      subscription.active &&
-      subscription.documentDetails?.__typename === 'SanityDocumentRef' &&
-      subscription.documentDetails?.id,
-  )
+  const subscriptions =
+    myDocumentSubscriptions?.subscribedTo.nodes.filter(
+      (subscription) =>
+        subscription.active &&
+        subscription.documentDetails?.__typename === 'SanityDocumentRef' &&
+        subscription.documentDetails?.id,
+    ) ?? []
 
   const collectionsById = useSanityCollections(
-    subscriptions?.length > 0
-      ? subscriptions.map((s) => s.documentDetails.id)
-      : [],
+    subscriptions.map((s) => s.documentDetails.id),
+  )
+
+  // skip subscriptions whose collection isn't (yet) returned by Sanity
+  // (still loading, unpublished, deleted or not an articleCollection)
+  const subscribedCollections = subscriptions.filter(
+    (s) => collectionsById[s.documentDetails.id],
   )
 
   return (
     <Loader
-      loading={
-        loading || Object.keys(collectionsById).length < subscriptions.length
-      }
+      loading={loading}
       error={error}
       render={() => {
-        if (!subscriptions.length) {
+        if (!subscribedCollections.length) {
           return (
             <Interaction.P>
               {t('Notifications/settings/formats/summary/0')}
@@ -100,7 +103,7 @@ const SubscribedDocuments = ({
 
         return (
           <div {...styles.formats}>
-            {subscriptions.map((subscription, i) => {
+            {subscribedCollections.map((subscription) => {
               const collection =
                 collectionsById[subscription.documentDetails.id]
 

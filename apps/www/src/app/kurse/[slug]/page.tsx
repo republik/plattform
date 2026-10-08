@@ -3,13 +3,13 @@ import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters
 import { ContainerNarrow } from '@/app/components/container'
 import { PageLayout } from '@/app/components/layout'
 import { Share } from '@/app/components/share/share'
+import Link from '@/app/components/ui/link'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import type { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
-import Link from '@/app/components/ui/link'
 import { notFound } from 'next/navigation'
 import React from 'react'
 import { Credits } from '../components/credits'
@@ -316,7 +316,7 @@ export default async function CoursePage({ params }: PageProps) {
 
                 <Share
                   title={title}
-                  url={`${process.env.NEXT_PUBLIC_URL}/kurse/${slug}`}
+                  url={`${process.env.NEXT_PUBLIC_BASE_URL}/kurse/${slug}`}
                   emailSubject={title}
                 >
                   <div

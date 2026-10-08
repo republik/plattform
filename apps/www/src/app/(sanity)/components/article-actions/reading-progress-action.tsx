@@ -23,7 +23,6 @@ const arcStyle = css({
 const statusStyle = css({
   '&[data-status]': {
     cursor: 'default',
-    fontVariantNumeric: 'tabular-nums',
     margin: 0,
     _hover: { color: 'text' },
   },
@@ -136,10 +135,10 @@ export function ReadingProgressAction({ stored }: { stored?: number }) {
     <p
       className={cx(actionStyle, statusStyle)}
       data-status
-      title={`${percent}% gelesen`}
+      title={`${percent} % gelesen`}
     >
       <ReadingPositionIcon percent={percent} />
-      <span className={actionLabelStyle}>{percent}%</span>
+      <span className={actionLabelStyle}>{percent}&thinsp;%</span>
     </p>
   )
 }

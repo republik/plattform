@@ -2,10 +2,13 @@ import { DiscussionNotificationOption } from '#graphql/republik-api/__generated_
 import FollowDiscussionDropdown from '@/app/(sanity)/components/follow/follow-discussion-dropdown'
 import { DialogPaynote } from '@/app/(sanity)/components/paynotes/paynotes-in-trial/dialog'
 import ActionBar from '@/components/ActionBar/Discussion'
+import { UnauthorizedMessage } from '@/components/Auth/withMembership'
+import { PageCenter } from '@/components/Auth/withAuthorization'
 import DiscussionTitle from '@/components/Dialog/DiscussionTitle'
 import { useDiscussion } from '@/components/Discussion/context/DiscussionContext'
 import DiscussionContextProvider from '@/components/Discussion/context/DiscussionContextProvider'
 import Discussion from '@/components/Discussion/Discussion'
+import { isDiscussionBlockedFor } from '@/components/Discussion/membersOnlyDiscussions'
 import Frame from '@/components/Frame'
 import Meta from '@/components/Frame/Meta'
 import StatusError from '@/components/StatusError'
@@ -15,6 +18,7 @@ import {
   providedUserAgentProps,
 } from '@/lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
+import { useMe } from '@/lib/context/MeContext'
 import { getServerSideRedirection } from '@/lib/redirections'
 import { useTranslation } from '@/lib/withT'
 import {
@@ -114,6 +118,17 @@ const getDiscussionPath = (path: string | string[]): string =>
 const DialogPage = () => {
   const router = useRouter()
   const discussionPath = getDiscussionPath(router.query.path)
+  const { me } = useMe()
+
+  if (isDiscussionBlockedFor(discussionPath, me)) {
+    return (
+      <Frame raw>
+        <PageCenter>
+          <UnauthorizedMessage />
+        </PageCenter>
+      </Frame>
+    )
+  }
 
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
@@ -127,10 +142,16 @@ const DialogPage = () => {
 export default DialogPage
 
 export const getServerSideProps = createGetServerSideProps(
-  async ({ client, ctx }) => {
+  async ({ client, ctx, user }) => {
+    const discussionPath = getDiscussionPath(ctx.params?.path)
+
+    if (isDiscussionBlockedFor(discussionPath, user)) {
+      return { props: providedUserAgentProps(ctx.req) }
+    }
+
     const data = await prefetchDiscussion(client, {
       query: ctx.query,
-      discussionPath: getDiscussionPath(ctx.params?.path),
+      discussionPath,
     })
 
     // Only a loaded-but-empty result means the discussion is gone. If the

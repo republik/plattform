@@ -108,9 +108,6 @@ export const presetRepublik = definePreset({
             value:
               'GT-America-Standard, Helvetica-Neue, Arial, Roboto, sans-serif',
           },
-          inicia: {
-            value: 'Inicia-Medium, Helvetica-Neue, Arial, Roboto, sans-serif',
-          },
           druk: {
             value: 'Druk, Helvetica-Neue, Arial, Roboto, sans-serif',
           },
@@ -367,6 +364,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: editorialFontSizes.editorialTitle,
             lineHeight: 1.1333,
+            '& em': { fontStyle: 'normal' }, // Republik Serif doesn't have an italic style
           },
         },
         editorialLead: {
@@ -420,6 +418,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: editorialFontSizes.metaTitle,
             lineHeight: 1.1333,
+            '& em': { fontStyle: 'normal' }, // Italic would be possible but we apply the same rule as editorialTitle text style
           },
         },
         metaSubheading: {
@@ -438,6 +437,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: editorialFontSizes.metaParagraph,
             lineHeight: 1.6,
+            '& strong': { fontWeight: 'medium' },
           },
         },
         teaserTitle: {
@@ -447,6 +447,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: { base: '3xl', md: '3rem' },
             lineHeight: 1.125,
+            '& em': { fontStyle: 'normal' }, // Republik Serif doesn't have an italic style
           },
         },
         teaserLead: {
@@ -465,6 +466,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: { base: 'l', md: 'xl' },
             lineHeight: 1.375,
+            '& strong': { fontWeight: 'medium' },
           },
         },
         teaserCredits: {
@@ -474,6 +476,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: 's',
             lineHeight: 1.375,
+            '& strong': { fontWeight: 'medium' },
           },
         },
         sans: {
@@ -483,6 +486,7 @@ export const presetRepublik = definePreset({
             fontStyle: 'normal',
             fontSize: 'base',
             lineHeight: 1.5,
+            '& strong': { fontWeight: 'medium' },
           },
         },
         serif: {
@@ -618,13 +622,6 @@ export const presetRepublik = definePreset({
             fontFamily: 'Menlo, Courier, monospace',
             fontWeight: 400,
             fontStyle: 'normal',
-          },
-        },
-        cursiveTitle: {
-          value: {
-            fontFamily: 'inicia',
-            fontWeight: 500,
-            fontStyle: 'italic',
           },
         },
       },

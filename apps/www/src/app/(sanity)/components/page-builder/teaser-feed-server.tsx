@@ -1,12 +1,10 @@
-'use server'
-
 import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import { TEASERS_SMALL_QUERY_DESC } from '@/app/(sanity)/groq/teasers-small-query'
 import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
-import { TeaserFeedClient } from './teaser-feed-client'
+import { TeaserFeedClient, type TeaserFeedPage } from './teaser-feed-client'
 
-const MAX_TEASERS = 20
+const PAGE_SIZE = 20
 
 export async function TeaserFeedServer({
   teaserList,
@@ -17,43 +15,38 @@ export async function TeaserFeedServer({
   documentId: string
   blockKey: string
 }) {
-  const data = await sanityClientFetch(
-    TEASERS_SMALL_QUERY_DESC,
-    {
-      documentId,
-      blockKey,
-      start: 0,
-      end: MAX_TEASERS,
-    },
-    { tag: 'teaser-feed' },
-  )
-
-  const teasers = getNotExpiredTeasers(data?.block?.teasers)
-  if (!teasers.length) return null
-
   const { total } = teaserList
 
-  // we only offer this option when: list has > 20 teasers
-  async function loadMore() {
+  // the cursor is the position in the source list (incl. expired teasers)
+  async function fetchPage(cursor = 0): Promise<TeaserFeedPage> {
     'use server'
+    const end = cursor + PAGE_SIZE
     const data = await sanityClientFetch(
       TEASERS_SMALL_QUERY_DESC,
       {
+        documentId,
         blockKey,
-        start: MAX_TEASERS,
-        end: total,
+        start: cursor,
+        end,
       },
       { tag: 'teaser-feed' },
     )
-    return getNotExpiredTeasers(data?.block?.teasers)
+    const hasMore = end < total
+    return {
+      teasers: getNotExpiredTeasers(data?.block?.teasers),
+      hasMore,
+      cursor: hasMore ? end : undefined,
+    }
   }
+
+  const initialPage = await fetchPage()
+  if (!initialPage.teasers.length) return null
 
   return (
     <TeaserFeedClient
-      initialTeasers={teasers}
+      initialPage={initialPage}
       teaserList={teaserList}
-      pageSize={MAX_TEASERS}
-      loadMoreAction={loadMore}
+      loadMoreAction={fetchPage}
     />
   )
 }

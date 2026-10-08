@@ -50,7 +50,7 @@ export const nextReadItemTypography = css({
     lineHeight: 1.5,
     marginBottom: 2,
   },
-  '& p.author': {
+  '& p.byline': {
     fontFamily: 'gtAmericaStandard',
     fontWeight: 500,
     fontSize: 14,

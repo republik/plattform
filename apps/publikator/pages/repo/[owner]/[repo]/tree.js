@@ -264,7 +264,7 @@ export default withDefaultSSR(
   compose(
     withRouter,
     withT,
-    withAuthorization(['editor']),
+    withAuthorization,
     graphql(getRepoHistory, {
       options: ({ router }) => {
         return {

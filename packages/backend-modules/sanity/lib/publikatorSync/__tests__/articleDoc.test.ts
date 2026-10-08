@@ -430,6 +430,24 @@ describe('publikatorSync/articleDoc buildDraftArticleDoc', () => {
     })
   })
 
+  describe('autoCreateDiscussion', () => {
+    it('is true for regular articles', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { template: 'article' },
+      })
+      expect(doc.autoCreateDiscussion).toBe(true)
+    })
+
+    it('is omitted for newsletters', () => {
+      const doc = buildDraftArticleDoc({
+        content: { children: [] },
+        meta: { template: 'editorialNewsletter' },
+      })
+      expect(doc).not.toHaveProperty('autoCreateDiscussion')
+    })
+  })
+
   describe('articleCollections — Vorgelesen entry', () => {
     it('adds the Vorgelesen collection when audioSourceKind is readAloud', () => {
       const doc = buildDraftArticleDoc({

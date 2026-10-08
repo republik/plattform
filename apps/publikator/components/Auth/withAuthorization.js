@@ -1,9 +1,11 @@
+import { BrandMark } from '@project-r/styleguide'
+import { css } from 'glamor'
+import { useEffect } from 'react'
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
 import Me from './Me'
-import { css } from 'glamor'
 
-import { Interaction, BrandMark } from '@project-r/styleguide'
+const STUDIO_URL = 'https://republik.sanity.studio'
 
 const styles = {
   center: css({
@@ -18,32 +20,35 @@ const styles = {
   }),
 }
 
-const withAuthorization = (authorizedRoles) => (Component) =>
+const isAdmin = (me) => !!me?.roles?.includes('admin')
+
+// Signed-in users without the admin role are sent to the Sanity Studio
+function RedirectToStudio() {
+  useEffect(() => {
+    window.location.replace(STUDIO_URL)
+  }, [])
+  return null
+}
+
+const withAuthorization = (Component) =>
   withT(
     withMe((props) => {
-      const { me, t } = props
-      if (
-        me &&
-        me.roles &&
-        me.roles.some((role) => authorizedRoles.indexOf(role) !== -1)
-      ) {
+      const { me } = props
+      // me is undefined while the query is loading, null when signed out
+      if (me === undefined) {
+        return null
+      }
+      if (isAdmin(me)) {
         return <Component {...props} />
+      }
+      if (me) {
+        return <RedirectToStudio />
       }
       return (
         <div {...styles.center}>
           <div {...styles.brandMark}>
             <BrandMark />
           </div>
-          <Interaction.H1>{t('withAuthorization/title')}</Interaction.H1>
-          {me && (
-            <Interaction.P>
-              {t('withAuthorization/authorizedRoles', {
-                roles: authorizedRoles.join(', '),
-              })}
-              <br />
-            </Interaction.P>
-          )}
-          <br />
           <Me />
         </div>
       )

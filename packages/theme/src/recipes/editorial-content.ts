@@ -171,11 +171,11 @@ export const editorialContentRecipe = defineRecipe({
         subheadings: readerScaledText('editorialSubheading'),
         smallheadings: {
           ...readerScaledText('editorialParagraph'),
-          fontWeight: 'bold',
+          fontWeight: 'medium',
         },
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
-        interviewQuestion: { fontWeight: 'bold' },
+        interviewQuestion: { fontWeight: 'medium' },
       }),
       PAGE: contentParts({
         heading: {
