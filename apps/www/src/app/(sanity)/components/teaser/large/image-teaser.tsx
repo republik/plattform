@@ -247,12 +247,15 @@ export function ImageTeaser({
             audioItem={teaser.audioItem}
             // Matches teaserTextPosition's own centering rule above —
             // TOP/MIDDLE/BOTTOM (and the unset default, MIDDLE) center the
-            // text; the corner variants and UNDERNEATH don't.
+            // text; the corner variants don't. UNDERNEATH isn't placed by
+            // that rule, so it follows `textAlignment` like the text does.
             align={
               !teaser.textPosition ||
               ['TOP', 'TOP_RIGHT', 'MIDDLE', 'BOTTOM', 'BOTTOM_RIGHT'].includes(
                 teaser.textPosition,
-              )
+              ) ||
+              (teaser.textPosition === 'UNDERNEATH' &&
+                teaser.textAlignment === 'CENTER')
                 ? 'center'
                 : 'left'
             }
