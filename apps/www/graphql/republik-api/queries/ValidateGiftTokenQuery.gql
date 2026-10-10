@@ -1,0 +1,13 @@
+query ValidateGiftToken($token: String!) {
+  validateGiftToken(token: $token) {
+    valid
+    documentId
+    documentPath
+    expiresAt
+    granter {
+      name
+      portrait
+      hasPublicProfile
+    }
+  }
+}
