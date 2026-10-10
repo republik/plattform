@@ -11,6 +11,18 @@ import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
 import { processInvoiceUpcoming } from '../handlers/stripe/invoiceUpcoming'
 import { isPledgeBased } from '../handlers/stripe/utils'
+import { PgDb } from 'pogi'
+
+async function isMigratedSubscription(
+  pgdb: PgDb,
+  subscriptionExternalId: string,
+): Promise<boolean> {
+  const row = await pgdb.queryOne(
+    `SELECT id FROM payments.subscriptions WHERE "externalId" = :externalId`,
+    { externalId: subscriptionExternalId },
+  )
+  return !!row
+}
 import { processChargeUpdated } from '../handlers/stripe/chargeUpdated'
 import { processInvoicePaymentSucceeded } from '../handlers/stripe/invoicePaymentSucceeded'
 import { WebhookService } from '../services/WebhookService'
@@ -75,21 +87,29 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           break
         case 'customer.subscription.updated':
           if (isPledgeBased(event.data.object.metadata)) {
-            this.logger.info(
-              { eventId: event.id },
-              'pledge based event; skipping',
-            )
-            break
+            if (
+              !(await isMigratedSubscription(ctx.pgdb, event.data.object.id))
+            ) {
+              this.logger.info(
+                { eventId: event.id },
+                'pledge based, not yet migrated; skipping',
+              )
+              break
+            }
           }
           await processSubscriptionUpdate(ctx, job.data.company, event)
           break
         case 'customer.subscription.deleted':
           if (isPledgeBased(event.data.object.metadata)) {
-            this.logger.info(
-              { eventId: event.id },
-              'pledge based event; skipping',
-            )
-            break
+            if (
+              !(await isMigratedSubscription(ctx.pgdb, event.data.object.id))
+            ) {
+              this.logger.info(
+                { eventId: event.id },
+                'pledge based, not yet migrated; skipping',
+              )
+              break
+            }
           }
           await processSubscriptionDeleted(ctx, job.data.company, event)
           break
@@ -113,11 +133,38 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           break
         case 'charge.succeeded':
           if (isPledgeBased(event.data.object.metadata)) {
-            this.logger.info(
-              { eventId: event.id },
-              'pledge based event; skipping',
-            )
-            break
+            // Recurring charges have empty metadata — resolve subscription via invoice
+            const invoiceId = (event.data.object as Stripe.Charge).invoice
+            let migrated = false
+            if (invoiceId) {
+              const stripeInvoice = await ctx.pgdb
+                .queryOne(
+                  `SELECT id FROM payments.invoices WHERE "externalId" = :externalId`,
+                  { externalId: invoiceId },
+                )
+                .then((r: any) => r)
+              migrated = !!stripeInvoice
+              if (!migrated) {
+                // Invoice not in our DB yet — check Stripe to get the subscription ID
+                // This handles the edge case where charge.succeeded arrives before
+                // invoice.payment_succeeded has written the invoice row.
+                const stripe = require('../providers/stripe').RepublikAGStripe as Stripe
+                const si = await stripe.invoices.retrieve(invoiceId as string).catch(() => null)
+                if (si?.parent?.subscription_details?.subscription) {
+                  migrated = await isMigratedSubscription(
+                    ctx.pgdb,
+                    si.parent.subscription_details.subscription as string,
+                  )
+                }
+              }
+            }
+            if (!migrated) {
+              this.logger.info(
+                { eventId: event.id },
+                'pledge based charge, not yet migrated; skipping',
+              )
+              break
+            }
           }
           await processChargeSucceeded(ctx, job.data.company, event)
           break

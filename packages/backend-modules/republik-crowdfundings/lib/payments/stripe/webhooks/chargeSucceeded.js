@@ -45,6 +45,23 @@ module.exports = {
           },
         )
       } else {
+        // Check if this charge belongs to a migrated subscription.
+        // Backfilled invoices and new invoices written by invoice.payment_succeeded
+        // are both stored in payments.invoices with their Stripe invoice externalId.
+        if (charge.invoice) {
+          const migratedInvoice = await transaction.queryOne(
+            `SELECT id FROM payments.invoices WHERE "externalId" = :externalId`,
+            { externalId: charge.invoice },
+          )
+          if (migratedInvoice) {
+            debug(
+              'charge %s belongs to migrated subscription, skipping legacy update',
+              charge.id,
+            )
+            await transaction.transactionRollback()
+            return 200
+          }
+        }
         debug(
           'no existing payment found in charge.succeeded. rejecting event %O',
           event,
