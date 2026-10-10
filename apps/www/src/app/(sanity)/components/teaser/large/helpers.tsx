@@ -1,3 +1,4 @@
+import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'
@@ -25,6 +26,16 @@ function ImagePlaceholder(props: { 'data-sanity'?: string }) {
       Bild
     </div>
   )
+}
+
+/**
+ * Overrides for the images' `sizes` when a teaser isn't rendered at front
+ * width: `full` for images spanning the teaser, `half` for side-by-side ones.
+ */
+export type TeaserImageSizes = { full: string; half: string }
+
+export type TeaserLargeProps = TeaserLargeFragmentType & {
+  imageSizes?: TeaserImageSizes
 }
 
 export function TeaserLargeImage({
