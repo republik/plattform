@@ -1,0 +1,436 @@
+# Geschäftsbericht data scripts
+
+Scripts to calculate the numbers needed for Republik's annual report
+("Geschäftsbericht"). There was no dedicated script for this before —
+last year's numbers (report for FY 2024/2025, snapshot 30.06.2025) were
+pulled ad hoc from several unrelated scripts and Ultradashboard/Metabase
+questions. These scripts replicate that report's tables in a repeatable
+way.
+
+Default dates target FY 2025-07-01–2026-06-30 / snapshot 2026-06-30.
+Override via CLI flags for future years.
+
+## Timezone handling
+
+All date CLI flags (`--asOf`) are parsed as calendar
+dates in **Europe/Zurich**, not the host machine's timezone — `--asOf
+2026-06-30` means "end of 30.06.2026, 23:59:59.999, Zurich time". Every
+script in this folder takes a single `--asOf` (the fiscal year end date)
+and derives whatever range it needs internally
+(`lib/dates.js`'s `fiscalYearStartFromAsOf`) — fiscal years always run
+01.07.–30.06., so there's no legitimate reason for a separate `--from`/`--to`
+pair that could end up mismatched. This is handled
+by `lib/dates.js`'s `endOfDayInZurich`/`startOfDayInZurich`, which use
+dayjs's `utc`/`timezone` plugins so the result is identical no matter what
+timezone the process itself runs in (verified: same absolute instant
+whether run with `TZ=UTC`, `TZ=America/New_York`, or unset).
+
+This matters because of a real bug found and fixed here: naively parsing a
+bare `'2026-06-30'` string and then formatting it back down to
+`'YYYY-MM-DD'` before sending it to Postgres throws away all timezone
+info — Postgres then reinterprets the bare string using its own session
+timezone (commonly UTC on a Heroku Postgres instance), landing on
+`2026-06-30T00:00:00Z`. That's **~22 hours before** the intended
+`2026-06-30T21:59:59.999Z`, which silently excluded anyone who joined
+during the 30th and silently included anyone who left during the 30th.
+Every script now passes the full precise instant (`.toDate()`) as the query
+parameter — never a re-formatted date string — and only uses
+`.format('YYYY-MM-DD')` for display/output labels.
+
+## Tables and scripts
+
+| Table | Script | What it needs |
+| --- | --- | --- |
+| A: Mitgliedschaften per Stichtag | `membershipsAndSubscriptions.js` | Postgres |
+| B: Abonnemente per Stichtag | `membershipsAndSubscriptions.js` | Postgres |
+| A+B evolution: Mitgliedschaften/Abonnemente zum Monatsende (with new/lost/net), one fiscal year at a time | `membershipEvolutionByFiscalYear.js` | Postgres — 13 queries per run |
+| C: Community (Debattenbeiträge) | `community.js` | Postgres |
+| E: Publizistische Arbeit | `../../documents/script/geschaeftsbericht.js` | Elasticsearch — GraphQL `search` aggregations + a scroll pass (slow — full year) |
+
+Table D (Geschlechterverteilung) isn't covered by a script here — it needs a
+different data source than the rest of this folder.
+
+`diagnoseReconciliation.js` isn't a report table — it's a diagnostic that
+compares, id by id, whether the point-in-time `count` query and the
+lifecycle-event query agree about who's active on a given date, and prints
+the exact disagreeing ids with their raw underlying dates. Run it whenever
+`count` and a `new`/`lost`/`net` reconstruction (or an external reference
+number) seem to disagree — see "Known approximations" below for the bug it
+found and fixed.
+
+Run each with `node <script>.js --help` for flags. All default to
+`DATABASE_URL`/`ELASTIC_URL` etc. from the environment, same as sibling
+scripts (`republik/script/finance/calculateKpis.js`,
+`documents/script/count.js`).
+
+`membershipsAndSubscriptions.js`, `membershipEvolutionByFiscalYear.js`, and
+`community.js` all exclude a fixed list of internal/test accounts (dummy
+users, media archive, national library account, Apple/Android test users,
+dialog user) via `lib/excludedUsers.js`, which reads the actual ids from
+`GESCHAEFTSBERICHT_EXCLUDED_USER_IDS` (comma-separated uuids, not committed
+to source control) — required, every script here throws immediately if it's
+unset. Table E (publishing stats) doesn't need this since it counts
+documents, not users.
+
+All output filenames include the fiscal year they're for plus the run
+date/time, e.g. `A-mitgliedschaften_FY2025-2026_2026-08-12_1556.csv` — every
+file from one script invocation shares the same timestamp, so re-running
+never overwrites a previous run's output, and files for different fiscal
+years never collide either. The fiscal year label is derived from `--asOf`.
+
+## Reduced subscriptions by discount duration
+
+`membershipsAndSubscriptions.js` also outputs
+`A-reduced-by-discount-duration_FY....csv`, splitting new-system reduced
+`YEARLY_SUBSCRIPTION`s into "Einstiegsangebot oder Kampagnen" (Stripe coupon
+duration `once` — a first-year-only discount, e.g. the `YEARLY_REDUCED`
+offer in `payments/lib/shop/offers.ts`) vs. "Reduzierte Mitgliedschaften"
+(Stripe coupon duration `repeating`/`forever`, merged into one row — a
+permanent discount applied every renewal, e.g. the `STUDENT` offer's
+`fixedDiscount`). This comes from Stripe's own coupon
+`duration` field, stored verbatim in `payments.invoices."discounts"` (a
+jsonb column populated directly from `invoice.discounts` in
+`payments/lib/handlers/stripe/invoiceCreated.ts` — see that file for the
+raw Stripe `Discount`/`Coupon` object shape). The old system has no
+equivalent — `memberships.reducedPrice` is a plain boolean with no duration
+concept — so this breakdown only covers the new-system side and isn't
+folded into the main categorized CTE.
+
+## Known approximations — do not treat blindly as final numbers
+
+- **Gift-membership definition (old system)**: a membership counts as
+  "Mitgliedschaft als Geschenk" if the pledge behind its CURRENT active
+  period was bought via the dedicated `ABO_GIVE` package (always a gift,
+  regardless of who currently holds it), OR if that pledge's payer differs
+  from the person currently holding the membership (a regular `ABO`
+  directly gifted to someone else) — same signal already used in
+  `RevenueStats/segments.js`.
+
+  **Root-caused (2026-08).** Originally diverged sharply from the published
+  FY24/25 report (1206 here vs. 655 published Mitgliedschaften-Geschenk, at
+  2025-06-30), even though the combined Mitgliedschaften total already
+  matched almost exactly. Ten prior hypotheses were tested and ruled out
+  (see git history on this file for the full list — flow-vs-stock framings,
+  renew flags, active flags, `updatedAt`, fiscal-year cutoffs, and a
+  periodCount-based "never renewed" check that was disproved by the user's
+  domain knowledge: when a gift's term ends, the ORIGINAL GIFTER — not the
+  recipient — gets an email asking whether to gift again, so a membership
+  can accumulate many periods purely from the same person repeatedly
+  re-gifting, with no self-pay conversion ever happening).
+
+  **The actual bug**: `is_gift` was evaluated against
+  `memberships."pledgeId"` — the membership's ORIGINAL pledge, fixed
+  forever at creation — instead of the CURRENT PERIOD's own pledge
+  (`membershipPeriods."pledgeId"`). A membership's own `pledgeId` never
+  changes after creation, but every renewal gets its own
+  `membershipPeriods` row with its own `pledgeId`: confirmed in
+  `republik-crowdfundings/lib/generateMemberships.js` (an explicit "prolong"
+  purchase) and `lib/AutoPay.js` (an autopay-driven renewal), both of which
+  insert new periods with `pledgeId` set to the NEW charge's pledge, never
+  touching `memberships."pledgeId"` itself. So once a gift recipient
+  enabled `autoPay` and started funding their own renewals, the membership
+  kept showing as "Mitgliedschaft als Geschenk" forever anyway, since the
+  check only ever looked at who paid for the *original* gift, never at who
+  is paying *now*. Checking the current period's own pledge instead
+  correctly reclassifies those into ordinary Jahresmitgliedschaft/reduziert
+  once the recipient takes over paying, while a membership still funded by
+  someone else (the original gifter re-gifting, or anyone else) correctly
+  keeps showing as a gift.
+
+  Fixed in `lib/membershipCategorizedCte.js` by joining the `is_gift` EXISTS
+  check against `mp."pledgeId"` instead of `m."pledgeId"`. Result: 1206 →
+  653 (published: 655, within 2 — 0.3%), with `Jahresmitgliedschaft`
+  correspondingly improving from 654-off to 102-off. **Deliberately not
+  applied to `ABO_GIVE_MONTHS`**, which is categorized unconditionally by
+  type (no `is_gift` check involved there at all) and already matched the
+  published Abonnemente-Geschenk (146) exactly before and after this fix —
+  confirmed unchanged via `diagnoseGiftCurrentPeriodPledge.js` before this
+  was committed, learning from the prior (reverted) attempt that broke that
+  exact match by not checking both sides.
+
+  Per the team's decision, this script also reports **redeemed gifts as
+  part of the normal category/total** (`memberships."voucherCode" IS NULL`)
+  and **unredeemed gifts as a separate row excluded from the total**
+  (`Mitgliedschaft als Geschenk, uneingelöst` /
+  `Monatsabonnement als Geschenk, uneingelöst`,
+  `lib/membershipCategorizedCte.js`'s `is_unredeemed`) — validated
+  separately against the actual `activateMembership.js` voucher mechanism.
+
+  The same fix was also applied to `lib/membershipLifecycleCte.js`'s
+  `old_lifecycle` (used for Table F's `new`/`lost` events), per-segment
+  using each segment's LATEST period's pledge rather than a correlated
+  subquery (which was correct but far too slow — rewritten with a window
+  function + `DISTINCT ON`, see that file). This gives a strong additional
+  cross-check: `membershipEvolutionByFiscalYear.js`'s independently-computed
+  lifecycle-based `Mitgliedschaft als Geschenk` count at 2025-06-30 is
+  **653** — exactly matching the point-in-time count from
+  `membershipsAndSubscriptions.js`. The two CTEs agree exactly after the
+  fix, which they would not have before it.
+- **Gönnermitgliedschaft definition (old system)**: counted purely by
+  `membershipTypes.name = 'BENEFACTOR_ABO'`, no gift check. Diverges from
+  the published FY24/25 report (154 here vs. 136 published, at
+  2025-06-30) — investigated (2026-08) but **left as-is, not root-caused**;
+  the base is small enough (136-154) that this is a low-priority open item.
+  Two candidate mechanisms were tested and ruled out:
+  - **Gifted Gönner memberships** (payer ≠ holder, the same signal that
+    explained the `ABO` mismatch): zero found. Nobody has ever gifted a
+    Gönner-tier membership in this dataset — not the cause.
+  - **CHF 1000+ spend threshold** (per the team: "Gönner" sometimes means
+    anyone who paid ≥ CHF 1000 within the fiscal year, independent of
+    formal membership type): gives 119, off in the *opposite* direction
+    (published 136 sits between 119 and 154). The union of "holds
+    BENEFACTOR_ABO" OR "paid ≥ CHF 1000 this year" massively overshoots at
+    236 (only 37 users satisfy both conditions), ruling out a simple union
+    too.
+  Also confirmed no `EXCLUDED_USER_IDS` account currently holds a
+  BENEFACTOR_ABO membership, ruling out a test-account leak as the cause.
+  `diagnoseGoennerGiftSplit.js`, `diagnoseGoennerThreshold.js`, and
+  `diagnoseGoennerVenn.js` are kept for re-verifying this after a future
+  schema/business-rule change.
+- **Reduced-price detection (new payments system)**: a subscription is
+  flagged "reduziert" if its overlapping `payments.invoices` row has
+  `totalDiscountAmount > 0`. This is best-effort — any positive discount
+  counts, not specifically the `YEARLY_REDUCED` offer's discount. Cross-check
+  against `payments/lib/config.ts`'s `PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS`
+  if the numbers look off.
+  **Known side-effect in `membershipEvolutionByFiscalYear.js`**: because this
+  is recomputed per invoice at each snapshot date (not fixed at signup), a
+  `YEARLY_REDUCED` subscriber shows as "reduziert" while their discounted
+  first-year invoice is active, then flips to plain "Jahresmitgliedschaft"
+  once their non-discounted second-year invoice starts — the same continuous
+  subscription registers as one category "losing" a member and the other
+  "gaining" one in that month. Confirmed via cross-check against a raw
+  new/lost export: **the combined net across Jahresmitgliedschaft +
+  reduziert + Geschenk stays accurate every month** (checked within ~2%),
+  but the *gross* `new`/`lost` split specifically between Jahresmitgliedschaft
+  and reduziert can be inflated 50%+ in months with many first-year discounts
+  expiring (e.g. ~12 months after a `YEARLY_SUBSCRIPTION` signup wave).
+  Trust the combined total and `net`; don't read `new`/`lost` for these two
+  categories individually as real acquisition/churn figures.
+- **Gift detection (new payments system)**: matched by finding a
+  `payments."giftVouchers"` row `redeemedBy` the subscription's user within
+  ±14 days of `currentPeriodStart`. There's no FK between vouchers and
+  subscriptions, so this is a fuzzy heuristic, not exact.
+- **Interactive stories**: the script only outputs *candidate* URLs (any
+  document containing a `DYNAMIC_COMPONENT` zone). Last year's report
+  hand-picked ~12 URLs from a larger candidate set — expect to do the same
+  manual curation this year from `E-interactive-story-candidates.csv`.
+- **Publishing stats (Table E)**: article/newsletter/discussion counts and
+  hasAudio/hasVideo counts come from the GraphQL `search` query's
+  aggregations (`template`, `hasAudio`, `hasVideo` keys) — the same query
+  used for last year's report, called directly from Node without HTTP.
+  charCount and the interactive-story candidate list have no aggregation
+  equivalent and still come from a raw Elasticsearch scroll.
+- **Any `Sonstige (alt): ...` / `Sonstige (neu): ...` category** in the
+  membership/subscription output means an unanticipated
+  `membershipTypes.name` / `payments.subscription_type` value showed up —
+  investigate and extend the `CASE` mapping in
+  `membershipsAndSubscriptions.js` before trusting totals.
+- **Cross-system double-counting**: a user migrating from the old system to
+  the new one can have an active row in both simultaneously (confirmed via
+  diagnostic: 22 users as of 30.06.2025). `lib/membershipCategorizedCte.js`
+  drops the old-system row for any user who also has a new-system row,
+  preferring the new system as the more current source of truth. If the
+  count still looks off, check `A-B-breakdown-by-source_FY....csv`
+  (`membershipsAndSubscriptions.js`) — it breaks every category down by
+  `source` (old/new) and raw `type_name`, matching the exact structure of
+  the original "Weitere Daten für Geschäftsbericht" source table (e.g.
+  category → ABO row + YEARLY_SUB row → summed total), so a mismatch against
+  that table can be traced to a specific system instead of only comparing
+  already-combined totals.
+- **Failed-payment-attempt inflation (new payments system, fixed)**: the
+  query used to count ANY `payments.subscriptions` row whose invoice period
+  covered the snapshot date — with no `status` filter at all. A declined
+  card retried several times creates a new `subscriptions`+`invoices` row
+  per attempt, each landing in `status = 'incomplete_expired'`, and every
+  one of those was being counted as a separate active member (found via
+  diagnostic: one user had 5 `incomplete_expired` rows plus 1 real `active`
+  row, all simultaneously "active" by period dates alone — this was the
+  single biggest driver of the total Mitgliedschaften/Abonnemente overcount
+  vs. the original report, ~190-200 memberships as of 30.06.2025). Fixed by
+  excluding `status IN ('incomplete', 'incomplete_expired')` — **not** a
+  broader allowlist like `('active', 'past_due', 'unpaid', 'paused')`
+  (which is what the `cockpit_membership_evolution` materialized view uses
+  for its always-current dashboard count). That allowlist was tried first
+  and undercounted Monatsabonnement by ~59%: `status` is a CURRENT, mutable
+  field, so a subscription genuinely active on the snapshot date but since
+  cancelled shows `status = 'canceled'` *today* — a broad allowlist wrongly
+  excludes it, treating "cancelled since" the same as "payment never
+  completed". `incomplete`/`incomplete_expired` is the narrow, historically
+  stable signal: it means no payment ever succeeded, so the invoice's
+  period never represented real paid access in the first place, which is
+  true regardless of when you ask — unlike `canceled`.
+
+- **Stale invoice periods on mid-period cancellations/refunds (new payments
+  system, fixed)**: Stripe never retroactively shortens an invoice's
+  `periodStart`/`periodEnd` when a subscription is cancelled or refunded
+  partway through it — e.g. a `YEARLY_SUBSCRIPTION` created 2024-12-30,
+  actually ended (`endedAt`) 2025-12-31, still has its last invoice's period
+  running to 2026-12-30. Since the point-in-time query only ever checked
+  invoice-period coverage, this kept counting people as active for up to a
+  full year after they'd genuinely left. Root-caused (not just "residual
+  variance") by writing `diagnoseReconciliation.js`, which directly compares
+  every id between the point-in-time `count` query and the independently
+  computed lifecycle active-range and prints the *exact* disagreeing ids
+  with their raw dates — confirmed via diagnostic: 35 subscriptions wrongly
+  counted active this way as of 2025-06-30, grown to 599 by 2026-06-30 (out
+  of ~35000 total). Fixed by additionally requiring
+  `COALESCE(s."endedAt", s."cancelAt") IS NULL OR ... > $1` in `new_rows`
+  (`lib/membershipCategorizedCte.js`) — the same signal
+  `lib/membershipLifecycleCte.js` already treated as authoritative for its
+  own `last_end`, just never applied to the point-in-time query before. After
+  the fix, `diagnoseReconciliation.js` shows **zero** unexplained
+  disagreements between `count` and the lifecycle active-range at either
+  fiscal-year boundary — the only remaining disagreements are memberships
+  correctly dropped by the cross-system dedup (a migrated user's old-system
+  row, while their new-system row is the one actually counted), which the
+  script itself confirms per-row via `user_has_active_new_system_row`. This
+  also **tightened the match against the actual published FY24/25 report**
+  (see "Year-over-year comparison" below): Abonnemente went from off by a
+  few units to an exact match; Mitgliedschaften from several hundred off to
+  0.07% off. Run `node diagnoseReconciliation.js --asOf <date>` any time this
+  needs re-verifying (e.g. after a schema change, or a fresh "why don't
+  these numbers match" complaint) — it's the fastest way to get a concrete,
+  inspectable answer instead of another round of guessing.
+- **Why this script's totals don't match the `cockpit_membership_evolution`
+  materialized view's `activeEndOfMonth`, and never fully will (explained,
+  not residual variance)**: at 2026-06-30, Cockpit reports 35909 active;
+  this script's validated total is 35034 — a gap of 875, fully decomposed
+  with `diagnoseCockpitGap.js` (see
+  `migrations/sqls/20250604102839-cockpit-materialized-view-up.sql` for
+  Cockpit's own SQL):
+  - **599** — Cockpit's `minMaxDates` CTE aggregates raw invoice-period
+    min/max with no `endedAt`/`cancelAt` check, so it has the exact same
+    stale-invoice-period bug described above, just never fixed there.
+  - **240** — Cockpit's `activeEndOfMonth` filter applies no `status` check
+    at all (unlike its `active` column, which does filter on
+    `status IN ('active', 'past_due', 'unpaid', 'paused')`), so
+    `incomplete`/`incomplete_expired` subscriptions are counted as active.
+  - **5** — Cockpit excludes only one hardcoded "tombstone" user, not this
+    folder's full `EXCLUDED_USER_IDS` list.
+  - The remaining ~31 comes from two smaller mechanisms `diagnoseCockpitGap.js`
+    doesn't replicate (for simplicity): the cross-system dedup for migrated
+    users, and the pledge-purchaser exclusion — both already handled in
+    `lib/membershipCategorizedCte.js`.
+  In short: Cockpit's number is the one carrying uncorrected inflation, not
+  this script's. Don't use Cockpit's `activeEndOfMonth` as a reconciliation
+  target without accounting for this.
+
+## Monthly evolution within a fiscal year (new/lost/net)
+
+`membershipEvolutionByFiscalYear.js` takes a single `--asOf` (the fiscal
+year end, 30.06.) and computes all 12 month-ends of that fiscal year itself
+(01.07.–30.06.) — no need to pass a date range. Output mirrors the shape of
+the "Mitgliedschaften zum Monatsende" / "Neue/Verlorene Mitgliedschaften zum
+Monatsende" Google Sheets referenced in the original task list, but using
+this repo's validated categories instead of raw `membershipTypes.name`
+values.
+
+`count` (point-in-time active count per month-end) and `new`/`lost`/`net`
+are computed by two genuinely **different methods**, on purpose:
+
+- `count` reuses the exact same `categorized` CTE as
+  `membershipsAndSubscriptions.js` (`lib/membershipCategorizedCte.js`,
+  period-coverage based) — the right tool for "how many are active on this
+  exact date."
+- `new`/`lost` come from `lib/membershipLifecycleCte.js`, a **lifecycle-event**
+  model (creation/cancellation dates), one single query for the whole fiscal
+  year instead of a query per month. This was originally implemented by
+  diffing consecutive `count` snapshots month-to-month, but a side-by-side
+  comparison against an existing Metabase reference dashboard (question
+  #1809, "abo-gain-loss-grouped-by-month-company-and-abo-type") showed that
+  approach measures something different: diffing snapshots treats ANY
+  invoice-period gap (a renewal invoice generated a few days late, a payment
+  retry cycle, proration) as a lost+new event pair, even when the person
+  never actually left — inflating gross `new`/`lost` by up to ~860/month in
+  high-volume acquisition months, while `net` was only off by 3-124/month.
+  `lib/membershipLifecycleCte.js` ports Metabase's own logic instead: for
+  the old system, it segments `membershipPeriods` by gaps (a gap crossing a
+  calendar-month boundary starts a new segment) and uses each segment's
+  min/max as its lifecycle start/end; for the new system, it uses the
+  subscription's own `createdAt` (gain) and `COALESCE(endedAt, cancelAt)`
+  (loss) directly, ignoring invoice periods entirely — matching Metabase.
+  Because of this, `count(M) - count(M-1)` and this month's `net` are **not
+  guaranteed to be equal** — they're two independently-computed, both valid,
+  measurements of different things (a snapshot count vs. lifecycle churn
+  events). Run this once per fiscal year you need (e.g. `--asOf 2025-06-30`,
+  `--asOf 2026-06-30`).
+
+Each month also gets two aggregate rows — `category: 'Total Mitgliedschaften'`
+and `category: 'Total Abonnemente'` — summing `count`/`new`/`lost`/`net`
+across `MITGLIEDSCHAFTEN_CATEGORIES`/`ABONNEMENTE_CATEGORIES`
+(`lib/membershipCategories.js`), giving a directly comparable month-by-month
+total series (e.g. against a "Mitgliedschaften zum Monatsende" reference
+like Juli 2024: 21326 … Juni 2025: 25112).
+
+Output is split into four CSVs (plus one combined JSON with all four
+arrays) — one axis is total vs. per-category breakdown, the other is
+Mitgliedschaften vs. Abonnemente:
+
+- `F-mitgliedschaften-total_FY....csv` — just the `Total Mitgliedschaften`
+  row per month
+- `F-mitgliedschaften-breakdown_FY....csv` — the four Mitgliedschaften
+  categories per month, no totals
+- `F-abonnemente-total_FY....csv` — just the `Total Abonnemente` row per
+  month
+- `F-abonnemente-breakdown_FY....csv` — the three Abonnemente categories
+  per month, no totals
+
+so a total-only chart/table for one report table doesn't need to filter out
+the category rows or the other table's data.
+
+**History**: `new`/`lost` used to be computed by diffing `count` snapshots
+month-to-month, which — for Jahresmitgliedschaft/reduziert specifically —
+was inflated by reduced-price reclassification (the point-in-time
+`is_reduced` check re-evaluates per invoice, so a subscriber's category
+flips as their first-year discount expires, registering as one category
+losing a member and the other gaining one even though nobody left). That
+symptom, and a side-by-side check against Metabase, is what led to the
+lifecycle-event rewrite described above — `new`/`lost` no longer have this
+issue, since gain/loss are now tied to actual creation/cancellation, not to
+which category a still-active person's invoice happens to fall into this
+month. Not independently re-validated against Metabase after the rewrite
+yet — do that before trusting the exact figures for a real report.
+
+## Year-over-year comparison
+
+`membershipsAndSubscriptions.js` runs the same snapshot query twice — once
+for `--asOf`, once for `--asOf` minus one year — and prints/writes both
+columns side by side. This is a real YoY comparison every time it's run, not
+a hardcoded baseline that goes stale.
+
+Validated once (2026-08) against the published FY24/25 report (30.06.2025:
+Jahresmitgliedschaft 17505, reduziert 6816, Gönnermitgliedschaft 136, als
+Geschenk 655, Total 25112; Monatsabonnement 3225, als Geschenk 146, Jahresabo
+Mitgliederkampagne 185, Total 3556) and independently against a monthly
+new/lost membership-evolution export — both checks matched within 0-3% per
+category (Gönnermitgliedschaft and Jahresabo Kampagne matched exactly). See
+git history on this file for that reconciliation if it needs redoing after a
+future schema change.
+
+**Note**: that validation pass predates the timezone fix described above (the
+query was then using a ~22h-earlier-than-intended instant on any non-Zurich
+host). The affected population is small — only memberships that specifically
+started/ended late in the day on a snapshot date — which is consistent with
+why that validation already showed close (not wildly off) matches.
+
+**Re-validated (2026-08) after fixing the stale-invoice-period bug** (see
+"Known approximations" above): running `--asOf 2026-06-30` and reading its
+`lastYear` (30.06.2025) column against the same published figures gives
+Total Mitgliedschaften 25095 vs. 25112 published (17 off, 0.07%) and Total
+Abonnemente 3556 vs. 3556 published (**exact match**) — both tighter than the
+pre-fix pass, as expected since the bug only ever inflated counts. This is
+now the strongest validation this script has against ground truth; treat any
+future divergence as a real regression worth investigating with
+`diagnoseReconciliation.js`, not as expected noise.
+
+**Re-validated again (2026-08) after fixing the gift current-period-pledge
+bug** (see "Gift-membership definition" above) — this time at the full
+category level, not just totals: `--asOf 2025-06-30` now gives
+Jahresmitgliedschaft 17403 vs. 17505 published (102 off, 0.6%),
+Mitgliedschaft als Geschenk 653 vs. 655 published (2 off, 0.3%), and
+Monatsabonnement als Geschenk unchanged at the already-exact 146 vs. 146.
+Every category is now within low single-digit percent of the published
+figures — a category-level check that would have caught the gift-definition
+bug immediately, had it existed before this investigation. Worth re-running
+after any future change to `lib/membershipCategorizedCte.js`.
