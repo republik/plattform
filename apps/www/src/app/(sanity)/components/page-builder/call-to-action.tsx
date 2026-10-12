@@ -11,19 +11,22 @@ export async function CallToAction({ cta }: { cta: CtaBlockFragmentType }) {
   if (!target) return null
 
   return (
-    <div className={css({ mx: 'auto' })}>
+    <>
       {target._type === 'newsletter' ? (
         <NewsletterSubscribeButton newsletter={target} />
       ) : target._type === 'articleCollection' ? (
-        <FollowButton
-          objectId={`sanity:${target._id}`}
-          objectName={target.title}
-          // FIXME: how to provide subscriptionId?
-          type={SubscriptionObjectType.Document}
-        />
+        <div className={css({ mx: 'auto' })}>
+          <FollowButton
+            objectId={`sanity:${target._id}`}
+            objectName={target.title}
+            type={SubscriptionObjectType.Document}
+          />
+        </div>
       ) : target._type === 'podcast' ? (
-        <FollowPodcast podcast={target} />
+        <div className={css({ mx: 'auto' })}>
+          <FollowPodcast podcast={target} />
+        </div>
       ) : null}
-    </div>
+    </>
   )
 }
