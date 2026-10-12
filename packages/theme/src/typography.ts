@@ -1,3 +1,5 @@
+import { calculateClamp } from 'utopia-core'
+
 /**
  * The reader's font size setting, as a unitless factor.
  *
@@ -12,9 +14,19 @@
  * the browser's own font size setting, which overriding the root font size did
  * not.
  */
-export const READER_FONT_SCALE = 'var(--article-font-scale, 1)'
+const READER_FONT_SCALE = 'var(--article-font-scale, 1)'
 
-type FontSize = { base: string; md: string }
+type FontSize = string
+
+function calculateEditorialFluidFontSize(min: number, max: number): FontSize {
+  return calculateClamp({
+    minWidth: 375,
+    maxWidth: 695,
+    minSize: min,
+    maxSize: max,
+    relativeTo: 'viewport',
+  })
+}
 
 /**
  * Font sizes of the editorial text styles — the single source shared by the
@@ -23,26 +35,25 @@ type FontSize = { base: string; md: string }
  * reader's font size setting. Keys are the text style names.
  */
 export const editorialFontSizes = {
-  editorialTitle: { base: '1.875rem', md: '3.625rem' },
-  editorialLead: { base: '1.1875rem', md: '1.4375rem' },
-  editorialByline: { base: '0.875rem', md: '0.9375rem' },
-  editorialHeading: { base: '1rem', md: '1.25rem' },
-  editorialParagraph: { base: '1.0625rem', md: '1.1875rem' },
-  editorialSubheading: { base: '1.1875rem', md: '1.5rem' },
-  metaTitle: { base: '1.875rem', md: '3.625rem' },
-  metaSubheading: { base: '1.1875rem', md: '1.5rem' },
-  metaParagraph: { base: '1.0625rem', md: '1.1875rem' },
+  editorialTitle: calculateEditorialFluidFontSize(30, 58),
+  editorialLead: calculateEditorialFluidFontSize(19, 23),
+  editorialByline: calculateEditorialFluidFontSize(14, 15),
+  editorialHeading: calculateEditorialFluidFontSize(16, 20),
+  editorialParagraph: calculateEditorialFluidFontSize(17, 19),
+  editorialSubheading: calculateEditorialFluidFontSize(19, 24),
+  metaTitle: calculateEditorialFluidFontSize(30, 58),
+  metaSubheading: calculateEditorialFluidFontSize(19, 24),
+  metaParagraph: calculateEditorialFluidFontSize(17, 19),
 } satisfies Record<string, FontSize>
 
 /** Scales a font size with the reader's setting. */
-export const readerScaled = (fontSize: string) =>
+const readerScaled = (fontSize: string) =>
   `calc(${fontSize} * ${READER_FONT_SCALE})`
 
 /**
  * A font size that follows the reader's setting at both breakpoints. Returns the
  * `md` condition too, so spread it into a style object.
  */
-export const readerScaledFontSize = ({ base, md }: FontSize) => ({
-  fontSize: readerScaled(base),
-  md: { fontSize: readerScaled(md) },
+export const readerScaledFontSize = (fs: FontSize) => ({
+  fontSize: readerScaled(fs),
 })
