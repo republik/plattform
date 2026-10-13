@@ -20,8 +20,8 @@ type FontSize = string
 
 function calculateEditorialFluidFontSize(min: number, max: number): FontSize {
   return calculateClamp({
-    minWidth: 375,
-    maxWidth: 695,
+    minWidth: 480, // viewport width where we want to show the smallest font size
+    maxWidth: 695, // max content width
     minSize: min,
     maxSize: max,
     relativeTo: 'viewport',
