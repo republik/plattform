@@ -188,7 +188,7 @@ export const fetchArticle = (documentId: string) =>
       "heading": heading->{"segment": slugSegment, "template": slugTemplate, "title": pt::text(title)}
     }`,
     { id: documentId },
-    { perspective: 'raw' },
+    { perspective: 'raw', tag: 'audio.article' },
   )
 
 // Cheap idempotency check for the Huebsch webhook: an already-recorded
@@ -206,7 +206,7 @@ export const fetchAudioContentHash = (documentId: string) =>
   sanityClient().fetch<string | undefined>(
     `*[_id == $id][0].audioContentHash`,
     { id: documentId },
-    { perspective: 'raw' },
+    { perspective: 'raw', tag: 'audio.content-hash' },
   )
 
 // Same idempotency shape as fetchAudioContentHash above, for the Publikator
@@ -219,7 +219,7 @@ export const fetchAudioLinkState = (documentId: string) =>
   sanityClient().fetch<{ audioContentHash?: string; audioSourceMp3?: string }>(
     `*[_id == $id][0]{ audioContentHash, audioSourceMp3 }`,
     { id: documentId },
-    { perspective: 'raw' },
+    { perspective: 'raw', tag: 'audio.link-state' },
   )
 
 // Mirrors studio's own STALE_AFTER_MS (functions/sync-audio/index.ts) — the
@@ -353,7 +353,7 @@ export const fetchPendingVersionKey = (
   sanityClient().fetch<string | undefined>(
     `*[_id == $id][0].audioVersions[status == "pending" && contentHash == $hash][0]._key`,
     { id: documentId, hash: contentHash },
-    { perspective: 'raw' },
+    { perspective: 'raw', tag: 'audio.pending-version-key' },
   )
 
 export interface AudioVersionChapter {
