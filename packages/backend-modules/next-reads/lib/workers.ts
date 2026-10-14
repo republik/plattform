@@ -126,7 +126,9 @@ export class SanityNext20DaysCommentsFeedRefreshWorker extends BaseWorker<object
         .map((row) => row.sanityId)
         .filter((sanityId) => !resolved.has(sanityId))
 
-      const refs = await fetchDiscussionRefsByIds(remainingIds)
+      const refs = await fetchDiscussionRefsByIds(remainingIds, {
+        tag: 'next-reads.discussion-refs',
+      })
       for (const ref of refs) {
         if (ref.discussionId) {
           resolved.set(ref._id, ref.discussionId)

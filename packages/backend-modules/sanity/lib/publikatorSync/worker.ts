@@ -72,7 +72,9 @@ export class PublikatorSyncWorker extends BaseWorker<PublikatorSyncPayload> {
       // (content stays, just goes offline). Only ever touch a document this
       // hook could plausibly have created (see eligibility.ts) — never a
       // `page`/`front`/`articleCollection`/etc. the real migration owns.
-      const published = await sanityClient().getDocument(id)
+      const published = await sanityClient().getDocument(id, {
+        tag: 'publikator-sync.unpublish-document',
+      })
       if (!published || published._type !== 'article') return
       const { _id, _rev, _createdAt, _updatedAt, _type, ...fields } =
         published as Record<string, unknown> & { _type: string }
