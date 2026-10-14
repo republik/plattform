@@ -1,8 +1,10 @@
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
+import { audioMediaId } from '@/app/(sanity)/components/article-actions/document-id'
 import { useTranslation } from '@/lib/withT'
 import { A, Spinner } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useMemo, useState } from 'react'
+import { useMediaProgressByIds } from '../../../../hooks/useMediaProgressByIds'
 import { useLatestAudioArticles } from '../../../../hooks/useLatestAudioArticles'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
@@ -40,6 +42,9 @@ const LatestArticlesTab = ({
   const { t } = useTranslation()
   const { articles, isLoading, isLoadingMore, hasError, hasMore, loadMore } =
     useLatestAudioArticles()
+  const progress = useMediaProgressByIds(
+    useMemo(() => articles.map(audioMediaId), [articles]),
+  )
 
   // "Read aloud" means read by a person — the counterpart to a synthetic voice.
   const hasReadAloudDocuments = articles.some(
@@ -93,6 +98,7 @@ const LatestArticlesTab = ({
               <li key={article._id}>
                 <LatestArticleItem
                   article={article}
+                  userProgress={progress[audioMediaId(article)]}
                   handleOpenArticle={handleOpenArticle}
                   handleDownload={handleDownload}
                 />

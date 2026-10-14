@@ -86,6 +86,30 @@ const findDocumentItemsByInputIds = async (
   })
 }
 
+// Media items for a user in one collection, by `mediaId`: a single
+// `mediaId IN (...)` query, not one lookup per id. Returns one entry per input
+// id, in input order, null where there is none — duplicates and misses both
+// keep their slot, as in findDocumentItemsByInputIds.
+const findMediaItemsByIds = async (
+  { collectionId, userId, mediaIds },
+  { pgdb },
+) => {
+  if (!mediaIds.length) {
+    return []
+  }
+
+  const rows = await pgdb.public.collectionMediaItems.find({
+    collectionId,
+    userId,
+    mediaId: [...new Set(mediaIds)],
+  })
+  const byMediaId = new Map(rows.map((row) => [row.mediaId, row]))
+
+  return mediaIds.map(
+    (mediaId) => spreadItemData(byMediaId.get(mediaId)) || null,
+  )
+}
+
 // `includeSanity` defaults to false: the long-standing caller is
 // `User.collectionItems`, whose `document` field must resolve to a GraphQL
 // Document, which Sanity-backed rows cannot do. The `userCollectionItemsByNames`
@@ -342,6 +366,7 @@ module.exports = {
 
   findDocumentItems,
   findDocumentItemsByInputIds,
+  findMediaItemsByIds,
   findDocumentItemsByCollectionNames,
 
   getDocumentItem,

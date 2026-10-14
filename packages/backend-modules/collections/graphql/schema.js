@@ -6,6 +6,14 @@ schema {
 
 type queries {
   mediaProgress(mediaId: ID!): MediaProgress
+
+  """
+  Batch \`mediaProgress\` for a list of rows: one entry per \`mediaIds\` entry,
+  in the same order, null where there is no progress (or the user opted out
+  of progress tracking). Only the first 100 ids are looked up; the rest
+  are null.
+  """
+  mediaProgressByIds(mediaIds: [ID!]!): [MediaProgress]!
   collectionsStats: CollectionsStats!
 
   """

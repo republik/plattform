@@ -10,21 +10,33 @@ import Link from '@/app/components/ui/link'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 
-const teaserTextContainer = css({
-  py: '10',
-  px: '4',
-  md: {
-    py: '20',
-    px: '15%',
+const teaserTextContainer = cva({
+  base: {
+    py: '10',
+    px: '4',
+    md: {
+      py: '20',
+      px: '15%',
+    },
   },
-  lg: {
-    position: 'absolute',
-    inset: 0,
-    overflow: 'hidden',
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    p: '12',
+  variants: {
+    // `stacked` (UNDERNEATH) keeps the normal block flow on `lg`; every other
+    // position overlays the text on the image via an absolutely positioned grid.
+    layout: {
+      overlay: {
+        lg: {
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          p: '12',
+        },
+      },
+      stacked: {},
+    },
   },
+  defaultVariants: { layout: 'overlay' },
 })
 
 const teaserTextPosition = cva({
@@ -201,7 +213,11 @@ export function ImageTeaser({
         )}
       </div>
 
-      <div className={teaserTextContainer}>
+      <div
+        className={teaserTextContainer({
+          layout: teaser.textPosition === 'UNDERNEATH' ? 'stacked' : 'overlay',
+        })}
+      >
         <div
           className={teaserTextPosition({
             position: teaser.textPosition,
@@ -232,12 +248,15 @@ export function ImageTeaser({
             audioItem={teaser.audioItem}
             // Matches teaserTextPosition's own centering rule above —
             // TOP/MIDDLE/BOTTOM (and the unset default, MIDDLE) center the
-            // text; the corner variants and UNDERNEATH don't.
+            // text; the corner variants don't. UNDERNEATH isn't placed by
+            // that rule, so it follows `textAlignment` like the text does.
             align={
               !teaser.textPosition ||
               ['TOP', 'TOP_RIGHT', 'MIDDLE', 'BOTTOM', 'BOTTOM_RIGHT'].includes(
                 teaser.textPosition,
-              )
+              ) ||
+              (teaser.textPosition === 'UNDERNEATH' &&
+                teaser.textAlignment === 'CENTER')
                 ? 'center'
                 : 'left'
             }

@@ -174,6 +174,7 @@ export function NewsletterSubscribeButton({
       className={css({
         fontWeight: 500,
         textDecoration: 'none',
+        mx: 'auto',
       })}
       onClick={toggleSubscription}
       disabled={isPending || isDisabled}

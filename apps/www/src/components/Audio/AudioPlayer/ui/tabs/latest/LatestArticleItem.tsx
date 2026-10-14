@@ -9,6 +9,7 @@ import { IconDownload, IconLink, IconPlaylistAdd } from '@republik/icons'
 import { useState } from 'react'
 import { useAudioContext } from '../../../../AudioProvider'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
+import { AudioQueueItemProgress } from '../../../../types/AudioQueueItem'
 import {
   AudioPlayerActions,
   AudioPlayerLocations,
@@ -16,12 +17,15 @@ import {
 
 type ArticleItemProps = {
   article: AudioQueueItemContent
+  // Not every listed article is queued, so the queue can't be the only source.
+  userProgress?: AudioQueueItemProgress | null
   handleOpenArticle: (path: string) => Promise<void>
   handleDownload: (item: AudioQueueItemContent) => Promise<void>
 }
 
 const LatestArticleItem = ({
   article,
+  userProgress,
   handleOpenArticle,
   handleDownload,
 }: ArticleItemProps) => {
@@ -65,7 +69,7 @@ const LatestArticleItem = ({
   return (
     <AudioListItem
       item={article}
-      userProgress={queueItem?.userProgress}
+      userProgress={userProgress ?? queueItem?.userProgress}
       isActive={!!checkIfHeadOfQueue(documentId)}
       beforeActionItem={
         isLoading ? (
