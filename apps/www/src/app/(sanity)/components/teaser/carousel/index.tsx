@@ -138,7 +138,7 @@ export function CarouselTeaser({
             </h4>
           )}
           {teaser.description && !skipDescription && (
-            <p className='description'>
+            <p className='description' style={{ lineHeight: '1.3' }}>
               <InlinePortableText value={teaser.description} />
             </p>
           )}
