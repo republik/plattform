@@ -45,12 +45,18 @@ export async function GET(req: NextRequest) {
           .width(SHARE_IMAGE_WIDTH)
           .height(SHARE_IMAGE_HEIGHT)
           .fit('crop')
+          // next/og is only reliable with PNG/JPEG; fm overrides auto=format
+          .format('jpg')
           .url()
       : null
 
   const logoUrl =
     builder?.layout === 'LOGO' && builder?.logo
-      ? urlFor(builder.logo).height(520).url()
+      ? urlFor(builder.logo)
+          .height(520)
+          // PNG keeps the logo's transparency
+          .format('png')
+          .url()
       : null
 
   const fonts = await loadShareImageFonts()
