@@ -8,7 +8,6 @@ import {
 } from '@/app/(sanity)/archiv/lib/month-range'
 import { ARCHIVE_MONTH_TEASERS_QUERY } from '@/app/(sanity)/groq/archive-month-query'
 import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
-import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -35,7 +34,7 @@ export async function generateMetadata({
         `/archiv/${parsed.year}/${parsed.month}`,
         process.env.NEXT_PUBLIC_BASE_URL,
       ),
-      images: `${CDN_FRONTEND_BASE_URL}/static/social-media/overview.png`,
+      images: `${process.env.NEXT_PUBLIC_BASE_URL}/static/social-media/overview.png`,
     },
   }
 }
