@@ -1,4 +1,5 @@
 'use client'
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 
@@ -112,7 +113,7 @@ const AudioProvider = ({ children }) => {
     location?: AudioPlayerLocations,
   ) => {
     const { slug, title } = playerItem
-    const url = playerItem.audioSourceMp3?.trim()
+    const url = toAssetCdnUrl(playerItem.audioSourceMp3?.trim())
     if (!url) {
       return
     }

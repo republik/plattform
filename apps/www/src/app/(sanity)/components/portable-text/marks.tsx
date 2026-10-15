@@ -1,3 +1,4 @@
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import type { PortableTextMarkComponentProps } from 'next-sanity'
@@ -62,7 +63,12 @@ export function ExternalLink({
   value,
 }: PortableTextMarkComponentProps) {
   return (
-    <a href={value.href} target='_blank' rel='noreferrer' className={linkStyle}>
+    <a
+      href={toAssetCdnUrl(value.href)}
+      target='_blank'
+      rel='noreferrer'
+      className={linkStyle}
+    >
       {children}
     </a>
   )

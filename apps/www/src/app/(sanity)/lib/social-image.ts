@@ -42,6 +42,8 @@ export function getSocialImage(
         url: urlFor(data.image)
           .width(SOCIAL_IMAGE_WIDTH)
           .height(SOCIAL_IMAGE_HEIGHT)
+          // Crawlers' WebP/AVIF support varies; fm overrides auto=format
+          .format('jpg')
           .url(),
         width: SOCIAL_IMAGE_WIDTH,
         height: SOCIAL_IMAGE_HEIGHT,

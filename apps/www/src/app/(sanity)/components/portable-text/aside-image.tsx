@@ -1,7 +1,7 @@
+import { getImageDimensions } from '@/app/(sanity)/lib/image-dimensions'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import type { AsideImage } from '@/sanity.types'
 import { css } from '@republik/theme/css'
-import { getImageDimensions } from '@sanity/asset-utils'
 import { useId } from 'react'
 import { Caption } from './caption'
 import { Image } from 'next-sanity/image'
