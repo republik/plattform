@@ -55,6 +55,7 @@ const menuPanelStyle = css({
   boxShadow: 'overlay',
   color: 'text',
   minWidth: '12rem',
+  maxWidth: '18rem',
   paddingY: '2',
   // Radix portals menu content to <body> without a z-index of its own, so it
   // would paint below anything that establishes a stacking context — the

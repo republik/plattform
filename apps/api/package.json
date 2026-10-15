@@ -31,6 +31,7 @@
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-feature-flags": "*",
     "@orbiting/backend-modules-formats": "*",
+    "@orbiting/backend-modules-gift-articles": "*",
     "@orbiting/backend-modules-invoices": "*",
     "@orbiting/backend-modules-job-queue": "*",
     "@orbiting/backend-modules-lead-tracking": "*",
