@@ -3,8 +3,8 @@ import { TeaserAudioPlayButton } from '@/app/(sanity)/components/teaser/_shared/
 import {
   Heading,
   TeaserLargeImage,
-  type TeaserLargeProps,
 } from '@/app/(sanity)/components/teaser/large/helpers'
+import { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import Link from '@/app/components/ui/link'
 import { css, cva } from '@republik/theme/css'
@@ -117,8 +117,7 @@ export function VignetteTeaser({
   theme,
   heading,
   teaser,
-  imageSizes,
-}: TeaserLargeProps) {
+}: TeaserLargeFragmentType) {
   const href = target ?? '#'
 
   return (
@@ -145,7 +144,7 @@ export function VignetteTeaser({
             image={teaser.image}
             className={imageStyle}
             alt={''}
-            sizes={imageSizes?.half ?? '(max-width: 768px) 100vw, 50vw'}
+            sizes={'(max-width: 768px) 100vw, 50vw'}
           />
         )}
 

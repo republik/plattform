@@ -1,8 +1,9 @@
 'use client'
 
-import { RENDER_WIDTH } from '@/app/(sanity)/archiv/lib/mosaic'
 import { css } from '@republik/theme/css'
 import { useEffect, useRef } from 'react'
+
+const RENDER_WIDTH = 1175
 
 // Below 640px teasers render unscaled in their own mobile styles. Above, each
 // tile is laid out at RENDER_WIDTH and zoomed into its column; unlike a

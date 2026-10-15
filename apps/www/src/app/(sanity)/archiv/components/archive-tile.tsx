@@ -1,4 +1,3 @@
-import { ARCHIVE_IMAGE_SIZES } from '@/app/(sanity)/archiv/lib/mosaic'
 import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css } from '@republik/theme/css'
@@ -19,7 +18,7 @@ export function ArchiveTile({ teaser }: { teaser: TeaserLargeFragmentType }) {
   return (
     <div className={tileStyle} data-archive-tile>
       <div data-archive-tile-inner>
-        <TeaserLarge {...teaser} imageSizes={ARCHIVE_IMAGE_SIZES} />
+        <TeaserLarge {...teaser} />
       </div>
     </div>
   )
