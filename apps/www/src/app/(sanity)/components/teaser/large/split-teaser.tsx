@@ -4,7 +4,7 @@ import {
   Heading,
   TeaserLargeImage,
 } from '@/app/(sanity)/components/teaser/large/helpers'
-import { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import Link from '@/app/components/ui/link'
 
