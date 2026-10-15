@@ -6,7 +6,10 @@ import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
 import { getRedirection } from '@/app/(sanity)/lib/get-redirection'
 import { getArticleJsonLd } from '@/app/(sanity)/lib/json-ld'
-import { getSocialImage } from '@/app/(sanity)/lib/social-image'
+import {
+  DEFAULT_SOCIAL_IMAGE,
+  getSocialImage,
+} from '@/app/(sanity)/lib/social-image'
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect, redirect } from 'next/navigation'
 
@@ -34,7 +37,7 @@ export async function generateMetadata({
       title: data.title,
       description: data?.description,
       url: new URL(slug, process.env.NEXT_PUBLIC_BASE_URL),
-      images: getSocialImage(data, slug),
+      images: getSocialImage(data, slug) ?? DEFAULT_SOCIAL_IMAGE,
     },
   }
 }
