@@ -7,11 +7,13 @@ import { AsideImage } from './aside-image'
 const quoteStyle = css({
   textStyle: 'serifBold',
   fontSize: 'calc(token(fontSizes.3xl) * var(--article-font-scale, 1))',
+  lineHeight: 1.15,
 })
 
 const sourceStyle = css({
   textStyle: 'sans',
   fontSize: 'calc(token(fontSizes.s) * var(--article-font-scale, 1))',
+  mt: '4',
 })
 
 export function PullQuote({

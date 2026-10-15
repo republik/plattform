@@ -43,7 +43,7 @@ export const fetchArticleForNotification = (documentId: string) =>
       "bylineContributors": byline[].markDefs[_type == "internalLink"].reference->{ _type, userId }
     }`,
     { id: documentId },
-    { perspective: 'raw' },
+    { perspective: 'raw', tag: 'notifications.article' },
   )
 
 const { Subscriptions } = require('@orbiting/backend-modules-subscriptions')

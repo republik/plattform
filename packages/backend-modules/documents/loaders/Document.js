@@ -97,11 +97,14 @@ module.exports = (context) => ({
       // candidates per unmatched plain key — go into a single Sanity query.
       // This is a dataloader; asking per key would make its Sanity path N+1 by
       // construction, on the branch that grows as content migrates.
-      const sanityDocs = await fetchDocumentsByIds([
-        ...sanityRefKeys.map(fromSanityRef),
-        ...unmatchedPlainKeys,
-        ...unmatchedPlainKeys.map(legacySanityId).filter(Boolean),
-      ])
+      const sanityDocs = await fetchDocumentsByIds(
+        [
+          ...sanityRefKeys.map(fromSanityRef),
+          ...unmatchedPlainKeys,
+          ...unmatchedPlainKeys.map(legacySanityId).filter(Boolean),
+        ],
+        { tag: 'documents.by-repo-id' },
+      )
       const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
       const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
 
@@ -165,11 +168,14 @@ module.exports = (context) => ({
       const sanityRefKeys = repoIds.filter(isSanityRef)
       const plainKeys = repoIds.filter((id) => !isSanityRef(id))
 
-      const sanityDocs = await fetchDocumentsByIds([
-        ...sanityRefKeys.map(fromSanityRef),
-        ...plainKeys,
-        ...plainKeys.map(legacySanityId).filter(Boolean),
-      ])
+      const sanityDocs = await fetchDocumentsByIds(
+        [
+          ...sanityRefKeys.map(fromSanityRef),
+          ...plainKeys,
+          ...plainKeys.map(legacySanityId).filter(Boolean),
+        ],
+        { tag: 'documents.by-repo-id-prefer-sanity' },
+      )
       const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
       const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
 
