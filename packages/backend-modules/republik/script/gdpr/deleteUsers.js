@@ -1051,8 +1051,11 @@ async function main() {
     const totalRows = sumRows(result.rows)
     stats[result.outcome]++
     stats.totalRows += totalRows
+    // the user's own address plus the shipping addresses of pledges and orders
     if (result.address.action === 'deleted') stats.addressesDeleted++
     if (result.address.action === 'name_cleared') stats.addressNamesCleared++
+    stats.addressesDeleted += result.shippingAddresses.deleted
+    stats.addressNamesCleared += result.shippingAddresses.nameCleared
     emit('user', {
       ...position,
       userId,
@@ -1152,7 +1155,7 @@ async function main() {
   await postSlackSummary(
     `deleteUsers batch: ${stats.deleted} deleted, ${stats.anonymised} anonymised, ` +
       `${stats.skipped} skipped, ${stats.notFound} not found, ${stats.dbFailed} failed; ` +
-      `${stats.totalRows} rows deleted, ${stats.addressesDeleted} addresses deleted, ` +
+      `${stats.totalRows} rows deleted, ${stats.addressesDeleted} addresses deleted, ${stats.addressNamesCleared} address names cleared, ` +
       `${stats.confirmationMailsSent} confirmation mails sent` +
       (stats.externalFailures
         ? `; ${stats.externalFailures} Stripe/Mailchimp/mail steps failed, see log`
