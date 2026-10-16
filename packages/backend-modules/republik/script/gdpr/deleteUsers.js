@@ -403,6 +403,14 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
  */
 const cleanUpAddress = async (tx, addressId) => {
   const refs = await getReferences(tx, 'addresses')
+  // orders.shippingAddressId has no foreign key, so it is not found above
+  if (!refs.some((r) => r.schema === 'payments' && r.table === 'orders')) {
+    refs.push({
+      schema: 'payments',
+      table: 'orders',
+      column: 'shippingAddressId',
+    })
+  }
   const referencedBy = []
   for (const ref of refs) {
     const { count } = await tx.queryOne(
