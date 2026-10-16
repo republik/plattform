@@ -86,7 +86,7 @@ What it does for you:
 - before a real run it asks you to type the app name; `--yes` skips this
 - runs `heroku run --no-tty` with your file on stdin and writes the output to
   `./deletion-logs/<app>-<delete|retry>-<dry|run>-<timestamp>.log` while also
-  showing it on screen. Change the folder with the `LOG_DIR` environment
+  showing it on screen as readable progress lines (needs `jq`, otherwise raw JSON lines). Change the folder with the `LOG_DIR` environment
   variable. Log files are readable by you only. Do not commit them: they
   contain user ids and the e-mails of failed steps
 - afterwards prints the exit code, the log path and (if `jq` is installed) the
@@ -215,7 +215,11 @@ jq -R 'fromjson? | select(.event | IN("error","skipped","not_found","external_fa
 | Event | Meaning |
 |---|---|
 | `start`, `summary` | Run settings and totals. |
-| `user` | One user done: `outcome` is `deleted` or `anonymised`, with row counts per table. In a dry run `committed` is `false`. |
+| `user_start` | Work on a user started (`index`/`total`, `userId`). |
+| `progress` | Heartbeat every 5 s while one step runs longer than 5 s: which `phase` and for how many `seconds`. Long phases are normal on big tables (e.g. `mailchimpLog`). |
+| `user_done` | After the DB commit: Stripe, Mailchimp and the confirmation mail finished (`externalMs`, `allDeleted`). Not logged in a dry run. |
+| `warning` | Something was skipped, e.g. a table that does not exist in this environment. |
+| `user` | One user's DB work done, with `durationMs` and the `slowPhases` (steps over 0.5 s): `outcome` is `deleted` or `anonymised`, with row counts per table. In a dry run `committed` is `false`. |
 | `skipped` | Not touched, with the reason (active membership, already deleted, publikator data). |
 | `not_found` | Input matched no user (or was already deleted). |
 | `error` | The user's transaction failed and was rolled back. Listed in the final `retry` event under `dbFailedInputs`: run these again. |

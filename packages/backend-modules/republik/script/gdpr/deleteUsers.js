@@ -104,6 +104,47 @@ const KEEP_RELATIONS = [
   'public.comments', // detached, see below
 ]
 
+// Progress / timing. `phase(name)` marks what the script is working on, so we
+// can report slow steps and print a heartbeat while one statement runs long.
+const progress = { index: 0, total: 0, phase: null, since: 0, timings: {} }
+const phase = (name) => {
+  const now = Date.now()
+  if (progress.phase) {
+    progress.timings[progress.phase] =
+      (progress.timings[progress.phase] || 0) + now - progress.since
+  }
+  progress.phase = name
+  progress.since = now
+}
+const startUser = (index, total) => {
+  Object.assign(progress, { index, total, timings: {}, phase: null })
+  progress.startedAt = Date.now()
+  phase('lookup')
+}
+// returns { durationMs, slowPhases } and stops the clock
+const endUser = () => {
+  phase(null)
+  const slowPhases = Object.entries(progress.timings)
+    .filter(([, ms]) => ms >= 500)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, ms]) => ({ phase: name, ms }))
+  return { durationMs: Date.now() - progress.startedAt, slowPhases }
+}
+const HEARTBEAT_MS = 5000
+const startHeartbeat = () =>
+  setInterval(() => {
+    if (progress.phase && Date.now() - progress.since >= HEARTBEAT_MS) {
+      emit('progress', {
+        index: progress.index,
+        total: progress.total,
+        userId: progress.userId,
+        phase: progress.phase,
+        seconds: Math.round((Date.now() - progress.since) / 1000),
+      })
+    }
+  }, HEARTBEAT_MS).unref()
+
 const readInput = () => {
   const positional = argv._.map(String).filter((a) => a !== '-')
   const useStdin =
@@ -156,6 +197,24 @@ const countAffected = async (tx, sql, params) => {
     params,
   )
   return row.count
+}
+
+// Not every environment has every table (e.g. staging lacks some). A failing
+// statement would abort the whole transaction, so check up front. `name` is
+// schema-qualified and quoted where needed, e.g. 'public."leadTracking"'.
+const existingTables = new Map()
+const tableExists = async (tx, name) => {
+  if (!existingTables.has(name)) {
+    const { exists } = await tx.queryOne(
+      `SELECT to_regclass(:name) IS NOT NULL AS exists`,
+      { name },
+    )
+    existingTables.set(name, exists)
+    if (!exists) {
+      emit('warning', { message: `table ${name} does not exist, skipping it` })
+    }
+  }
+  return existingTables.get(name)
 }
 
 const getNulledColumns = async (tx) => {
@@ -230,20 +289,22 @@ const getDeletableRelations = async (tx, keep) => {
 const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
   const counts = {}
 
+  phase('sessions, votes, comments')
   counts.sessions = await countAffected(
     tx,
     `DELETE FROM sessions s WHERE (s.sess #>> '{passport, user}')::uuid = :userId`,
     { userId },
   )
 
-  // pull user from comments.votes, leaving upVotes, downVotes untouched
+  // pull user from comments.votes, leaving upVotes, downVotes untouched.
+  // `@>` uses the GIN index comments_votes_idx (a ::text LIKE scans the table).
   await tx.query(
     `
     UPDATE comments
       SET votes = COALESCE(NULLIF(sub.votes,'[{}]'::jsonb), '[]'::jsonb)
       FROM (
         SELECT id, jsonb_agg(v) AS votes
-        FROM   (SELECT id, votes FROM comments WHERE votes::text LIKE :userIdPattern) c,
+        FROM   (SELECT id, votes FROM comments WHERE votes @> jsonb_build_array(jsonb_build_object('userId', CAST(:userId AS text)))) c,
                jsonb_array_elements(
                  CASE
                    WHEN jsonb_array_length(votes) = 1
@@ -256,7 +317,7 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
       ) sub
     WHERE comments.id = sub.id
   `,
-    { userIdPattern: `%${userId}%`, userId },
+    { userId },
   )
 
   // detach (and optionally unpublish) comments, they are not deleted
@@ -271,6 +332,7 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
   // Cancellations reference memberships / subscriptions without ON DELETE
   // CASCADE, so they have to go before their parents. If the parent is kept
   // for bookkeeping, only the free text reason (may contain PII) is cleared.
+  phase('cancellations')
   const cancellations = [
     {
       label: 'public.membershipCancellations',
@@ -288,6 +350,7 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
     },
   ]
   for (const c of cancellations) {
+    if (!(await tableExists(tx, c.table))) continue
     const where = `${c.fk} IN (SELECT id FROM ${c.parents} WHERE "userId" = :userId)`
     if (c.parentKept) {
       counts[`${c.label} (reason cleared)`] = await countAffected(
@@ -306,7 +369,10 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
 
   // upgrades reference subscriptions without ON DELETE CASCADE (user_id has
   // no foreign key at all)
-  if (!keep.includes('payments.subscriptions')) {
+  if (
+    !keep.includes('payments.subscriptions') &&
+    (await tableExists(tx, 'payments.subscription_upgrades'))
+  ) {
     counts['payments.subscription_upgrades'] = await countAffected(
       tx,
       `DELETE FROM payments.subscription_upgrades
@@ -319,6 +385,7 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
   // sequential on purpose: on error we want to stop at the first failure
   for (const rel of relations) {
     const key = `${rel.schema}.${rel.table}`
+    phase(`delete ${key}`)
     counts[key] =
       (counts[key] || 0) +
       (await tx[rel.schema][rel.table].delete({ [rel.column]: userId }))
@@ -400,6 +467,7 @@ const deleteInDb = async (tx, user) => {
   if (user.deletedAt) {
     return { skipped: 'already deleted (anonymised)' }
   }
+  phase('checks')
   if (await hasUserActiveMembership(user, tx)) {
     return { skipped: 'active membership or subscription' }
   }
@@ -442,6 +510,7 @@ const deleteInDb = async (tx, user) => {
     hasCandidacies ||
     hasClaimedMemberships
 
+  phase('find related tables')
   const relations = await getDeletableRelations(tx, keep)
 
   // editorial users own publikator data (commits, milestones, ...) that is
@@ -466,37 +535,58 @@ const deleteInDb = async (tx, user) => {
   // with userId are already covered by deleteRelatedData.
   const email = user.email
   const byEmail = [
-    ['public.mailLog (by email)', `DELETE FROM "mailLog" WHERE email = :email`],
     [
+      'public.mailLog (by email)',
+      'public."mailLog"',
+      `DELETE FROM "mailLog" WHERE email = :email`,
+    ],
+    [
+      'public.tokens',
       'public.tokens',
       `DELETE FROM tokens WHERE lower(email::text) = lower(:email)`,
     ],
-    ['public.leadTracking', `DELETE FROM "leadTracking" WHERE email = :email`],
-    ['public.mailchimpLog', `DELETE FROM "mailchimpLog" WHERE email = :email`],
+    [
+      'public.leadTracking',
+      'public."leadTracking"',
+      `DELETE FROM "leadTracking" WHERE email = :email`,
+    ],
+    [
+      'public.mailchimpLog',
+      'public."mailchimpLog"',
+      `DELETE FROM "mailchimpLog" WHERE email = :email`,
+    ],
     [
       'public.mailchimpLog (oldEmail cleared)',
+      'public."mailchimpLog"',
       `UPDATE "mailchimpLog" SET "oldEmail" = NULL WHERE "oldEmail" = :email`,
     ],
     [
+      'public.l_mc_audience_check',
       'public.l_mc_audience_check',
       `DELETE FROM l_mc_audience_check WHERE lower(email) = lower(:email)`,
     ],
     [
       // kept grants stay for bookkeeping, without the address
       'public.accessGrants (email cleared)',
+      'public."accessGrants"',
       `UPDATE "accessGrants" SET email = NULL
        WHERE email IS NOT NULL AND ("recipientUserId" = :userId OR email = :email)`,
     ],
     [
       'payments.orders (customerEmail cleared)',
+      'payments.orders',
       `UPDATE payments.orders SET "customerEmail" = NULL
        WHERE "userId" = :userId AND "customerEmail" IS NOT NULL`,
     ],
   ]
-  for (const [label, sql] of byEmail) {
-    rows[label] = await countAffected(tx, sql, { email, userId })
+  for (const [label, table, sql] of byEmail) {
+    phase(`by email: ${label}`)
+    if (await tableExists(tx, table)) {
+      rows[label] = await countAffected(tx, sql, { email, userId })
+    }
   }
 
+  phase('user row')
   if (!mustKeepRow) {
     // stripe customers are deleted remotely after commit; local rows have to
     // go now because they reference the user
@@ -523,6 +613,7 @@ const deleteInDb = async (tx, user) => {
     rows['public.users (anonymised)'] = 1
   }
 
+  phase('address')
   let address = { action: 'none', rows: {} }
   if (user.addressId) {
     address = await cleanUpAddress(tx, user.addressId)
@@ -613,6 +704,7 @@ async function main() {
   })
 
   const pgdb = await PgDb.connect()
+  startHeartbeat()
   const stats = {
     deleted: 0,
     anonymised: 0,
@@ -640,6 +732,7 @@ async function main() {
 
   for (const [i, token] of tokens.entries()) {
     const position = { index: i + 1, total: tokens.length }
+    startUser(position.index, position.total)
     const tx = await pgdb.transactionBegin()
     let result
     let userId
@@ -652,7 +745,10 @@ async function main() {
         continue
       }
       userId = user.id
+      progress.userId = userId
+      emit('user_start', { ...position, userId })
       result = await deleteInDb(tx, user)
+      phase(dryRun || result.skipped ? 'rollback' : 'commit')
       if (result.skipped || dryRun) {
         await tx.transactionRollback()
       } else {
@@ -671,6 +767,7 @@ async function main() {
       continue
     }
 
+    const { durationMs, slowPhases } = endUser()
     if (result.skipped) {
       stats.skipped++
       emit('skipped', { ...position, userId, reason: result.skipped })
@@ -687,6 +784,8 @@ async function main() {
       userId,
       outcome: result.outcome,
       committed: !dryRun,
+      durationMs,
+      slowPhases,
       totalRows,
       rows: result.rows,
       address: result.address,
@@ -696,6 +795,8 @@ async function main() {
 
     // DB is committed; now it is safe to touch Stripe and Mailchimp
     const ctx = { userId }
+    const externalStartedAt = Date.now()
+    phase('stripe')
     if (result.stripeCustomers.length) {
       try {
         stripeAccounts = stripeAccounts || (await getStripeClients(pgdb))
@@ -713,7 +814,9 @@ async function main() {
       )
       allDeleted = allDeleted && ok
     }
+    phase('mailchimp')
     allDeleted = (await deleteMailchimp(result.email, ctx)) && allDeleted
+    phase('confirmation mail')
 
     // confirmation only once everything is deleted, otherwise it is logged as
     // a failure; retryExternalDeletions.js does not send it, it only lists it
@@ -732,6 +835,14 @@ async function main() {
         error: 'not sent: Stripe/Mailchimp deletion failed',
       })
     }
+    phase(null)
+    emit('user_done', {
+      ...position,
+      userId,
+      durationMs: durationMs + (Date.now() - externalStartedAt),
+      externalMs: Date.now() - externalStartedAt,
+      allDeleted,
+    })
   }
 
   emit('summary', { ...stats, dryRun })
