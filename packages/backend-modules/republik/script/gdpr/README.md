@@ -62,6 +62,42 @@ a@example.org
 
 ## Running on Heroku
 
+**Shortcut:** `delete-users.sh` wraps all the commands below, so you normally
+only need this.
+
+```sh
+S=packages/backend-modules/republik/script/gdpr/delete-users.sh
+
+$S <app> delete users.txt                          # dry run (default)
+$S <app> delete users.txt --no-dry-run             # real run
+$S <app> retry deletion-logs/<log> --no-dry-run    # retry Stripe/Mailchimp
+```
+
+Run it from the repository root. `delete` takes the list of e-mails / user ids,
+`retry` takes the log of an earlier `delete` run. Without `--no-dry-run` both
+are dry runs.
+
+What it does for you:
+
+- checks that the `heroku` CLI is installed and you are logged in, and that the
+  input file exists and is not empty
+- adds `--allow-remote` to real runs and passes other flags through to the
+  script (e.g. `--keep-comments`, `--no-slack`)
+- before a real run it asks you to type the app name; `--yes` skips this
+- runs `heroku run --no-tty` with your file on stdin and writes the output to
+  `./deletion-logs/<app>-<delete|retry>-<dry|run>-<timestamp>.log` while also
+  showing it on screen. Change the folder with the `LOG_DIR` environment
+  variable. Log files are readable by you only. Do not commit them: they
+  contain user ids and the e-mails of failed steps
+- afterwards prints the exit code, the log path and (if `jq` is installed) the
+  summary and the number of events that need attention, followed by the next
+  command to run: the real run after a dry run, or the retry if something
+  failed
+- exits with the script's exit code (0 = fine, 1 = something failed, 2 =
+  refused or bad input)
+
+The manual commands, which the wrapper runs for you:
+
 Prerequisites: Heroku CLI, access to the app, and a local `users.txt`.
 
 Use `--no-tty` whenever you redirect stdin or stdout. Without it the CLI
