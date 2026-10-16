@@ -611,6 +611,16 @@ const deleteInDb = async (tx, user) => {
       },
     )
     rows['public.users (anonymised)'] = 1
+
+    // The Stripe customer is deleted at Stripe after the commit. Locally only
+    // the reference (id, company, userId) stays for the bookkeeping rows; the
+    // cached payment methods and other payload are removed.
+    rows['public.stripeCustomers (cache cleared)'] = await countAffected(
+      tx,
+      `UPDATE public."stripeCustomers" SET cache = NULL, payload = NULL
+       WHERE "userId" = :userId AND (cache IS NOT NULL OR payload IS NOT NULL)`,
+      { userId },
+    )
   }
 
   phase('address')
@@ -625,7 +635,7 @@ const deleteInDb = async (tx, user) => {
     rows,
     address: { action: address.action, referencedBy: address.referencedBy },
     email: user.email,
-    stripeCustomers: mustKeepRow ? [] : stripeCustomers,
+    stripeCustomers, // deleted at Stripe for deleted and anonymised users
   }
 }
 

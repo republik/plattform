@@ -40,8 +40,12 @@ Every user runs in its own DB transaction. A failure rolls back that user only.
 
 Only after the DB transaction **committed**:
 
-7. Deletes the Stripe customer(s) (only for fully deleted users) and removes
-   the e-mail from all Mailchimp audiences.
+7. Deletes the Stripe customer(s) at Stripe, for deleted **and** anonymised
+   users, and removes the e-mail from all Mailchimp audiences. For anonymised
+   users the local `stripeCustomers` rows stay as a reference (id, company,
+   user), with the cached payment methods cleared. Charges, invoices and
+   orders are not touched; they hold no personal data (amounts, status, ids,
+   marketing metadata).
 8. If both worked, sends the confirmation mail "Bestätigung Datenlöschung"
    from kontakt@republik.ch. It is sent through an adapter that does not write
    to `mailLog`, so the address is not stored again.
