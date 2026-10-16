@@ -193,6 +193,38 @@ mode that sends them.
 grep '"event":"confirmation_mail_pending"' retry-1.log
 ```
 
+## Zendesk: Löschanfragen herunterladen
+
+`zendeskDeletionRequests.js` lädt alle Zendesk-Tickets mit dem Tag
+`löschanfrage` herunter und schreibt eine Liste der Absender-Adressen, die man
+direkt an `delete-users.sh` geben kann. Es liest nur und ändert nichts in
+Zendesk. Es läuft lokal (nicht auf Heroku).
+
+Zugang (Umgebungsvariablen, nicht als Argument):
+
+```sh
+export ZENDESK_SUBDOMAIN=<subdomain>      # <subdomain>.zendesk.com
+export ZENDESK_EMAIL=<agent-email>
+export ZENDESK_API_TOKEN=<token>          # Admin Center > Apps und Integrationen > APIs > Zendesk API > API-Token hinzufügen
+```
+
+```sh
+node packages/backend-modules/republik/script/gdpr/zendeskDeletionRequests.js
+node ... --status new --status open       # nur offene Anfragen
+node ... --comments                       # inklusive aller Kommentare
+node ... --tag <anderer-tag> --out ./zendesk-export
+```
+
+Ergebnis im Ordner `./zendesk-export` (nur für dich lesbar):
+
+- `tickets-<zeit>.json`: Tickets mit Absender (Name, E-Mail), Status, Tags
+- `emails-<zeit>.txt`: eindeutige Absender-Adressen, eine pro Zeile
+
+Wichtig: Die Adresse ist die, **von der geschrieben wurde**. Sie muss nicht die
+des Kontos sein, das gelöscht werden soll. Die Liste vor dem Löschen prüfen.
+Tickets ohne Absender-Adresse werden am Ende aufgelistet. Die Dateien enthalten
+Personendaten und sollten nach der Bearbeitung gelöscht werden.
+
 ## Flags
 
 `deleteUsers.js`:
