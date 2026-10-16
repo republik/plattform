@@ -211,7 +211,7 @@ jq -R 'fromjson? | select(.event=="summary")' run.log
 # per-user results and row counts
 jq -R 'fromjson? | select(.event=="user") | {userId, outcome, totalRows, address}' run.log
 # everything that needs attention
-jq -R 'fromjson? | select(.event | IN("error","skipped","not_found","external_failure","external_warning","warning"))' run.log
+jq -R 'fromjson? | select(.event | IN("error","skipped","not_found","external_failure","warning"))' run.log
 ```
 
 | Event | Meaning |
@@ -225,8 +225,7 @@ jq -R 'fromjson? | select(.event | IN("error","skipped","not_found","external_fa
 | `skipped` | Not touched, with the reason (active membership, already deleted, publikator data). |
 | `not_found` | Input matched no user (or was already deleted). |
 | `error` | The user's transaction failed and was rolled back. Listed in the final `retry` event under `dbFailedInputs`: run these again. |
-| `external_failure` | Stripe, Mailchimp or the confirmation mail failed after the DB commit. Contains what a retry needs. |
-| `external_warning` | Mailchimp reported "not a member" for an audience. Usually harmless. |
+| `external_failure` | Stripe, Mailchimp or the confirmation mail failed after the DB commit. Contains what a retry needs. For Mailchimp, "not a member of this audience" (HTTP 404) is normal and not a failure; only other statuses, e.g. 429 or 500, are. |
 | `retry` | Final hint with the inputs to run again. |
 
 Personal data in the log: user ids everywhere; e-mail addresses only in

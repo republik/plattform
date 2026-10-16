@@ -5,7 +5,7 @@
  */
 const fs = require('fs')
 const crypto = require('crypto')
-const { deleteEmail } = require('@orbiting/backend-modules-mailchimp')
+const { deleteEmailDetailed } = require('@orbiting/backend-modules-mailchimp')
 const getStripeClients = require('@orbiting/backend-modules-republik-crowdfundings/lib/payments/stripe/clients')
 
 const runId = crypto.randomUUID()
@@ -70,17 +70,23 @@ const deleteStripeCustomer = async (accounts, customer, ctx) => {
   }
 }
 
-// returns true on success. Mailchimp answering false for an audience (usually:
-// not a member there) is only a warning.
+// returns true on success. "Not a member of this audience" (HTTP 404) is the
+// normal answer for most audiences and counts as done; any other failure
+// (rate limit, server error, bad key) is a failure that has to be retried.
 const deleteFromMailchimp = async (email, ctx) => {
   try {
-    const results = await Promise.all(await deleteEmail({ email }))
-    if (!results.every((r) => r === true)) {
-      emit('external_warning', {
+    const results = await deleteEmailDetailed({ email })
+    const failed = results.filter((r) => !r.ok && !r.notMember)
+    if (failed.length) {
+      emit('external_failure', {
         kind: 'mailchimp',
         ...ctx,
-        message: 'not removed from every audience (probably not a member)',
+        email,
+        error: failed
+          .map((r) => `audience ${r.audienceId}: HTTP ${r.status}`)
+          .join(', '),
       })
+      return false
     }
     return true
   } catch (e) {
