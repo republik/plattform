@@ -175,23 +175,41 @@ const MailchimpInterface = ({ logger }: any) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
-    async deleteMember(email: string, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+    // Like deleteMember, but tells "not a member of this audience" (404, the
+    // expected answer for most audiences) apart from a real failure.
+    async deleteMemberDetailed(
+      email: string,
+      audienceId = MAILCHIMP_MAIN_LIST_ID,
+    ): Promise<{
+      audienceId?: string
+      status: number
+      ok: boolean
+      notMember: boolean
+    }> {
       debug('mail:MailchimpInterface:delete')(`deleting ${email}`)
       const url =
         this.buildMembersApiUrl(email, audienceId) + '/actions/delete-permanent'
       try {
         const response = await this.fetchAuthenticated('POST', url)
-        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug('mail:MailchimpInterface:deleteError')(
-            `could not delete member from audience ${audienceId}: ${email}`,
-          )
-          return false
+        return {
+          audienceId,
+          status: response.status,
+          ok: response.status < MINIMUM_HTTP_RESPONSE_STATUS_ERROR,
+          notMember: response.status === 404,
         }
-        return true
       } catch (error: any) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
       }
+    },
+    async deleteMember(email: string, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+      const { ok } = await this.deleteMemberDetailed(email, audienceId)
+      if (!ok) {
+        debug('mail:MailchimpInterface:deleteError')(
+          `could not delete member from audience ${audienceId}: ${email}`,
+        )
+      }
+      return ok
     },
     async postBatch(operations: any) {
       const preparedOperations = operations.map((operation: any) => {
