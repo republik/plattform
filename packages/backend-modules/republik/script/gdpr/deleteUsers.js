@@ -579,6 +579,25 @@ const deleteInDb = async (tx, user) => {
       : { action: 'delete', url: user.portraitUrl }
   }
 
+  // Notifications of OTHER users can point at this user's mail log rows, e.g.
+  // when an e-mail address changed hands: the old owner's notifications still
+  // reference mails that were sent to it. notifications."mailLogId" is only an
+  // audit link written after sending, so detach it instead of failing on the
+  // foreign key when the mail log rows are deleted. The user's own
+  // notifications are deleted below.
+  let mailLogLinksRemoved = 0
+  if (await tableExists(tx, 'public.notifications')) {
+    mailLogLinksRemoved = await countAffected(
+      tx,
+      `UPDATE notifications SET "mailLogId" = NULL
+       WHERE "userId" IS DISTINCT FROM :userId
+         AND "mailLogId" IN (
+           SELECT id FROM "mailLog" WHERE "userId" = :userId OR email = :email
+         )`,
+      { userId, email: user.email },
+    )
+  }
+
   const rows = await deleteRelatedData(
     tx,
     userId,
@@ -586,6 +605,7 @@ const deleteInDb = async (tx, user) => {
     unpublishComments,
     relations,
   )
+  rows['public.notifications (mail log link removed)'] = mailLogLinksRemoved
 
   // Tables identified by e-mail only (no foreign key to users). mailLog rows
   // with userId are already covered by deleteRelatedData.

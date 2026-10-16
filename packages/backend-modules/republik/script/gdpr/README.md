@@ -29,7 +29,9 @@ Every user runs in its own DB transaction. A failure rolls back that user only.
    devices, notifications, newsletter signups, bookmarks, ...). Data the user
    issued about OTHER people stays: the suspensions a moderator issued
    (`discussionSuspensions.issuerUserId`) are detached by the database, not
-   deleted. Also deletes rows that
+   deleted. Notifications of OTHER users that still point at this user's mail
+   log rows (an e-mail address that changed hands) only lose that audit link
+   (`mailLogId`), they are kept. Also deletes rows that
    only carry the e-mail address (`mailLog`, `tokens`, `leadTracking`,
    `mailchimpLog`, `l_mc_audience_check`).
 3. Detaches comments from the user and unpublishes them: the text and the
