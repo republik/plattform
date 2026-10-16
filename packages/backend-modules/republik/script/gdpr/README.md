@@ -203,10 +203,20 @@ Zendesk. Es läuft lokal (nicht auf Heroku).
 Zugang (Umgebungsvariablen, nicht als Argument):
 
 ```sh
-export ZENDESK_SUBDOMAIN=<subdomain>      # <subdomain>.zendesk.com
+export ZENDESK_SUBDOMAIN=republik         # <subdomain>.zendesk.com
+
+# entweder ein OAuth-Access-Token ...
+export ZENDESK_OAUTH_TOKEN=<token>
+
+# ... oder E-Mail + API-Token (Admin Center > Apps und Integrationen > APIs > API-Token)
 export ZENDESK_EMAIL=<agent-email>
-export ZENDESK_API_TOKEN=<token>          # Admin Center > Apps und Integrationen > APIs > Zendesk API > API-Token hinzufügen
+export ZENDESK_API_TOKEN=<token>
 ```
+
+Achtung: Zendesk schafft API-Tokens ab. Seit 28.7.2026 werden Tokens, die 30 Tage
+nicht benutzt wurden, automatisch deaktiviert. Ab 27.10.2026 lassen sich keine
+neuen mehr erstellen, und ab 30.4.2027 funktioniert keiner mehr. Für Neues also
+OAuth verwenden.
 
 ```sh
 node packages/backend-modules/republik/script/gdpr/zendeskDeletionRequests.js

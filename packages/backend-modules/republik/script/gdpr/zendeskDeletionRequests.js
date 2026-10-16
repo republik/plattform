@@ -10,10 +10,15 @@
  * directly from your machine, not via Heroku.
  *
  * Credentials (environment variables, never put them on the command line):
- *   ZENDESK_SUBDOMAIN   e.g. "republik" for republik.zendesk.com
- *   ZENDESK_EMAIL       e-mail of the Zendesk agent who owns the API token
- *   ZENDESK_API_TOKEN   Admin Center > Apps and integrations > APIs >
- *                       Zendesk API > Add API token
+ *   ZENDESK_SUBDOMAIN     e.g. "republik" for republik.zendesk.com
+ * and either
+ *   ZENDESK_OAUTH_TOKEN   an OAuth access token (sent as Bearer token)
+ * or
+ *   ZENDESK_EMAIL         e-mail of the Zendesk agent who owns the API token
+ *   ZENDESK_API_TOKEN     Admin Center > Apps and integrations > APIs > API tokens
+ *
+ * Zendesk is removing API tokens: no new ones can be created from 2026-10-27
+ * and none work after 2027-04-30. Existing tokens keep working until then.
  *
  * Usage:
  *   node script/gdpr/zendeskDeletionRequests.js
@@ -38,7 +43,12 @@
 const fs = require('fs')
 const path = require('path')
 
-const { ZENDESK_SUBDOMAIN, ZENDESK_EMAIL, ZENDESK_API_TOKEN } = process.env
+const {
+  ZENDESK_SUBDOMAIN,
+  ZENDESK_EMAIL,
+  ZENDESK_API_TOKEN,
+  ZENDESK_OAUTH_TOKEN,
+} = process.env
 
 const args = process.argv.slice(2)
 const option = (name) => {
@@ -61,9 +71,16 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const baseUrl = () => `https://${ZENDESK_SUBDOMAIN}.zendesk.com`
 
+// OAuth access token (Bearer) if given, otherwise e-mail + API token. API tokens
+// are being removed by Zendesk (no new ones from 2026-10-27, none work after
+// 2027-04-30).
 const authHeader = () =>
-  'Basic ' +
-  Buffer.from(`${ZENDESK_EMAIL}/token:${ZENDESK_API_TOKEN}`).toString('base64')
+  ZENDESK_OAUTH_TOKEN
+    ? `Bearer ${ZENDESK_OAUTH_TOKEN}`
+    : 'Basic ' +
+      Buffer.from(`${ZENDESK_EMAIL}/token:${ZENDESK_API_TOKEN}`).toString(
+        'base64',
+      )
 
 // GET with retry on rate limit (429) and temporary server errors
 const get = async (url) => {
@@ -86,7 +103,7 @@ const get = async (url) => {
     }
     if (response.status === 401 || response.status === 403) {
       throw new Error(
-        `Zendesk refused the credentials (HTTP ${response.status}). Check ZENDESK_SUBDOMAIN, ZENDESK_EMAIL and ZENDESK_API_TOKEN and that API token access is enabled.`,
+        `Zendesk refused the credentials (HTTP ${response.status}). Check ZENDESK_SUBDOMAIN and ZENDESK_OAUTH_TOKEN (or ZENDESK_EMAIL and ZENDESK_API_TOKEN, and that API token access is enabled).`,
       )
     }
     throw new Error(`Zendesk request failed: HTTP ${response.status} ${url}`)
@@ -141,9 +158,10 @@ const fetchComments = async (ticketId) => {
 }
 
 async function main() {
-  const missing = ['ZENDESK_SUBDOMAIN', 'ZENDESK_EMAIL', 'ZENDESK_API_TOKEN']
-    .filter((name) => !process.env[name])
-    .join(', ')
+  const required = ZENDESK_OAUTH_TOKEN
+    ? ['ZENDESK_SUBDOMAIN']
+    : ['ZENDESK_SUBDOMAIN', 'ZENDESK_EMAIL', 'ZENDESK_API_TOKEN']
+  const missing = required.filter((name) => !process.env[name]).join(', ')
   if (missing) {
     console.error(`missing environment variable(s): ${missing}`)
     return 2
