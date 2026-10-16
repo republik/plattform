@@ -46,7 +46,11 @@ Only after the DB transaction **committed**:
    user), with the cached payment methods cleared. Charges, invoices and
    orders are not touched; they hold no personal data (amounts, status, ids,
    marketing metadata).
-8. If both worked, sends the confirmation mail "Bestätigung Datenlöschung"
+8. Deletes the profile picture file on S3 (`portraits/<hash>.jpeg`), unless
+   another user uses the same file or the file is in a different bucket than
+   the app's own (`AWS_S3_BUCKET`), e.g. production images referenced by a
+   copied staging database. Those cases are only logged as a `warning`.
+9. If everything worked, sends the confirmation mail "Bestätigung Datenlöschung"
    from kontakt@republik.ch. It is sent through an adapter that does not write
    to `mailLog`, so the address is not stored again.
 
@@ -229,7 +233,7 @@ jq -R 'fromjson? | select(.event | IN("error","skipped","not_found","external_fa
 | `skipped` | Not touched, with the reason (active membership, already deleted, publikator data). |
 | `not_found` | Input matched no user (or was already deleted). |
 | `error` | The user's transaction failed and was rolled back. Listed in the final `retry` event under `dbFailedInputs`: run these again. |
-| `external_failure` | Stripe, Mailchimp or the confirmation mail failed after the DB commit. Contains what a retry needs. For Mailchimp, "not a member of this audience" (HTTP 404) is normal and not a failure; only other statuses, e.g. 429 or 500, are. |
+| `external_failure` | Stripe, Mailchimp, the portrait deletion on S3 or the confirmation mail failed after the DB commit. Contains what a retry needs. For Mailchimp, "not a member of this audience" (HTTP 404) is normal and not a failure; only other statuses, e.g. 429 or 500, are. |
 | `retry` | Final hint with the inputs to run again. |
 
 Personal data in the log: user ids everywhere; e-mail addresses only in
@@ -239,7 +243,8 @@ Personal data in the log: user ids everywhere; e-mail addresses only in
 ## Environment
 
 The dyno needs the usual app config: `DATABASE_URL`, the Mailchimp variables,
-the Stripe keys (`STRIPE_PLATFORM`, `STRIPE_SECRET_KEY_*`, ...), the mail
+the Stripe keys (`STRIPE_PLATFORM`, `STRIPE_SECRET_KEY_*`, ...), the S3 settings
+(`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET`), the mail
 settings (Mandrill or SMTP) and optionally `SLACK_CHANNEL_IT_MONITOR`. In
 production `NODE_ENV=production` makes the mail real. Elsewhere mails are only
 simulated unless `SEND_MAILS=true`.
@@ -248,6 +253,8 @@ simulated unless `SEND_MAILS=true`.
 
 - A mail the provider accepted but reported as failed (e.g. a timeout) counts
   as failed and is listed as pending, so it may be sent manually twice.
+- The CDN (`cdn.repub.ch`) may keep serving a deleted portrait (and resized
+  variants) until its cache expires. The script cannot purge it.
 - Mandrill keeps its own copy of sent mails for its retention period.
 - `mailchimpLog."oldEmail"` has no index, so each user scans that table.
 - Not yet run end to end against Heroku. Do the small dry run first.

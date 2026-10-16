@@ -1,10 +1,10 @@
 /**
- * Retries the Stripe / Mailchimp deletions that failed during a deleteUsers.js
+ * Retries the Stripe / Mailchimp / portrait deletions that failed during a deleteUsers.js
  * run. The users' DB rows are already gone, so deleteUsers.js cannot do it.
  *
  * Input: the log (stdout) of a deleteUsers.js run on STDIN, one JSON object
- * per line. Only `external_failure` events of kind `stripe` and `mailchimp`
- * are used, all other lines (including non-JSON lines) are ignored. Several
+ * per line. Only `external_failure` events of kind `stripe`, `mailchimp`
+ * and `portrait` are used, all other lines (including non-JSON lines) are ignored. Several
  * logs can be concatenated.
  *
  * This script never writes to the database and NEVER SENDS MAILS. Users whose
@@ -34,6 +34,7 @@ const {
   getStripeClients,
   deleteStripeCustomer,
   deleteFromMailchimp,
+  deletePortrait,
 } = require('./deleteUsers.lib')
 
 const argv = yargs(hideBin(process.argv))
@@ -76,9 +77,9 @@ async function main() {
   const pendingMails = events.filter((r) => r.kind === 'confirmation_mail')
   const seen = new Set()
   const failures = events
-    .filter((r) => ['stripe', 'mailchimp'].includes(r.kind))
+    .filter((r) => ['stripe', 'mailchimp', 'portrait'].includes(r.kind))
     .filter((r) => {
-      const key = `${r.kind}:${r.customerId || r.email}`
+      const key = `${r.kind}:${r.customerId || r.email || r.portraitUrl}`
       if (seen.has(key)) return false
       seen.add(key)
       return true
@@ -103,14 +104,18 @@ async function main() {
       emit('would_retry', { kind: f.kind, userId: f.userId })
       continue
     }
-    const ok =
-      f.kind === 'stripe'
-        ? await deleteStripeCustomer(
-            accounts,
-            { id: f.customerId, companyId: f.companyId },
-            ctx,
-          )
-        : await deleteFromMailchimp(f.email, ctx)
+    let ok
+    if (f.kind === 'stripe') {
+      ok = await deleteStripeCustomer(
+        accounts,
+        { id: f.customerId, companyId: f.companyId },
+        ctx,
+      )
+    } else if (f.kind === 'portrait') {
+      ok = await deletePortrait(f.portraitUrl, ctx)
+    } else {
+      ok = await deleteFromMailchimp(f.email, ctx)
+    }
     if (!ok) stillFailing++
     emit('retried', { kind: f.kind, userId: f.userId, ok })
   }

@@ -56,6 +56,7 @@ const {
   getStripeClients,
   deleteStripeCustomer,
   deleteFromMailchimp,
+  deletePortrait,
 } = require('./deleteUsers.lib')
 
 const argv = yargs(hideBin(process.argv))
@@ -523,6 +524,23 @@ const deleteInDb = async (tx, user) => {
 
   const stripeCustomers = await getStripeCustomers(tx, userId)
 
+  // The portrait file on S3 is deleted after the commit, unless another user
+  // points at the same file (the file name is a hash of the image).
+  let portrait = { action: 'none' }
+  if (user.portraitUrl) {
+    const { count: sharedWith } = await tx.queryOne(
+      `SELECT count(*)::int AS count FROM users
+       WHERE id <> :userId AND "portraitUrl" LIKE :prefix`,
+      {
+        userId,
+        prefix: `${user.portraitUrl.split('?')[0].replace(/[\\%_]/g, '\\$&')}%`,
+      },
+    )
+    portrait = sharedWith
+      ? { action: 'kept_shared_with_other_user' }
+      : { action: 'delete', url: user.portraitUrl }
+  }
+
   const rows = await deleteRelatedData(
     tx,
     userId,
@@ -636,6 +654,7 @@ const deleteInDb = async (tx, user) => {
     address: { action: address.action, referencedBy: address.referencedBy },
     email: user.email,
     stripeCustomers, // deleted at Stripe for deleted and anonymised users
+    portrait,
   }
 }
 
@@ -739,6 +758,7 @@ async function main() {
     }
   const deleteStripe = countFailures(deleteStripeCustomer)
   const deleteMailchimp = countFailures(deleteFromMailchimp)
+  const deletePortraitCounted = countFailures(deletePortrait)
 
   for (const [i, token] of tokens.entries()) {
     const position = { index: i + 1, total: tokens.length }
@@ -799,6 +819,7 @@ async function main() {
       totalRows,
       rows: result.rows,
       address: result.address,
+      portrait: result.portrait.action,
     })
 
     if (dryRun) continue
@@ -826,6 +847,11 @@ async function main() {
     }
     phase('mailchimp')
     allDeleted = (await deleteMailchimp(result.email, ctx)) && allDeleted
+    if (result.portrait.action === 'delete') {
+      phase('portrait')
+      allDeleted =
+        (await deletePortraitCounted(result.portrait.url, ctx)) && allDeleted
+    }
     phase('confirmation mail')
 
     // confirmation only once everything is deleted, otherwise it is logged as

@@ -100,6 +100,50 @@ const deleteFromMailchimp = async (email, ctx) => {
   }
 }
 
+// Portraits are public S3 objects (portraits/<md5>.jpeg). Returns true on
+// success. A portrait in another bucket than this app's (e.g. production
+// images referenced by a copied staging database) is NOT deleted: that is only
+// a warning, retrying would not help.
+const deletePortrait = async (portraitUrl, ctx) => {
+  let bucket
+  let path
+  try {
+    const [, b, ...rest] = new URL(portraitUrl).pathname
+      .replace(/^\//, '')
+      .split('/')
+    bucket = b
+    path = rest.join('/')
+  } catch (e) {
+    // not parsable: nothing we could delete
+  }
+  if (!bucket || !path || !portraitUrl.includes('/s3/')) {
+    emit('warning', { ...ctx, message: 'portrait url not recognised, kept' })
+    return true
+  }
+  if (bucket !== process.env.AWS_S3_BUCKET) {
+    emit('warning', {
+      ...ctx,
+      message: `portrait not deleted: bucket ${bucket} is not this app's bucket`,
+    })
+    return true
+  }
+  try {
+    const S3 = require('@orbiting/backend-modules-assets/lib/s3')
+    if (await S3.del({ bucket, path: decodeURIComponent(path) })) {
+      return true
+    }
+    throw new Error('S3 deleteObject failed')
+  } catch (e) {
+    emit('external_failure', {
+      kind: 'portrait',
+      ...ctx,
+      portraitUrl,
+      error: e.message,
+    })
+    return false
+  }
+}
+
 module.exports = {
   emit,
   readStdin,
@@ -108,4 +152,5 @@ module.exports = {
   getStripeClients,
   deleteStripeCustomer,
   deleteFromMailchimp,
+  deletePortrait,
 }
