@@ -57,6 +57,9 @@ const {
   deleteStripeCustomer,
   deleteFromMailchimp,
   deletePortrait,
+  isPortraitShared,
+  portraitKey,
+  mailchimpDeleteAvailable,
 } = require('./deleteUsers.lib')
 
 const argv = yargs(hideBin(process.argv))
@@ -76,6 +79,12 @@ const argv = yargs(hideBin(process.argv))
     type: 'boolean',
     default: false,
   })
+  .option('accept-preflight-warnings', {
+    description:
+      'Run even if the preflight only has warnings (mails simulated, portraits in another bucket)',
+    type: 'boolean',
+    default: false,
+  })
   .option('slack', {
     description: 'Post summary to Slack, disable with --no-slack',
     type: 'boolean',
@@ -92,6 +101,11 @@ const UUID_RE =
 
 // columns on users that survive anonymisation
 const KEEP_USER_COLUMNS = ['createdAt', 'updatedAt', 'deletedAt']
+
+// Columns that point at the user as the author of OTHER people's data. They are
+// ON DELETE SET NULL: the database detaches them, deleting the rows would erase
+// data of other users (e.g. the suspensions a moderator issued).
+const KEEP_COLUMNS = ['public.discussionSuspensions.issuerUserId']
 
 // relations to users that are kept, see deleteUser mutation
 const KEEP_RELATIONS = [
@@ -255,7 +269,9 @@ const findUser = async (tx, token) => {
  */
 const getDeletableRelations = async (tx, keep) => {
   const relations = (await getReferences(tx, 'users')).filter(
-    (rel) => !keep.includes(`${rel.schema}.${rel.table}`),
+    (rel) =>
+      !keep.includes(`${rel.schema}.${rel.table}`) &&
+      !KEEP_COLUMNS.includes(`${rel.schema}.${rel.table}.${rel.column}`),
   )
   const edges = await tx.query(`
     SELECT
@@ -321,12 +337,34 @@ const deleteRelatedData = async (tx, userId, keep, unpublish, relations) => {
     { userId },
   )
 
-  // detach (and optionally unpublish) comments, they are not deleted
+  // the user's reports on other people's comments (reporter ids)
+  phase('comment reports')
+  counts['public.comments (reports removed)'] = await countAffected(
+    tx,
+    `UPDATE comments
+       SET reports = COALESCE(
+         (SELECT jsonb_agg(r) FROM jsonb_array_elements(comments.reports) r
+          WHERE r->>'userId' <> CAST(:userId AS text)),
+         '[]'::jsonb)
+     WHERE reports @> jsonb_build_array(jsonb_build_object('userId', CAST(:userId AS text)))`,
+    { userId },
+  )
+
+  // detach (and optionally unpublish) comments, they are not deleted. The
+  // featured excerpt is a separate copy of the text, remove it as well.
   counts['public.comments (detached)'] = await tx.public.comments.update(
     { userId },
     {
       userId: null,
-      ...(unpublish ? { published: false, content: null } : {}),
+      ...(unpublish
+        ? {
+            published: false,
+            content: null,
+            featuredContent: null,
+            featuredAt: null,
+            featuredTargets: null,
+          }
+        : {}),
     },
   )
 
@@ -536,15 +574,7 @@ const deleteInDb = async (tx, user) => {
   // points at the same file (the file name is a hash of the image).
   let portrait = { action: 'none' }
   if (user.portraitUrl) {
-    const { count: sharedWith } = await tx.queryOne(
-      `SELECT count(*)::int AS count FROM users
-       WHERE id <> :userId AND "portraitUrl" LIKE :prefix`,
-      {
-        userId,
-        prefix: `${user.portraitUrl.split('?')[0].replace(/[\\%_]/g, '\\$&')}%`,
-      },
-    )
-    portrait = sharedWith
+    portrait = (await isPortraitShared(tx, user.portraitUrl, userId))
       ? { action: 'kept_shared_with_other_user' }
       : { action: 'delete', url: user.portraitUrl }
   }
@@ -650,16 +680,43 @@ const deleteInDb = async (tx, user) => {
   }
 
   phase('address')
+  const addCounts = (extra) =>
+    Object.entries(extra).forEach(([k, v]) => {
+      rows[k] = (rows[k] || 0) + v
+    })
   let address = { action: 'none', rows: {} }
   if (user.addressId) {
     address = await cleanUpAddress(tx, user.addressId)
-    Object.assign(rows, address.rows)
+    addCounts(address.rows)
+  }
+  // Shipping addresses of the user's own pledges and orders are personal data
+  // too (name, street, city), and in practice never the same as the user's
+  // address. Same rule: delete if unreferenced, name cleared if only
+  // bookkeeping rows still point at it, untouched if another user shares it.
+  const shippingIds = (
+    await tx.queryOneColumn(
+      `SELECT DISTINCT a FROM (
+         SELECT "shippingAddressId" AS a FROM pledges WHERE "userId" = :userId
+         UNION
+         SELECT "shippingAddressId" FROM payments.orders WHERE "userId" = :userId
+       ) s WHERE a IS NOT NULL`,
+      { userId },
+    )
+  ).filter((id) => id !== user.addressId)
+  const shippingAddresses = { deleted: 0, nameCleared: 0, shared: 0 }
+  for (const addressId of shippingIds) {
+    const result = await cleanUpAddress(tx, addressId)
+    addCounts(result.rows)
+    if (result.action === 'deleted') shippingAddresses.deleted++
+    else if (result.action === 'name_cleared') shippingAddresses.nameCleared++
+    else shippingAddresses.shared++
   }
 
   return {
     outcome: mustKeepRow ? 'anonymised' : 'deleted',
     rows,
     address: { action: address.action, referencedBy: address.referencedBy },
+    shippingAddresses,
     email: user.email,
     stripeCustomers, // deleted at Stripe for deleted and anonymised users
     portrait,
@@ -714,6 +771,148 @@ const postSlackSummary = async (text) => {
   }
 }
 
+// Checks that everything needed AFTER the database commit is configured, so a
+// missing key is found before any user is deleted, not afterwards.
+// A failed check is either blocking (the run would delete users and then fail
+// to clean up) or a warning (the run works but leaves something behind or does
+// not really send mails). A real run aborts on blocking failures, and on
+// warnings unless --accept-preflight-warnings is given.
+const preflight = async (pgdb, tokens) => {
+  const checks = []
+  const check = (name, ok, detail, warning = false) =>
+    checks.push({ name, ok, detail, ...(warning ? { warning: true } : {}) })
+  const missing = (names) => names.filter((n) => !process.env[n])
+
+  try {
+    const { accounts } = await getStripeClients(pgdb)
+    if (!accounts || !accounts.length) {
+      check('stripe', false, 'no Stripe accounts configured')
+    } else if (dryRun) {
+      check('stripe', true, `${accounts.length} account(s) configured`)
+    } else {
+      // read only call per account: proves the key works
+      for (const account of accounts) {
+        await account.stripe.customers.list({ limit: 1 })
+      }
+      check('stripe', true, `${accounts.length} account(s), keys accepted`)
+    }
+  } catch (e) {
+    check('stripe', false, e.message)
+  }
+
+  const mailchimpMissing = missing([
+    'MAILCHIMP_API_KEY',
+    'MAILCHIMP_URL',
+    'MAILCHIMP_MAIN_LIST_ID',
+  ])
+  if (mailchimpMissing.length) {
+    check('mailchimp', false, `missing ${mailchimpMissing.join(', ')}`)
+  } else if (!mailchimpDeleteAvailable) {
+    check(
+      'mailchimp',
+      false,
+      'deleteEmailDetailed is missing: the deployed mailchimp package is stale, rebuild and deploy',
+    )
+  } else {
+    check('mailchimp', true, 'configured')
+  }
+
+  const s3Missing = missing([
+    'AWS_ACCESS_KEY_ID',
+    'AWS_SECRET_ACCESS_KEY',
+    'AWS_S3_BUCKET',
+  ])
+  check(
+    's3',
+    !s3Missing.length,
+    s3Missing.length
+      ? `missing ${s3Missing.join(', ')}`
+      : process.env.AWS_S3_BUCKET,
+  )
+
+  // Portraits of the input users that live in another bucket than this app's
+  // are NOT deleted (the script only warns), yet the confirmation mail would
+  // say everything is deleted.
+  try {
+    const ids = tokens.filter((t) => UUID_RE.test(t))
+    const emails = tokens.filter((t) => !UUID_RE.test(t))
+    const rows = [
+      ...(ids.length
+        ? await pgdb.query(
+            `SELECT id, "portraitUrl" FROM users WHERE id = ANY(:ids)`,
+            { ids },
+          )
+        : []),
+      ...(emails.length
+        ? await pgdb.query(
+            `SELECT id, "portraitUrl" FROM users WHERE email = ANY(:emails)`,
+            { emails },
+          )
+        : []),
+    ]
+    const elsewhere = rows.filter((r) => {
+      const key = r.portraitUrl && portraitKey(r.portraitUrl)
+      return key && key.bucket !== process.env.AWS_S3_BUCKET
+    })
+    check(
+      'portraits',
+      !elsewhere.length,
+      elsewhere.length
+        ? `${elsewhere.length} of ${rows.length} input user(s) have a portrait in another bucket than ${process.env.AWS_S3_BUCKET}: those files stay, and the confirmation mail would still say everything is deleted`
+        : "all portraits of the input users are in this app's bucket (or none)",
+      true,
+    )
+  } catch (e) {
+    check('portraits', false, e.message, true)
+  }
+
+  try {
+    require('@orbiting/backend-modules-mail/lib/sendMailWithoutLog')
+    const canSend =
+      !!process.env.MANDRILL_API_KEY ||
+      !!(
+        process.env.SEND_MAILS_NODEMAILER_CONNECTION_URL &&
+        new RegExp(
+          process.env.SEND_MAILS_NODEMAILER_TEMPLATE_REGEX || '$^',
+          'i',
+        ).test(CONFIRMATION_MAIL.templateName)
+      )
+    const simulated =
+      process.env.SEND_MAILS === 'false' ||
+      (process.env.NODE_ENV !== 'production' &&
+        process.env.SEND_MAILS !== 'true')
+    if (!canSend) {
+      check(
+        'mail',
+        false,
+        'neither MANDRILL_API_KEY nor a Nodemailer setup for this template',
+      )
+    } else if (simulated) {
+      // reports "sent" without sending anything
+      check(
+        'mail',
+        false,
+        'mails are only SIMULATED here (set SEND_MAILS=true or NODE_ENV=production): users would get no confirmation although it is logged as sent',
+        true,
+      )
+    } else {
+      check('mail', true, 'configured')
+    }
+  } catch (e) {
+    check('mail', false, e.message)
+  }
+
+  const blocking = checks.filter((c) => !c.ok && !c.warning)
+  const warnings = checks.filter((c) => !c.ok && c.warning)
+  emit('preflight', {
+    ok: !blocking.length && !warnings.length,
+    blocking: blocking.length,
+    warnings: warnings.length,
+    checks,
+  })
+  return { blocking, warnings }
+}
+
 async function main() {
   if (!dryRun && !isLocalDatabase() && !argv['allow-remote']) {
     emit('error', {
@@ -742,6 +941,25 @@ async function main() {
 
   const pgdb = await PgDb.connect()
   startHeartbeat()
+
+  const { blocking, warnings } = await preflight(pgdb, tokens)
+  if (
+    !dryRun &&
+    (blocking.length || (warnings.length && !argv['accept-preflight-warnings']))
+  ) {
+    const failed = [...blocking, ...warnings]
+      .map((c) => `${c.name}: ${c.detail}`)
+      .join(' | ')
+    emit('error', {
+      message: `preflight failed, nothing was deleted. ${failed}${
+        !blocking.length
+          ? ' (only warnings: add --accept-preflight-warnings to run anyway)'
+          : ''
+      }`,
+    })
+    await pgdb.close()
+    return 2
+  }
   const stats = {
     deleted: 0,
     anonymised: 0,
@@ -774,6 +992,7 @@ async function main() {
     const tx = await pgdb.transactionBegin()
     let result
     let userId
+    let committing = false
     try {
       const user = await findUser(tx, token)
       if (!user) {
@@ -790,7 +1009,21 @@ async function main() {
       if (result.skipped || dryRun) {
         await tx.transactionRollback()
       } else {
+        // Written BEFORE the commit: if the process dies right after it, this
+        // line is the only record of what still has to be removed outside the
+        // database. retryExternalDeletions.js checks the database to see
+        // whether the commit happened.
+        emit('pending_external', {
+          ...position,
+          userId,
+          email: result.email,
+          stripeCustomers: result.stripeCustomers,
+          portraitUrl:
+            result.portrait.action === 'delete' ? result.portrait.url : null,
+        })
+        committing = true
         await tx.transactionCommit()
+        committing = false
       }
     } catch (e) {
       await tx.transactionRollback().catch(() => {})
@@ -800,7 +1033,10 @@ async function main() {
         ...position,
         input: token,
         userId,
-        message: `rolled back: ${e.message}`,
+        message: committing
+          ? `commit failed, the user may or may not have been deleted: ${e.message}`
+          : `rolled back: ${e.message}`,
+        ...(committing ? { commitUncertain: true } : {}),
       })
       continue
     }
@@ -828,6 +1064,7 @@ async function main() {
       rows: result.rows,
       address: result.address,
       portrait: result.portrait.action,
+      shippingAddresses: result.shippingAddresses,
     })
 
     if (dryRun) continue
@@ -836,22 +1073,33 @@ async function main() {
     const ctx = { userId }
     const externalStartedAt = Date.now()
     phase('stripe')
+    let allDeleted = true
     if (result.stripeCustomers.length) {
+      let accounts = null
+      let reason
       try {
         stripeAccounts = stripeAccounts || (await getStripeClients(pgdb))
+        accounts = stripeAccounts.accounts || []
       } catch (e) {
-        stripeAccounts = { accounts: [] }
-        emit('warning', { message: `stripe clients: ${e.message}` })
+        // not cached: the next user tries again
+        reason = e.message
       }
-    }
-    let allDeleted = true
-    for (const customer of result.stripeCustomers) {
-      const ok = await deleteStripe(
-        stripeAccounts.accounts || [],
-        customer,
-        ctx,
-      )
-      allDeleted = allDeleted && ok
+      for (const customer of result.stripeCustomers) {
+        if (!accounts) {
+          stats.externalFailures++
+          allDeleted = false
+          emit('external_failure', {
+            kind: 'stripe',
+            ...ctx,
+            customerId: customer.id,
+            companyId: customer.companyId,
+            error: `stripe clients unavailable: ${reason}`,
+          })
+          continue
+        }
+        const ok = await deleteStripe(accounts, customer, ctx)
+        allDeleted = allDeleted && ok
+      }
     }
     phase('mailchimp')
     allDeleted = (await deleteMailchimp(result.email, ctx)) && allDeleted

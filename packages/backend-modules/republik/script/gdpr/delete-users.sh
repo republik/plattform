@@ -127,6 +127,9 @@ main() {
     elif .event == "would_retry" then "would retry \(.kind) for \(.userId)"
     elif .event == "retried" then "retried \(.kind) for \(.userId): \(if .ok then "ok" else "FAILED" end)"
     elif .event == "confirmation_mail_pending" then "    ? confirmation mail pending for \(.userId)"
+    elif .event == "preflight" then "== preflight: \(.checks | map("\(.name) \(if .ok then "ok" elif .warning then "WARNING (\(.detail))" else "FAILED (\(.detail))" end)") | join(" | "))"
+    elif .event == "retry_skipped" then "    ~ retry skipped (\(.kind)) for \(.userId): \(.message)"
+    elif .event == "skipped_not_deleted" then "    ~ \(.userId): \(.message)"
     elif .event == "summary" then "== summary: \(del(.ts, .runId, .event) | tojson)"
     elif .event == "raw" then .line
     else empty end
