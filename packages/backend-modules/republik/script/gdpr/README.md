@@ -100,7 +100,9 @@ The manual commands, which the wrapper runs for you:
 
 Prerequisites: Heroku CLI, access to the app, and a local `users.txt`.
 
-Use `--no-tty` whenever you redirect stdin or stdout. Without it the CLI
+Always put `--` before `node`: the Heroku CLI otherwise rejects the script's
+flags (`--no-dry-run`, `--allow-remote`) as unknown. Use `-x` to get the
+script's exit code, and `--no-tty` whenever you redirect stdin or stdout. Without it the CLI
 attaches a terminal and the output gets mixed with terminal control characters.
 Run from the repository root (the dyno's working directory), as for the other
 scripts.
@@ -119,7 +121,7 @@ SCRIPT=packages/backend-modules/republik/script/gdpr/deleteUsers.js
 Everything is executed and rolled back. Nothing is changed, nothing is sent.
 
 ```sh
-heroku run --app $APP --no-tty node $SCRIPT < users.txt > dry-run.log
+heroku run --app $APP --no-tty -x -- node $SCRIPT < users.txt > dry-run.log
 ```
 
 Read the log (see "Reading the log"). Check that the number of `user` events
@@ -130,7 +132,7 @@ seconds because of the large e-mail-keyed tables.
 ### 2. Real run
 
 ```sh
-heroku run --app $APP --no-tty node $SCRIPT --no-dry-run --allow-remote \
+heroku run --app $APP --no-tty -x -- node $SCRIPT --no-dry-run --allow-remote \
   < users.txt > run-$(date +%Y-%m-%d-%H%M).log
 ```
 
@@ -145,7 +147,7 @@ time. A re-run of already processed input is harmless: deleted users are
 reported as `not_found`, anonymised ones as `skipped` (already deleted).
 
 The exit code is 0 when everything worked and 1 if any user rolled back or any
-Stripe/Mailchimp/mail step failed (`heroku run` passes it through).
+Stripe/Mailchimp/mail step failed (passed through by `heroku run -x`).
 
 ### 3. Retry failed Stripe / Mailchimp deletions
 
@@ -156,9 +158,9 @@ does not help. Pipe the stored log into the retry script instead:
 RETRY=packages/backend-modules/republik/script/gdpr/retryExternalDeletions.js
 
 # dry run (default): lists what would be retried
-cat run-2026-10-16-1030.log | heroku run --app $APP --no-tty node $RETRY
+cat run-2026-10-16-1030.log | heroku run --app $APP --no-tty -x -- node $RETRY
 
-cat run-2026-10-16-1030.log | heroku run --app $APP --no-tty node $RETRY \
+cat run-2026-10-16-1030.log | heroku run --app $APP --no-tty -x -- node $RETRY \
   --no-dry-run --allow-remote > retry-1.log
 ```
 

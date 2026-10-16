@@ -132,7 +132,9 @@ main() {
     else empty end
 JQ
 
-  CMD=(heroku run --app "$APP" --no-tty node "$NODE_SCRIPT")
+  # "--" keeps the heroku CLI from parsing the script's flags as its own;
+  # -x passes the script's exit code through
+  CMD=(heroku run --app "$APP" --no-tty -x -- node "$NODE_SCRIPT")
   if [[ ${#FLAGS[@]} -gt 0 ]]; then
     CMD+=("${FLAGS[@]}")
   fi
