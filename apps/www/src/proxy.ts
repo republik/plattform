@@ -72,7 +72,28 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ message: 'Nope' }, { status: 401 })
   }
 
-  return NextResponse.next()
+  return previewHeader(req)
+}
+
+/**
+ * Mark requests to /preview routes, so nested server components can fetch draft content.
+ * @param req
+ * @returns NextResponse with the preview request header set (or removed)
+ */
+function previewHeader(req: NextRequest): NextResponse {
+  const headers = new Headers(req.headers)
+  // Never trust a client-supplied value
+  headers.delete('x-republik-preview')
+
+  if (
+    req.nextUrl.pathname === '/preview' ||
+    req.nextUrl.pathname.startsWith('/preview/')
+  ) {
+    headers.set('x-republik-preview', '1')
+  }
+
+  // Note: this header will never reach the browser, just the target page https://nextjs.org/docs/app/api-reference/functions/next-response#next
+  return NextResponse.next({ request: { headers } })
 }
 
 export const config = {

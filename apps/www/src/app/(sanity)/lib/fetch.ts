@@ -6,22 +6,32 @@ import type {
   QueryParams,
   ResponseQueryOptions,
 } from 'next-sanity'
-import { draftMode } from 'next/headers'
+import { draftMode, headers } from 'next/headers'
 
 const publishedClient = client.withConfig({
   stega: false,
   perspective: 'published',
 })
 
+/**
+ * Draft content is only fetched on /preview routes with draft mode enabled. See proxy.ts
+ */
+async function isPreviewRequest() {
+  if (!(await draftMode()).isEnabled) {
+    return false
+  }
+  // Only read headers once draft mode is enabled, so published pages can stay static
+  return (await headers()).get('x-republik-preview') === '1'
+}
+
 export async function sanityClientFetch<const QueryString extends string>(
   query: QueryString,
   params?: QueryParams,
   options?: ResponseQueryOptions,
 ): Promise<ClientReturn<QueryString>> {
-  const draft = (await draftMode()).isEnabled
-
+  const isPreview = await isPreviewRequest()
   try {
-    if (draft) {
+    if (isPreview) {
       const { data } = await liveFetch({
         query,
         params,
@@ -40,7 +50,7 @@ export async function sanityClientFetch<const QueryString extends string>(
       tags: {
         context: 'sanityClientFetch',
         requestTag: options?.tag,
-        isDraftMode: draft,
+        isDraftMode: isPreview,
       },
       extra: { query, params },
     })
