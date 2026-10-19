@@ -57,6 +57,7 @@ export function InternalLink({
   }
 
   // empty internal links are a thing for unpublished linked document
+  // and we want them to show up in the live preview
   return (
     <Link href={href ?? '#'} className={linkStyle}>
       {children}
