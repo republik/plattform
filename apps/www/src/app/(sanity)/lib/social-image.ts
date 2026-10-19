@@ -15,6 +15,13 @@ type SocialImage = {
   height: number
 }
 
+// Generic Republik share image for documents without an image of their own.
+export const DEFAULT_SOCIAL_IMAGE: SocialImage = {
+  url: '/static/social-media/teilen.png',
+  width: 1200,
+  height: 628,
+}
+
 /**
  * Resolves the share image of a document, used for both the Open Graph
  * metadata and the JSON-LD linked data.
@@ -42,6 +49,8 @@ export function getSocialImage(
         url: urlFor(data.image)
           .width(SOCIAL_IMAGE_WIDTH)
           .height(SOCIAL_IMAGE_HEIGHT)
+          // Crawlers' WebP/AVIF support varies; fm overrides auto=format
+          .format('jpg')
           .url(),
         width: SOCIAL_IMAGE_WIDTH,
         height: SOCIAL_IMAGE_HEIGHT,

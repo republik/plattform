@@ -112,9 +112,10 @@ export const fetchSearchableArticlesPage = async (
   offset: number,
   limit: number,
 ): Promise<TypesenseArticleDocument[]> => {
-  const docs = await createSanityClient().fetch<RawArticleDoc[]>(QUERY, {
-    offset,
-    end: offset + limit,
-  })
+  const docs = await createSanityClient().fetch<RawArticleDoc[]>(
+    QUERY,
+    { offset, end: offset + limit },
+    { tag: 'search.reindex-articles' },
+  )
   return docs.map(toTypesenseArticleDocument)
 }

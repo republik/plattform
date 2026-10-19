@@ -1,3 +1,4 @@
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import type { PortableTextMarkComponentProps } from 'next-sanity'
@@ -46,10 +47,17 @@ export function InternalLink({
 }: PortableTextMarkComponentProps) {
   const href = value?.slug
 
+  // we don't want links to contributors without profiles
+  if (!href && value?.referenceType === 'contributor') {
+    return <span>{children}</span>
+  }
+
   if (!href) {
     console.warn('Internal link without href', value, { text })
   }
 
+  // empty internal links are a thing for unpublished linked document
+  // and we want them to show up in the live preview
   return (
     <Link href={href ?? '#'} className={linkStyle}>
       {children}
@@ -62,7 +70,12 @@ export function ExternalLink({
   value,
 }: PortableTextMarkComponentProps) {
   return (
-    <a href={value.href} target='_blank' rel='noreferrer' className={linkStyle}>
+    <a
+      href={toAssetCdnUrl(value.href)}
+      target='_blank'
+      rel='noreferrer'
+      className={linkStyle}
+    >
       {children}
     </a>
   )
