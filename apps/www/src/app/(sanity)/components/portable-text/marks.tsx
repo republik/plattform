@@ -47,10 +47,17 @@ export function InternalLink({
 }: PortableTextMarkComponentProps) {
   const href = value?.slug
 
+  // we don't want links to contributors without profiles
+  if (!href && value?.referenceType === 'contributor') {
+    return <span>{children}</span>
+  }
+
   if (!href) {
     console.warn('Internal link without href', value, { text })
   }
 
+  // empty internal links are a thing for unpublished linked document
+  // and we want them to show up in the live preview
   return (
     <Link href={href ?? '#'} className={linkStyle}>
       {children}
