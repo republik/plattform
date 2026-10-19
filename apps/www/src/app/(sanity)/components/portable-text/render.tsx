@@ -1,5 +1,6 @@
 import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { DividerStars } from '@/app/(sanity)/components/portable-text/divider-stars'
+import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
 import {
   Em,
   ExternalLink,
@@ -81,6 +82,7 @@ const nestedComponentsWithoutLinks: Partial<PortableTextReactComponents> = {
     voiceTag: () => null,
     divider: () => <hr />,
     dividerStars: DividerStars,
+    infoBox: InfoBox,
   },
 
   block: {

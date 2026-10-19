@@ -504,6 +504,9 @@ export type NestedEditor = Array<
   | ({
       _key: string
     } & Button)
+  | ({
+      _key: string
+    } & InfoBox)
 >
 
 export type TextOnlyEditor = Array<{
@@ -2474,6 +2477,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  markDefs: null
+                }
             > | null
             caption?: Caption
             markDefs: null
@@ -2633,6 +2649,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  markDefs: null
+                }
             > | null
             markDefs: null
           }
@@ -2771,6 +2800,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  markDefs: null
+                }
             > | null
             markDefs: null
           }
@@ -2837,6 +2879,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'dividerStars'
                   style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
                   markDefs: null
                 }
             > | null
@@ -2918,6 +2973,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'dividerStars'
                   style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
                   markDefs: null
                 }
             > | null
@@ -3057,6 +3125,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   _key: string
                   _type: 'dividerStars'
                   style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
                   markDefs: null
                 }
             > | null
@@ -3382,6 +3463,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                         style?: string
                         markDefs: null
                       }
+                    | {
+                        _key: string
+                        _type: 'infoBox'
+                        title?: string
+                        body?: NestedEditor
+                        image?: AsideImage
+                        includeInSyntheticVoice?: boolean
+                        collapsible?: boolean
+                        size?: 'breakout' | 'float'
+                        figureSize?: 'L' | 'M' | 'S'
+                        figureFloat?: boolean
+                        markDefs: null
+                      }
                   > | null
                   caption?: Caption
                   markDefs: null
@@ -3626,6 +3720,19 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                         _key: string
                         _type: 'dividerStars'
                         style?: string
+                        markDefs: null
+                      }
+                    | {
+                        _key: string
+                        _type: 'infoBox'
+                        title?: string
+                        body?: NestedEditor
+                        image?: AsideImage
+                        includeInSyntheticVoice?: boolean
+                        collapsible?: boolean
+                        size?: 'breakout' | 'float'
+                        figureSize?: 'L' | 'M' | 'S'
+                        figureFloat?: boolean
                         markDefs: null
                       }
                   > | null
@@ -4036,6 +4143,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  markDefs: null
+                }
             > | null
             caption?: Caption
             markDefs: null
@@ -4195,6 +4315,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  markDefs: null
+                }
             > | null
             markDefs: null
           }
@@ -4333,6 +4466,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   style?: string
                   markDefs: null
                 }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
+                  markDefs: null
+                }
             > | null
             markDefs: null
           }
@@ -4399,6 +4545,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'dividerStars'
                   style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
                   markDefs: null
                 }
             > | null
@@ -4480,6 +4639,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'dividerStars'
                   style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
                   markDefs: null
                 }
             > | null
@@ -4619,6 +4791,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   _key: string
                   _type: 'dividerStars'
                   style?: string
+                  markDefs: null
+                }
+              | {
+                  _key: string
+                  _type: 'infoBox'
+                  title?: string
+                  body?: NestedEditor
+                  image?: AsideImage
+                  includeInSyntheticVoice?: boolean
+                  collapsible?: boolean
+                  size?: 'breakout' | 'float'
+                  figureSize?: 'L' | 'M' | 'S'
+                  figureFloat?: boolean
                   markDefs: null
                 }
             > | null
@@ -4944,6 +5129,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                         style?: string
                         markDefs: null
                       }
+                    | {
+                        _key: string
+                        _type: 'infoBox'
+                        title?: string
+                        body?: NestedEditor
+                        image?: AsideImage
+                        includeInSyntheticVoice?: boolean
+                        collapsible?: boolean
+                        size?: 'breakout' | 'float'
+                        figureSize?: 'L' | 'M' | 'S'
+                        figureFloat?: boolean
+                        markDefs: null
+                      }
                   > | null
                   caption?: Caption
                   markDefs: null
@@ -5188,6 +5386,19 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                         _key: string
                         _type: 'dividerStars'
                         style?: string
+                        markDefs: null
+                      }
+                    | {
+                        _key: string
+                        _type: 'infoBox'
+                        title?: string
+                        body?: NestedEditor
+                        image?: AsideImage
+                        includeInSyntheticVoice?: boolean
+                        collapsible?: boolean
+                        size?: 'breakout' | 'float'
+                        figureSize?: 'L' | 'M' | 'S'
+                        figureFloat?: boolean
                         markDefs: null
                       }
                   > | null
@@ -5661,6 +5872,19 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 style?: string
                 markDefs: null
               }
+            | {
+                _key: string
+                _type: 'infoBox'
+                title?: string
+                body?: NestedEditor
+                image?: AsideImage
+                includeInSyntheticVoice?: boolean
+                collapsible?: boolean
+                size?: 'breakout' | 'float'
+                figureSize?: 'L' | 'M' | 'S'
+                figureFloat?: boolean
+                markDefs: null
+              }
           > | null
           caption?: Caption
           markDefs: null
@@ -5902,6 +6126,19 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
                 style?: string
                 markDefs: null
               }
+            | {
+                _key: string
+                _type: 'infoBox'
+                title?: string
+                body?: NestedEditor
+                image?: AsideImage
+                includeInSyntheticVoice?: boolean
+                collapsible?: boolean
+                size?: 'breakout' | 'float'
+                figureSize?: 'L' | 'M' | 'S'
+                figureFloat?: boolean
+                markDefs: null
+              }
           > | null
           image?: AsideImage
           includeInSyntheticVoice?: boolean
@@ -6124,6 +6361,19 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               style?: string
               markDefs: null
             }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              body?: NestedEditor
+              image?: AsideImage
+              includeInSyntheticVoice?: boolean
+              collapsible?: boolean
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
+              markDefs: null
+            }
         > | null
         caption?: Caption
         markDefs: null
@@ -6281,6 +6531,19 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               style?: string
               markDefs: null
             }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              body?: NestedEditor
+              image?: AsideImage
+              includeInSyntheticVoice?: boolean
+              collapsible?: boolean
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
+              markDefs: null
+            }
         > | null
         markDefs: null
       }
@@ -6417,6 +6680,19 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               style?: string
               markDefs: null
             }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              body?: NestedEditor
+              image?: AsideImage
+              includeInSyntheticVoice?: boolean
+              collapsible?: boolean
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
+              markDefs: null
+            }
         > | null
         markDefs: null
       }
@@ -6481,6 +6757,19 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'dividerStars'
               style?: string
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              body?: NestedEditor
+              image?: AsideImage
+              includeInSyntheticVoice?: boolean
+              collapsible?: boolean
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
               markDefs: null
             }
         > | null
@@ -6560,6 +6849,19 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'dividerStars'
               style?: string
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              body?: NestedEditor
+              image?: AsideImage
+              includeInSyntheticVoice?: boolean
+              collapsible?: boolean
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
               markDefs: null
             }
         > | null
@@ -6697,6 +6999,19 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
               _key: string
               _type: 'dividerStars'
               style?: string
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              body?: NestedEditor
+              image?: AsideImage
+              includeInSyntheticVoice?: boolean
+              collapsible?: boolean
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
               markDefs: null
             }
         > | null
