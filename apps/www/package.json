@@ -8,7 +8,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\" \"yarn sanity:types --watch\"",
+    "dev": "concurrently \"PORT=3010 next dev --webpack\" \"yarn gql:types --watch\" \"panda --watch\" \"yarn sanity:types --watch\"",
     "start": "next start",
     "build": "panda && yarn gql:types && next build --webpack",
     "test": "jest",
