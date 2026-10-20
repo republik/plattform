@@ -676,7 +676,6 @@
       "key": "Account/AddressForm/name/error/tooLong",
       "value": "Ihr Name, maximal {maxLength} Zeichen"
     },
-
     {
       "key": "Account/AddressForm/line1/label",
       "value": "Strasse und Hausnummer"
@@ -2988,26 +2987,6 @@
     {
       "key": "shareholder/contact/phone/link",
       "value": "+41445056780"
-    },
-    {
-      "key": "front/prepublication/notice",
-      "value": "Interne Publikation (Editoren-Vorschau)"
-    },
-    {
-      "key": "front/finite/feed",
-      "value": "Zum Feed"
-    },
-    {
-      "key": "front/finite",
-      "value": "Sie haben die aktuelle Republik gelesen."
-    },
-    {
-      "key": "front/chronology",
-      "value": "Archiv {years}"
-    },
-    {
-      "key": "front/loadMore",
-      "value": "Ältere Beiträge laden\n"
     },
     {
       "key": "feed/title/1",

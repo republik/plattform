@@ -1,4 +1,5 @@
 import { EditLink } from '@/app/(sanity)/components/edit-link'
+import { EndOfFront } from '@/app/(sanity)/front/components/end-of-front'
 import { FrontBlock } from '@/app/(sanity)/front/components/front-block'
 import { FRONT_LATEST_QUERY } from '@/app/(sanity)/groq/front-latest-query'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
@@ -75,13 +76,7 @@ export default async function FrontPage() {
         ))}
       </div>
 
-      {/*
-        FIXME: The Front feed query is extremely slow and blocks the whole page load
-        So we disable it for now
-        */}
-      {/*<Suspense>
-        <FrontFeed />
-      </Suspense>*/}
+      <EndOfFront />
     </EventTrackingContext>
   )
 }
