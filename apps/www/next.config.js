@@ -45,6 +45,22 @@ const nextConfig = {
 
   poweredByHeader: false,
 
+  // next-sanity is ESM-only ("type": "module") and does `import NextImage from 'next/image'`,
+  // which is CJS. Both Node and webpack treat "type": "module" files as strict ESM, where a
+  // default import of CJS resolves to the whole `module.exports` ({ __esModule: true, default })
+  // instead of the component. Bundling it (transpilePackages) and parsing it as
+  // `javascript/auto` (see webpack below) makes the interop respect `__esModule`.
+  transpilePackages: ['next-sanity'],
+  webpack(config) {
+    config.module.rules.push({
+      test: /[\\/]node_modules[\\/]next-sanity[\\/]dist[\\/]image[\\/]/,
+      type: 'javascript/auto',
+    })
+    return config
+  },
+
+  // bundlePagesRouterDependencies: true,
+
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,
   images: {
