@@ -5,6 +5,9 @@ import {
 import Link from '@/app/components/ui/link'
 import { css } from '@republik/theme/css'
 import { CircleCheckBig } from 'lucide-react'
+import { Fragment } from 'react'
+
+const linkStyle = css({ textDecoration: 'underline' })
 
 export function EndOfFront() {
   const now = currentZurichMonth()
@@ -15,8 +18,11 @@ export function EndOfFront() {
 
   return (
     <div
+      data-theme='dark'
+      style={{ backgroundColor: '#000000' }}
       className={css({
         display: 'flex',
+        color: 'text',
         flexDirection: 'column',
         gap: '4',
         padding: '8',
@@ -25,12 +31,21 @@ export function EndOfFront() {
     >
       <div className={css({ display: 'flex', gap: '2' })}>
         <CircleCheckBig size={24} /> Sie haben die aktuelle Republik gelesen.
-        <Link href='/feed'>Zum Feed</Link>
       </div>
       <div>
-        Archiv:
-        {archiveYears.map((year) => (
-          <Link href={`/archiv/${year}/1`}>{year}</Link>
+        <Link href='/feed' className={linkStyle}>
+          Zum Feed
+        </Link>
+      </div>
+      <div>
+        Archiv{' '}
+        {archiveYears.map((year, i) => (
+          <Fragment key={year}>
+            {i > 0 && ', '}
+            <Link href={`/archiv/${year}/1`} className={linkStyle}>
+              {year}
+            </Link>
+          </Fragment>
         ))}
       </div>
     </div>
