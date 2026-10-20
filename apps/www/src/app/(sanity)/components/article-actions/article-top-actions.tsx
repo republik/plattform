@@ -7,7 +7,7 @@ import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'
 import { css, cx } from '@republik/theme/css'
 import { AArrowUp, EllipsisVertical } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { ACTION_ICON_SIZE } from './action-style'
 import { AddToPlaylistAction } from './add-to-playlist-action'
 import { useArticleActions } from './article-actions-context'
@@ -16,7 +16,7 @@ import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
 import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
 import { OpenInSanityAction } from './open-in-sanity'
-import { PdfDownloadAction } from './pdf-download-action'
+import { PdfDownloadAction, PdfDownloadDialog } from './pdf-download-action'
 import { PlayAction } from './play-action'
 import { ShareAction } from './share-action'
 
@@ -32,6 +32,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
   // Not signed in, or trial ended: reader is looking at a paywall, so the
   // full text isn't theirs to download.
   const { hasPaywall } = usePaynotes()
+  const [pdfDialogOpen, setPdfDialogOpen] = useState(false)
 
   // The floating action bar stays hidden while this row is on screen.
   const ref = useRef<HTMLDivElement>(null)
@@ -86,8 +87,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
           {!hasPaywall && (
             <Menu.Item asChild>
               <PdfDownloadAction
-                path={path}
-                version={article._updatedAt}
+                onClick={() => setPdfDialogOpen(true)}
                 className={menuItemStyle}
               />
             </Menu.Item>
@@ -105,6 +105,16 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
           </Menu.Item>
         </Menu.Content>
       </Menu.Root>
+
+      {/* Outside the menu, which unmounts its items once one is selected. */}
+      {!hasPaywall && (
+        <PdfDownloadDialog
+          path={path}
+          version={article._updatedAt}
+          open={pdfDialogOpen}
+          onOpenChange={setPdfDialogOpen}
+        />
+      )}
     </div>
   )
 }
