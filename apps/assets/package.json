@@ -13,7 +13,7 @@
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-types": "*",
     "cors": "^2.8.5",
-    "express": "^4.16.3",
+    "express": "^4.21.2",
     "regiment": "^0.0.5"
   },
   "scripts": {
