@@ -1,13 +1,11 @@
 import Link from '@/app/components/ui/link'
+import { formatDate, formatExcerpt } from '@/lib/utils/format'
+import { IconCheck } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import { IconCheck } from '@republik/icons'
 
 import { getHighlight } from '../../lib/typesense-adapter'
-import { formatExcerpt, timeFormat } from '@/lib/utils/format'
 import { Highlight } from './highlight'
-
-const formatDate = timeFormat('%d.%m.%Y')
 
 export function CommentResult({ comment }) {
   const bodySnippet = getHighlight(comment.highlights, 'contentString')
@@ -15,7 +13,10 @@ export function CommentResult({ comment }) {
 
   // discussionPath is only ever set for an article-attached comment, so /dialog always applies
   const discussionHref = comment.discussionPath
-    ? { pathname: `/dialog${comment.discussionPath}`, query: { focus: comment.id } }
+    ? {
+        pathname: `/dialog${comment.discussionPath}`,
+        query: { focus: comment.id },
+      }
     : undefined
 
   return (
@@ -32,9 +33,7 @@ export function CommentResult({ comment }) {
         gap: 2,
       })}
     >
-      <div
-        className={css({ display: 'flex', alignItems: 'center', gap: 2 })}
-      >
+      <div className={css({ display: 'flex', alignItems: 'center', gap: 2 })}>
         {author?.portrait && (
           <img
             src={author.portrait}

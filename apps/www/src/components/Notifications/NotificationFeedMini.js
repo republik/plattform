@@ -1,22 +1,22 @@
-import { Fragment } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { nest } from 'd3-collection'
-import { css } from 'glamor'
-import { parse } from 'url'
-import {
-  useColorContext,
-  mediaQueries,
-  fontStyles,
-  Loader,
-} from '@project-r/styleguide'
-
-import { notificationsMiniQuery } from './enhancers'
+import Link from '@/app/components/ui/link'
 import { timeFormat } from '@/lib/utils/format'
 import withT, { useTranslation } from '@/lib/withT'
-import Link from '@/app/components/ui/link'
+import { graphql } from '@apollo/client/react/hoc'
+import {
+  fontStyles,
+  Loader,
+  mediaQueries,
+  useColorContext,
+} from '@project-r/styleguide'
+import { nest } from 'd3-collection'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { Fragment } from 'react'
+import { parse } from 'url'
 
-const dateFormat = timeFormat('%d.%m.')
+import { notificationsMiniQuery } from './enhancers'
+
+const dateFormat = timeFormat('%-d.\u00a0%B')
 
 const groupByDate = nest().key((n) => {
   return dateFormat(new Date(n.createdAt))

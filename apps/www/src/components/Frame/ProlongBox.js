@@ -1,3 +1,6 @@
+import Link from '@/app/components/ui/link'
+import { formatDate } from '@/lib/utils/format'
+import { useInNativeApp } from '@/lib/withInNativeApp'
 import {
   Button,
   Center,
@@ -9,11 +12,8 @@ import {
 import { timeDay } from 'd3-time'
 
 import { css } from 'glamor'
-import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { Fragment } from 'react'
-import { timeFormat } from '@/lib/utils/format'
-import { useInNativeApp } from '@/lib/withInNativeApp'
 
 import TokenPackageLink from '../Link/TokenPackage'
 
@@ -33,8 +33,6 @@ const styles = {
 const SingleLine = ({ children }) => (
   <div {...styles.singleLine}>{children}</div>
 )
-
-const dayFormat = timeFormat('%d. %B %Y')
 
 const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
   const [colorScheme] = useColorContext()
@@ -114,9 +112,9 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
         daysAgo: t.pluralize('prolongNecessary/days', {
           count: Math.abs(numberOfDays),
         }),
-        prolongBeforeDate: dayFormat(date),
-        endDate: dayFormat(endDate),
-        graceEndDate: dayFormat(graceEndDate),
+        prolongBeforeDate: formatDate(date),
+        endDate: formatDate(endDate),
+        graceEndDate: formatDate(graceEndDate),
       },
       '',
     )

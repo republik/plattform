@@ -11,14 +11,6 @@ export const swissNumbers = formatLocale({
   minus: '\u2212',
   percent: '\u2009%',
 })
-const chf4Format = swissNumbers.format('$.0f')
-const chf5Format = swissNumbers.format('$,.0f')
-export const chfFormat = (value) => {
-  if (String(Math.round(value)).length > 4) {
-    return chf5Format(value)
-  }
-  return chf4Format(value)
-}
 
 const count4Format = swissNumbers.format('.0f')
 const count5Format = swissNumbers.format(',.0f')
@@ -32,8 +24,8 @@ export const countFormat = (value) => {
 export const swissTime = timeFormatLocale(timeDefinition)
 export const timeFormat = swissTime.format
 
-const dateFormat = '%d.%m.%Y'
-export const parseDate = swissTime.parse(dateFormat)
+// "1. Januar 2026", with non-breaking spaces so the date never wraps
+export const dateFormat = '%-d.\u00a0%B\u00a0%Y'
 export const formatDate = swissTime.format(dateFormat)
 
 export const formatExcerpt = (string) =>

@@ -1,3 +1,4 @@
+import Link from '@/app/components/ui/link'
 import { useSanityArticles } from '@/lib/use-sanity-data'
 import { timeFormat } from '@/lib/utils/format'
 import withT from '@/lib/withT'
@@ -15,16 +16,15 @@ import {
 import { nest } from 'd3-collection'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import Link from '@/app/components/ui/link'
 import { useMemo } from 'react'
 import DateLabel from '../Feed/DateLabel'
 import InfiniteScroll from '../Frame/InfiniteScroll'
 import CommentNotification from './CommentNotification'
 import DocumentNotification from './DocumentNotification'
-import SanityDocumentNotification from './SanityDocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
+import SanityDocumentNotification from './SanityDocumentNotification'
 
-const dateFormat = timeFormat('%A,\n%d.%m.%Y')
+const dateFormat = timeFormat(`%A, ${dateFormat}`)
 
 const groupByDate = nest().key((n) => {
   return dateFormat(new Date(n.createdAt))

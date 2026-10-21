@@ -7,7 +7,7 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/lib/utils/format'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import type { CSSProperties } from 'react'
@@ -146,9 +146,7 @@ export function CarouselTeaser({
           {teaser._type !== 'page' &&
             teaser.publishDate &&
             !skipDescription && (
-              <p className='time'>
-                {timeFormat('%d.%m.%Y')(new Date(teaser.publishDate))}
-              </p>
+              <p className='time'>{formatDate(new Date(teaser.publishDate))}</p>
             )}
         </div>
       </div>

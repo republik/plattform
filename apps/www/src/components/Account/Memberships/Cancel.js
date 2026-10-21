@@ -1,31 +1,28 @@
 import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-
-import { Fragment, useEffect, useState, useRef } from 'react'
-import { css } from 'glamor'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
-import AutosizeInput from 'react-textarea-autosize'
-
-import { timeFormat } from '@/lib/utils/format'
+import Link from '@/app/components/ui/link'
+import { formatDate } from '@/lib/utils/format'
 import withT from '@/lib/withT'
-import ErrorMessage from '../../ErrorMessage'
-import { Item, P } from '../Elements'
+import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
 
 import {
-  Loader,
   A,
-  Field,
-  Radio,
   Button,
-  Interaction,
+  Field,
   InlineSpinner,
+  Interaction,
+  Loader,
+  Radio,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
 
 import { useRouter } from 'next/router'
-import Link from '@/app/components/ui/link'
 
-const dayFormat = timeFormat('%d. %B %Y')
+import { Fragment, useEffect, useRef, useState } from 'react'
+import AutosizeInput from 'react-textarea-autosize'
+import ErrorMessage from '../../ErrorMessage'
+import { Item, P } from '../Elements'
 
 export const styles = {
   autoSize: css({
@@ -116,7 +113,7 @@ const CancelMembership = ({
       render={() => {
         const latestPeriod = membership.periods[0]
         const formattedEndDate =
-          latestPeriod && dayFormat(new Date(latestPeriod.endDate))
+          latestPeriod && formatDate(new Date(latestPeriod.endDate))
         if (remoteState.success || !membership.renew) {
           return (
             <Fragment>
