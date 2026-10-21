@@ -25,6 +25,7 @@
     "@types/uuid": "^8.3.0"
   },
   "dependencies": {
+    "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-dataloader": "*",
     "@orbiting/backend-modules-translate": "*",
     "@types/is-uuid": "^1.0.0",

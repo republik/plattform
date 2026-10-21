@@ -24,7 +24,7 @@ const start = (workerId) => {
 
   // redirect to https
   if (!DEV) {
-    server.enable('trust proxy')
+    server.set('trust proxy', 1)
     server.use((req, res, next) => {
       if (!req.secure) {
         res.redirect(`https://${req.hostname}${req.url}`)

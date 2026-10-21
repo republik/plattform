@@ -8,6 +8,7 @@ const helmet = require('helmet')
 const sleep = require('await-sleep')
 const ipfilter = require('express-ipfilter').IpFilter
 const { httpLogger } = require('@orbiting/backend-modules-logger')
+const { getTrustProxyHops, getClientIp } = require('./lib/clientIp')
 
 const graphql = require('./express/graphql')
 const graphiql = require('./express/graphiql')
@@ -76,7 +77,9 @@ const start = async (
       ipfilter(ipBlocklist, {
         mode: 'deny',
         logLevel: 'deny',
-        trustProxy: !DEV,
+        // only trust the proxies we run behind (spoofed leading
+        // X-Forwarded-For entries must not be used)
+        detectIp: (req) => getClientIp(req),
       }),
     )
   }
@@ -85,8 +88,8 @@ const start = async (
   if (!DEV) {
     // enable compression
     server.use(compression())
-    // trust first proxy
-    server.enable('trust proxy')
+    // trust the configured number of proxy hops (default: 1, Heroku router)
+    server.set('trust proxy', getTrustProxyHops())
     // redirect to https
     server.use((req, res, next) => {
       if (
