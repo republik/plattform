@@ -30,7 +30,7 @@
     "remark-parse": "^8.0.2",
     "unified": "^9.0.0",
     "unist-util-visit": "^2.0.2",
-    "validator": "^13.7.0"
+    "validator": "^13.15.22"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
