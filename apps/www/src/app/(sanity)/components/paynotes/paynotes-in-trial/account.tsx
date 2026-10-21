@@ -3,15 +3,13 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 import { useMe } from '@/lib/context/MeContext'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/lib/utils/format'
 
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 
 import NativeCta from '../native-cta'
-
-const dayFormat = timeFormat('%e. %B %Y')
 
 function AccountCta() {
   const utmParams = getUTMSessionStorage()
@@ -56,7 +54,7 @@ export function AccountPaynote() {
         new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
       new Date(),
     )
-  const maxEndAtString = dayFormat(new Date(maxEndAt))
+  const maxEndAtString = formatDate(new Date(maxEndAt))
   const description = (
     t.elements('paynotes/account/description', {
       maxEndAt: maxEndAtString,

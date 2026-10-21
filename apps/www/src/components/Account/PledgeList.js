@@ -5,13 +5,11 @@ import { A } from '@project-r/styleguide'
 
 import withT from '@/lib/withT'
 import withMe from '@/lib/apollo/withMe'
-import { timeFormat, chfFormat } from '@/lib/utils/format'
+import { chfFormat, formatDate } from '@/lib/utils/format'
 import List, { Item } from '../List'
 import { Item as AccountItem } from './Elements'
 import GiveMemberships from './Memberships/Give'
 import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-
-const dayFormat = timeFormat('%-d. %B %Y')
 
 class PledgeList extends Component {
   render() {
@@ -79,7 +77,7 @@ class PledgeList extends Component {
                               option.membership.sequenceNumber,
                             endDateSuffix: endDate
                               ? t('option/suffix/endDate', {
-                                  formattedEndDate: dayFormat(
+                                  formattedEndDate: formatDate(
                                     new Date(endDate),
                                   ),
                                 })
@@ -109,7 +107,7 @@ class PledgeList extends Component {
                               : t(
                                   'account/pledges/payment/status/generic/PAID/dateSuffix',
                                   {
-                                    createdAt: dayFormat(
+                                    createdAt: formatDate(
                                       new Date(payment.createdAt),
                                     ),
                                   },

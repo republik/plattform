@@ -16,7 +16,7 @@ import { parse } from 'url'
 
 import { notificationsMiniQuery } from './enhancers'
 
-const dateFormat = timeFormat('%-d.\u00a0%B')
+const dateFormat = timeFormat('%d.%m.')
 
 const groupByDate = nest().key((n) => {
   return dateFormat(new Date(n.createdAt))

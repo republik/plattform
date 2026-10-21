@@ -26,6 +26,7 @@ import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { errorToString } from '@/lib/utils/errors'
+import { formatDate } from '@/lib/utils/format'
 import { useTranslation } from '@/lib/withT'
 import { EditButton } from '../Elements'
 
@@ -121,22 +122,8 @@ const Subscription = ({
         <>
           <Interaction.P>
             {t(`magazineSubscription/canceled`, {
-              canceledAt: new Date(subscription.canceledAt).toLocaleDateString(
-                'de-CH',
-                {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                },
-              ),
-              cancelAt: new Date(subscription.cancelAt).toLocaleDateString(
-                'de-CH',
-                {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                },
-              ),
+              canceledAt: formatDate(new Date(subscription.canceledAt)),
+              cancelAt: formatDate(new Date(subscription.cancelAt)),
             })}
           </Interaction.P>
         </>
@@ -144,13 +131,9 @@ const Subscription = ({
         <>
           <Interaction.P>
             {t('magazineSubscription/description', {
-              currentPeriodEnd: new Date(
-                subscription.currentPeriodEnd,
-              ).toLocaleDateString('de-CH', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              }),
+              currentPeriodEnd: formatDate(
+                new Date(subscription.currentPeriodEnd),
+              ),
               renewsAtPrice: (subscription.renewsAtPrice / 100).toFixed(0),
             })}
           </Interaction.P>
@@ -231,13 +214,7 @@ const SubscriptionUpgrade = ({
         {t(
           `magazineSubscriptionUpgrade/description/${subscription.upgrade.subscriptionType}`,
           {
-            startAt: new Date(
-              subscription.upgrade.scheduledStart,
-            ).toLocaleDateString('de-CH', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            }),
+            startAt: formatDate(new Date(subscription.upgrade.scheduledStart)),
             from: t(`magazineSubscription/title/${subscription.type}`),
             to: t(
               `magazineSubscription/title/${subscription.upgrade.subscriptionType}`,

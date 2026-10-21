@@ -12,7 +12,7 @@ import { format } from 'url'
 import GoodieOptions from './PledgeOptions/GoodieOptions'
 
 import withT from '@/lib/withT'
-import { chfFormat, timeFormat } from '@/lib/utils/format'
+import { chfFormat, formatDate } from '@/lib/utils/format'
 
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
@@ -33,8 +33,6 @@ import {
 
 import ManageMembership from '../Account/Memberships/Manage'
 import Link from '@/app/components/ui/link'
-
-const dayFormat = timeFormat('%d. %B %Y')
 
 const { P } = Interaction
 
@@ -910,7 +908,7 @@ class CustomizePackage extends Component {
                         .map((period) => {
                           const beginDate = new Date(period.beginDate)
                           const endDate = new Date(period.endDate)
-                          const formattedEndDate = dayFormat(endDate)
+                          const formattedEndDate = formatDate(endDate)
                           const days = timeDay.count(beginDate, endDate)
 
                           const title = t.first(
@@ -951,7 +949,7 @@ class CustomizePackage extends Component {
                       <SmallP>
                         <Interaction.Emphasis>
                           {t(`option/${pkg.name}/additionalPeriods/endDate`, {
-                            formattedEndDate: dayFormat(
+                            formattedEndDate: formatDate(
                               new Date(
                                 additionalPeriods[
                                   additionalPeriods.length - 1
