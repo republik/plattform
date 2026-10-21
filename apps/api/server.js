@@ -1,4 +1,5 @@
 const { merge } = require('apollo-modules-node')
+const { getClientIp } = require('@orbiting/backend-modules-base/lib/clientIp')
 
 const {
   server: Server,
@@ -304,11 +305,8 @@ const run = async (workerId, config) => {
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
-    // Per web standard, x-forwarded-for format is: "client, proxy1, proxy2"
-    const forwardedFor = defaultContext.req?.headers['x-forwarded-for']
-    const clientIp = forwardedFor
-      ? forwardedFor.split(',')[0].trim()
-      : defaultContext.req?.connection?.remoteAddress
+    // proxies append to x-forwarded-for, leftmost entries are client supplied
+    const clientIp = getClientIp(defaultContext.req)
     const requestFeatures = parseFeatureHeader(
       defaultContext.req?.headers['x-republik-features'],
     )

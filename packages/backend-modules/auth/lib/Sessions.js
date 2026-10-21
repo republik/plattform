@@ -1,4 +1,5 @@
 const kraut = require('kraut')
+const { getClientIp } = require('@orbiting/backend-modules-base/lib/clientIp')
 const geoForIP = require('./geoForIP')
 const { newAuthError } = require('./AuthError')
 const { getCookieOptions, COOKIE_NAME } = require('./CookieOptions')
@@ -29,8 +30,7 @@ const destroySession = async (req, res) => {
 }
 
 const initiateSession = async ({ req, pgdb, email, consents }) => {
-  const ipAddress =
-    req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  const ipAddress = getClientIp(req)
   const userAgent = req.headers['user-agent']
   const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
   const { country, city } = await geoForIP(ipAddress)
