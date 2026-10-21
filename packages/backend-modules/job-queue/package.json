@@ -17,11 +17,11 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@testcontainers/postgresql": "^10.9.0",
+    "@testcontainers/postgresql": "^10.28.0",
     "@faker-js/faker": "^8.4.1",
     "@types/jest": "^29.5.12",
     "pg": "^8.12.0",
-    "testcontainers": "^10.9.0",
+    "testcontainers": "^10.28.0",
     "ts-jest": "^29.1.2"
   }
 }

@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "@republik/eslint-config-backend": "*",
-    "nodemon": "^2.0.4"
+    "nodemon": "^3.1.14"
   }
 }
