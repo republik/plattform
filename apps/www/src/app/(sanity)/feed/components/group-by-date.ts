@@ -1,12 +1,12 @@
 'use client'
 
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
-import { dateFormat, timeFormat } from '@/lib/utils/format'
+import { timeFormat } from '@/lib/utils/format'
 import { stegaClean } from 'next-sanity'
 
 const dateKey = timeFormat('%Y-%m-%d')
-const dateLabel = timeFormat(`%A, ${dateFormat}`)
-const dateLabelLg = timeFormat(`%A,\n${dateFormat}`)
+const dateLabel = timeFormat('%A, %d.%m.%Y')
+const dateLabelLg = timeFormat('%A,\n%d.%m.%Y')
 
 type TeaserGroup = {
   key: string
