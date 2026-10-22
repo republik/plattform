@@ -1,6 +1,6 @@
 import Link from '@/app/components/ui/link'
 import { useSanityArticles } from '@/lib/use-sanity-data'
-import { timeFormat } from '@/lib/utils/format'
+import { dateFormat, timeFormat } from '@/lib/utils/format'
 import withT from '@/lib/withT'
 import {
   A,
@@ -24,10 +24,10 @@ import DocumentNotification from './DocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
 import SanityDocumentNotification from './SanityDocumentNotification'
 
-const dateFormat = timeFormat('%A,\n%d.%m.%Y')
+const dateLabel = timeFormat(`%A, ${dateFormat}`)
 
 const groupByDate = nest().key((n) => {
-  return dateFormat(new Date(n.createdAt))
+  return dateLabel(new Date(n.createdAt))
 })
 
 const styles = {
