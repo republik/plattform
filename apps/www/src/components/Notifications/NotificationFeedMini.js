@@ -1,5 +1,5 @@
 import Link from '@/app/components/ui/link'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/lib/utils/format'
 import withT, { useTranslation } from '@/lib/withT'
 import { graphql } from '@apollo/client/react/hoc'
 import {
@@ -16,10 +16,8 @@ import { parse } from 'url'
 
 import { notificationsMiniQuery } from './enhancers'
 
-const dateFormat = timeFormat('%d.%m.')
-
 const groupByDate = nest().key((n) => {
-  return dateFormat(new Date(n.createdAt))
+  return formatDate(new Date(n.createdAt))
 })
 
 const NotificationFeedMini = ({ data: { notifications, loading, error } }) => {
@@ -70,7 +68,7 @@ const NotificationFeedMini = ({ data: { notifications, loading, error } }) => {
                             passHref
                             {...styles.cleanLink}
                           >
-                            {dateFormat(new Date(node.createdAt))}{' '}
+                            {formatDate(new Date(node.createdAt))}{' '}
                             {node.content.title}
                           </Link>
                         </div>

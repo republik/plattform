@@ -1,11 +1,12 @@
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { AudioQueueItemProgress } from '@/components/Audio/types/AudioQueueItem'
+import { formatDate } from '@/lib/utils/format'
 import { fontStyles } from '@project-r/styleguide'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
 import { ReactNode } from 'react'
-import { audioCoverStyle, dateFormatter, formatMinutes } from '../../../shared'
-import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
+import { audioCoverStyle, formatMinutes } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
 
@@ -49,7 +50,6 @@ const styles = {
   metaLine: css({
     ...fontStyles.sansSerifRegular,
     fontSize: 12,
-    gap: 12,
     display: 'flex',
     color: token.var('colors.textSoft'),
   }),
@@ -120,7 +120,7 @@ const AudioListItem = ({
             <div {...styles.dataText}>
               <AudioPlayerTitle title={item.title} />
               <span {...styles.metaLine}>
-                <span>{dateFormatter(publishDate)}</span>
+                {formatDate(publishDate)}・
                 <span style={{ whiteSpace: 'nowrap' }}>
                   {durationString} min
                 </span>
