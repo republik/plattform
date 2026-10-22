@@ -68,6 +68,11 @@ export default async function ArticleDocument({
         <article
           // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
           data-force-theme={theme?.darkMode ? 'dark' : undefined}
+          data-page-theme={
+            theme?.name === 'CHALLENGE_ACCEPTED'
+              ? 'challenge-accepted'
+              : undefined
+          }
           className={editorialContent({
             theme: theme?.name,
           })}

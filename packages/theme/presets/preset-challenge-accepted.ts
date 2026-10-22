@@ -4,9 +4,14 @@ export const presetChallengeAccepted = definePreset({
   name: 'challenge-accepted',
   conditions: {
     extend: {
-      challengeAccepted: '[data-page-theme="challenge-accepted"] &',
+      // Applies below a `data-page-theme="challenge-accepted"` ancestor, or
+      // app-wide when that marker exists anywhere in the document (e.g. a Sanity
+      // page with the CHALLENGE_ACCEPTED theme) — mirrors `dark` in
+      // preset-republik.ts.
+      challengeAccepted:
+        ':is([data-page-theme="challenge-accepted"], :root:has([data-page-theme="challenge-accepted"])) &',
       challengeAcceptedDark:
-        '[data-theme="dark"] [data-page-theme="challenge-accepted"] &',
+        ':is([data-theme="dark"] [data-page-theme="challenge-accepted"], [data-theme="dark"]:has([data-page-theme="challenge-accepted"])) &',
     },
   },
 
@@ -31,6 +36,12 @@ export const presetChallengeAccepted = definePreset({
               _challengeAcceptedDark: '{colors.challengeAccepted.darkBlue}',
             },
           },
+          disabled: {
+            value: {
+              _challengeAccepted: '#b0b02c',
+              _challengeAcceptedDark: '#3B2BC4FF',
+            },
+          },
           contrast: {
             value: {
               _challengeAccepted: '{colors.challengeAccepted.blue}',
@@ -42,6 +53,9 @@ export const presetChallengeAccepted = definePreset({
               _challengeAccepted: '{colors.challengeAccepted.blue}',
               _challengeAcceptedDark: '{colors.challengeAccepted.blue}',
             },
+          },
+          teaserText: {
+            value: 'white',
           },
           link: {
             value: {
