@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/cli": "5.0.7",
     "@graphql-codegen/client-preset": "4.2.5",
     "@graphql-codegen/introspection": "4.0.3",
     "@graphql-codegen/schema-ast": "^4.0.0",
@@ -43,11 +43,11 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "concurrently": "^8.2.1",
     "cross-env": "^5.2.1",
-    "diff": "^3.5.0",
+    "diff": "^3.5.1",
     "enzyme": "^3.11.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^3.1.14",
     "raf": "^3.4.0"
   },
   "dependencies": {
@@ -81,7 +81,7 @@
     "downshift": "^2.2.3",
     "glamor": "^2.20.40",
     "graphql": "^16.11.0",
-    "immutable": "^3.8.2",
+    "immutable": "^3.8.4",
     "immutable-treeutils": "^1.2.0",
     "is-url": "^1.2.4",
     "is-uuid": "^1.0.2",

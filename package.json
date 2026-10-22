@@ -83,6 +83,15 @@
     "@types/react-dom": "^19.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "@pandacss/node/postcss": "^8.5.23",
+    "@pandacss/node/browserslist": "^4.28.7",
+    "@pandacss/core/postcss-selector-parser": "^7.1.6",
+    "@module-federation/dts-plugin/undici": "^7.29.1",
+    "adm-zip": "^0.6.1",
+    "smol-toml": "^1.9.0",
+    "@vercel/frameworks/js-yaml": "^3.15.2",
+    "serve-handler/minimatch": "^3.1.4",
+    "@ardatan/relay-compiler/immutable": "^3.8.4"
   }
 }

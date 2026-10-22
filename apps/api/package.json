@@ -91,11 +91,8 @@
   "devDependencies": {
     "@republik/eslint-config-backend": "*",
     "apollo-fetch": "^0.7.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "nodemon": "^2.0.4",
-    "snoowrap": "^1.21.0",
-    "tap-diff": "^0.1.1",
-    "testcontainers": "^10.9.0",
+    "nodemon": "^3.1.14",
+    "testcontainers": "^10.28.0",
     "zero-fill": "^2.2.3"
   }
 }
