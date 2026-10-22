@@ -18,7 +18,7 @@ type DateLike = string | number | Date
  * @returns string
  */
 export const formatDateTimeLong = (d: DateLike) => {
-  return dayjs(d).tz().format('dddd, DD.MM.YYYY, HH.mm')
+  return dayjs(d).tz().format('dddd, DD.\u00a0MMMM YYYY, HH.mm')
 }
 
 /**
@@ -27,7 +27,7 @@ export const formatDateTimeLong = (d: DateLike) => {
  * @returns string
  */
 export const formatDate = (d: DateLike) => {
-  return dayjs(d).tz().format('DD.MM.YYYY')
+  return dayjs(d).tz().format('DD.\u00a0MMMM\u00a0YYYY')
 }
 
 /**
@@ -36,7 +36,7 @@ export const formatDate = (d: DateLike) => {
  * @returns string
  */
 export const formatDateShort = (d: DateLike) => {
-  return dayjs(d).tz().format('DD.MM.YY')
+  return dayjs(d).tz().format('DD.\u00a0MMMM\u00a0YYYY')
 }
 
 /**

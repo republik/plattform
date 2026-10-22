@@ -1,7 +1,7 @@
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { formatDate } from '@/lib/utils/format'
 import { stegaClean } from 'next-sanity'
-import { Fragment } from 'react'
+import { Fragment } from 'react' // "A", "A und B", "A, B und C"
 
 // "A", "A und B", "A, B und C"
 const contributorsList = new Intl.ListFormat('de', { type: 'conjunction' })
@@ -32,7 +32,7 @@ export function formatPublishDate(
   return formatDate(new Date(stegaClean(teaser.publishDate)))
 }
 
-// "Von A und B, 1. Januar 2026"
+// "Von A und B・1. Januar 2026"
 export function TeaserByline({
   teaser,
   skipPublishDate,
