@@ -440,6 +440,15 @@ export const presetRepublik = definePreset({
             '& strong': { fontWeight: 'medium' },
           },
         },
+        caLead: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: editorialFontSizes.editorialLead,
+            lineHeight: 1.2,
+          },
+        },
         teaserTitle: {
           value: {
             fontFamily: 'republikSerif',

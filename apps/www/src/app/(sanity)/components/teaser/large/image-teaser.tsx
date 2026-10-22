@@ -121,6 +121,9 @@ const teaserTitle = cva({
       PAGE: {
         textStyle: 'metaTitle',
       },
+      CHALLENGE_ACCEPTED: {
+        textStyle: 'metaTitle',
+      },
     },
     size: {
       // Caps at the shared `base.md` step (58/60) — legacy ImageHeadline's

@@ -118,7 +118,12 @@ function TextSpanEl({ span }: { span: TextSpan }) {
   return <span style={style}>{node}</span>
 }
 
-export type ThemeName = 'EDITORIAL' | 'META' | 'PAGE' | 'EDITORIAL_CENTERED'
+export type ThemeName =
+  | 'EDITORIAL'
+  | 'META'
+  | 'PAGE'
+  | 'EDITORIAL_CENTERED'
+  | 'CHALLENGE_ACCEPTED'
 export type Layout = 'TEXT' | 'BACKGROUND_IMAGE' | 'LOGO'
 export type TextPosition = 'top' | 'center' | 'bottom'
 
@@ -135,14 +140,19 @@ export type ShareImageProps = {
   logoUrl?: string | null
 }
 
-// EDITORIAL → serif title (RepublikSerif 900); META/PAGE → sans serif (GT America).
+// EDITORIAL → serif title (RepublikSerif 900); META/PAGE/CHALLENGE_ACCEPTED →
+// sans serif (GT America).
 // Mirrors formatFonts in ShareImagePreview.js (editorial → serifTitle,
 // meta → sansSerifRegular).
 function mainFont(themeName?: ThemeName | null): {
   fontFamily: string
   fontWeight: number
 } {
-  if (themeName === 'META' || themeName === 'PAGE') {
+  if (
+    themeName === 'META' ||
+    themeName === 'PAGE' ||
+    themeName === 'CHALLENGE_ACCEPTED'
+  ) {
     return { fontFamily: GT_AMERICA, fontWeight: 400 }
   }
   return { fontFamily: REPUBLIK_SERIF, fontWeight: 900 }

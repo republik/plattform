@@ -32,6 +32,9 @@ const teaserTitle = cva({
       PAGE: {
         textStyle: 'metaTitle',
       },
+      CHALLENGE_ACCEPTED: {
+        textStyle: 'metaTitle',
+      },
     },
     size: {
       SMALL: {
