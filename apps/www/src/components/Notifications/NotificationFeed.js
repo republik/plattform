@@ -1,6 +1,7 @@
 import Link from '@/app/components/ui/link'
 import { useSanityArticles } from '@/lib/use-sanity-data'
-import { formatDate, formatWeekday } from '@/app/lib/util/time-format'
+import { DateGroup } from '@/app/components/date-group/date-group'
+import { groupByDate } from '@/app/components/date-group/group-by-date'
 import withT from '@/lib/withT'
 import {
   A,
@@ -13,21 +14,14 @@ import {
   RawHtml,
   useColorContext,
 } from '@project-r/styleguide'
-import { nest } from 'd3-collection'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { useMemo } from 'react'
-import DateLabel from '../Feed/DateLabel'
 import InfiniteScroll from '../Frame/InfiniteScroll'
 import CommentNotification from './CommentNotification'
 import DocumentNotification from './DocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
 import SanityDocumentNotification from './SanityDocumentNotification'
-
-const groupByDate = nest().key((n) => {
-  const date = new Date(n.createdAt)
-  return `${formatWeekday(date)}, ${formatDate(date)}`
-})
 
 const styles = {
   container: css({
@@ -208,10 +202,14 @@ export default compose(
             currentCount={nodes.length}
             loadMoreStyles={styles.more}
           >
-            {groupByDate.entries(nodes).map(({ key, values }, i, all) => {
+            {groupByDate(nodes, (node) => node.createdAt).map((group) => {
               return (
-                <DateLabel key={i} label={key}>
-                  {values.map((node, j) => {
+                <DateGroup
+                  key={group.key}
+                  label={group.label}
+                  labelLg={group.labelLg}
+                >
+                  {group.items.map((node, j) => {
                     if (
                       !node.object ||
                       (node.object.__typename === 'Comment' &&
@@ -269,7 +267,7 @@ export default compose(
                       />
                     )
                   })}
-                </DateLabel>
+                </DateGroup>
               )
             })}
           </InfiniteScroll>

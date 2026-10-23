@@ -68,7 +68,8 @@ const NotificationFeedMini = ({ data: { notifications, loading, error } }) => {
                             passHref
                             {...styles.cleanLink}
                           >
-                            {formatDate(new Date(node.createdAt))}{' '}
+                            {formatDate(new Date(node.createdAt))}
+                            {': '}
                             {node.content.title}
                           </Link>
                         </div>
