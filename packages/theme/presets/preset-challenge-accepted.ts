@@ -55,7 +55,10 @@ export const presetChallengeAccepted = definePreset({
             },
           },
           teaserText: {
-            value: 'white',
+            value: {
+              _challengeAccepted: 'white',
+              _challengeAcceptedDark: 'white',
+            },
           },
           link: {
             value: {
