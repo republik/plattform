@@ -259,6 +259,45 @@ before deleting. Tickets without a requester e-mail are listed at the end. The
 files contain personal data and should be deleted once the requests are
 handled.
 
+## Zendesk: mark processed requests as solved
+
+`zendeskCloseProcessedRequests.js` marks the deletion-request tickets as
+**solved** once the batch deletion has completed them, and adds a short
+internal note ("Löschanfrage durch das Batch-Löschskript erledigt ...").
+
+**It cannot set "closed".** Zendesk does not allow a ticket to be set to
+Closed manually: agents set Solved and Zendesk closes the ticket by itself
+afterwards (by default after 4 days, at the latest after 28). `--status closed`
+tries it anyway; Zendesk may refuse, and a closed ticket cannot be reopened.
+
+Inputs: the `tickets-<time>.json` from the Zendesk export, and the log(s) of the
+deletion run(s) on stdin (concatenate several). Dry run is the default.
+
+```sh
+cat run-1.log run-2.log | node packages/backend-modules/republik/script/gdpr/zendeskCloseProcessedRequests.js \
+  --tickets ./zendesk-export/tickets-<time>.json            # dry run, lists what would change
+
+... --no-dry-run                                            # update the tickets
+```
+
+A ticket is only changed if its requester e-mail belongs to a user that was
+**completely** processed: committed as deleted or anonymised, Stripe, Mailchimp,
+portrait and confirmation mail all done (`user_done` with `allDeleted`), and no
+`external_failure` for that user. Every other ticket stays open and is listed
+with the reason:
+
+- the requester e-mail is not in the logs (not processed, skipped because of an
+  active membership, or not found)
+- processed but not completely: a failure, or a user that needed a retry (the
+  retry never sends the confirmation mail, so close those by hand once the mail
+  went out)
+- already solved or closed, or no requester e-mail
+
+Options: `--status solved|closed` (default `solved`), `--note "<text>"` or
+`--no-note`. It needs the Zendesk credentials of the export script, and the
+user must be allowed to change tickets (a light agent cannot). The output is
+NDJSON with ticket and user ids only, no e-mail addresses.
+
 ## Flags
 
 `deleteUsers.js`:
