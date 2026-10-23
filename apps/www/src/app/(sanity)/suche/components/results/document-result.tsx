@@ -1,15 +1,13 @@
-import { Fragment } from 'react'
-import Link from '@/app/components/ui/link'
-import { css, cx } from '@republik/theme/css'
-import { linkOverlay } from '@republik/theme/patterns'
-
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { TeaserActions } from '@/app/(sanity)/components/teaser/feed/teaser-actions'
+import Link from '@/app/components/ui/link'
+import { formatDate } from '@/app/lib/util/time-format'
+import { formatExcerpt } from '@/lib/utils/format'
+import { css, cx } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
+import { Fragment } from 'react'
 import { getHighlight } from '../../lib/typesense-adapter'
-import { formatExcerpt, timeFormat } from '@/lib/utils/format'
 import { Highlight } from './highlight'
-
-const formatDate = timeFormat('%d.%m.%Y')
 
 // doc.credits is a JSON-encoded CreditsNode[], already resolved to
 // `/~slug` links server-side -- just a plain text-or-link walk.
@@ -58,7 +56,11 @@ export function DocumentResult({ document }) {
         }),
       )}
       // runtime hex, can't be a css() token -- overrides the class's divider color
-      style={document.format?.color ? { borderTopColor: document.format.color } : undefined}
+      style={
+        document.format?.color
+          ? { borderTopColor: document.format.color }
+          : undefined
+      }
     >
       <div
         className={css({ display: 'flex', flexDirection: 'column', gap: 2 })}

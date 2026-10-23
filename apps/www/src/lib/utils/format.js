@@ -1,6 +1,4 @@
 import { formatLocale } from 'd3-format'
-import { timeFormatLocale } from 'd3-time-format'
-import timeDefinition from 'd3-time-format/locale/de-CH'
 
 export const thousandSeparator = '\u2019'
 export const swissNumbers = formatLocale({
@@ -28,13 +26,6 @@ export const countFormat = (value) => {
   }
   return count4Format(value)
 }
-
-export const swissTime = timeFormatLocale(timeDefinition)
-export const timeFormat = swissTime.format
-
-const dateFormat = '%d.%m.%Y'
-export const parseDate = swissTime.parse(dateFormat)
-export const formatDate = swissTime.format(dateFormat)
 
 export const formatExcerpt = (string) =>
   '... ' + string.replace(/\.+$/, '') + '...'

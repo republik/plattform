@@ -5,13 +5,11 @@ import { A, Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import Link from '@/app/components/ui/link'
 
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import withInNativeApp from '@/lib/withInNativeApp'
 import withT from '@/lib/withT'
 
 const { P } = Interaction
-
-const dayFormat = timeFormat('%e. %B %Y')
 
 const AccessGrants = ({ accessGrants, inNativeApp, t }) => {
   const maxEndAt =
@@ -25,7 +23,7 @@ const AccessGrants = ({ accessGrants, inNativeApp, t }) => {
   return maxEndAt ? (
     <P>
       {t.elements('Account/Access/Grants/message/claimed', {
-        maxEndAt: <span>{dayFormat(new Date(maxEndAt))}</span>,
+        maxEndAt: <span>{formatDate(new Date(maxEndAt))}</span>,
       })}
       {!inNativeApp && (
         <>

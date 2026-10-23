@@ -1,3 +1,4 @@
+import { countMinutes, dayjs } from '@/app/lib/util/time-format'
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
@@ -5,7 +6,6 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { ascending } from 'd3-array'
-import { timeMinute } from 'd3-time'
 
 import withT from '@/lib/withT'
 import { chfFormat, countFormat } from '@/lib/utils/format'
@@ -86,7 +86,7 @@ class Status extends Component {
       if (end < now) {
         return
       }
-      const totalMinutes = timeMinute.count(now, end)
+      const totalMinutes = countMinutes(now, end)
       const hours = Math.floor(totalMinutes / 60) % 24
       if (hours === 0) {
         msToNextTick = msLeft
@@ -128,14 +128,14 @@ class Status extends Component {
       hasEnd = true,
     } = this.props
     const now = new Date()
-    const nextMinute = timeMinute.ceil(new Date())
+    const nextMinute = dayjs().add(59_999, 'ms').startOf('minute')
 
     // end date is expected to be an exact minute
-    // timeMinute.round is used to ensure that and
+    // it is rounded to the nearest minute to ensure that and
     // support end dates like '2017-05-31 19:59:59.999+02'
-    const end = timeMinute.round(new Date(endDate))
+    const end = dayjs(endDate).add(30, 'second').startOf('minute')
 
-    const totalMinutes = timeMinute.count(nextMinute, end)
+    const totalMinutes = countMinutes(nextMinute, end)
     const minutes = totalMinutes % 60
     const hours = Math.floor(totalMinutes / 60) % 24
     const days = Math.floor(totalMinutes / 60 / 24)
