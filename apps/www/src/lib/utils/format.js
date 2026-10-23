@@ -1,6 +1,4 @@
 import { formatLocale } from 'd3-format'
-import { timeFormatLocale } from 'd3-time-format'
-import timeDefinition from 'd3-time-format/locale/de-CH'
 
 export const thousandSeparator = '\u2019'
 export const swissNumbers = formatLocale({
@@ -28,13 +26,6 @@ export const countFormat = (value) => {
   }
   return count4Format(value)
 }
-
-export const swissTime = timeFormatLocale(timeDefinition)
-export const timeFormat = swissTime.format
-
-// "1. Januar 2026", with non-breaking spaces so the date never wraps
-export const dateFormat = '%-d.\u00a0%B\u00a0%Y'
-export const formatDate = swissTime.format(dateFormat)
 
 export const formatExcerpt = (string) =>
   '... ' + string.replace(/\.+$/, '') + '...'

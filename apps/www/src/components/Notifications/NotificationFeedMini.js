@@ -1,5 +1,5 @@
 import Link from '@/app/components/ui/link'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import withT, { useTranslation } from '@/lib/withT'
 import { graphql } from '@apollo/client/react/hoc'
 import {

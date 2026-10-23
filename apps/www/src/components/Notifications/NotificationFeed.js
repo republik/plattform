@@ -1,6 +1,6 @@
 import Link from '@/app/components/ui/link'
 import { useSanityArticles } from '@/lib/use-sanity-data'
-import { dateFormat, timeFormat } from '@/lib/utils/format'
+import { formatDate, formatWeekday } from '@/app/lib/util/time-format'
 import withT from '@/lib/withT'
 import {
   A,
@@ -24,10 +24,9 @@ import DocumentNotification from './DocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
 import SanityDocumentNotification from './SanityDocumentNotification'
 
-const dateLabel = timeFormat(`%A, ${dateFormat}`)
-
 const groupByDate = nest().key((n) => {
-  return dateLabel(new Date(n.createdAt))
+  const date = new Date(n.createdAt)
+  return `${formatWeekday(date)}, ${formatDate(date)}`
 })
 
 const styles = {

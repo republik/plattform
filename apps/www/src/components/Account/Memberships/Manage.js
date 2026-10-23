@@ -7,7 +7,7 @@ import Link from '@/app/components/ui/link'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { errorToString } from '@/lib/utils/errors'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 
 import withT from '@/lib/withT'

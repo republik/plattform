@@ -1,6 +1,6 @@
 import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import Link from '@/app/components/ui/link'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import withT from '@/lib/withT'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'

@@ -1,5 +1,5 @@
 import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { stegaClean } from 'next-sanity'
 import { Fragment } from 'react' // "A", "A und B", "A, B und C"
 

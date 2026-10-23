@@ -4,7 +4,7 @@ import compose from 'lodash/flowRight'
 import { Interaction } from '@project-r/styleguide'
 
 import { Item } from '../../List'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import Revoke from './Revoke'
 import withT from '@/lib/withT'
 

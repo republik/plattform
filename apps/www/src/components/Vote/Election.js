@@ -20,7 +20,7 @@ import { css } from 'glamor'
 import ElectionBallot from './ElectionBallot'
 import voteT from './voteT'
 import withMe from '@/lib/apollo/withMe'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import Loader from '../Loader'
 import SignIn from '../Auth/SignIn'
 import AddressEditor, { withAddressData } from './AddressEditor'
@@ -94,8 +94,6 @@ const query = gql`
     }
   }
 `
-
-const messageDateFormat = timeFormat('%e. %B %Y')
 
 const styles = {
   wrapper: css({
@@ -234,13 +232,13 @@ const Election = compose(
     let showSignIn
     if (election.userHasSubmitted) {
       dangerousDisabledHTML = vt('vote/voting/thankyou', {
-        submissionDate: messageDateFormat(new Date(election.userSubmitDate)),
+        submissionDate: formatDate(new Date(election.userSubmitDate)),
       })
     } else if (Date.now() > new Date(election.endDate)) {
       dangerousDisabledHTML = vt('vote/election/ended')
     } else if (!me) {
       dangerousDisabledHTML = vt('vote/election/notSignedIn', {
-        beginDate: timeFormat('%d.%m.%Y')(new Date(election.beginDate)),
+        beginDate: formatDate(new Date(election.beginDate)),
       })
       showSignIn = true
     } else if (!election.userIsEligible) {

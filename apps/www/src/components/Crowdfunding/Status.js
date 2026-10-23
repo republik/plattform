@@ -1,3 +1,4 @@
+import { countMinutes } from '@/app/lib/util/time-format'
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
@@ -5,7 +6,6 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { ascending } from 'd3-array'
-import { timeMinute } from 'd3-time'
 
 import withT from '@/lib/withT'
 import { chfFormat, countFormat } from '@/lib/utils/format'
@@ -86,7 +86,7 @@ class Status extends Component {
       if (end < now) {
         return
       }
-      const totalMinutes = timeMinute.count(now, end)
+      const totalMinutes = countMinutes(now, end)
       const hours = Math.floor(totalMinutes / 60) % 24
       if (hours === 0) {
         msToNextTick = msLeft

@@ -26,7 +26,7 @@ import Link from '@/app/components/ui/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { errorToString } from '@/lib/utils/errors'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { useTranslation } from '@/lib/withT'
 import { EditButton } from '../Elements'
 

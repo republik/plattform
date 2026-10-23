@@ -7,7 +7,7 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import type { CSSProperties } from 'react'

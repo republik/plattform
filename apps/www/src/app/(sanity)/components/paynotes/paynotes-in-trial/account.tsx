@@ -3,7 +3,7 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 import { useMe } from '@/lib/context/MeContext'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'

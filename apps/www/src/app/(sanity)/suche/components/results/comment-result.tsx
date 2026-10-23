@@ -1,5 +1,6 @@
 import Link from '@/app/components/ui/link'
-import { formatDate, formatExcerpt } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
+import { formatExcerpt } from '@/lib/utils/format'
 import { IconCheck } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'

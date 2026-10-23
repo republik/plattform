@@ -1,12 +1,12 @@
 'use client'
 
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
-import { dateFormat, timeFormat } from '@/lib/utils/format'
+import {
+  formatDate,
+  formatDateKey,
+  formatWeekday,
+} from '@/app/lib/util/time-format'
 import { stegaClean } from 'next-sanity'
-
-const dateKey = timeFormat('%Y-%m-%d')
-const dateLabel = timeFormat(`%A, ${dateFormat}`)
-const dateLabelLg = timeFormat(`%A,\n${dateFormat}`)
 
 type TeaserGroup = {
   key: string
@@ -21,13 +21,13 @@ export function groupByDate(teasers: TeaserSmallFragmentType[]): TeaserGroup[] {
     const date = teaser.publishDate
       ? new Date(stegaClean(teaser.publishDate))
       : null
-    const key = date ? dateKey(date) : 'unknown'
+    const key = date ? formatDateKey(date) : 'unknown'
     let group = groups[groups.length - 1]
     if (!group || group.key !== key) {
       group = {
         key,
-        label: date ? dateLabel(date) : '',
-        labelLg: date ? dateLabelLg(date) : '',
+        label: date ? `${formatWeekday(date)}, ${formatDate(date)}` : '',
+        labelLg: date ? `${formatWeekday(date)},\n${formatDate(date)}` : '',
         teasers: [],
       }
       groups.push(group)

@@ -4,7 +4,6 @@ import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 import { nest } from 'd3-collection'
 import { sum, min } from 'd3-array'
-import { timeDay } from 'd3-time'
 import compose from 'lodash/flowRight'
 import omit from 'lodash/omit'
 import { withRouter } from 'next/router'
@@ -12,7 +11,8 @@ import { format } from 'url'
 import GoodieOptions from './PledgeOptions/GoodieOptions'
 
 import withT from '@/lib/withT'
-import { chfFormat, formatDate } from '@/lib/utils/format'
+import { countDays, formatDate } from '@/app/lib/util/time-format'
+import { chfFormat } from '@/lib/utils/format'
 
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
@@ -408,10 +408,7 @@ class CustomizePackage extends Component {
             .reduce(
               (days, period) =>
                 days +
-                timeDay.count(
-                  new Date(period.beginDate),
-                  new Date(period.endDate),
-                ),
+                countDays(new Date(period.beginDate), new Date(period.endDate)),
               0,
             )
           const regularDays = option.additionalPeriods
@@ -419,10 +416,7 @@ class CustomizePackage extends Component {
             .reduce(
               (days, period) =>
                 days +
-                timeDay.count(
-                  new Date(period.beginDate),
-                  new Date(period.endDate),
-                ),
+                countDays(new Date(period.beginDate), new Date(period.endDate)),
               0,
             )
           return (
@@ -909,7 +903,7 @@ class CustomizePackage extends Component {
                           const beginDate = new Date(period.beginDate)
                           const endDate = new Date(period.endDate)
                           const formattedEndDate = formatDate(endDate)
-                          const days = timeDay.count(beginDate, endDate)
+                          const days = countDays(beginDate, endDate)
 
                           const title = t.first(
                             [

@@ -2,7 +2,7 @@ import SignIn from '@/components/Auth/SignIn'
 import { Content } from '@/components/Frame'
 
 import withMe from '@/lib/apollo/withMe'
-import { formatDate, timeFormat } from '@/lib/utils/format'
+import { formatDate, formatTime } from '@/app/lib/util/time-format'
 import withT from '@/lib/withT'
 
 import {
@@ -31,8 +31,6 @@ const styles = {
 
 const { H3 } = Interaction
 
-const hourFormat = timeFormat('%H:%M')
-
 export const Item = withT(
   ({ t, highlighted, title, createdAt, children, compact }) => {
     const [colorScheme] = useColorContext()
@@ -51,7 +49,7 @@ export const Item = withT(
             <Label>
               {t('account/item/label', {
                 formattedDate: formatDate(createdAt),
-                formattedTime: hourFormat(createdAt),
+                formattedTime: formatTime(createdAt),
               })}
             </Label>
             <br />

@@ -1,5 +1,5 @@
 import Link from '@/app/components/ui/link'
-import { formatDate } from '@/lib/utils/format'
+import { countDays, formatDate } from '@/app/lib/util/time-format'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import {
   Button,
@@ -9,7 +9,6 @@ import {
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
-import { timeDay } from 'd3-time'
 
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
@@ -52,7 +51,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
   }
 
   const date = new Date(prolongBeforeDate)
-  const numberOfDays = timeDay.count(new Date(), date)
+  const numberOfDays = countDays(new Date(), date)
 
   if (
     (membership.type.name === 'ABO_GIVE_MONTHS' && numberOfDays <= 7) ||

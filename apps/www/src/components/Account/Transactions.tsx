@@ -1,6 +1,6 @@
 import { TransactionsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useTranslation } from '@/lib/withT'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { useQuery } from '@apollo/client'
 import { Loader } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'

@@ -5,7 +5,7 @@ import { A, Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import Link from '@/app/components/ui/link'
 
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import withInNativeApp from '@/lib/withInNativeApp'
 import withT from '@/lib/withT'
 

@@ -1,7 +1,7 @@
 import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { AudioQueueItemProgress } from '@/components/Audio/types/AudioQueueItem'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { fontStyles } from '@project-r/styleguide'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
