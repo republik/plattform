@@ -50,7 +50,9 @@ const nextConfig = {
   // default import of CJS resolves to the whole `module.exports` ({ __esModule: true, default })
   // instead of the component. Bundling it (transpilePackages) and parsing it as
   // `javascript/auto` (see webpack below) makes the interop respect `__esModule`.
-  transpilePackages: ['next-sanity'],
+  // @radix-ui/react-collection >=1.1.8 ships untranspiled `static {}` class
+  // blocks (Safari 16.4+), which break parsing on Safari 15.x.
+  transpilePackages: ['next-sanity', '@radix-ui/react-collection'],
   webpack(config) {
     config.module.rules.push({
       test: /[\\/]node_modules[\\/]next-sanity[\\/]dist[\\/]image[\\/]/,
