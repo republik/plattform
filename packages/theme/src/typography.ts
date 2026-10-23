@@ -44,6 +44,7 @@ export const editorialFontSizes = {
   metaTitle: calculateEditorialFluidFontSize(30, 58),
   metaSubheading: calculateEditorialFluidFontSize(19, 24),
   metaParagraph: calculateEditorialFluidFontSize(17, 19),
+  caLead: calculateEditorialFluidFontSize(24, 30),
 } satisfies Record<string, FontSize>
 
 /** Scales a font size with the reader's setting. */

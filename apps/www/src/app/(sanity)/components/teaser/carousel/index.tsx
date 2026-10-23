@@ -20,8 +20,9 @@ const carouselItemStyle = css({
   width: 'full',
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: 'var(--teaser-bg, transparent)',
-  color: 'var(--teaser-color, inherit)',
+  backgroundColor:
+    'var(--teaser-bg, token(colors.teaserBackground, transparent))',
+  color: 'var(--teaser-color, token(colors.teaserText, inherit))',
   border: '1px solid',
   borderColor: 'divider',
   '&[data-has-background]': {

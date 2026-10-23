@@ -981,7 +981,8 @@ export type Discussion = {
 
 export type Theme = {
   _type: 'theme'
-  name?: 'PAGE' | 'EDITORIAL' | 'EDITORIAL_CENTERED' | 'META'
+  name?:
+    'PAGE' | 'EDITORIAL' | 'EDITORIAL_CENTERED' | 'META' | 'CHALLENGE_ACCEPTED'
   accentColor?: Color
   darkMode?: boolean
 }
@@ -1641,7 +1642,13 @@ export type ARCHIVE_MONTH_TEASERS_QUERY_RESULT = Array<{
   targetId: string | null
   publishDate: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name:
+      | 'CHALLENGE_ACCEPTED'
+      | 'EDITORIAL_CENTERED'
+      | 'EDITORIAL'
+      | 'META'
+      | 'PAGE'
+      | null
     accentColor: Color | null
   }
   heading: {
@@ -1753,7 +1760,13 @@ export type TEASER_LARGE_QUERY_RESULT = {
   targetId: string | null
   publishDate: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name:
+      | 'CHALLENGE_ACCEPTED'
+      | 'EDITORIAL_CENTERED'
+      | 'EDITORIAL'
+      | 'META'
+      | 'PAGE'
+      | null
     accentColor: Color | null
   }
   heading: {
@@ -1884,7 +1897,13 @@ export type ARTICLES_BY_AUTHOR_QUERY_RESULT = Array<{
   } | null
   label: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name:
+      | 'CHALLENGE_ACCEPTED'
+      | 'EDITORIAL_CENTERED'
+      | 'EDITORIAL'
+      | 'META'
+      | 'PAGE'
+      | null
     accentColor: Color | null
   } | null
   color: Color | null
@@ -1955,7 +1974,13 @@ export type ARTICLES_BY_IDS_QUERY_RESULT = Array<{
   } | null
   label: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name:
+      | 'CHALLENGE_ACCEPTED'
+      | 'EDITORIAL_CENTERED'
+      | 'EDITORIAL'
+      | 'META'
+      | 'PAGE'
+      | null
     accentColor: Color | null
   } | null
   color: Color | null
@@ -2021,7 +2046,13 @@ export type ARTICLES_QUERY_RESULT = Array<{
   } | null
   label: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name:
+      | 'CHALLENGE_ACCEPTED'
+      | 'EDITORIAL_CENTERED'
+      | 'EDITORIAL'
+      | 'META'
+      | 'PAGE'
+      | null
     accentColor: Color | null
   } | null
   color: Color | null
@@ -2218,7 +2249,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -3137,7 +3174,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             } | null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name:
+                | 'CHALLENGE_ACCEPTED'
+                | 'EDITORIAL_CENTERED'
+                | 'EDITORIAL'
+                | 'META'
+                | 'PAGE'
+                | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -3195,7 +3238,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             articleCollection: null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name:
+                | 'CHALLENGE_ACCEPTED'
+                | 'EDITORIAL_CENTERED'
+                | 'EDITORIAL'
+                | 'META'
+                | 'PAGE'
+                | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -3236,7 +3285,13 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -3791,7 +3846,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -4710,7 +4771,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             } | null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name:
+                | 'CHALLENGE_ACCEPTED'
+                | 'EDITORIAL_CENTERED'
+                | 'EDITORIAL'
+                | 'META'
+                | 'PAGE'
+                | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -4768,7 +4835,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             articleCollection: null
             label: string | null
             theme: {
-              name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+              name:
+                | 'CHALLENGE_ACCEPTED'
+                | 'EDITORIAL_CENTERED'
+                | 'EDITORIAL'
+                | 'META'
+                | 'PAGE'
+                | null
               accentColor: Color | null
             } | null
             color: Color | null
@@ -4809,7 +4882,13 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
         slug: string
       } | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -6667,7 +6746,13 @@ export type SEO_QUERY_RESULT =
       imageBuilder: SeoImageBuilder | null
       heading: string
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -6712,7 +6797,13 @@ export type OG_SHARE_IMAGE_QUERY_RESULT =
       imageBuilder: SeoImageBuilder | null
       heading: string
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
         darkMode: boolean | null
       } | null
@@ -6771,7 +6862,13 @@ export type SERIES_MENU_QUERY_RESULT = {
           } | null
           label: string | null
           theme: {
-            name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+            name:
+              | 'CHALLENGE_ACCEPTED'
+              | 'EDITORIAL_CENTERED'
+              | 'EDITORIAL'
+              | 'META'
+              | 'PAGE'
+              | null
             accentColor: Color | null
           } | null
           color: Color | null
@@ -6892,7 +6989,13 @@ export type SERIES_NAV_QUERY_RESULT = {
         } | null
         label: string | null
         theme: {
-          name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+          name:
+            | 'CHALLENGE_ACCEPTED'
+            | 'EDITORIAL_CENTERED'
+            | 'EDITORIAL'
+            | 'META'
+            | 'PAGE'
+            | null
           accentColor: Color | null
         } | null
         color: Color | null
@@ -6993,7 +7096,13 @@ export type TEASER_LARGE_FRAGMENT_QUERY_RESULT = {
   targetId: string | null
   publishDate: string | null
   theme: {
-    name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+    name:
+      | 'CHALLENGE_ACCEPTED'
+      | 'EDITORIAL_CENTERED'
+      | 'EDITORIAL'
+      | 'META'
+      | 'PAGE'
+      | null
     accentColor: Color | null
   }
   heading: {
@@ -7179,7 +7288,13 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       } | null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7237,7 +7352,13 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
       articleCollection: null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7279,7 +7400,13 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       } | null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7337,7 +7464,13 @@ export type TEASER_SMALL_PREVIEW_QUERY_RESULT =
       articleCollection: null
       label: string | null
       theme: {
-        name: 'EDITORIAL_CENTERED' | 'EDITORIAL' | 'META' | 'PAGE' | null
+        name:
+          | 'CHALLENGE_ACCEPTED'
+          | 'EDITORIAL_CENTERED'
+          | 'EDITORIAL'
+          | 'META'
+          | 'PAGE'
+          | null
         accentColor: Color | null
       } | null
       color: Color | null
@@ -7389,6 +7522,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       label: string | null
                       theme: {
                         name:
+                          | 'CHALLENGE_ACCEPTED'
                           | 'EDITORIAL_CENTERED'
                           | 'EDITORIAL'
                           | 'META'
@@ -7452,6 +7586,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       label: string | null
                       theme: {
                         name:
+                          | 'CHALLENGE_ACCEPTED'
                           | 'EDITORIAL_CENTERED'
                           | 'EDITORIAL'
                           | 'META'
@@ -7528,6 +7663,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT =
                       label: string | null
                       theme: {
                         name:
+                          | 'CHALLENGE_ACCEPTED'
                           | 'EDITORIAL_CENTERED'
                           | 'EDITORIAL'
                           | 'META'
@@ -7650,6 +7786,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       label: string | null
                       theme: {
                         name:
+                          | 'CHALLENGE_ACCEPTED'
                           | 'EDITORIAL_CENTERED'
                           | 'EDITORIAL'
                           | 'META'
@@ -7713,6 +7850,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       label: string | null
                       theme: {
                         name:
+                          | 'CHALLENGE_ACCEPTED'
                           | 'EDITORIAL_CENTERED'
                           | 'EDITORIAL'
                           | 'META'
@@ -7757,6 +7895,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT =
                       label: string | null
                       theme: {
                         name:
+                          | 'CHALLENGE_ACCEPTED'
                           | 'EDITORIAL_CENTERED'
                           | 'EDITORIAL'
                           | 'META'
