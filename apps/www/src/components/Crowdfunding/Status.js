@@ -1,4 +1,4 @@
-import { countMinutes } from '@/app/lib/util/time-format'
+import { countMinutes, dayjs } from '@/app/lib/util/time-format'
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
@@ -128,14 +128,14 @@ class Status extends Component {
       hasEnd = true,
     } = this.props
     const now = new Date()
-    const nextMinute = timeMinute.ceil(new Date())
+    const nextMinute = dayjs().add(59_999, 'ms').startOf('minute')
 
     // end date is expected to be an exact minute
-    // timeMinute.round is used to ensure that and
+    // it is rounded to the nearest minute to ensure that and
     // support end dates like '2017-05-31 19:59:59.999+02'
-    const end = timeMinute.round(new Date(endDate))
+    const end = dayjs(endDate).add(30, 'second').startOf('minute')
 
-    const totalMinutes = timeMinute.count(nextMinute, end)
+    const totalMinutes = countMinutes(nextMinute, end)
     const minutes = totalMinutes % 60
     const hours = Math.floor(totalMinutes / 60) % 24
     const days = Math.floor(totalMinutes / 60 / 24)
