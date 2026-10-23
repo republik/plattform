@@ -19,43 +19,65 @@ function isDocumentNotFoundError(err: unknown): boolean {
   )
 }
 
-// True for either way a versioned document can turn out to be unwritable by
-// the time we get to it: it's gone outright (isDocumentNotFoundError), or
-// its release moved into a state withReleaseUnlock has no recovery path for
-// (any ReleaseNotMutableError — see releaseLock.ts). A `published` release
-// gets its own, more specific recovery in withDraftSync below (its content
-// merged into a real, mutable published document); this covers the rest
-// (archived, or a genuinely vanished document), where falling back to the
-// draft is the only option.
+// True for either way the document a write targets can turn out to be
+// unwritable by the time we get to it: it's gone outright
+// (isDocumentNotFoundError — a release version whose release went out or was
+// discarded, or a draft the editor published while generation was in flight),
+// or its release moved into a state withReleaseUnlock has no recovery path for
+// (any ReleaseNotMutableError — see releaseLock.ts).
 function isUnrecoverableVersionError(err: unknown): boolean {
   return isDocumentNotFoundError(err) || err instanceof ReleaseNotMutableError
 }
 
+// Where a write goes once documentId itself turned out to be unwritable, in
+// order of preference. A release that already PUBLISHED merged its version
+// into the real published document, so that is the live target and comes
+// first. Anything else — the draft published away, a schedule cancelled, a
+// release archived — prefers the draft (what editors are looking at in
+// Studio), then the published document. documentId itself is never a
+// fallback for itself.
+export function fallbackIdsFor(
+  documentId: string,
+  releasePublished: boolean,
+): string[] {
+  const draftId = draftIdFor(documentId)
+  const publishedId = publishedIdFor(documentId)
+  const order = releasePublished
+    ? [publishedId, draftId]
+    : [draftId, publishedId]
+  return order.filter((id) => id !== documentId)
+}
+
+// The ids among `ids` that exist right now, under `raw` (the only perspective
+// that sees a literal `drafts.*`/`versions.*` id).
+const fetchExistingIds = async (ids: string[]): Promise<Set<string>> => {
+  if (ids.length === 0) return new Set()
+  const existing = await sanityClient().fetch<string[]>(
+    `*[_id in $ids]._id`,
+    { ids },
+    { perspective: 'raw', tag: 'audio.existing-ids' },
+  )
+  return new Set(existing)
+}
+
 // Every write in this file goes through this: locked-release handling (via
-// withReleaseUnlock) against documentId, plus keeping the draft permanently
-// up to date with the same write. Editors are almost always looking at the
-// draft in Studio, not the scheduled/published version — so whenever
-// documentId isn't already the draft itself, the same patch is also mirrored
-// onto draftIdFor(documentId) once the primary write succeeds. That mirror
-// write is best-effort: it's never allowed to fail the caller, since the
-// primary write (the one actually gating claim/success/error semantics)
-// already landed.
+// withReleaseUnlock) against documentId, plus keeping the draft up to date
+// with the same write. Editors are almost always looking at the draft in
+// Studio, not the scheduled/published version — so whenever the write landed
+// somewhere other than the draft, the same patch is also mirrored onto the
+// draft. That mirror write is best-effort: it's never allowed to fail the
+// caller, since the primary write (the one actually gating
+// claim/success/error semantics) already landed.
 //
-// TTS generation is async and can take real time, and the release backing
-// `documentId` can move on while it's in flight. Two different things can
-// have happened by the time any of these run:
-//   - The release already PUBLISHED: its version content already merged
-//     into the real published document (a normal, mutable, non-versioned
-//     doc) — that's the live target now, not a vanished one. Patch it
-//     directly (making this generation the article's current audio version,
-//     same as if it had finished before publish), then still mirror onto
-//     the draft below, same as the ordinary success path — both the
-//     published document and the draft must end up with this write.
-//   - Anything else unrecoverable (archived, or the document genuinely gone
-//     because a schedule was cancelled/deleted): there's no live document to
-//     redirect to, so fall back to the draft (always still there) and log
-//     loudly — this needs a human to notice and reconcile from the draft's
-//     history.
+// TTS generation is async and can take real time, and documentId can stop
+// being writable while it's in flight: its release published or was archived,
+// a schedule was cancelled, or — documentId being a draft — the editor simply
+// published the article, which deletes the draft. The write then moves to the
+// first fallback (fallbackIdsFor) that still exists, and is logged loudly.
+// Only documents that exist are ever targeted: a finished generation must
+// land on the article if there is any version of it left, and if there is
+// none (the article was deleted) the original error is rethrown rather than
+// patching documents that aren't there.
 // `doPatch` receives the id to target, so it can be applied to documentId,
 // the published id, the draft, or a combination.
 async function withDraftSync<T>(
@@ -64,55 +86,66 @@ async function withDraftSync<T>(
   doPatch: (id: string) => Promise<T>,
 ): Promise<T> {
   const draftId = draftIdFor(documentId)
-  const isVersioned = draftId !== documentId
 
   let result: T
+  let targetId = documentId
   try {
     result = await withReleaseUnlock(sanityClient(), documentId, () =>
       doPatch(documentId),
     )
   } catch (err) {
-    if (err instanceof ReleaseNotMutableError && err.state === 'published') {
-      const publishedId = publishedIdFor(documentId)
+    if (!isUnrecoverableVersionError(err)) throw err
+
+    const releasePublished =
+      err instanceof ReleaseNotMutableError && err.state === 'published'
+    const fallbackIds = fallbackIdsFor(documentId, releasePublished)
+    const existing = await fetchExistingIds(fallbackIds)
+
+    let landed: { id: string; result: T } | undefined
+    for (const id of fallbackIds) {
+      if (!existing.has(id)) continue
       try {
-        result = await doPatch(publishedId)
+        landed = { id, result: await doPatch(id) }
+        break
+      } catch (fallbackErr) {
         logger.error(
-          { documentId, publishedId, err },
-          `sanity audio: release already published when ${action} — ` +
-            'patched the live published document instead',
+          { documentId, fallbackId: id, err: fallbackErr },
+          `sanity audio: fallback write to ${id} failed when ${action}`,
         )
-      } catch (publishErr) {
-        logger.error(
-          { documentId, publishedId, err: publishErr },
-          `sanity audio: failed to patch the published document when ` +
-            `${action} after its release published — falling back to the draft`,
-        )
-        return doPatch(draftId)
       }
-      // Falls through to the draft-mirror step below, same as any other
-      // successful primary write — both the published doc and the draft
-      // must get this write, not one or the other.
-    } else if (isUnrecoverableVersionError(err)) {
+    }
+
+    if (!landed) {
       logger.error(
-        { documentId, draftId, err },
-        `sanity audio: version document no longer writable when ${action} ` +
-          '(release archived, or schedule cancelled while generation was ' +
-          'in flight) — falling back to the draft',
+        { documentId, fallbackIds, err },
+        `sanity audio: ${documentId} no longer writable when ${action}, and ` +
+          'no other version of the article could take the write — dropped',
       )
-      return doPatch(draftId)
-    } else {
       throw err
     }
+
+    logger.error(
+      { documentId, targetId: landed.id, err },
+      `sanity audio: ${documentId} no longer writable when ${action} ` +
+        `(release published/archived, schedule cancelled, or draft ` +
+        `published while generation was in flight) — wrote to ${landed.id} ` +
+        'instead',
+    )
+    result = landed.result
+    targetId = landed.id
   }
 
-  if (isVersioned) {
+  if (
+    targetId !== draftId &&
+    (await fetchExistingIds([draftId])).has(draftId)
+  ) {
     try {
       await doPatch(draftId)
     } catch (err) {
       logger.error(
         { documentId, draftId, err },
         `sanity audio: failed to mirror ${action} onto the draft (the ` +
-          'scheduled/published write itself succeeded)',
+          `write to ${targetId} itself succeeded)`,
       )
     }
   }
@@ -199,15 +232,30 @@ export const fetchArticle = (documentId: string) =>
 // delivery's signed query params changes, so it looks like a perfectly
 // valid, brand-new request. Checked before doing any of the (wasteful, and
 // non-idempotent on their own) S3/asset upload work below.
-export const fetchAudioContentHash = (documentId: string) =>
-  // `raw` for the same reason as fetchArticle above — documentId is very
-  // often a `drafts.*` id, and the default (published) perspective returns
-  // null for one even on an exact _id match.
-  sanityClient().fetch<string | undefined>(
-    `*[_id == $id][0].audioContentHash`,
-    { id: documentId },
+//
+// Read from documentId if it still exists, otherwise from the first fallback
+// that does (draft, then published — see fallbackIdsFor): once documentId is
+// gone (typically a draft published while generation was in flight) the
+// first delivery's write went to a fallback, and reading the vanished
+// documentId would always come back empty and let a retry record the same
+// generation a second time. The draft is checked before the published
+// document because every write is mirrored onto it whenever it exists.
+// `raw` because documentId is very often a `drafts.*` id, and the default
+// (published) perspective returns null for one even on an exact _id match.
+export const fetchAudioContentHash = async (
+  documentId: string,
+): Promise<string | undefined> => {
+  const ids = [documentId, ...fallbackIdsFor(documentId, false)]
+  const rows = await sanityClient().fetch<
+    { _id: string; audioContentHash?: string }[]
+  >(
+    `*[_id in $ids]{ _id, audioContentHash }`,
+    { ids },
     { perspective: 'raw', tag: 'audio.content-hash' },
   )
+  const live = ids.map((id) => rows.find((row) => row._id === id)).find(Boolean)
+  return live?.audioContentHash
+}
 
 // Same idempotency shape as fetchAudioContentHash above, for the Publikator
 // sync's legacy-audio link (see publikatorSync/legacyAudio.ts): that flow

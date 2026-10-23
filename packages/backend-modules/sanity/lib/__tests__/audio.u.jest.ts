@@ -2,8 +2,26 @@ const patch = jest.fn()
 const fetch = jest.fn()
 const loggerError = jest.fn()
 
+// withDraftSync's existence lookup (tag `audio.existing-ids`) is answered
+// from `existingIds` rather than the shared `fetch` mock, so the tests below
+// that configure `fetch` for other reads don't have to account for it. Every
+// id exists unless a test narrows it.
+let existingIds: string[] | 'all' = 'all'
+const existenceFetch = async (ids: string[]) =>
+  existingIds === 'all' ? ids : ids.filter((id) => existingIds.includes(id))
+
 jest.mock('../client', () => ({
-  sanityClient: () => ({ patch, fetch }),
+  sanityClient: () => ({
+    patch,
+    fetch: (
+      query: string,
+      params: Record<string, unknown>,
+      options?: { tag?: string },
+    ) =>
+      options?.tag === 'audio.existing-ids'
+        ? existenceFetch(params.ids as string[])
+        : fetch(query, params, options),
+  }),
 }))
 
 jest.mock('@orbiting/backend-modules-logger', () => ({
@@ -26,6 +44,8 @@ jest.mock('../releaseLock', () => ({
 
 import {
   claimAudioGeneration,
+  fallbackIdsFor,
+  fetchAudioContentHash,
   hasPendingVersion,
   markPendingVersionError,
   recordAudioVersion,
@@ -59,6 +79,10 @@ function chainable(commit: jest.Mock) {
   })
   return proxy
 }
+
+beforeEach(() => {
+  existingIds = 'all'
+})
 
 describe('hasPendingVersion', () => {
   it('is false when nothing is pending', () => {
@@ -188,9 +212,9 @@ describe('claimAudioGeneration', () => {
     expect(loggerError).toHaveBeenCalledWith(
       expect.objectContaining({
         documentId: 'versions.r1.doc-1',
-        draftId: 'drafts.doc-1',
+        targetId: 'drafts.doc-1',
       }),
-      expect.stringContaining('falling back to the draft'),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
   })
 
@@ -295,8 +319,8 @@ describe('markPendingVersionError', () => {
       autoGenerateArrayKeys: true,
     })
     expect(loggerError).toHaveBeenCalledWith(
-      expect.objectContaining({ draftId: 'drafts.doc-1' }),
-      expect.stringContaining('falling back to the draft'),
+      expect.objectContaining({ targetId: 'drafts.doc-1' }),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
   })
 
@@ -381,9 +405,9 @@ describe('recordAudioVersion', () => {
     expect(loggerError).toHaveBeenCalledWith(
       expect.objectContaining({
         documentId: 'versions.r1.doc-1',
-        draftId: 'drafts.doc-1',
+        targetId: 'drafts.doc-1',
       }),
-      expect.stringContaining('falling back to the draft'),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
   })
 
@@ -487,8 +511,8 @@ describe('reportAudioGenerationError', () => {
       autoGenerateArrayKeys: true,
     })
     expect(loggerError).toHaveBeenCalledWith(
-      expect.objectContaining({ draftId: 'drafts.doc-1' }),
-      expect.stringContaining('falling back to the draft'),
+      expect.objectContaining({ targetId: 'drafts.doc-1' }),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
   })
 
@@ -535,9 +559,9 @@ describe('reportAudioGenerationError', () => {
     expect(loggerError).toHaveBeenCalledWith(
       expect.objectContaining({
         documentId: 'versions.r1.doc-1',
-        draftId: 'drafts.doc-1',
+        targetId: 'drafts.doc-1',
       }),
-      expect.stringContaining('falling back to the draft'),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
     // The bug this reproduces: without recognizing ReleaseNotMutableError,
     // the fallback never runs and this "report the failure" call itself
@@ -582,9 +606,9 @@ describe('reportAudioGenerationError', () => {
     expect(loggerError).toHaveBeenCalledWith(
       expect.objectContaining({
         documentId: 'versions.r1.doc-1',
-        publishedId: 'doc-1',
+        targetId: 'doc-1',
       }),
-      expect.stringContaining('patched the live published document instead'),
+      expect.stringContaining('wrote to doc-1 instead'),
     )
   })
 
@@ -613,9 +637,13 @@ describe('reportAudioGenerationError', () => {
     expect(loggerError).toHaveBeenCalledWith(
       expect.objectContaining({
         documentId: 'versions.r1.doc-1',
-        publishedId: 'doc-1',
+        fallbackId: 'doc-1',
       }),
-      expect.stringContaining('falling back to the draft'),
+      expect.stringContaining('fallback write to doc-1 failed'),
+    )
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ targetId: 'drafts.doc-1' }),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
   })
 
@@ -664,8 +692,8 @@ describe('reportAudioGenerationSuccess', () => {
       autoGenerateArrayKeys: true,
     })
     expect(loggerError).toHaveBeenCalledWith(
-      expect.objectContaining({ draftId: 'drafts.doc-1' }),
-      expect.stringContaining('falling back to the draft'),
+      expect.objectContaining({ targetId: 'drafts.doc-1' }),
+      expect.stringContaining('wrote to drafts.doc-1 instead'),
     )
   })
 
@@ -681,5 +709,147 @@ describe('reportAudioGenerationSuccess', () => {
     expect(patch).toHaveBeenCalledWith('versions.r1.doc-1')
     expect(patch).toHaveBeenCalledWith('drafts.doc-1')
     expect(loggerError).not.toHaveBeenCalled()
+  })
+})
+
+// A draft published while generation was in flight: Sanity deletes the draft,
+// so the result must move to the published document — and must never be
+// written to a document that doesn't exist.
+describe('withDraftSync: only ever targets documents that exist', () => {
+  beforeEach(() => {
+    loggerError.mockReset()
+  })
+
+  it('moves a draft write to the published document once the draft is gone', async () => {
+    existingIds = ['doc-1']
+    const draftChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const publishedChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'drafts.doc-1' ? draftChain : publishedChain,
+    )
+
+    await reportAudioGenerationSuccess('drafts.doc-1')
+
+    expect(patch.mock.calls.map(([id]) => id)).toEqual(['drafts.doc-1', 'doc-1'])
+    expect(publishedChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ documentId: 'drafts.doc-1', targetId: 'doc-1' }),
+      expect.stringContaining('wrote to doc-1 instead'),
+    )
+  })
+
+  it('records the finished audio on the published document once the draft is gone', async () => {
+    existingIds = ['doc-1']
+    fetch.mockReset().mockResolvedValue(undefined)
+    const draftChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const publishedChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'drafts.doc-1' ? draftChain : publishedChain,
+    )
+    const version = { url: 'https://example.com/a.mp3', generatedAt: 'now' }
+
+    await recordAudioVersion('drafts.doc-1', { audioContentHash: 'hash-1' }, version, 'hash-1')
+
+    // No placeholder on the published document (the claim went to the
+    // draft), so the version is appended there.
+    expect(publishedChain.set).toHaveBeenCalledWith({ audioContentHash: 'hash-1' })
+    expect(publishedChain.append).toHaveBeenCalledWith('audioVersions', [version])
+  })
+
+  it('patches nothing else and rethrows when no version of the article is left', async () => {
+    existingIds = []
+    const err = notFoundError()
+    patch.mockReset().mockReturnValue(chainable(jest.fn().mockRejectedValue(err)))
+
+    await expect(reportAudioGenerationSuccess('drafts.doc-1')).rejects.toBe(err)
+    expect(patch).toHaveBeenCalledTimes(1)
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ documentId: 'drafts.doc-1' }),
+      expect.stringContaining('dropped'),
+    )
+  })
+
+  it('falls back to the published document for a vanished version with no draft', async () => {
+    existingIds = ['doc-1']
+    const versionChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const publishedChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'versions.r1.doc-1' ? versionChain : publishedChain,
+    )
+
+    await reportAudioGenerationSuccess('versions.r1.doc-1')
+
+    expect(patch.mock.calls.map(([id]) => id)).toEqual(['versions.r1.doc-1', 'doc-1'])
+  })
+
+  it('skips the draft mirror when there is no draft', async () => {
+    existingIds = ['versions.r1.doc-1', 'doc-1']
+    patch.mockReset().mockReturnValue(chainable(jest.fn().mockResolvedValue(undefined)))
+
+    await reportAudioGenerationSuccess('versions.r1.doc-1')
+
+    expect(patch.mock.calls.map(([id]) => id)).toEqual(['versions.r1.doc-1'])
+    expect(loggerError).not.toHaveBeenCalled()
+  })
+})
+
+describe('fallbackIdsFor', () => {
+  it('prefers the draft, then the published document', () => {
+    expect(fallbackIdsFor('versions.r1.doc-1', false)).toEqual(['drafts.doc-1', 'doc-1'])
+  })
+
+  it('prefers the published document once the release published', () => {
+    expect(fallbackIdsFor('versions.r1.doc-1', true)).toEqual(['doc-1', 'drafts.doc-1'])
+  })
+
+  it('never lists documentId as its own fallback', () => {
+    expect(fallbackIdsFor('drafts.doc-1', false)).toEqual(['doc-1'])
+    expect(fallbackIdsFor('doc-1', false)).toEqual(['drafts.doc-1'])
+  })
+})
+
+describe('fetchAudioContentHash', () => {
+  beforeEach(() => {
+    fetch.mockReset()
+  })
+
+  it('reads documentId when it still exists', async () => {
+    fetch.mockResolvedValue([
+      { _id: 'doc-1', audioContentHash: 'published-hash' },
+      { _id: 'drafts.doc-1', audioContentHash: 'draft-hash' },
+    ])
+
+    expect(await fetchAudioContentHash('drafts.doc-1')).toBe('draft-hash')
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      { ids: ['drafts.doc-1', 'doc-1'] },
+      { perspective: 'raw', tag: 'audio.content-hash' },
+    )
+  })
+
+  // The retried-delivery case: the first delivery's result went to the
+  // published document because the draft was published meanwhile. Reading
+  // only the vanished draft would come back empty and record it twice.
+  it('reads the published document once the draft is gone', async () => {
+    fetch.mockResolvedValue([{ _id: 'doc-1', audioContentHash: 'hash-1' }])
+
+    expect(await fetchAudioContentHash('drafts.doc-1')).toBe('hash-1')
+  })
+
+  it('prefers the draft over the published document for a vanished version', async () => {
+    fetch.mockResolvedValue([
+      { _id: 'doc-1', audioContentHash: 'published-hash' },
+      { _id: 'drafts.doc-1', audioContentHash: 'draft-hash' },
+    ])
+
+    expect(await fetchAudioContentHash('versions.r1.doc-1')).toBe('draft-hash')
+  })
+
+  it('is undefined when no version of the article is left', async () => {
+    fetch.mockResolvedValue([])
+
+    expect(await fetchAudioContentHash('drafts.doc-1')).toBeUndefined()
   })
 })
