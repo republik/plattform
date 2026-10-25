@@ -1,4 +1,7 @@
 const session = require('express-session')
+const {
+  getTrustProxyHops,
+} = require('@orbiting/backend-modules-base/lib/clientIp')
 const PgSession = require('connect-pg-simple')(session)
 
 const transformUser = require('../lib/transformUser')
@@ -61,9 +64,9 @@ exports.configure = ({
     }),
   )
 
-  // trust first proxy
+  // trust the configured number of proxy hops (default: 1)
   if (!dev) {
-    server.set('trust proxy', 1)
+    server.set('trust proxy', getTrustProxyHops())
   }
 
   // set user on req

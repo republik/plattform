@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+import { resolveClientIP } from '@/lib/api/ClientIP'
+
 /**
  * In case the request is not on https, redirect to https if PUBLIC_BASE_URL is set to https
  * @param req to check if the request is not already on https
@@ -59,8 +61,8 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   }
 
   // Block if request is coming from IP_BLOCKLIST
-  const fwdIp = req.headers.get('X-Forwarded-For')
-  const clientIp = fwdIp ? fwdIp.split(',')[0] : ''
+  // (only the entry appended by our trusted proxy is used, see ClientIP.ts)
+  const clientIp = resolveClientIP(req.headers.get('X-Forwarded-For')) || ''
 
   const isBlocklistedIP =
     clientIp &&

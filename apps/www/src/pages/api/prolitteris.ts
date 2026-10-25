@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import truncateIP from '@/lib/api/TruncateIP'
+import { resolveClientIP } from '@/lib/api/ClientIP'
 import withReqMethodGuard from '@/lib/api/withReqMethodGuard'
 import HTTPMethods from '@/lib/api/HTTPMethods'
 import crypto from 'node:crypto'
@@ -38,22 +39,10 @@ function getHash(input: string | number | object): string {
  * @returns IP address or null
  */
 function getRequestIP(request: NextApiRequest): string | null {
-  const requestIps =
-    request.headers['x-forwarded-for'] || request.socket.remoteAddress
-
-  if (Array.isArray(requestIps)) {
-    return requestIps[0]
-  }
-
-  if (typeof requestIps === 'string' && requestIps.includes(',')) {
-    return requestIps.split(',')[0].trim()
-  }
-
-  if (typeof requestIps === 'string') {
-    return requestIps
-  }
-
-  return null
+  return resolveClientIP(
+    request.headers['x-forwarded-for'],
+    request.socket.remoteAddress,
+  )
 }
 
 /**

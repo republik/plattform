@@ -1,3 +1,4 @@
+const { getClientIp } = require('@orbiting/backend-modules-base/lib/clientIp')
 const { t } = require('@orbiting/backend-modules-translate')
 const { newAuthError } = require('./AuthError')
 
@@ -130,7 +131,7 @@ const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
       pgdb.public.consents.insert({
         userId,
         policy: consent,
-        ip: req.ip,
+        ip: getClientIp(req),
       }),
     ),
   )
@@ -144,7 +145,7 @@ const revokeConsent = async ({ userId, consent }, context) => {
   await pgdb.public.consents.insert({
     userId,
     policy: consent,
-    ip: req.ip,
+    ip: getClientIp(req),
     record: 'REVOKE',
   })
 }
