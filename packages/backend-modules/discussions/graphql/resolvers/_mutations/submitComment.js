@@ -28,8 +28,6 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/discussion/404'))
   }
 
-  Roles.ensureUserIsInRoles(me, discussion.allowedRoles)
-
   // check if client-side generated ID already exists
   if (id && !!(await loaders.Comment.byId.load(id))) {
     throw new Error(t('api/comment/id/duplicate'))

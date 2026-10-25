@@ -58,7 +58,6 @@ type DiscussionRules {
   maxLength: Int
   anonymity: Permission!
   disableTopLevelComments: Boolean
-  allowedRoles: [String!]!
 }
 
 type DiscussionPreferences {
