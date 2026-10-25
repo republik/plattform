@@ -2,7 +2,7 @@ import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
 const AGE_DAYS = 365
 
-export default module.exports = function setup(
+export = function setup(
   options: Options,
   context: JobContext,
 ): JobFn {
