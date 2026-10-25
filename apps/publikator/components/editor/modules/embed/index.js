@@ -227,7 +227,7 @@ const TWITTER_REGEX =
 
 // One capturing group at match[1] that catches the video id
 const YOUTUBE_REGEX =
-  /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*$/
+  /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&\S*)?$/
 
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX =
