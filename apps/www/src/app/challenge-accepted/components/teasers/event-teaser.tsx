@@ -1,7 +1,7 @@
 import { CMSItemStatus } from '@/app/components/cms/item-status'
 import { Share } from '@/app/components/share/share'
 import {
-  formatDateShort,
+  formatDate,
   formatEventDateRange,
   isFutureEvent,
 } from '@/app/lib/util/time-format'
@@ -81,7 +81,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             mb: '0.2ex',
           })}
         >
-          {formatDateShort(event.startAt)}
+          {formatDate(event.startAt)}
         </p>
       </div>
       <div

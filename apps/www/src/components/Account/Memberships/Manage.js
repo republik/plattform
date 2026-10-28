@@ -7,15 +7,13 @@ import Link from '@/app/components/ui/link'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { errorToString } from '@/lib/utils/errors'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 
 import withT from '@/lib/withT'
 
 import TokenPackageLink from '../../Link/TokenPackage'
 import { Item as AccountItem, P } from '../Elements'
-
-const dayFormat = timeFormat('%d. %B %Y')
 
 const Actions = ({
   t,
@@ -280,7 +278,7 @@ const Manage = ({
   const latestPeriod = membership.periods?.[0]
 
   const endDate = latestPeriod && new Date(latestPeriod.endDate)
-  const formattedEndDate = latestPeriod && dayFormat(endDate)
+  const formattedEndDate = latestPeriod && formatDate(endDate)
   const overdue = latestPeriod && endDate < new Date()
 
   return (
