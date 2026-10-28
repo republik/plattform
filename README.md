@@ -4,8 +4,8 @@ The platform that powers republik.ch. A tailored solution for a membership based
 
 ## Contributions and issues
 
-If you are a Republik reader (thank you!) and you have any issues or feature requests, please do kindly direct them to [our support team](mailto:kontakt@republik.ch). 
-Unfortunately we can also not currently accept external contributions to our codebase, as we are a small team and want to keep our focus on improving and maintaining the product for all of our readers. Thank you for your interest in case you were considering it, we are impressed. 
+If you are a Republik reader (thank you!) and you have any issues or feature requests, please do kindly direct them to [our support team](mailto:kontakt@republik.ch).
+Unfortunately we can also not currently accept external contributions to our codebase, as we are a small team and want to keep our focus on improving and maintaining the product for all of our readers. Thank you for your interest in case you were considering it, we are impressed.
 
 ## What's inside?
 
@@ -61,7 +61,6 @@ All apps and the styleguide provide an `.env.example`, the provided default valu
 
 ```bash
 cp apps/www/.env.example apps/www/.env
-cp apps/publikator/.env.example apps/publikator/.env
 cp apps/admin/.env.example apps/admin/.env
 
 cp apps/api/.env.example apps/api/.env
@@ -75,7 +74,6 @@ You may copyover your environment from the individual repos with one manual edit
 
 ```bash
 cp ../republik-frontend/.env apps/www/.env
-cp ../publikator-frontend/.env apps/publikator/.env
 cp ../republik-admin-frontend/.env apps/admin/.env
 
 cp ../styleguide/.env packages/styleguide/.env
@@ -139,7 +137,6 @@ For start only frontend and api use:
 yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
 ```
 
-
 ### Commit Message Format
 
 ```
@@ -175,7 +172,6 @@ yarn dev:www
 ```
 
 (Obvious )Warning: whatever you do here is for realz, if you login to your account and change things they are changed on republik.ch!
-
 
 ## Deployment
 
