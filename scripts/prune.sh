@@ -16,7 +16,7 @@ then
   exit 1
 fi
 
-if [ -f apps/www/.env ] || [ -f apps/api/.env ] || [ -f apps/assets/.env ]
+if [ -f apps/www/.env ] || [ -f apps/api/.env ]
 then
   echo "⚠️ Early exit 1 because .env files were detected. The pruned out will not overwrite the root directory."
   exit 1
