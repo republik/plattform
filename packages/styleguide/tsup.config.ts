@@ -2,7 +2,7 @@ import { exec } from 'node:child_process'
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['src/lib.ts', 'src/editor.ts', 'src/chart.ts'],
+  entry: ['src/lib.ts', 'src/chart.ts'],
   outDir: 'dist',
   format: ['cjs', 'esm'],
   loader: {

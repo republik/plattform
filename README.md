@@ -61,7 +61,6 @@ All apps and the styleguide provide an `.env.example`, the provided default valu
 
 ```bash
 cp apps/www/.env.example apps/www/.env
-cp apps/publikator/.env.example apps/publikator/.env
 cp apps/admin/.env.example apps/admin/.env
 
 cp apps/api/.env.example apps/api/.env
@@ -74,7 +73,6 @@ You may copyover your environment from the individual repos with one manual edit
 
 ```bash
 cp ../republik-frontend/.env apps/www/.env
-cp ../publikator-frontend/.env apps/publikator/.env
 cp ../republik-admin-frontend/.env apps/admin/.env
 
 cp ../styleguide/.env packages/styleguide/.env
