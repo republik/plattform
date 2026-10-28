@@ -25,7 +25,6 @@ export { default as Field } from './components/Form/Field'
 export { default as FieldSet } from './components/Form/FieldSet'
 export { default as Radio } from './components/Form/Radio'
 export { default as Checkbox } from './components/Form/Checkbox'
-export { default as Slider } from './components/Form/Slider'
 export { default as Loader } from './components/Loader'
 export { default as RawHtml } from './components/RawHtml'
 export { default as IllustrationHtml } from './components/IllustrationHtml'
@@ -141,8 +140,6 @@ export { renderCommentMdast } from './components/Discussion/Internal/Comment/ren
 export { default as RelativeTime } from './components/Discussion/Internal/Comment/RelativeTime'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
-export { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from './components/ExpandableLink/ExpandableLink'
-
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
 export { CommentNode } from './components/Discussion/Tree'
 export type { CommentProps } from './components/Discussion/Tree'
@@ -161,25 +158,11 @@ export { shouldIgnoreClick } from './lib/helpers'
 export { default as ActiveDebateTeaser } from './components/TeaserActiveDebates/DebateTeaser'
 export { default as IconButton } from './components/IconButton'
 
-export { VariableContext } from './components/Variables'
-export { default as ShareImageGenerator } from './components/ShareImage'
 export {
   default as ShareImagePreview,
-  socialPreviewStyles,
-  socialPreviewWidth,
-  SHARE_IMAGE_DEFAULTS,
   SHARE_IMAGE_HEIGHT,
   SHARE_IMAGE_WIDTH,
 } from './components/ShareImage/ShareImagePreview'
-export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
-export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'
-export {
-  default as AudioCoverGenerator,
-  COVER_IMAGE_WIDTH,
-  COVER_IMAGE_HEIGHT,
-} from './components/AudioCoverGenerator'
-
-export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
 export { default as TabButton } from './components/Tabs/TabButton'
 export { default as Scroller } from './components/Tabs/Scroller'
@@ -193,13 +176,9 @@ export * from './chart'
 
 // export * from './components/Icons'
 
-export * from './templates'
+export { default as createArticleSchema } from './templates/Article'
 export { mdastToString } from './templates/Article/utils'
 
+export { TeaserActiveDebates } from './components/TeaserActiveDebates'
+
 export { default as ErrorBoundary } from './components/ErrorBoundary'
-
-export { Author as EmailAuthor } from './templates/shared/email/components/Author'
-
-export { default as ChartEditor } from './components/Chart/Editor'
-
-export { Marker, markerKeys, markersConfig } from './components/Marker'

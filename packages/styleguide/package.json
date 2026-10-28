@@ -15,11 +15,6 @@
       "types": "./dist/chart.d.ts",
       "import": "./dist/chart.mjs",
       "require": "./dist/chart.js"
-    },
-    "./editor": {
-      "types": "./dist/editor.d.ts",
-      "import": "./dist/editor.mjs",
-      "require": "./dist/editor.js"
     }
   },
   "engines": {
@@ -90,7 +85,6 @@
     "prop-types": "^15.7.2",
     "react": "^19.3.1",
     "react-autocomplete": "^1.4.1",
-    "react-color": "^2.18.1",
     "react-dom": "^19.3.1",
     "react-maskedinput": "^4.0.1",
     "react-textarea-autosize": "^5.1.0",
@@ -120,7 +114,6 @@
     "mdast-react-render": ">=1.1",
     "prop-types": ">=15.5",
     "react": "^19.3.1",
-    "react-color": "^2.18.1",
     "react-dom": "^19.3.1",
     "react-maskedinput": ">=4.0.1",
     "react-textarea-autosize": ">=5.1.0",
