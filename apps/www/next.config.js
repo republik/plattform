@@ -70,7 +70,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.datocms-assets.com', port: '' },
       { protocol: 'https', hostname: 'cdn.repub.ch', port: '' },
       { protocol: 'https', hostname: 'cdn.republik.pink', port: '' },
-      { protocol: 'https', hostname: 'assets.republik.pink', port: '' },
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
