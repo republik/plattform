@@ -22,6 +22,7 @@ import { TeaserSmallPreviewLink } from '@/app/(sanity)/components/teaser-small-p
 import { Theme } from '@/app/(sanity)/components/theme'
 import type { ArticleDocumentType } from '@/app/(sanity)/groq/document-query'
 import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { LoginPopup } from '@/app/components/auth/login/login-popup'
 import Link from '@/app/components/ui/link'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
@@ -54,6 +55,7 @@ export default async function ArticleDocument({
 
   return (
     <EventTrackingContext category='Article'>
+      <LoginPopup />
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
       <WelcomeBanner />
