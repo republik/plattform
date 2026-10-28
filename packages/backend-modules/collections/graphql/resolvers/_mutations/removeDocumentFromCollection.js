@@ -28,7 +28,7 @@ module.exports = async (_, { documentId, collectionName }, context) => {
     throw new Error(t(`api/collections/document/404`))
   }
 
-  const documentRef = doc ? doc.meta.repoId : parsedRepoId
+  const documentRef = doc ? doc.sanityRef : parsedRepoId
 
   const item = await Collection.deleteDocumentItem(
     me.id,

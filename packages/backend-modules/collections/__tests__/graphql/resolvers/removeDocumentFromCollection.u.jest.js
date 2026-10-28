@@ -26,6 +26,7 @@ const removeDocumentFromCollection = require('../../../graphql/resolvers/_mutati
 const USER_ID = 'user-1'
 const COLLECTION_ID = 'collection-bookmarks'
 const LEGACY_REPO_ID = 'republik/article-test'
+const SANITY_ID = 'a1b2c3d4-0000-4000-8000-000000000001'
 
 // Records what any delete would have been scoped to, without running it.
 const makeContext = ({ document = null } = {}) => {
@@ -95,7 +96,10 @@ describe('removeDocumentFromCollection', () => {
 
   test('deletes exactly one document when the id resolves', async () => {
     const { context, deletes } = makeContext({
-      document: { meta: { repoId: LEGACY_REPO_ID } },
+      document: {
+        sanityRef: `sanity:${SANITY_ID}`,
+        meta: { repoId: LEGACY_REPO_ID },
+      },
     })
 
     await removeDocumentFromCollection(
@@ -105,7 +109,7 @@ describe('removeDocumentFromCollection', () => {
     )
 
     expect(deletes).toEqual([
-      { userId: USER_ID, collectionId: COLLECTION_ID, repoId: LEGACY_REPO_ID },
+      { userId: USER_ID, collectionId: COLLECTION_ID, sanityId: SANITY_ID },
     ])
   })
 

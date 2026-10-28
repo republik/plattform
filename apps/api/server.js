@@ -16,7 +16,6 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
   graphql: redirections,
 } = require('@orbiting/backend-modules-redirections')
-const { graphql: search } = require('@orbiting/backend-modules-search')
 const {
   graphql: notifications,
 } = require('@orbiting/backend-modules-push-notifications')
@@ -40,9 +39,6 @@ const {
 } = require('@orbiting/backend-modules-referral-campaigns')
 const {
   graphql: nextReads,
-  ReadingPositionRefreshWorker,
-  Next7DaysFeedRefreshWorker,
-  Next20DaysCommentsFeedRefreshWorker,
   SanityReadingPositionRefreshWorker,
   SanityNext7DaysFeedRefreshWorker,
   SanityNext20DaysCommentsFeedRefreshWorker,
@@ -148,9 +144,6 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
     CockpitWorker,
-    ReadingPositionRefreshWorker,
-    Next7DaysFeedRefreshWorker,
-    Next20DaysCommentsFeedRefreshWorker,
     SanityReadingPositionRefreshWorker,
     SanityNext7DaysFeedRefreshWorker,
     SanityNext20DaysCommentsFeedRefreshWorker,
@@ -239,7 +232,6 @@ const run = async (workerId, config) => {
     republikCrowdfundings,
     publikator,
     documents,
-    search,
     searchTypesense,
     redirections,
     discussions,
@@ -453,21 +445,17 @@ const runOnce = async () => {
       'cockpit:refresh',
       '*/120 * * * *', // cron for every 120 minutes
     )
-    await queue.schedule(
-      'next_reads:reading_position',
-      '7 2,14 * * *', // twice daily: 02:07 and 14:07 UTC (night + midday/afternoon)
-    )
-    await queue.schedule(
-      'next_reads:feed:20days:refresh',
-      '37 */3 * * *', // every 3 hours, independent of reading_position
-    )
+    // Drop the persisted schedules of the removed Publikator next-reads workers
+    // (safe to delete once this has run in every environment).
+    await queue.unschedule('next_reads:reading_position')
+    await queue.unschedule('next_reads:feed:20days:refresh')
     await queue.schedule(
       'next_reads_sanity:reading_position',
-      '22 2,14 * * *', // twice daily, offset 15min from next_reads:reading_position
+      '22 2,14 * * *', // twice daily: 02:22 and 14:22 UTC
     )
     await queue.schedule(
       'next_reads_sanity:feed:20days:refresh',
-      '52 */3 * * *', // every 3 hours, offset from next_reads:feed:20days:refresh; independent of reading_position
+      '52 */3 * * *', // every 3 hours, independent of reading_position
     )
   }
 

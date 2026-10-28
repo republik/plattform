@@ -80,13 +80,11 @@ const makeContext = (items, { document } = {}) => {
   }
 }
 
-// What loaders.Document.byRepoId resolves to — `meta.repoId` is the canonical
-// ref, `sanityType` the Sanity `_type` (see documents/loaders/Document.js).
-const publikatorDoc = (repoId) => ({
-  meta: { repoId },
-})
+// What loaders.Document.byRepoId resolves to — `sanityRef` is the
+// canonical ref, `sanityType` the Sanity `_type` (see documents/loaders/Document.js).
 const sanityDoc = (id, sanityType = 'article') => ({
   sanityType,
+  sanityRef: `sanity:${id}`,
   meta: { repoId: `sanity:${id}` },
 })
 
@@ -226,9 +224,14 @@ describe('upsertItem', () => {
     expect('repoId' in inserts[0]).toBe(false)
   })
 
-  test('stores a publikator document in "repoId", leaving "sanityId" absent', async () => {
+  test('stores a legacy repoId resolved via Sanity in "sanityId", leaving "repoId" absent', async () => {
+    // `meta.repoId` stays the legacy value on this path; the stored ref is the
+    // canonical Sanity one.
     const { context, inserts } = makeContext([], {
-      document: publikatorDoc('republik/article-test'),
+      document: {
+        ...sanityDoc(SANITY_ID),
+        meta: { repoId: 'republik/article-test' },
+      },
     })
 
     await upsertItem(
@@ -236,8 +239,8 @@ describe('upsertItem', () => {
       context,
     )
 
-    expect(inserts[0].repoId).toBe('republik/article-test')
-    expect('sanityId' in inserts[0]).toBe(false)
+    expect(inserts[0].sanityId).toBe(SANITY_ID)
+    expect('repoId' in inserts[0]).toBe(false)
   })
 
   test('rejects a Sanity document whose _type is not collectable', async () => {
@@ -260,6 +263,7 @@ describe('upsertItem', () => {
     const { context, inserts } = makeContext([], {
       document: {
         sanityType: 'articleCollection',
+        sanityRef: `sanity:${SANITY_ID}`,
         meta: { repoId: 'republik/format-test' },
       },
     })

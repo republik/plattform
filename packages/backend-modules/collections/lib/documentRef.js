@@ -44,7 +44,7 @@ const refToFilterColumns = (ref) => (ref ? refToColumns(ref) : {})
 // A *client-supplied* id, by contrast, can't be trusted to say which kind it
 // is: it may be a publikator repoId or base64 documentId, a bare Sanity `_id`
 // (with or without the `drafts.` prefix), or an already-prefixed ref. Rather
-// than resolve the document (an ES or Sanity round trip per id, which defeats
+// than resolve the document (a Sanity round trip per id, which defeats
 // the point of a batch lookup) we return every column value it could match and
 // let the query decide. A wrong-kind candidate simply matches nothing: no row
 // holds a repoId in "sanityId" or vice versa.
@@ -95,14 +95,11 @@ const canonicalKey = ({ repoId, sanityId }) =>
 // the repoId itself and for a Sanity-backed one the loader's normalized
 // `sanity:`-prefixed ref.
 //
-// `ref` is only set for content that may live in a collection. The loader's
-// publikator branch filters Elasticsearch to `type: 'Document'`, so a repoId is
-// guaranteed to be an article; its Sanity branch resolves any `_type`, so
-// without the gate an author, a format or a settings singleton could be
-// bookmarked, progressed or queued. Keyed on `sanityType` being present rather
-// than on the ref being `sanity:`-prefixed: the loader's legacy-rescue path
-// deliberately keeps `meta.repoId` as the legacy repoId even though it resolved
-// the document out of Sanity, so a prefix check would skip exactly those.
+// `ref` is only set for content that may live in a collection. The loader
+// resolves any Sanity `_type`, so without the gate an author, a format or a
+// settings singleton could be bookmarked, progressed or queued. It is the
+// canonical `sanity:` ref, also for a legacy repoId the loader resolved through
+// its Sanity counterpart, so new rows are always keyed by "sanityId".
 //
 // Callers own the error messages, so both "no such document" and "not
 // collectable" are reported as the absence of `ref`. `parsedRepoId` is handed
@@ -113,13 +110,12 @@ const resolveInputRef = async (inputId, { loaders }) => {
   const doc = parsedRepoId
     ? await loaders.Document.byRepoId.load(parsedRepoId)
     : null
-  const collectable =
-    !!doc && (!doc.sanityType || isCollectableType(doc.sanityType))
+  const collectable = !!doc && isCollectableType(doc.sanityType)
 
   return {
     parsedRepoId,
     doc,
-    ref: collectable ? doc.meta.repoId : undefined,
+    ref: collectable ? doc.sanityRef : undefined,
   }
 }
 

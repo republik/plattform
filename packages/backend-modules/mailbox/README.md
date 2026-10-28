@@ -1,6 +1,6 @@
 # @orbiting/backend-modules-mailbox
 
-Query mailbox index and mailLog table at once
+Query the mailLog table
 
 ## API
 

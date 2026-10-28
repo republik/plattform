@@ -3,6 +3,8 @@ require('@orbiting/backend-modules-env').config()
 const debug = require('debug')('search:lib:notifyListener')
 const get = require('lodash/get')
 
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
+
 const mappings = require('./indices')
 const inserts = require('./inserts')
 const { getIndexAlias } = require('./utils')
@@ -58,26 +60,12 @@ const cascadeUpdateConfig = {
       where: 'id', // where repos.id === <via>
     },
   ],
-  questions: [
-    {
-      source: 'public.questions',
-      target: 'public.questionnaireSubmissions', // update all questionnaireSubmissions
-      via: 'questionnaireId', // via questions.questionnaireId
-      where: 'questionnaireId', // where questionnaireSubmissions.questionnaireId === <via>
-    },
-  ],
   users: [
     {
       source: 'public.users',
       target: 'public.comments', // update all comments
       via: 'id', // via users.id
       where: 'userId', // where comments.userid === <via>
-    },
-    {
-      source: 'public.users',
-      target: 'public.questionnaireSubmissions', // update all submissions
-      via: 'id', // via users.id
-      where: 'userId', // where questionnaireSubmissions.questionId === <via>
     },
   ],
 }
@@ -201,13 +189,17 @@ const run = async (workQueue, context) => {
 }
 
 let singleton
-const start = async ({ pgdb, elastic }) => {
+// Elasticsearch is not part of the shared connection context anymore, the
+// listener, its last writer, holds its own connection.
+const start = async ({ pgdb }) => {
   if (singleton) {
     // this is just a precautionary measure, the limitation could be lifted
     // without the need to change other code here
     throw new Error('NotifyListener must not be initiated twice!')
   }
   singleton = 'init'
+
+  const elastic = Elasticsearch.connect()
 
   let closing = false
 
@@ -239,6 +231,7 @@ const start = async ({ pgdb, elastic }) => {
     runPromise && (await runPromise)
 
     await cxt.dedicatedConnectionEnd()
+    await Elasticsearch.disconnect(elastic)
 
     singleton = null
   }
