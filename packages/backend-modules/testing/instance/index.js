@@ -11,7 +11,7 @@ const { getId } = require('./pool')
 //
 // REDIS_URL: if set is has to be a base url, allowing to append '/db'
 //
-const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
+const init = async () => {
   // checks
   if (global.instance) {
     throw new Error('only one instance per process')
@@ -48,11 +48,6 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
   process.env.SEND_MAILS = false
   process.env.SEND_NOTIFICATIONS = false
   process.env.SLACK_API_TOKEN = ''
-  if (publicationScheduler) {
-  }
-  if (searchNotifyListener !== null && !searchNotifyListener) {
-    process.env.SEARCH_PG_LISTENER = false
-  }
 
   // flush redis
   const redis = Redis.connect()

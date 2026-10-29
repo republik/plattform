@@ -5,9 +5,6 @@ const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
 const {
-  NotifyListener: SearchNotifyListener,
-} = require('@orbiting/backend-modules-search')
-const {
   Listener: SearchTypesenseListener,
   graphql: searchTypesense,
 } = require('@orbiting/backend-modules-search-typesense')
@@ -178,7 +175,6 @@ function setupQueue(context, monitorQueueState = undefined) {
 const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
-  SEARCH_PG_LISTENER,
   SEARCH_TYPESENSE_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
@@ -354,11 +350,6 @@ const runOnce = async () => {
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
 
-  let searchNotifyListener
-  if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
-    searchNotifyListener = await SearchNotifyListener.start(context)
-  }
-
   let searchTypesenseListener
   if (SEARCH_TYPESENSE_LISTENER && SEARCH_TYPESENSE_LISTENER !== 'false') {
     searchTypesenseListener = await SearchTypesenseListener.start(context)
@@ -468,7 +459,6 @@ const runOnce = async () => {
   const close = async () => {
     await Promise.all(
       [
-        searchNotifyListener && searchNotifyListener.close(),
         searchTypesenseListener && searchTypesenseListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
