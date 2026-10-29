@@ -7,26 +7,6 @@ schema {
 
 type queries {
   repo(id: ID!): Repo
-
-  """
-  This query is a cached version of repos query. It uses cached information
-  about repositories.
-  """
-  reposSearch(
-    first: Int
-    last: Int
-    before: String
-    after: String
-    # can not be combined with orderBy
-    publishDateRange: RepoPublishDateRange
-    search: String
-    template: String
-    phases: [RepoPhaseKey!]
-    orderBy: RepoOrderBy
-    isTemplate: Boolean
-    isSeriesMaster: Boolean
-    isSeriesEpisode: Boolean
-  ): RepoConnection!
 }
 
 type mutations {
