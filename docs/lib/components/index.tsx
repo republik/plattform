@@ -1,5 +1,0 @@
-'use client'
-export { IconExplorer } from './icon-explorer'
-export { ComponentDemo } from './component-demo'
-export { Colors } from './colors'
-export { PropsTable } from './props-table'
