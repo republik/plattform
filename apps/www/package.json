@@ -98,7 +98,7 @@
     "@sanity/asset-utils": "^2.3.0",
     "@sanity/client": "^7.25.0",
     "@sanity/image-url": "^2.1.1",
-    "@sentry/nextjs": "^10.53.1",
+    "@sentry/nextjs": "^10.75.2",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
     "apollo-fetch": "^0.7.0",
