@@ -61,18 +61,6 @@
       "problemMatcher": []
     },
     {
-      "label": "dev:docs",
-      "type": "shell",
-      "command": "yarn turbo run dev --filter=@republik/docs...",
-      "presentation": {
-        "group": "dev",
-        "panel": "dedicated",
-        "close": true,
-        "showReuseMessage": true
-      },
-      "problemMatcher": []
-    },
-    {
       "label": "proxy:staging",
       "type": "shell",
       "command": "yarn yaproxy:staging",

@@ -4,7 +4,6 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "docs",
       "apps/*",
       "packages/*",
       "packages/mdast/*",
@@ -21,7 +20,6 @@
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
     "dev": "turbo run dev --parallel --concurrency=100",
-    "dev:docs": "turbo run dev --filter=@republik/docs...",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",
     "dev:www-api": "turbo run dev --filter=@orbiting/www-app --filter=@orbiting/api-app --concurrency=100",
     "dev:api": "turbo run dev --filter=@orbiting/api-app... --concurrency=100",
