@@ -6,7 +6,7 @@ import crypto from 'crypto'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 const {
   getParsedDocumentId,
-} = require('@orbiting/backend-modules-search/lib/Documents')
+} = require('@orbiting/backend-modules-base/lib/legacyDocumentId')
 
 import { Commit, DerivativeRow } from '../types'
 import { associateReadAloudDerivativeWithCommit } from './associateReadAloudDerivativeWithCommit'

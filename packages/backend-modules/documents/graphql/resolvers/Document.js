@@ -10,7 +10,6 @@ const {
 const {
   contentUrlResolver,
   metaUrlResolver,
-  extractIdsFromNode,
 } = require('../../lib/resolve')
 
 const getDocuments = require('./_queries/documents')
@@ -20,10 +19,6 @@ const {
     webp: { addFormatAuto },
   },
 } = require('@orbiting/backend-modules-assets')
-
-const {
-  resolveEntities,
-} = require('@orbiting/backend-modules-search/lib/Documents')
 
 const {
   processMeta: processSyntheticReadAloudInMeta,
@@ -140,49 +135,6 @@ module.exports = {
     const hasPreviousPage =
       !!startCursor &&
       children.some((v, i) => v.data.id === startCursor && i > firstIndex)
-
-    if (doc._all) {
-      const idsFromNodes = await Promise.all(
-        nodes.map(async (node) => {
-          await Promise.all([
-            processRepoImageUrlsInContent(node, addFormatAuto),
-            processEmbedImageUrlsInContent(node, addFormatAuto),
-          ])
-
-          processMembersOnlyZonesInContent(node, context.user, doc._apiKey)
-          processNodeModifiersInContent(node, context.user)
-          if (doc.meta.template !== 'article') {
-            processIfHasAccess(node, context.user, doc._apiKey)
-          }
-
-          return extractIdsFromNode(node)
-        }),
-      )
-
-      const { docs, users } = await resolveEntities({
-        context,
-        userIds: idsFromNodes.reduce(
-          (userIds, idsFromNode) => userIds.concat(idsFromNode.users),
-          [],
-        ),
-        repoIds: idsFromNodes.reduce(
-          (repoIds, idsFromNode) => repoIds.concat(idsFromNode.repos),
-          [],
-        ),
-      })
-      doc._all = doc._all.concat(docs)
-      doc._users = doc._users.concat(users)
-
-      contentUrlResolver(
-        doc,
-        doc._all,
-        doc._users,
-        undefined,
-        urlPrefix,
-        searchString,
-        context.user || null,
-      )
-    }
 
     return {
       pageInfo: {
