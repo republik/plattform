@@ -20,10 +20,6 @@ const {
   },
 } = require('@orbiting/backend-modules-assets')
 
-const {
-  processMeta: processSyntheticReadAloudInMeta,
-} = require('@orbiting/backend-modules-publikator/lib/Derivative/SyntheticReadAloud')
-
 module.exports = {
   repoId(doc, _args, _context) {
     return (
@@ -87,7 +83,7 @@ module.exports = {
       await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
     }
 
-    return processSyntheticReadAloudInMeta(meta, doc, context)
+    return meta
   },
   async children(
     doc,
