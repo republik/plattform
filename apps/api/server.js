@@ -89,9 +89,6 @@ const {
   AccessScheduler,
   graphql: access,
 } = require('@orbiting/backend-modules-access')
-const {
-  PublicationNotificationWorker,
-} = require('@orbiting/backend-modules-publikator/lib/workers')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const {
   MembershipOwnersWorker,
@@ -154,13 +151,6 @@ function setupQueue(context, monitorQueueState = undefined) {
   ]
 
   if (
-    PUBLICATION_SCHEDULER !== 'false' &&
-    (!DEV || PUBLICATION_SCHEDULER === 'true')
-  ) {
-    workers.push(PublicationNotificationWorker)
-  }
-
-  if (
     MEMBERSHIP_SCHEDULER !== 'false' &&
     (!DEV || MEMBERSHIP_SCHEDULER === 'true')
   ) {
@@ -193,7 +183,6 @@ const {
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
-  PUBLICATION_SCHEDULER,
   DATABROOM_SCHEDULER,
   MAIL_SCHEDULER,
   SERVER = 'graphql',
@@ -458,12 +447,8 @@ const runOnce = async () => {
     )
   }
 
-  if (
-    PUBLICATION_SCHEDULER !== 'false' &&
-    (!DEV || PUBLICATION_SCHEDULER === 'true')
-  ) {
-    await queue.schedule('scheduler:publication', '* * * * *')
-  }
+  // PublicationWorker is gone, drop its leftover cron entry
+  await queue.unschedule('scheduler:publication')
 
   if (
     MEMBERSHIP_SCHEDULER !== 'false' &&

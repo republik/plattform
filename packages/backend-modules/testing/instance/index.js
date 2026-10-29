@@ -49,7 +49,6 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
   process.env.SEND_NOTIFICATIONS = false
   process.env.SLACK_API_TOKEN = ''
   if (publicationScheduler) {
-    process.env.PUBLICATION_SCHEDULER = true
   }
   if (searchNotifyListener !== null && !searchNotifyListener) {
     process.env.SEARCH_PG_LISTENER = false
