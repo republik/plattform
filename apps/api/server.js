@@ -90,7 +90,6 @@ const {
   graphql: access,
 } = require('@orbiting/backend-modules-access')
 const {
-  PublicationWorker,
   PublicationNotificationWorker,
 } = require('@orbiting/backend-modules-publikator/lib/workers')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
@@ -158,7 +157,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     PUBLICATION_SCHEDULER !== 'false' &&
     (!DEV || PUBLICATION_SCHEDULER === 'true')
   ) {
-    workers.push(PublicationWorker, PublicationNotificationWorker)
+    workers.push(PublicationNotificationWorker)
   }
 
   if (

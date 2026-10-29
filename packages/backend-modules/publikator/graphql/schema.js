@@ -33,16 +33,6 @@ type mutations {
     name: String!
   ): Boolean!
 
-  publish(
-    repoId: ID!
-    commitId: ID!
-    settings: PublishSettings!
-  ): PublishResponse!
-
-  unpublish(
-    repoId: ID!
-  ): Boolean!
-
   generateDerivative(
     commitId: ID!
   ): Derivative!
@@ -60,11 +50,6 @@ type mutations {
     publishDate: DateTime
     briefingUrl: String
   ): Repo!
-
-  archive(
-    repoIds: [ID!]!
-    unpublish: Boolean
-  ): RepoConnection!
 
   publishMemo(
     id: ID
