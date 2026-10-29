@@ -10,6 +10,7 @@
 
 import {
   HuebschError,
+  assertSafeAssetUrl,
   describeHuebschError,
   parseHuebschResult,
   uploadToHuebsch,
@@ -245,5 +246,75 @@ describe('uploadToHuebsch / parseHuebschResult (fetch stubbed)', () => {
     })
 
     expect(result.durationMs).toBeUndefined()
+  })
+})
+
+describe('assertSafeAssetUrl / parseHuebschResult SSRF guard', () => {
+  afterEach(() => {
+    delete process.env.HUEBSCH_ASSET_HOSTS
+  })
+
+  it.each([
+    'http://cdn.example.com/a.mp3',
+    'file:///etc/passwd',
+    'not a url',
+    'https://user:pw@cdn.example.com/a.mp3',
+    'https://localhost/a.mp3',
+    'https://foo.localhost/a.mp3',
+    'https://intranet/a.mp3',
+    'https://metadata.google.internal/a',
+    'https://127.0.0.1/a',
+    'https://127.1/a',
+    'https://2130706433/a',
+    'https://0x7f.0.0.1/a',
+    'https://10.1.2.3/a',
+    'https://172.16.0.1/a',
+    'https://192.168.1.1/a',
+    'https://169.254.169.254/latest/meta-data',
+    'https://100.64.0.1/a',
+    'https://0.0.0.0/a',
+    'https://[::1]/a',
+    'https://[::ffff:127.0.0.1]/a',
+    'https://[::ffff:a9fe:a9fe]/a',
+    'https://[fe80::1]/a',
+    'https://[fd00::1]/a',
+  ])('rejects %s', (url) => {
+    expect(() => assertSafeAssetUrl(url)).toThrow(HuebschError)
+  })
+
+  it('accepts public https urls', () => {
+    expect(() =>
+      assertSafeAssetUrl('https://cdn.example.com/audio.mp3'),
+    ).not.toThrow()
+    expect(() => assertSafeAssetUrl('https://8.8.8.8/audio.mp3')).not.toThrow()
+  })
+
+  it('enforces HUEBSCH_ASSET_HOSTS when set (exact or subdomain)', () => {
+    process.env.HUEBSCH_ASSET_HOSTS = 'huebsch.example.com, assets.test'
+    expect(() =>
+      assertSafeAssetUrl('https://huebsch.example.com/a.mp3'),
+    ).not.toThrow()
+    expect(() =>
+      assertSafeAssetUrl('https://x.assets.test/a.mp3'),
+    ).not.toThrow()
+    expect(() => assertSafeAssetUrl('https://evil.example.org/a.mp3')).toThrow(
+      /allowlist/,
+    )
+    expect(() => assertSafeAssetUrl('https://notassets.test/a.mp3')).toThrow(
+      /allowlist/,
+    )
+  })
+
+  it('parseHuebschResult does not fetch an unsafe asset url', async () => {
+    const fetchMock = jest.fn()
+    global.fetch = fetchMock as unknown as typeof fetch
+
+    await expect(
+      parseHuebschResult({
+        ok: true,
+        val: { asset: 'https://169.254.169.254/latest/meta-data' },
+      }),
+    ).rejects.toThrow(HuebschError)
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })
