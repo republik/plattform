@@ -36,14 +36,11 @@ const init = async () => {
     process.env.REDIS_URL || 'redis://127.0.0.1:6379'
   }/${instanceId}`
 
-  const esPrefix = `test${instanceId}`
-
-  console.log({ instanceId, redisUrl, port, databaseUrl: db.url, esPrefix })
+  console.log({ instanceId, redisUrl, port, databaseUrl: db.url })
 
   process.env.PORT = port
   process.env.DATABASE_URL = db.url
   process.env.REDIS_URL = redisUrl
-  process.env.ES_INDEX_PREFIX = esPrefix
   process.env.SEND_MAILS_LOG = false
   process.env.SEND_MAILS = false
   process.env.SEND_NOTIFICATIONS = false
@@ -54,16 +51,6 @@ const init = async () => {
   await redis.flushdbAsync()
   Redis.disconnect(redis)
 
-  // create ES indices
-  const pullElasticsearch = require('@orbiting/backend-modules-search/lib/pullElasticsearch')
-  const dropElasticsearch = require('@orbiting/backend-modules-search/lib/dropElasticsearch')
-  await dropElasticsearch(esPrefix, { debug: false })
-  await pullElasticsearch({
-    inserts: false,
-    ensurePropagation: false,
-    debug: false,
-  })
-
   // require server's server.js and start
   const Server = require('@orbiting/api-app/server')
   const server = await Server.start()
@@ -73,8 +60,6 @@ const init = async () => {
     expect(await PG.hasOpenTransactions(pgdb, dbName)).toBeFalsy()
     await server.close()
     await db.drop()
-    // drop ES indices
-    await dropElasticsearch(esPrefix, { debug: false })
     global.instance = null
   }
 
