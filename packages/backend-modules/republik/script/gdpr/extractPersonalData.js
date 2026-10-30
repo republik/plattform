@@ -14,11 +14,6 @@ const Promise = require('bluebird')
 const { csvFormat } = require('d3-dsv')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
-
-const {
-  findPublished,
-} = require('@orbiting/backend-modules-search/lib/Documents')
 
 const argv = yargs
   .option('userId', {
@@ -83,28 +78,10 @@ ${readMeExplanations.join('\n\n')}
   )
 }
 
-const getMetas = (repoIds, { elastic }) =>
-  Promise.map(
-    repoIds,
-    async (repoId) => {
-      console.log(`fetching "${repoId}"...`)
-      const docs = await findPublished(elastic, repoId)
-
-      if (docs.length === 0) {
-        return false
-      }
-
-      const { meta } = docs[0]
-
-      return meta
-    },
-    { concurrency: 2 },
-  )
-
-Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
+Promise.props({ pgdb: PgDb.connect() })
   .then(async (connections) => {
     const { userId, destination } = argv
-    const { pgdb, elastic } = connections
+    const { pgdb } = connections
 
     if (!(await fs.existsSync(destination))) {
       fs.mkdirSync(destination, { recursive: true })
@@ -363,11 +340,6 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         id: collectionDocumentItems.map(({ collectionId }) => collectionId),
       })
 
-      const metas = await getMetas(
-        collectionDocumentItems.map(({ repoId }) => repoId),
-        { elastic },
-      )
-
       await save(
         destination,
         'collectionDocumentItems',
@@ -377,17 +349,11 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             (collection) =>
               collection.id === collectionDocumentItem.collectionId,
           )
-          const meta = metas.find(
-            (meta) => meta.repoId === collectionDocumentItem.repoId,
-          )
-
           return {
             collection_name: collection.name,
-            ...(meta && {
-              document_meta_title: meta.title,
-              document_meta_path: meta.path,
-            }),
             ...pick(collectionDocumentItem, [
+              'repoId',
+              'sanityId',
               'data.max.data',
               'data.nodeId',
               'data.percentage',
@@ -1090,9 +1056,8 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     return connections
   })
   .then(async (connections) => {
-    const { pgdb, elastic } = connections
+    const { pgdb } = connections
     await pgdb.close()
-    await elastic.close()
   })
   .catch((e) => {
     console.log(e)

@@ -3,10 +3,9 @@ import createDebug from 'debug'
 import moment from 'moment'
 import crypto from 'crypto'
 
-import { GraphqlContext } from '@orbiting/backend-modules-types'
 const {
   getParsedDocumentId,
-} = require('@orbiting/backend-modules-search/lib/Documents')
+} = require('@orbiting/backend-modules-base/lib/legacyDocumentId')
 
 import { Commit, DerivativeRow } from '../types'
 import { associateReadAloudDerivativeWithCommit } from './associateReadAloudDerivativeWithCommit'
@@ -34,64 +33,6 @@ export const canDerive = (meta: any) => {
   const shouldDeriveAudio = !meta.suppressSyntheticReadAloud
 
   return isEnabledTemplate && hasNoAudioSource && shouldDeriveAudio
-}
-
-export const processMeta = async (
-  preprocessedMeta: any,
-  document: any,
-  context: GraphqlContext,
-) => {
-  if (preprocessedMeta.audioSource) {
-    return preprocessedMeta
-  }
-
-  if (preprocessedMeta.suppressSyntheticReadAloud) {
-    return preprocessedMeta
-  }
-
-  const { repoId, commitId, versionName } = getParsedDocumentId(document.id)
-  if (versionName === 'preview') {
-    return preprocessedMeta
-  }
-
-  const commitWithSynthReadAloud =
-    await context.pgdb.publikator.commitsWithSynthReadAloud.findOne({
-      commitId: commitId,
-    })
-
-  const synthesizedAudio =
-    !!commitWithSynthReadAloud &&
-    (await context.loaders.Derivative.byId.load(
-      commitWithSynthReadAloud.derivativeId,
-    ))
-
-  if (synthesizedAudio) {
-    const { result } = synthesizedAudio
-    if (!result) {
-      return preprocessedMeta
-    }
-
-    const { audioDuration, s3 } = result
-    if (!audioDuration || !s3) {
-      return preprocessedMeta
-    }
-
-    const { key, bucket } = s3
-    if (!key || !bucket) {
-      return preprocessedMeta
-    }
-
-    preprocessedMeta.audioSource = {
-      mediaId: Buffer.from([repoId, 'SyntheticReadAloud'].join('/')).toString(
-        'base64',
-      ),
-      kind: 'syntheticReadAloud',
-      mp3: `${ASSETS_SERVER_BASE_URL}/s3/${bucket}/${key}`,
-      durationMs: Math.round(1000 * audioDuration),
-    }
-  }
-
-  return preprocessedMeta
 }
 
 export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {

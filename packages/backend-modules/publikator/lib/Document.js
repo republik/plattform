@@ -1,11 +1,6 @@
 const visit = require('unist-util-visit')
-const debug = require('debug')('publikator:lib:Document')
-const Promise = require('bluebird')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
-const {
-  Redirections: { upsert: upsertRedirection },
-} = require('@orbiting/backend-modules-redirections')
 const { getMeta } = require('@orbiting/backend-modules-documents/lib/meta')
 
 const { upsert: upsertDiscussion } = require('./Discussion')
@@ -180,47 +175,7 @@ const prepareMetaForPublish = async ({
   }
 }
 
-// if the requirements for context change you need to
-// adapt lib/PublicationScheduler
-const handleRedirection = async (repoId, newDocMeta, context) => {
-  const {
-    lib: {
-      Documents: { findPublications },
-    },
-  } = require('@orbiting/backend-modules-search')
-
-  const newPath = newDocMeta.path
-  const { elastic } = context
-
-  const docs = await findPublications(elastic, repoId)
-
-  const previousPaths = docs
-    .map((doc) => doc.meta.path)
-    .filter((path) => path !== newPath)
-
-  if (!previousPaths.length) {
-    return
-  }
-
-  await Promise.each([...new Set(previousPaths)], (previousPath) => {
-    debug('upsertRedirection', {
-      source: previousPath,
-      target: newPath,
-      repoId,
-    })
-    return upsertRedirection(
-      {
-        source: previousPath,
-        target: newPath,
-        resource: { repo: { id: repoId } },
-      },
-      context,
-    )
-  })
-}
-
 module.exports = {
   getPath,
   prepareMetaForPublish,
-  handleRedirection,
 }

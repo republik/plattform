@@ -7,26 +7,6 @@ schema {
 
 type queries {
   repo(id: ID!): Repo
-
-  """
-  This query is a cached version of repos query. It uses cached information
-  about repositories.
-  """
-  reposSearch(
-    first: Int
-    last: Int
-    before: String
-    after: String
-    # can not be combined with orderBy
-    publishDateRange: RepoPublishDateRange
-    search: String
-    template: String
-    phases: [RepoPhaseKey!]
-    orderBy: RepoOrderBy
-    isTemplate: Boolean
-    isSeriesMaster: Boolean
-    isSeriesEpisode: Boolean
-  ): RepoConnection!
 }
 
 type mutations {
@@ -53,16 +33,6 @@ type mutations {
     name: String!
   ): Boolean!
 
-  publish(
-    repoId: ID!
-    commitId: ID!
-    settings: PublishSettings!
-  ): PublishResponse!
-
-  unpublish(
-    repoId: ID!
-  ): Boolean!
-
   generateDerivative(
     commitId: ID!
   ): Derivative!
@@ -80,11 +50,6 @@ type mutations {
     publishDate: DateTime
     briefingUrl: String
   ): Repo!
-
-  archive(
-    repoIds: [ID!]!
-    unpublish: Boolean
-  ): RepoConnection!
 
   publishMemo(
     id: ID

@@ -1,8 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {
-  upsertItem,
-  publikatorOnly,
-} = require('../../../lib/AudioQueue')
+const { upsertItem, publikatorOnly } = require('../../../lib/AudioQueue')
 
 module.exports = async (_, args, context) => {
   const { entity, sequence } = args

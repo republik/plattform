@@ -1,11 +1,3 @@
-const {
-  graphql: {
-    resolvers: {
-      queries: { document: getDocument },
-    },
-  },
-} = require('@orbiting/backend-modules-documents')
-
 const validate = async (value, question, context, payload) => {
   const { t } = context
   if (typeof value !== 'string') {
@@ -14,14 +6,15 @@ const validate = async (value, question, context, payload) => {
   if (value.length === 0) {
     return true
   } else {
-    const doc = await getDocument(null, { path: value }, context)
+    const doc = await context.loaders.Document.byPath.load(value)
     if (!doc) {
       throw new Error(
         t('api/questionnaire/answer/Document/404', { path: value }),
       )
     }
+    // Sanity articles have no template, the document type stands in
     const requestedTemplate = question.typePayload.template
-    if (requestedTemplate && requestedTemplate !== doc.meta.template) {
+    if (requestedTemplate && requestedTemplate !== doc.sanityType) {
       throw new Error(
         t('api/questionnaire/answer/Document/wrongTemplate', {
           template: requestedTemplate,
@@ -31,7 +24,6 @@ const validate = async (value, question, context, payload) => {
     // save doc to payload
     payload.document = {
       title: doc.meta.title,
-      credits: doc.meta.credits,
     }
   }
   return false
