@@ -1,6 +1,6 @@
 import { EmployeeRecord } from '#graphql/cms/__generated__/gql/graphql'
-import { A, Interaction } from '@project-r/styleguide'
 import { useInNativeApp } from '@/lib/withInNativeApp'
+import { A, Interaction } from '@project-r/styleguide'
 
 import Employees from './Employees'
 
@@ -29,8 +29,9 @@ export default function Impressum({ data }: { data: EmployeeRecord[] }) {
       <P>
         Republik AG
         <br />
-        Sihlhallenstrasse 1<br />
-        8004 Zürich
+        Hafnerstrasse 43
+        <br />
+        8005 Zürich
         <br />
         Schweiz
       </P>
