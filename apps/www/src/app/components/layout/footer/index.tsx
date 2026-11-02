@@ -324,8 +324,9 @@ export default async function Footer() {
             <p>
               Republik AG
               <br />
-              Sihlhallenstrasse 1<br />
-              8004 Zürich
+              Hafnerstrasse 43
+              <br />
+              8005 Zürich
               <br />
               Schweiz
             </p>

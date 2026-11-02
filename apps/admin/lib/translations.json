@@ -936,7 +936,7 @@
     },
     {
       "key": "account/pledges/payment/status/PAYMENTSLIP/WAITING",
-      "value": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 61-11760-6<br />\nIBAN: CH50 0900 0000 6101 1760 6<br />\nlautend auf:<br />\nProject R Genossenschaft<br />\nSihlhallenstrasse 1<br />\n8004 Zürich\n"
+      "value": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 61-11760-6<br />\nIBAN: CH50 0900 0000 6101 1760 6<br />\nlautend auf:<br />\nProject R Genossenschaft<br />\nHafnerstrasse 43<br />\n8005 Zürich\n"
     },
     {
       "key": "account/pledges/payment/status/PAYMENTSLIP/PAID",
@@ -1344,7 +1344,7 @@
     },
     {
       "key": "footer/contact/address",
-      "value": "Sihlhallenstrasse 1 \n8004 Zürich \nSchweiz"
+      "value": "Hafnerstrasse 43 \n8005xw Zürich \nSchweiz"
     },
     {
       "key": "footer/contact/mail",
@@ -3556,7 +3556,7 @@
     },
     {
       "key": "merci/payment/status/PAYMENTSLIP/WAITING",
-      "value": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 61-11760-6<br />\nIBAN: CH50 0900 0000 6101 1760 6<br />\nlautend auf:<br />\nProject R Genossenschaft<br />\nSihlhallenstrasse 1<br />\n8004 Zürich\n"
+      "value": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 61-11760-6<br />\nIBAN: CH50 0900 0000 6101 1760 6<br />\nlautend auf:<br />\nProject R Genossenschaft<br />\nHafnerstrasse 43<br />\n8005 Zürich\n"
     },
     {
       "key": "merci/payment/status/PAYMENTSLIP/PAID",
