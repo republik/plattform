@@ -20,8 +20,9 @@ const carouselItemStyle = css({
   width: 'full',
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: 'var(--teaser-bg, transparent)',
-  color: 'var(--teaser-color, inherit)',
+  backgroundColor:
+    'var(--teaser-bg, token(colors.teaserBackground, transparent))',
+  color: 'var(--teaser-color, token(colors.teaserText, inherit))',
   border: '1px solid',
   borderColor: 'divider',
   '&[data-has-background]': {
@@ -138,7 +139,7 @@ export function CarouselTeaser({
             </h4>
           )}
           {teaser.description && !skipDescription && (
-            <p className='description'>
+            <p className='description' style={{ lineHeight: '1.3' }}>
               <InlinePortableText value={teaser.description} />
             </p>
           )}

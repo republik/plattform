@@ -7,11 +7,6 @@
       "problemMatcher": []
     },
     {
-      "label": "dev:publikator / staging proxy",
-      "dependsOn": ["dev:publikator", "proxy:staging"],
-      "problemMatcher": []
-    },
-    {
       "label": "dev:www / tsc / prod proxy",
       "dependsOn": ["dev:www", "tsc:www", "proxy:prod"],
       "problemMatcher": []
@@ -42,18 +37,6 @@
       "problemMatcher": []
     },
     {
-      "label": "dev:publikator",
-      "type": "shell",
-      "command": "yarn turbo run dev --filter=@orbiting/publikator-app...",
-      "presentation": {
-        "group": "dev",
-        "panel": "dedicated",
-        "close": true,
-        "showReuseMessage": true
-      },
-      "problemMatcher": []
-    },
-    {
       "label": "dev:admin",
       "type": "shell",
       "command": "yarn turbo run dev --filter=@orbiting/admin-app...",
@@ -69,18 +52,6 @@
       "label": "dev:api",
       "type": "shell",
       "command": "yarn turbo run dev --filter=@orbiting/api-app... --concurrency=100",
-      "presentation": {
-        "group": "dev",
-        "panel": "dedicated",
-        "close": true,
-        "showReuseMessage": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "dev:docs",
-      "type": "shell",
-      "command": "yarn turbo run dev --filter=@republik/docs...",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",

@@ -1,3 +1,4 @@
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import useInterval from '@/lib/hooks/useInterval'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { AudioPlayerProps } from '../AudioPlayerController'
@@ -143,7 +144,7 @@ const AudioPlaybackElement = ({
         return
       }
 
-      const mp3 = playerItem?.document?.audioSourceMp3
+      const mp3 = toAssetCdnUrl(playerItem?.document?.audioSourceMp3)
       if (!mp3) {
         console.error('Audio Elem: track has no mp3 to play')
         return

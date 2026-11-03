@@ -45,6 +45,24 @@ const nextConfig = {
 
   poweredByHeader: false,
 
+  // next-sanity is ESM-only ("type": "module") and does `import NextImage from 'next/image'`,
+  // which is CJS. Both Node and webpack treat "type": "module" files as strict ESM, where a
+  // default import of CJS resolves to the whole `module.exports` ({ __esModule: true, default })
+  // instead of the component. Bundling it (transpilePackages) and parsing it as
+  // `javascript/auto` (see webpack below) makes the interop respect `__esModule`.
+  // @radix-ui/react-collection >=1.1.8 ships untranspiled `static {}` class
+  // blocks (Safari 16.4+), which break parsing on Safari 15.x.
+  transpilePackages: ['next-sanity', '@radix-ui/react-collection'],
+  webpack(config) {
+    config.module.rules.push({
+      test: /[\\/]node_modules[\\/]next-sanity[\\/]dist[\\/]image[\\/]/,
+      type: 'javascript/auto',
+    })
+    return config
+  },
+
+  // bundlePagesRouterDependencies: true,
+
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,
   images: {
@@ -224,9 +242,9 @@ const nextConfig = {
           '/politik-in-26-fragen-ihre-antworten?share=submission-:id',
         permanent: true,
       },
-      // Redirect overview pages to 1st month
-      // TODO: fix and use sanity for the overview
-      /*{
+      // Redirect overview pages to 1st month. The single-segment pattern can't
+      // collide with an article slug, which always carries /year/month/day/name.
+      {
         source: '/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
@@ -235,7 +253,7 @@ const nextConfig = {
         source: '/archiv/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
-      },*/
+      },
       { source: '/en', destination: '/manifest/en', permanent: false },
     ].filter(Boolean)
   },

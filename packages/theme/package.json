@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "devDependencies": {
-    "@pandacss/dev": "^1.9.1"
+    "@pandacss/dev": "^1.9.1",
+    "utopia-core": "^1.6.0"
   },
   "exports": {
     "./presets": {

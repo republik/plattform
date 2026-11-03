@@ -8,10 +8,8 @@
 module.exports = {
   FONT_FACES: `@font-face {
   font-family: 'Rubis';
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff2)
+  font-display: swap;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff)
       format('woff'),
@@ -20,11 +18,9 @@ module.exports = {
 }
 @font-face {
   font-family: 'Rubis';
+  font-display: swap;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff)
       format('woff'),
@@ -33,11 +29,9 @@ module.exports = {
 }
 @font-face {
   font-family: 'Rubis';
+  font-display: swap;
   font-weight: 700;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff)
       format('woff'),
@@ -46,12 +40,10 @@ module.exports = {
 }
 @font-face {
   font-family: 'Rubis';
+  font-display: swap;
   font-weight: 700;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff)
       format('woff'),
@@ -60,11 +52,9 @@ module.exports = {
 }
 @font-face {
   font-family: 'Rubis';
+  font-display: swap;
   font-weight: 500;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff)
       format('woff'),
@@ -73,12 +63,10 @@ module.exports = {
 }
 @font-face {
   font-family: 'Rubis';
+  font-display: swap;
   font-weight: 500;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff)
       format('woff'),
@@ -87,9 +75,9 @@ module.exports = {
 }
 @font-face {
   font-family: 'GT-America-Standard';
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot?#iefix)
-      format('embedded-opentype'),
+  font-display: swap;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff2)
+      format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff)
       format('woff'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.ttf)
@@ -97,11 +85,9 @@ module.exports = {
 }
 @font-face {
   font-family: 'GT-America-Standard';
+  font-display: swap;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.woff)
       format('woff'),
@@ -110,10 +96,10 @@ module.exports = {
 }
 @font-face {
   font-family: 'GT-America-Standard';
+  font-display: swap;
   font-weight: 500;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.eot?#iefix)
-      format('embedded-opentype'),
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.woff2)
+      format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.woff)
       format('woff'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.ttf)
@@ -121,6 +107,7 @@ module.exports = {
 }
 @font-face {
   font-family: 'GT-America-Standard';
+  font-display: swap;
   font-weight: 700;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff2)
       format('woff2'),
@@ -130,12 +117,34 @@ module.exports = {
       format('truetype');
 }
 @font-face {
+  font-family: 'GT-America-Standard';
+  font-display: swap;
+  font-weight: 500;
+  font-style: italic;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium-italic.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium-italic.woff)
+      format('woff'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium-italic.ttf)
+      format('truetype');
+}
+@font-face {
+  font-family: 'GT-America-Standard';
+  font-display: swap;
+  font-weight: 700;
+  font-style: italic;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold-italic.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold-italic.woff)
+      format('woff'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold-italic.ttf)
+      format('truetype');
+}
+@font-face {
   font-family: 'RepublikSerif';
+  font-display: swap;
   font-weight: 900;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.woff2)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.woff2)
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.woff)
       format('woff'),
@@ -146,10 +155,7 @@ module.exports = {
   font-family: 'Inicia';
   font-weight: 500;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/inicia-medium-italic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/inicia-medium-italic.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/inicia-medium-italic.woff)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/inicia-medium-italic.woff)
       format('woff'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/inicia-medium-italic.ttf)
       format('truetype');

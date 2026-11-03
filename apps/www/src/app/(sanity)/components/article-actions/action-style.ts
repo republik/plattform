@@ -20,6 +20,7 @@ export const actionStyle = css({
   '&:disabled, &[aria-disabled="true"]': {
     color: 'disabled',
     cursor: 'default',
+    _hover: { color: 'disabled' },
   },
   '& > svg': { flexShrink: 0 },
 })

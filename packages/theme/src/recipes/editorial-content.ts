@@ -171,11 +171,11 @@ export const editorialContentRecipe = defineRecipe({
         subheadings: readerScaledText('editorialSubheading'),
         smallheadings: {
           ...readerScaledText('editorialParagraph'),
-          fontWeight: 'bold',
+          fontWeight: 'medium',
         },
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
-        interviewQuestion: { fontWeight: 'bold' },
+        interviewQuestion: { fontWeight: 'medium' },
       }),
       PAGE: contentParts({
         heading: {
@@ -193,6 +193,26 @@ export const editorialContentRecipe = defineRecipe({
           textAlign: 'center',
           gridColumn: 'breakout',
         },
+        paragraphs: readerScaledText('metaParagraph'),
+        subheadings: readerScaledText('metaSubheading'),
+        smallheadings: {
+          ...readerScaledText('metaSubheading'),
+          fontWeight: 'medium',
+        },
+        unorderedListItems: readerScaledText('metaParagraph'),
+        orderedListItems: readerScaledText('metaParagraph'),
+        interviewQuestion: { fontWeight: 'medium' },
+      }),
+      CHALLENGE_ACCEPTED: contentParts({
+        heading: {
+          display: 'editorialHeading',
+          textAlign: 'center',
+          gridColumn: 'breakout',
+        },
+        title: {
+          display: 'none',
+        },
+        lead: readerScaledText('caLead'),
         paragraphs: readerScaledText('metaParagraph'),
         subheadings: readerScaledText('metaSubheading'),
         smallheadings: {

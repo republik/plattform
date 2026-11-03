@@ -1,3 +1,4 @@
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
 import { AudioQueueItem } from '../types/AudioQueueItem'
 import { audioCoverUrl } from './audioCoverImages'
@@ -36,7 +37,7 @@ export function toNativeAppTrack(item: AudioQueueItem) {
           kind: document?.syntheticVoiceEnabled
             ? 'syntheticReadAloud'
             : 'readAloud',
-          mp3: document?.audioSourceMp3 ?? null,
+          mp3: toAssetCdnUrl(document?.audioSourceMp3) ?? null,
           // Alternative encodings only ever existed in the legacy backend.
           aac: null,
           ogg: null,

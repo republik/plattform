@@ -95,12 +95,12 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </thead>
       <tbody>
         {items.map((payment, index) => {
-          const {
-            user,
-            user: { address },
-          } = payment
+          const { user } = payment
+          const address = user?.address
 
-          const name = user.name || `${user.firstName} ${user.lastName}`
+          const name = user
+            ? user.name || `${user.firstName} ${user.lastName}`
+            : null
 
           return (
             <tr key={`payment-${index}`} {...styles.row}>
@@ -108,9 +108,13 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{getDueDate(payment.status, payment.dueDate)}</td>
               <td>{payment.method}</td>
               <td>
-                <Link href={`/users/${user.id}`} {...styles.link}>
-                  {name}
-                </Link>
+                {user ? (
+                  <Link href={`/users/${user.id}`} {...styles.link}>
+                    {name}
+                  </Link>
+                ) : (
+                  '–'
+                )}
               </td>
               <td>
                 {address &&

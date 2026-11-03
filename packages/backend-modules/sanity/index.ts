@@ -1,5 +1,6 @@
 export { verifySanityToken } from './express/auth'
 export { createSanityClient } from './lib/client'
+export type { SanityClientOptions } from './lib/client'
 export {
   fetchArticle,
   recordAudioVersion,

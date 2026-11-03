@@ -17,59 +17,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<style type="text/css">
-		@font-face {
-			font-family: "Rubis-Regular";
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "Rubis-Regular-Italic";
-			font-style: italic;
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "Rubis-Bold";
-			font-weight: 700;
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "Rubis-Bold-Italic";
-			font-weight: 700;
-			font-style: italic;
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "GT-America-Standard-Regular";
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "GT-America-Standard-Regular-Italic";
-			font-style: italic;
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "GT-America-Standard-Bold";
-			font-weight: 700;
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.ttf) format("truetype")
-		}
-
-		@font-face {
-			font-family: "RepublikSerif-Black";
-			font-weight: 900;
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.eot);
-			src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.eot?#iefix) format("embedded-opentype"), url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.woff2) format("woff2"), url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.woff) format("woff"), url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.ttf) format("truetype")
-		}
+		{{{sg_font_faces}}}
 
 		p {
 			margin: 1em 0;
@@ -207,7 +155,8 @@
 		}
 
     #footerContent strong {
-			font-family: Rubis-Bold;
+			font-family: Rubis;
+			font-weight: 700;
 		}
 
 		#templateHeader,
@@ -245,7 +194,7 @@
 			/*@tab Page
 @section Heading 1*/
 			color: #282828;
-			font-family: Rubis-Regular, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			/*@editable*/
 			font-size: 40px;
 			/*@editable*/
@@ -268,7 +217,7 @@
 			/*@tab Page
 @section Heading 2*/
 			color: #282828;
-			font-family: Rubis-Bold, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			/*@editable*/
 			font-size: 28px;
 			/*@editable*/
@@ -291,7 +240,7 @@
 			/*@tab Page
 @section Heading 3*/
 			color: #282828;
-			font-family: Rubis-Bold, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			/*@editable*/
 			font-size: 22px;
 			/*@editable*/
@@ -361,7 +310,7 @@
 			/*@tab Preheader
 @section Preheader Text*/
 			color: #282828;
-			font-family: GT-America-Standard-Regular, Helvetica Neue, Helvetica, sans-serif;
+			font-family: GT-America-Standard, Helvetica Neue, Helvetica, sans-serif;
 			/*@editable*/
 			font-size: 14px;
 			/*@editable*/
@@ -419,7 +368,7 @@
 			/*@tab Header
 @section Header Text*/
 			color: #282828;
-			font-family: Rubis-Regular, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			font-size: 17px;
 			line-height: 160%;
 			text-align: center;
@@ -449,7 +398,7 @@
 			/*@tab Header
 @section Sender*/
 			color: #282828;
-			font-family: GT-America-Standard-Regular, Helvetica Neue, Helvetica, sans-serif;
+			font-family: GT-America-Standard, Helvetica Neue, Helvetica, sans-serif;
 			font-size: 17px;
 			line-height: 160%;
 			text-align: left;
@@ -460,7 +409,7 @@
 		#sender strong,
 		#sender_bottom strong {
 			font-weight: 700;
-			font-family: GT-America-Standard-Bold, Helvetica Neue, Helvetica, sans-serif;
+			font-family: GT-America-Standard, Helvetica Neue, Helvetica, sans-serif;
 		}
 
 		#sender_bottom {
@@ -499,7 +448,7 @@
 			/*@tab Body
 @section Body Text*/
 			color: #282828;
-			font-family: Rubis-Regular, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			/*@editable*/
 			font-size: 17px;
 			/*@editable*/
@@ -526,7 +475,7 @@
 		#templateBody p strong,
 		#templateBody p b {
 			font-weight: bold;
-			font-family: Rubis-Bold, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 		}
 
 		/*
@@ -586,7 +535,7 @@
 			/*@tab Footer
 @section Social Bar Text*/
 			color: #FFFFFF;
-			font-family: Rubis-Regular, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			/*@editable*/
 			font-size: 12px;
 			/*@editable*/
@@ -619,7 +568,7 @@
 			/*@tab Footer
 @section Footer Text*/
 			color: #282828;
-			font-family: Rubis-Regular, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			/*@editable*/
 			font-size: 17px;
 			/*@editable*/
@@ -667,7 +616,7 @@
 			/*@tab Footer
 @section Utility Bar Text*/
 			color: #282828;
-			font-family: Rubis-Regular, Georgia, serif;
+			font-family: Rubis, Georgia, serif;
 			font-size: 12px;
 			line-height: 160%;
 			text-align: left;
@@ -692,14 +641,15 @@
 
 		.custom_button a {
 			color: #ffffff !important;
-			font-family: GT-America-Standard-Regular;
+			font-family: GT-America-Standard;
 			text-decoration: none !important;
 			font-weight: normal;
 			font-size: '20px';
 		}
 
     .custom_button strong {
-			font-family: GT-America-Standard-Bold;
+			font-family: GT-America-Standard;
+			font-weight: 700;
 		}
 
 		@media only screen and (max-width: 480px) {

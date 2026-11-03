@@ -75,6 +75,9 @@ export interface ArticleCollectionEntry {
 
 export interface DraftArticleDoc {
   _type: 'article'
+  // Opts the article in to Studio's create-discussion function. Set for
+  // everything except newsletters (template editorialNewsletter).
+  autoCreateDiscussion?: true
   title?: unknown[]
   description?: unknown[]
   byline?: unknown[]
@@ -549,6 +552,9 @@ export function buildDraftArticleDoc(
     })(),
     ...(optBool(commit.meta?.feed) !== undefined
       ? { showInFeed: optBool(commit.meta.feed) }
+      : {}),
+    ...(commit.meta?.template !== 'editorialNewsletter'
+      ? { autoCreateDiscussion: true as const }
       : {}),
     readingAccess:
       commit.meta?.isPaynoteExcluded === true

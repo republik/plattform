@@ -28,6 +28,14 @@ describe('titleSlugFrom', () => {
     expect(titleSlugFrom(first, 'fallback')).toBe(first)
   })
 
+  it('strips leading/trailing separators and is fast on pathological input', () => {
+    expect(titleSlugFrom('/x/--foo--bar--', 'fallback')).toBe('foo-bar')
+    expect(titleSlugFrom('/x/' + '-'.repeat(100000) + 'a', 'f')).toBe('a')
+    const started = Date.now()
+    titleSlugFrom('/x/' + '- '.repeat(50000) + '!', 'f')
+    expect(Date.now() - started).toBeLessThan(1000)
+  })
+
   it('falls back to "audio" when the slug sanitizes to nothing at all', () => {
     expect(titleSlugFrom('///', 'fallback')).toBe('fallback')
     expect(titleSlugFrom('!!!', 'fallback')).toBe('audio')

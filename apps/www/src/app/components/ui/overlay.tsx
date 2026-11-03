@@ -37,6 +37,7 @@ export function Overlay({ children }: ModalProps) {
           width: '90vw',
           maxWidth: 'content.text',
           maxHeight: '85vh',
+          overflowY: 'scroll',
           _stateOpen: { animation: 'fadeIn' },
           _stateClosed: {
             animation: 'fadeOut',
@@ -56,7 +57,7 @@ export function Overlay({ children }: ModalProps) {
             </Button>
           </Dialog.Close>
         </div>
-        <div className={css({ padding: '8-16' })}>{children}</div>
+        <div className={css({ padding: '8' })}>{children}</div>
       </Dialog.Content>
     </Dialog.Overlay>
   )

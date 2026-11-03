@@ -25,7 +25,10 @@ import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
 import useTimeout from '@/lib/hooks/useTimeout'
 import { clamp } from './helpers/clamp'
-import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
+import {
+  audioMediaId,
+  collectionsDocumentId,
+} from '@/app/(sanity)/components/article-actions/document-id'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { audioCoverUrl } from './helpers/audioCoverImages'
 import { toNativeAppTrack } from './helpers/nativeAppTrack'
@@ -596,11 +599,17 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         // Show the clicked track before the round trips below, so the player
         // swaps over on the click rather than a beat later. `id` is null
         // until the mutation hands back the real slot, which
-        // `setupNextAudioItem` then sets in place of this.
+        // `setupNextAudioItem` then sets in place of this. `mediaId` uses
+        // `audioMediaId`, not `collectionsDocumentId` -- the latter is the
+        // collectionDocumentItems join key ("sanity:<id>"), a different key
+        // than the progress table's, and saving progress under it would
+        // write to a key nothing ever reads back (see audioMediaId's doc
+        // comment for why computing it here, instead of waiting for the
+        // server-resolved item, is safe).
         const optimisticItem: AudioQueueItem = {
           id: null,
           sequence: 0,
-          mediaId: collectionsDocumentId(item),
+          mediaId: audioMediaId(item),
           userProgress: null,
           document: item,
         }

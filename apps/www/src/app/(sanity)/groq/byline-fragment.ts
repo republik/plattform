@@ -10,7 +10,8 @@ export const BYLINE_FRAGMENT = /* groq */ `
         "slug": select(
           reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId),
           reference->slug.current
-        )
+        ),
+        "referenceType": reference->_type
       }
     }
   }

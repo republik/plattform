@@ -1,7 +1,8 @@
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 
 function downloadAudioSourceFile(item: AudioQueueItemContent) {
-  const downloadSource = item?.audioSourceMp3
+  const downloadSource = toAssetCdnUrl(item?.audioSourceMp3)
   if (!downloadSource) {
     return
   }

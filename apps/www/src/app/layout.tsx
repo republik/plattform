@@ -65,8 +65,8 @@ export default async function RootLayout({
         <ThemeProvider>
           <ApolloWrapper>
             <MeContextProvider>
-              <AnalyticsProvider>
-                <UserAgentProvider>
+              <UserAgentProvider>
+                <AnalyticsProvider>
                   <MediaProgressContext>
                     <AudioQueueProvider>
                       <AudioProvider>
@@ -81,8 +81,8 @@ export default async function RootLayout({
                       </AudioProvider>
                     </AudioQueueProvider>
                   </MediaProgressContext>
-                </UserAgentProvider>
-              </AnalyticsProvider>
+                </AnalyticsProvider>
+              </UserAgentProvider>
             </MeContextProvider>
           </ApolloWrapper>
         </ThemeProvider>

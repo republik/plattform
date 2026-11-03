@@ -164,7 +164,10 @@ const creditsFromContributors = (
 // a freeform string (e.g. "Ein Beitrag von Jane Doe (Text) und John Smith
 // (Bild), 12.05.2023"), so the roles have to be parsed back out of it.
 const getAuthors = (byline: string) => {
-  const authorsRe = /^.*?[vV]on (.+?) [0-9]{2}.[0-9]{2}.20[0-9]{2}.*/
+  // The author list ends where the trailing date begins (if there is one).
+  // The date's format varies ("12.05.2023", "1. Oktober 2026"), so only its
+  // leading digit is relied on, never its shape.
+  const authorsRe = /^.*?[vV]on (.+?)(?:,?\s+\d.*)?$/s
   const match = byline.match(authorsRe)
   if (!match) throw new Error('could not find an author list in byline')
   return match[1]

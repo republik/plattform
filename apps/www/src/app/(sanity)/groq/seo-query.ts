@@ -4,7 +4,11 @@ export const SEO_QUERY = defineQuery(
   `*[slug.current == $slug][0]{
     "title": coalesce(pt::text(seo.title), pt::text(title)),
     "description": coalesce(pt::text(seo.description), pt::text(description)),
-    "image": coalesce(seo.image, cover, teaserSmall.image),
+    "image": coalesce(
+      select(defined(seo.image.asset) => seo.image),
+      select(defined(cover.asset) => cover),
+      teaserSmall.image
+    ),
     "useImageBuilder": seo.useImageBuilder,
     "imageBuilder": seo.imageBuilder,
     "heading": pt::text(heading->title),
@@ -26,7 +30,11 @@ export const OG_SHARE_IMAGE_QUERY = defineQuery(
   `*[slug.current == $slug || _id == $id || _id == "drafts." + $id][0]{
     "title": coalesce(pt::text(seo.title), pt::text(title)),
     "description": coalesce(pt::text(seo.description), pt::text(description)),
-    "image": coalesce(seo.image, cover, teaserSmall.image),
+    "image": coalesce(
+      select(defined(seo.image.asset) => seo.image),
+      select(defined(cover.asset) => cover),
+      teaserSmall.image
+    ),
     "useImageBuilder": seo.useImageBuilder,
     "imageBuilder": seo.imageBuilder,
     "heading": pt::text(heading->title),

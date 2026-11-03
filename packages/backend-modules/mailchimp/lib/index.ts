@@ -5,7 +5,7 @@ import {
 import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { changeEmailOnMailchimp } from './changeEmailOnMailchimp'
 import { mergeUsersOnMailchimp } from './mergeUsersOnMailchimp'
-import { deleteEmail } from './deleteEmail'
+import { deleteEmail, deleteEmailDetailed } from './deleteEmail'
 import { enforceSubscriptions } from './enforceSubscriptions'
 import { getInterestsForUser } from './getInterestsForUser'
 import { getMailchimpMember } from './getMailchimpMember'
@@ -24,6 +24,7 @@ export {
   changeEmailOnMailchimp,
   mergeUsersOnMailchimp,
   deleteEmail,
+  deleteEmailDetailed,
   enforceSubscriptions,
   getInterestsForUser,
   getMailchimpMember,

@@ -16,7 +16,10 @@ const sanitize = (value: string): string => {
   const cleaned = value
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    // runs of non-alphanumerics are already collapsed to a single '-', so at
+    // most one leading/trailing dash remains (avoids a backtracking `-+$`)
+    .replace(/^-/, '')
+    .replace(/-$/, '')
   return cleaned || 'audio'
 }
 

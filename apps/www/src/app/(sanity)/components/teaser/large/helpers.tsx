@@ -1,10 +1,10 @@
+import {
+  getImageDimensions,
+  type ImageDimensions,
+} from '@/app/(sanity)/lib/image-dimensions'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
-import { getImageDimensions } from '@sanity/asset-utils'
-import type {
-  SanityImageDimensions,
-  SanityImageSource,
-} from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url'
 import { stegaClean } from 'next-sanity'
 import { Image, type ImageProps } from 'next-sanity/image'
 
@@ -36,7 +36,7 @@ export function TeaserLargeImage({
 >) {
   // If an image with crop/hotspot is provided, those will be applied automatically
   let src: string
-  let dimensions: SanityImageDimensions
+  let dimensions: ImageDimensions
   try {
     src = urlFor(image).url()
     dimensions = getImageDimensions(src)

@@ -23,7 +23,8 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
     markDefs[]{
       ...,
       _type == "internalLink" => {
-        "slug": ${REFERENCE_SLUG}
+        "slug": ${REFERENCE_SLUG},
+        "referenceType": reference->_type
       },
       _type == "expandableLink" => {
         "slug": ${REFERENCE_SLUG},
@@ -35,13 +36,17 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
       markDefs[]{
         ...,
         _type == "internalLink" => {
-          "slug": ${REFERENCE_SLUG}
+          "slug": ${REFERENCE_SLUG},
+          "referenceType": reference->_type
         },
         _type == "expandableLink" => {
           "slug": ${REFERENCE_SLUG},
           "referenceTitle": ${REFERENCE_TITLE}
-        }
-      }
+        },
+      },
+      _type == "button" => {
+        "slug": ${REFERENCE_SLUG}
+      },
     },
 
     _type == "toc" => {
@@ -51,6 +56,9 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
     _type == "authorBlock" => {
       ...,
       contributor->
+    },
+    _type == "button" => {
+      "slug": ${REFERENCE_SLUG}
     },
     _type == "audio" => {
       ...,

@@ -66,6 +66,7 @@ async function resolveContributorId(
     const existingId = await sanityClient().fetch<string | null>(
       `*[_type == "contributor" && userId == $userId][0]._id`,
       { userId },
+      { tag: 'publikator-sync.contributor-by-user-id' },
     )
     if (existingId) return existingId
 

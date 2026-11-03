@@ -75,6 +75,13 @@ export const COLLECTABLE_TYPES = ['article']
 export const isCollectableType = (type?: string) =>
   !!type && COLLECTABLE_TYPES.includes(type)
 
+// The lookups below are shared by several callers, so each caller names
+// itself with a request `tag` (see client.ts) — otherwise they all show up as
+// the same query in Sanity's logs, with no way to tell who sends it.
+interface SharedFetchOptions {
+  tag: string
+}
+
 // Generic (not article-specific) lookup by a raw Sanity `_id`. Used both by the
 // Document loader's Sanity branch and by callers that already know they're
 // holding a Sanity id.
@@ -84,25 +91,29 @@ export const isCollectableType = (type?: string) =>
 // the default only became `published` as of apiVersion v2025-02-19, and
 // SANITY_API_VERSION is env-overridable, so an older value would silently
 // reinstate `raw`. (`raw` stays in lib/audio.ts and lib/article.ts, where
-// pre-publish access is the point.)
-export const fetchDocumentById = (id: string) =>
-  sanityClient().fetch<GenericDocument | null>(
+// pre-publish access is the point.) Being published-only is also what makes
+// the API CDN safe here: the frontend reads the same content through it.
+export const fetchDocumentById = (id: string, { tag }: SharedFetchOptions) =>
+  sanityClient({ useCdn: true }).fetch<GenericDocument | null>(
     // No `drafts.` companion lookup: under `published` such an id can never match.
     `*[_id == $id][0]{ _id, _type, title, slug, publishDate }`,
     { id: publishedId(id) },
-    { perspective: 'published' },
+    { perspective: 'published', tag },
   )
 
 // The batch form, for the Document dataloader: every id a batch could match is
 // computable up front (see legacySanityId), so a whole page's worth of
 // documents costs one round trip rather than one per key. Returns only the ids
 // that exist, in no particular order — callers index by `_id`.
-export const fetchDocumentsByIds = (ids: string[]) =>
+export const fetchDocumentsByIds = (
+  ids: string[],
+  { tag }: SharedFetchOptions,
+) =>
   ids.length
-    ? sanityClient().fetch<GenericDocument[]>(
+    ? sanityClient({ useCdn: true }).fetch<GenericDocument[]>(
         `*[_id in $ids]{ _id, _type, title, slug, publishDate }`,
         { ids: ids.map(publishedId) },
-        { perspective: 'published' },
+        { perspective: 'published', tag },
       )
     : Promise.resolve([])
 
@@ -124,9 +135,12 @@ export const legacySanityId = (repoId: string): string | undefined => {
   }
 }
 
-export const fetchDocumentByLegacyRepoId = (repoId: string) => {
+export const fetchDocumentByLegacyRepoId = (
+  repoId: string,
+  options: SharedFetchOptions,
+) => {
   const sanityId = legacySanityId(repoId)
-  return sanityId ? fetchDocumentById(sanityId) : Promise.resolve(null)
+  return sanityId ? fetchDocumentById(sanityId, options) : Promise.resolve(null)
 }
 
 export interface DiscussionRef {
@@ -141,11 +155,14 @@ export interface DiscussionRef {
 // other way, so this reverse lookup is the only way to find an article's
 // discussion. Batched for callers (e.g. next-reads' worker) resolving many
 // articles' discussion ids at once.
-export const fetchDiscussionRefsByIds = (ids: string[]) =>
+export const fetchDiscussionRefsByIds = (
+  ids: string[],
+  { tag }: SharedFetchOptions,
+) =>
   ids.length
-    ? sanityClient().fetch<DiscussionRef[]>(
+    ? sanityClient({ useCdn: true }).fetch<DiscussionRef[]>(
         `*[_id in $ids]{ _id, "discussionId": discussion->backendDiscussionId }`,
         { ids: ids.map(publishedId) },
-        { perspective: 'published' },
+        { perspective: 'published', tag },
       )
     : Promise.resolve([])

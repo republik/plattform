@@ -40,7 +40,10 @@ export = async function nextReadsSanity(
       // (capped at 30 by the SQL query above) against Sanity once here.
       // An id that doesn't resolve is simply unpublished/deleted and drops
       // out, for free, under the `published` perspective.
-      const docs = await fetchDocumentsByIds(scored.map((s) => s.sanityId))
+      const docs = await fetchDocumentsByIds(
+        scored.map((s) => s.sanityId),
+        { tag: 'next-reads.feed-documents' },
+      )
       const docById = new Map(docs.map((doc) => [doc._id, doc]))
       const now = Date.now()
 

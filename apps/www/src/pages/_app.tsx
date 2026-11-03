@@ -47,8 +47,8 @@ const WebApp = ({
   return (
     <PageErrorBoundary>
       <MeContextProvider assumeAccess={assumeAccess}>
-        <AnalyticsProvider>
-          <UserAgentProvider providedValue={providedUserAgent}>
+        <UserAgentProvider providedValue={providedUserAgent}>
+          <AnalyticsProvider>
             <MediaProgressContext>
               <AudioQueueProvider>
                 <AudioProvider>
@@ -84,8 +84,8 @@ const WebApp = ({
                 </AudioProvider>
               </AudioQueueProvider>
             </MediaProgressContext>
-          </UserAgentProvider>
-        </AnalyticsProvider>
+          </AnalyticsProvider>
+        </UserAgentProvider>
       </MeContextProvider>
     </PageErrorBoundary>
   )

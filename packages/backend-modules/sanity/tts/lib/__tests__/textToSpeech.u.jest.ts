@@ -243,15 +243,44 @@ describe('buildSpeakableContent', () => {
       expect(credits?.authors).toEqual(['Jane Doe'])
     })
 
-    it('falls back to the generic notice when the byline does not match the expected pattern', () => {
+    it('parses a byline with a written-out date', () => {
       const result = buildSpeakableContent(
         {
-          byline: portableText('von Jane Doe, 16. Juli 2026'), // foreign date formating breaks the regex
+          byline: portableText(
+            'Von Carlos Hanimann (Text) und Rosa Snijders (Illustration), 1. Oktober 2026',
+          ),
           content: portableText('Absatz.'),
         },
         'voice-a',
       )
       const credits = creditsOf(result)
+      expect(credits?.authors).toEqual(['Carlos Hanimann'])
+      expect(credits?.text).toBe(
+        'Ein Beitrag von Carlos Hanimann, vorgelesen von einer synthetischen Stimme.',
+      )
+    })
+
+    it('parses a byline without a date', () => {
+      const result = buildSpeakableContent(
+        {
+          byline: portableText('Von Jane Doe'),
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      expect(creditsOf(result)?.authors).toEqual(['Jane Doe'])
+    })
+
+    it('falls back to the generic notice when the byline has no author list', () => {
+      const result = buildSpeakableContent(
+        {
+          byline: portableText('Redaktion, 16. Juli 2026'),
+          content: portableText('Absatz.'),
+        },
+        'voice-a',
+      )
+      const credits = creditsOf(result)
+      expect(credits?.authors).toEqual([])
       expect(credits?.text).toContain(
         'Dieser Beitrag wird von einer synthetischen Stimme vorgelesen.',
       )

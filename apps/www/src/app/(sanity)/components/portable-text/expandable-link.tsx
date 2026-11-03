@@ -1,4 +1,5 @@
 import { ExpandableLinkCard } from '@/app/(sanity)/components/portable-text/expandable-link-client'
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import type {
   ExpandableLink as ExpandableLinkSchemaType,
   TextOnlyInlineEditor,
@@ -32,7 +33,7 @@ export function ExpandableLink({
   text,
   value,
 }: PortableTextMarkComponentProps<ExpandableLinkValue>) {
-  const href = value?.href || value?.slug
+  const href = toAssetCdnUrl(value?.href) || value?.slug
   const isInternal = !value?.href && !!value?.slug
 
   if (!href) {

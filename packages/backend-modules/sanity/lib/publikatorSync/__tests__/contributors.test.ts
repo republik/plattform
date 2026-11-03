@@ -29,9 +29,11 @@ describe('publikatorSync/contributors resolveContributorRefs', () => {
 
     const result = await resolveContributorRefs(doc)
 
-    expect(fetchMock).toHaveBeenCalledWith(expect.any(String), {
-      userId: USER_ID,
-    })
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.any(String),
+      { userId: USER_ID },
+      { tag: 'publikator-sync.contributor-by-user-id' },
+    )
     expect(createIfNotExists).not.toHaveBeenCalled()
     expect(result.contributor._ref).toBe('studio-created-random-id')
     expect(result.contributor._sanityContributor).toBeUndefined()

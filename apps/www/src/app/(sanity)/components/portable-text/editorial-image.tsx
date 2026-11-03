@@ -1,10 +1,10 @@
+import {
+  getImageDimensions,
+  type ImageDimensions,
+} from '@/app/(sanity)/lib/image-dimensions'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import type { EditorialImage, GroupedEditorialImage } from '@/sanity.types'
 import { css, cva, cx } from '@republik/theme/css'
-import {
-  getImageDimensions,
-  type SanityImageDimensions,
-} from '@sanity/asset-utils'
 import { Image } from 'next-sanity/image'
 import { useId } from 'react'
 import { Caption } from './caption'
@@ -80,10 +80,8 @@ export function EditorialImage({
   // (to optimize image loading) but this media query gives us the best quality.
   const sizes = isGrouped ? '(max-width: 607px) 100vw, 50vw' : '100vw'
 
-  let imageProps: { src: string; dimensions: SanityImageDimensions }
-  let darkImageProps:
-    | { src: string; dimensions: SanityImageDimensions }
-    | undefined
+  let imageProps: { src: string; dimensions: ImageDimensions }
+  let darkImageProps: { src: string; dimensions: ImageDimensions } | undefined
 
   try {
     const src = urlFor(value).url()

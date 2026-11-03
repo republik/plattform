@@ -79,8 +79,8 @@ const DOCUMENT_FIELDS = /* groq */ `{
       "plainTitle": pt::text(title),
       "plainDescription": pt::text(description),
       seo {
-        title,
-        description,
+        "title": pt::text(title),
+        "description": pt::text(description),
         image,
         useImageBuilder
       },

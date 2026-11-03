@@ -5,7 +5,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import { css } from '@republik/theme/css'
-import { useRouter } from 'next/router'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
 
@@ -67,25 +67,23 @@ function Login({ email }: { email: string }) {
 
 export function LoginPopup() {
   const { meLoading, me } = useMe()
-  const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState<string>('')
 
-  useEffect(() => {
-    if (router.isReady && router.query.email) {
-      const { email: emailParam, ...restQuery } = router.query
+  const emailParam = searchParams.get('email')
 
+  useEffect(() => {
+    if (emailParam) {
       const decodedEmail = maybeDecode(emailParam as string)
       if (isEmail(decodedEmail)) {
         setEmail(decodedEmail)
       }
 
-      router.replace(
-        { pathname: router.pathname, query: restQuery },
-        undefined,
-        { shallow: true },
-      )
+      const newParams = new URLSearchParams(searchParams)
+      newParams.delete('email')
+      window.history.replaceState(null, '', `?${newParams.toString()}`)
     }
-  }, [router.isReady, router.query.email, router])
+  }, [emailParam, searchParams])
 
   if (meLoading || me || !email) return null
 

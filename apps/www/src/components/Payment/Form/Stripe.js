@@ -167,7 +167,7 @@ const PrivacyWrapper = forwardRef((props, ref) => {
       {
         family: 'GT-America-Standard-Regular',
         weight: '400',
-        src: 'url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff) format("woff"),url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.ttf) format("truetype")',
+        src: 'url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff2) format("woff2"),url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff) format("woff"),url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.ttf) format("truetype")',
       },
     ],
   }

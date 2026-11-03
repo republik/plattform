@@ -2241,6 +2241,10 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/notifications/doc/format/title",
+      "value": "Neuer Beitrag in {formatTitle}"
+    },
+    {
       "key": "api/notifications/doc/title",
       "value": "Neuer Beitrag in {formatTitle}: {articleTitle}"
     },

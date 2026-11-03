@@ -25,7 +25,9 @@ export const fetchExistingSanityDocsById = async (
 ): Promise<Map<string, { _id: string }>> => {
   const existingDocsById = new Map<string, { _id: string }>()
   for (const idsBatch of chunk(ids, BATCH_SIZE)) {
-    const docs = await fetchDocumentsByIds(idsBatch)
+    const docs = await fetchDocumentsByIds(idsBatch, {
+      tag: 'migrate.sanity-existence',
+    })
     for (const doc of docs) existingDocsById.set(doc._id, doc)
   }
   return existingDocsById

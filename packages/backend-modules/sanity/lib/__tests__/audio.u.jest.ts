@@ -339,7 +339,7 @@ describe('recordAudioVersion', () => {
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       { id: 'drafts.doc-1', hash: 'hash-1' },
-      { perspective: 'raw' },
+      { perspective: 'raw', tag: 'audio.pending-version-key' },
     )
     expect(patch).toHaveBeenCalledWith('drafts.doc-1')
     expect(patch).toHaveBeenCalledTimes(1)
@@ -417,12 +417,12 @@ describe('recordAudioVersion', () => {
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       { id: 'versions.r1.doc-1', hash: 'hash-1' },
-      { perspective: 'raw' },
+      { perspective: 'raw', tag: 'audio.pending-version-key' },
     )
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       { id: 'drafts.doc-1', hash: 'hash-1' },
-      { perspective: 'raw' },
+      { perspective: 'raw', tag: 'audio.pending-version-key' },
     )
     expect(versionChain.set).toHaveBeenCalledWith({
       'audioVersions[_key == "version-key"]': version,

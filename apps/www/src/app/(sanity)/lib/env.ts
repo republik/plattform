@@ -1,6 +1,7 @@
 export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
 export const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL
+export const assetCdnBaseUrl = process.env.NEXT_PUBLIC_SANITY_ASSET_CDN_BASE_URL
 export const apiToken = process.env.SANITY_API_READ_TOKEN
 
 if (!projectId) throw new Error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID')

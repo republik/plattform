@@ -2,6 +2,7 @@
 
 import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { useHlsSource } from '@/app/(sanity)/components/portable-text/hooks/useHlsSource'
+import { toAssetCdnUrl } from '@/app/(sanity)/lib/asset-url'
 import type { LegacyAudioSrc } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 import { useRef } from 'react'
@@ -42,7 +43,7 @@ export function AudioEmbed({
     // priority; legacyAudioSrc only exists on content migrated from old
     // Publikator embedVideo blocks that had forceAudio set.
     const body = fileUrl ? (
-      <audio className={audioStyle} controls src={fileUrl} />
+      <audio className={audioStyle} controls src={toAssetCdnUrl(fileUrl)} />
     ) : legacyAudioSrc?.mp4 ? (
       <HlsAudio src={legacyAudioSrc} />
     ) : null
