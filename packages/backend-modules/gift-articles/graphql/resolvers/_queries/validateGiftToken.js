@@ -6,7 +6,8 @@ const ANONYMOUS_GRANTER = 'Ein Republik-Mitglied'
 // Public: recipients redeem links without an account.
 module.exports = async (_, { token }, { pgdb }) => {
   // gift_article_links is snake_case, users is not: the granter's columns are
-  // aliased so one row doesn't come back in two naming conventions.
+  // aliased so one row doesn't come back in two naming conventions. LEFT JOIN:
+  // run-out links are unlinked from their granter and still report as expired.
   const [row] = await pgdb.query(
     `SELECT g.document_id,
             g.document_path,
@@ -16,7 +17,7 @@ module.exports = async (_, { token }, { pgdb }) => {
             u."hasPublicProfile" AS granter_has_public_profile,
             u."portraitUrl" AS granter_portrait_url
        FROM gift_article_links g
-       JOIN users u ON u.id = g.granter_user_id
+       LEFT JOIN users u ON u.id = g.granter_user_id
       WHERE g.token = :token
       LIMIT 1`,
     { token },

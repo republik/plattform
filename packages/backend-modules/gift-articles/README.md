@@ -15,6 +15,8 @@ an account.
 - A link lives **14 days**. Sharing the same article again while its link is
   still live hands out that same link; once it has run out, the next share
   mints a fresh one.
+- Once a link has run out it is unlinked from its granter, and 90 days later
+  deleted — see *Retention*.
 - `validateGiftToken` is public — recipients redeem links without signing in.
 
 ## Database
@@ -30,7 +32,7 @@ resolvers map to the camelCase GraphQL fields.
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid (PK) | |
-| `granter_user_id` | uuid (FK → users) | ON DELETE CASCADE |
+| `granter_user_id` | uuid (FK → users) | ON DELETE CASCADE; `NULL` once the link has run out |
 | `document_id` | text | bare, published Sanity `_id` — same value as `collectionDocumentItems."sanityId"` |
 | `document_path` | text | slug snapshot, only used to build the link's URL |
 | `token` | text (UNIQUE) | `crypto.randomUUID()`, travels as the `?gift=` query param |
@@ -46,6 +48,24 @@ and hands it back out over GraphQL as the `sanity:`-prefixed ref the frontend's
 
 No foreign key on `document_id` — Sanity documents don't live in this database.
 
+## Retention
+
+Who handed out which article is only needed while the link is live: to hand
+the granter the same link again, and to show their name to the recipient.
+The databroom job `postgres/giftArticleLinks` (daily, 03:00 UTC) therefore:
+
+- sets `granter_user_id` to `NULL` on every link past `expires_at`. The
+  anonymous row stays, so a recipient opening it is still told the gift ran
+  out;
+- deletes the row 90 days after `expires_at`, the same window after which the
+  frontend forgets a redeemed link (`FORGET_AFTER_MS` in `gift-access.ts`).
+  `validateGiftToken` then answers `null`, as for an unknown token.
+
+Account deletion (the `deleteUser` mutation and `republik/script/gdpr/deleteUsers.js`)
+removes a user's links along with all other rows that reference `users`, and
+`ON DELETE CASCADE` covers a hard-deleted user. Both rely on the foreign key on
+`granter_user_id`, and on `gift_article_links` staying off their keep lists.
+
 ## Attribution
 
 Gift-to-conversion tracking piggybacks on the existing UTM mechanism. When a
@@ -53,7 +73,8 @@ recipient opens a gift link, the frontend writes `gift_token` and
 `gift_document_id` into the `republik-utm` sessionStorage key. Those values
 ride along in the conversion payload and end up in the `meta` JSONB of trials,
 pledges and newsletter signups, exactly as UTM parameters already do. No
-dedicated conversion table.
+dedicated conversion table. Once a link has run out, its `gift_token` no
+longer leads back to a granter; `gift_document_id` still names the article.
 
 ## GraphQL API
 

@@ -12,9 +12,13 @@
 -- document_path is a snapshot of the slug at hand-out time, kept only to build
 -- the link's URL. It is not the identity of the article -- a slug can change,
 -- document_id cannot.
+--
+-- granter_user_id is NULL once a link has run out: databroom unlinks expired
+-- links from their granter and deletes them 90 days later (see
+-- backend-modules/databroom, job postgres/giftArticleLinks).
 CREATE TABLE public.gift_article_links (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-  granter_user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  granter_user_id uuid REFERENCES public.users(id) ON DELETE CASCADE,
   document_id text NOT NULL,
   document_path text NOT NULL,
   token text NOT NULL UNIQUE,
@@ -27,3 +31,7 @@ CREATE TABLE public.gift_article_links (
 -- this article?" check.
 CREATE INDEX gift_article_links_granter_document_idx
   ON public.gift_article_links (granter_user_id, document_id);
+
+-- Serves databroom's daily sweep over run-out links.
+CREATE INDEX gift_article_links_expires_at_idx
+  ON public.gift_article_links (expires_at);
