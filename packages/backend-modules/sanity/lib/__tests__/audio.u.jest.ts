@@ -1,13 +1,17 @@
 const patch = jest.fn()
 const fetch = jest.fn()
 const loggerError = jest.fn()
+const loggerInfo = jest.fn()
 
 jest.mock('../client', () => ({
   sanityClient: () => ({ patch, fetch }),
 }))
 
 jest.mock('@orbiting/backend-modules-logger', () => ({
-  logger: { error: (...args: unknown[]) => loggerError(...args) },
+  logger: {
+    error: (...args: unknown[]) => loggerError(...args),
+    info: (...args: unknown[]) => loggerInfo(...args),
+  },
 }))
 
 // withReleaseUnlock has its own dedicated test suite (releaseLock.u.jest.ts) —
@@ -452,6 +456,30 @@ describe('recordAudioVersion', () => {
       'audioVersions[_key == "draft-key"]': version,
     })
     expect(loggerError).not.toHaveBeenCalled()
+  })
+
+  it('logs at info, not error, when the draft to mirror onto no longer exists', async () => {
+    const okChain = chainable(jest.fn().mockResolvedValue(undefined))
+    const missingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'drafts.doc-1' ? missingChain : okChain,
+    )
+    fetch.mockReset().mockResolvedValue(undefined)
+    loggerError.mockReset()
+    loggerInfo.mockReset()
+
+    await recordAudioVersion(
+      'doc-1',
+      { audioSourceMp3: 'https://x/a.mp3' },
+      { url: 'https://x/a.mp3', generatedAt: '2026-01-01T00:00:00.000Z' },
+      'hash-1',
+    )
+
+    expect(loggerError).not.toHaveBeenCalled()
+    expect(loggerInfo).toHaveBeenCalledWith(
+      expect.objectContaining({ draftId: 'drafts.doc-1' }),
+      expect.stringContaining('no draft to mirror'),
+    )
   })
 
   it('still resolves successfully when the mirror write to the draft fails', async () => {

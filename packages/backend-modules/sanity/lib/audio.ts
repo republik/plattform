@@ -125,6 +125,14 @@ async function withDraftSync<T>(
     try {
       await doPatch(draftId)
     } catch (err) {
+      if (isDocumentNotFoundError(err)) {
+        // Normal for a published article whose draft was discarded.
+        logger.info(
+          { documentId, draftId },
+          `sanity audio: no draft to mirror ${action} onto`,
+        )
+        return result
+      }
       logger.error(
         { documentId, draftId, err },
         `sanity audio: failed to mirror ${action} onto the draft (the ` +
