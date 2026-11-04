@@ -76,22 +76,16 @@ export const processResult = async (
   contentHash: string,
   body: unknown,
 ) => {
-  // Idempotency: a webhook provider retrying a delivery (at-least-once
-  // semantics, or just not seeing our 204 fast enough) resends the exact
-  // same signed request — nothing here would otherwise notice, and
-  // recordAudioVersion has no dedup of its own, so each delivery would
-  // append its own "new" audio version for what is actually one generation.
-  // If this contentHash is already recorded *with this very audio file*, a
-  // previous delivery already handled this result — skip before doing any of
-  // the (wasteful) work below.
+  // Idempotency: a retried delivery resends the exact same signed request,
+  // and recordAudioVersion has no dedup of its own, so each retry would append
+  // another audio version. Skip when this contentHash is already recorded
+  // with this very audio file.
   //
-  // contentHash only identifies the article *content* the audio was
-  // generated from, not the audio itself: Huebsch can re-render the same
-  // content (e.g. after a pronunciation correction) and post it to the same
-  // URL. That is a legitimate update, not a duplicate, so a matching hash
-  // alone isn't enough — the delivered file must also be the one already
-  // recorded. Sanity serves a file asset at `.../<sha1 of its bytes>.<ext>`,
-  // so the sha1 of the delivered bytes is looked for in the stored URL.
+  // contentHash only identifies the article content, not the audio: Huebsch
+  // can re-render the same content (e.g. a pronunciation correction) and post
+  // it to the same URL, which is an update, not a duplicate. Sanity serves a
+  // file asset at `.../<sha1 of its bytes>.<ext>`, so the delivered bytes'
+  // sha1 is looked for in the stored URL.
   const existing = await fetchAudioLinkState(documentId)
   if (existing?.audioContentHash === contentHash) {
     let alreadyRecorded = true
