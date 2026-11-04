@@ -47,7 +47,6 @@ export function Toc({ value }: { value: TocType }) {
                   value={heading}
                 />
               </a>
-              <br />
             </li>
           )
         })}
