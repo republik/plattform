@@ -4,9 +4,9 @@ import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-
 import { css } from '@republik/theme/css'
 import {
   PortableText,
-  toPlainText,
   type PortableTextBlock,
   type PortableTextReactComponents,
+  toPlainText,
 } from 'next-sanity'
 
 type TocType = Extract<ArticlePortableTextBlockType, { _type: 'toc' }>
@@ -30,14 +30,16 @@ export function Toc({ value }: { value: TocType }) {
       <h3 className={css({ fontWeight: 'bold' })}>
         {value.title ?? 'Inhaltsverzeichnis'}
       </h3>
-      <ul>
+      <ul id='menu'>
         {value.headings?.map((heading) => {
           const plainText = toPlainText(heading as PortableTextBlock)
           const id = legacySlugify(plainText)
           return (
             <li key={heading._key}>
               <a
-                className={css({ textDecoration: 'underline' })}
+                className={css({
+                  textDecoration: 'underline',
+                })}
                 href={`#${id}`}
               >
                 <PortableText
@@ -45,6 +47,7 @@ export function Toc({ value }: { value: TocType }) {
                   value={heading}
                 />
               </a>
+              <br />
             </li>
           )
         })}
