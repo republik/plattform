@@ -64,6 +64,17 @@ const save = async (destination, name, explanation, _rows = []) => {
   )
 }
 
+const saveFile = async (destination, name, explanation, buffer) => {
+  fileCount++
+
+  const filename = `${String(fileCount).padStart(2, '0')}-${name}`
+  readMeExplanations.push(`/${filename}:\n\n\t${explanation}`)
+
+  console.log(path.resolve(destination, filename))
+
+  fs.writeFileSync(path.resolve(destination, filename), buffer)
+}
+
 const saveReadMe = async (destination) => {
   fs.writeFileSync(
     path.resolve(destination, 'README.txt'),
@@ -143,6 +154,32 @@ Promise.props({ pgdb: PgDb.connect() })
         },
       ],
     )
+
+    /**
+     * portrait
+     *
+     * The portrait is a public JPEG on S3, only the current one is kept (see
+     * assets/lib/Portrait.js). A failed download must not abort the export.
+     */
+    if (user.portraitUrl) {
+      try {
+        const response = await fetch(user.portraitUrl, {
+          signal: AbortSignal.timeout(30000),
+        })
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        await saveFile(
+          destination,
+          'portrait.jpeg',
+          'Profilbild',
+          Buffer.from(await response.arrayBuffer()),
+        )
+      } catch (e) {
+        console.log(`portrait could not be downloaded: ${e.message}`)
+      }
+    }
 
     /**
      * userAttributes
@@ -901,19 +938,281 @@ Promise.props({ pgdb: PgDb.connect() })
     /**
      * stripeCustomers
      */
-    const stripeCustomers = await pgdb.public.stripeCustomers.find({
+    // The same Stripe customer can be in public.stripeCustomers (id = Stripe
+    // customer id, with cached payment methods) and in payments.stripeCustomers
+    // (customerId, company). Merge them so each customer is exported once.
+    const companies = await pgdb.public.companies.findAll()
+    const stripeCustomersById = new Map()
+
+    const legacyStripeCustomers = await pgdb.public.stripeCustomers.find({
       userId,
+    })
+    legacyStripeCustomers.forEach((stripeCustomer) => {
+      stripeCustomersById.set(stripeCustomer.id, {
+        company: companies.find(({ id }) => id === stripeCustomer.companyId)
+          ?.name,
+        ...pick(stripeCustomer, ['createdAt', 'updatedAt']),
+        cache: stripeCustomer.cache?.paymentMethods?.map((paymentMethod) =>
+          pick(paymentMethod, ['card', 'status', 'isDefault']),
+        ),
+      })
+    })
+
+    const stripeCustomers = await pgdb.payments.stripeCustomers.find({ userId })
+    stripeCustomers.forEach((stripeCustomer) => {
+      stripeCustomersById.set(stripeCustomer.customerId, {
+        ...stripeCustomersById.get(stripeCustomer.customerId),
+        ...pick(stripeCustomer, ['company', 'createdAt', 'updatedAt']),
+      })
     })
 
     await save(
       destination,
       'stripeCustomers',
       'verbundene Zahlungsmittel wie Kreditkarte bei Stripe. "cache" sind zwischengespeicherte Informationen von Stripe.',
-      stripeCustomers.map((payment) => ({
-        ...pick(payment, ['createdAt', 'updatedAt']),
-        cache: payment.cache?.paymentMethods.map((paymentMethod) =>
-          pick(paymentMethod, ['card', 'status', 'isDefault']),
-        ),
+      Array.from(stripeCustomersById.values()),
+    )
+
+    /**
+     * paymentSources
+     */
+    const paymentSources = await pgdb.public.paymentSources.find({ userId })
+
+    await save(
+      destination,
+      'paymentSources',
+      'gespeicherte Zahlungsquellen (ältere Zahlungsabwicklung)',
+      paymentSources.map((paymentSource) =>
+        pick(paymentSource, ['method', 'pspPayload', 'createdAt', 'updatedAt']),
+      ),
+    )
+
+    /**
+     * payments.subscriptions, payments.subscriptionCancellations,
+     * payments.subscription_upgrades
+     *
+     * A cancellation is stored twice: as columns on the subscription and as a
+     * row in subscriptionCancellations. Both are merged into one row per
+     * subscription.
+     */
+    const paymentsSubscriptions = await pgdb.payments.subscriptions.find({
+      userId,
+    })
+    const subscriptionCancellations =
+      paymentsSubscriptions.length > 0
+        ? await pgdb.payments.subscriptionCancellations.find({
+            subscriptionId: paymentsSubscriptions.map(({ id }) => id),
+          })
+        : []
+
+    await save(
+      destination,
+      'payments-subscriptions',
+      'Abonnemente (neue Zahlungsabwicklung) inkl. Kündigungen',
+      paymentsSubscriptions.map((subscription) => {
+        const cancellation = subscriptionCancellations.find(
+          ({ subscriptionId, revokedAt }) =>
+            subscriptionId === subscription.id && !revokedAt,
+        )
+
+        return {
+          ...pick(subscription, [
+            'company',
+            'type',
+            'status',
+            'currentPeriodStart',
+            'currentPeriodEnd',
+            'cancelAtPeriodEnd',
+            'cancelAt',
+            'canceledAt',
+            'endedAt',
+            'createdAt',
+            'updatedAt',
+          ]),
+          cancellationReason:
+            cancellation?.category ?? subscription.cancellationReason,
+          cancellationComment:
+            cancellation?.reason ?? subscription.cancellationComment,
+          cancellationFeedback: subscription.cancellationFeedback,
+          cancelledViaSupport: cancellation?.cancelledViaSupport,
+        }
+      }),
+    )
+
+    const subscriptionUpgrades = await pgdb.payments.subscription_upgrades.find(
+      { user_id: userId },
+    )
+    await save(
+      destination,
+      'payments-subscription-upgrades',
+      'Upgrades von Abonnementen',
+      subscriptionUpgrades.map((upgrade) =>
+        pick(upgrade, [
+          'company',
+          'subscription_type',
+          'status',
+          'scheduled_start',
+          'upgrade_config',
+          'created_at',
+          'updated_at',
+        ]),
+      ),
+    )
+
+    /**
+     * payments.invoices, payments.charges, payments.orders,
+     * payments.orderLineItems
+     *
+     * Invoices (with their items and charges) and orders (with their line
+     * items) are exported separately. An order refers to its invoice by the
+     * invoice's hrId.
+     */
+    const invoices = await pgdb.payments.invoices.find({ userId })
+    const orders = await pgdb.payments.orders.find({ userId })
+    const charges =
+      invoices.length > 0
+        ? await pgdb.payments.charges.find({
+            invoiceId: invoices.map(({ id }) => id),
+          })
+        : []
+
+    await save(
+      destination,
+      'payments-invoices',
+      'Rechnungen (neue Zahlungsabwicklung) mit Positionen und Zahlungen (charges)',
+      invoices.map((invoice) => ({
+        ...pick(invoice, [
+          'company',
+          'hrId',
+          'total',
+          'totalBeforeDiscount',
+          'totalDiscountAmount',
+          'totalExcludingTax',
+          'totalTaxAmount',
+          'status',
+          'items',
+          'discounts',
+          'periodStart',
+          'periodEnd',
+          'createdAt',
+          'updatedAt',
+        ]),
+        charges: charges
+          .filter(({ invoiceId }) => invoiceId === invoice.id)
+          .map((charge) =>
+            pick(charge, [
+              'paid',
+              'amount',
+              'amountCaptured',
+              'amountRefunded',
+              'status',
+              'paymentMethodType',
+              'fullyRefunded',
+              'description',
+              'failureMessage',
+              'createdAt',
+            ]),
+          ),
+      })),
+    )
+
+    const orderLineItems =
+      orders.length > 0
+        ? await pgdb.payments.orderLineItems.find({
+            orderId: orders.map(({ id }) => id),
+          })
+        : []
+
+    await save(
+      destination,
+      'payments-orders',
+      'Bestellungen (neue Zahlungsabwicklung) mit Positionen',
+      orders.map((order) => ({
+        ...pick(order, ['company', 'status', 'createdAt', 'updatedAt']),
+        invoiceHrId: invoices.find(({ id }) => id === order.invoiceId)?.hrId,
+        lineItems: orderLineItems
+          .filter(({ orderId }) => orderId === order.id)
+          .map((lineItem) =>
+            pick(lineItem, [
+              'description',
+              'quantity',
+              'price',
+              'priceSubtotal',
+              'taxAmount',
+              'discountAmount',
+            ]),
+          ),
+      })),
+    )
+
+    /**
+     * payments.giftVouchers
+     */
+    const giftVouchers = await pgdb.payments.giftVouchers.find({
+      or: [
+        { redeemedBy: userId },
+        ...(orders.length > 0 ? [{ orderId: orders.map(({ id }) => id) }] : []),
+      ],
+    })
+
+    await save(
+      destination,
+      'payments-giftVouchers',
+      'gekaufte oder eingelöste Geschenkgutscheine',
+      giftVouchers.map((giftVoucher) =>
+        pick(giftVoucher, [
+          'issuedBy',
+          'redeemedForCompany',
+          'redeemedAt',
+          'createdAt',
+        ]),
+      ),
+    )
+
+    /**
+     * newsletter_signups
+     */
+    const newsletterSignups = await pgdb.public.newsletter_signups.find({
+      user_id: userId,
+    })
+
+    await save(
+      destination,
+      'newsletter-signups',
+      'Newsletter-Anmeldungen',
+      newsletterSignups.map((signup) =>
+        pick(signup, ['newsletter', 'requested_at', 'confirmed_at']),
+      ),
+    )
+
+    /**
+     * questionnaireSubmissions
+     */
+    const questionnaireSubmissions =
+      await pgdb.public.questionnaireSubmissions.find({ userId })
+    const submittedQuestionnaires =
+      questionnaireSubmissions.length > 0
+        ? await pgdb.public.questionnaires.find({
+            id: questionnaireSubmissions.map(
+              ({ questionnaireId }) => questionnaireId,
+            ),
+          })
+        : []
+
+    await save(
+      destination,
+      'questionnaireSubmissions',
+      'Abgaben von Fragebögen',
+      questionnaireSubmissions.map((submission) => ({
+        questionnaire_slug: submittedQuestionnaires.find(
+          ({ id }) => id === submission.questionnaireId,
+        )?.slug,
+        ...pick(submission, [
+          'createdAt',
+          'updatedAt',
+          'anonymized',
+          'pseudonym',
+        ]),
       })),
     )
 
