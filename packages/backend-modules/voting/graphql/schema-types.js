@@ -404,8 +404,18 @@ type QuestionTypeDocument implements QuestionInterface {
 }
 type QuestionTypeDocumentResult {
   # only null if the document doesn exist anymore
-  document: Document
+  document: QuestionTypeDocumentResultDocument
   count: Int!
+}
+# Sanity articles can't be resolved to a full Document, title and path are all
+# a result needs
+type QuestionTypeDocumentResultDocument {
+  id: ID
+  meta: QuestionTypeDocumentResultMeta!
+}
+type QuestionTypeDocumentResultMeta {
+  title: String
+  path: String
 }
 
 enum QuestionTypeRangeKind {

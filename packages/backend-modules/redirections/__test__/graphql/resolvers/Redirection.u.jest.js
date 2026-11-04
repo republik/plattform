@@ -4,11 +4,6 @@ jest.mock('@orbiting/backend-modules-auth', () => ({
   },
 }))
 
-jest.mock(
-  '@orbiting/backend-modules-search/graphql/resolvers/_queries/search',
-  () => jest.fn(),
-)
-
 jest.mock('@orbiting/backend-modules-documents', () => ({
   lib: {
     resolve: {

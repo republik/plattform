@@ -14,7 +14,6 @@ describe('discussions', () => {
   beforeAll(async () => {
     await Instance.init({
       serverName: 'republik',
-      searchNotifyListener: false,
     })
   }, 60000)
 

@@ -278,59 +278,6 @@ const DOCUMENT_META_PARTIAL = `
   }
 `
 
-const PUBLISH_MUTAION = `
-  mutation publish(
-    $repoId: ID!
-    $commitId: ID!
-    $prepublication: Boolean!
-    $updateMailchimp: Boolean!
-    $scheduledAt: DateTime
-    $notifySubscribers: Boolean
-  ) {
-    publish(
-      repoId: $repoId
-      commitId: $commitId
-      prepublication: $prepublication
-      updateMailchimp: $updateMailchimp
-      scheduledAt: $scheduledAt
-      notifySubscribers: $notifySubscribers
-    ) {
-      unresolvedRepoIds
-      publication {
-        name
-        live
-        sha
-        prepublication
-        updateMailchimp
-        scheduledAt
-        date
-        author {
-          name
-          email
-          user {
-            email
-          }
-        }
-        commit {
-          id
-          document {
-            content
-            ${DOCUMENT_META_PARTIAL}
-          }
-        }
-      }
-    }
-  }
-`
-
-const UNPUBLISH_MUTAION = `
-  mutation unpublish(
-    $repoId: ID!
-  ) {
-    unpublish(repoId: $repoId)
-  }
-`
-
 const LATEST_PUBLICATIONS_QUERY = `
   query latestPublications(
     $repoId: ID!
@@ -487,8 +434,6 @@ module.exports = {
   REMOVE_MILESTONE_MUTATION,
   REPO_MILESTONES_QUERY,
   DOCUMENT_META_PARTIAL,
-  PUBLISH_MUTAION,
-  UNPUBLISH_MUTAION,
   getLatestPublications,
   getDocuments,
   getDocument,

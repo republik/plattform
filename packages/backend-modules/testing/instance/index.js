@@ -11,7 +11,7 @@ const { getId } = require('./pool')
 //
 // REDIS_URL: if set is has to be a base url, allowing to append '/db'
 //
-const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
+const init = async () => {
   // checks
   if (global.instance) {
     throw new Error('only one instance per process')
@@ -36,39 +36,20 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
     process.env.REDIS_URL || 'redis://127.0.0.1:6379'
   }/${instanceId}`
 
-  const esPrefix = `test${instanceId}`
-
-  console.log({ instanceId, redisUrl, port, databaseUrl: db.url, esPrefix })
+  console.log({ instanceId, redisUrl, port, databaseUrl: db.url })
 
   process.env.PORT = port
   process.env.DATABASE_URL = db.url
   process.env.REDIS_URL = redisUrl
-  process.env.ES_INDEX_PREFIX = esPrefix
   process.env.SEND_MAILS_LOG = false
   process.env.SEND_MAILS = false
   process.env.SEND_NOTIFICATIONS = false
   process.env.SLACK_API_TOKEN = ''
-  if (publicationScheduler) {
-    process.env.PUBLICATION_SCHEDULER = true
-  }
-  if (searchNotifyListener !== null && !searchNotifyListener) {
-    process.env.SEARCH_PG_LISTENER = false
-  }
 
   // flush redis
   const redis = Redis.connect()
   await redis.flushdbAsync()
   Redis.disconnect(redis)
-
-  // create ES indices
-  const pullElasticsearch = require('@orbiting/backend-modules-search/lib/pullElasticsearch')
-  const dropElasticsearch = require('@orbiting/backend-modules-search/lib/dropElasticsearch')
-  await dropElasticsearch(esPrefix, { debug: false })
-  await pullElasticsearch({
-    inserts: false,
-    ensurePropagation: false,
-    debug: false,
-  })
 
   // require server's server.js and start
   const Server = require('@orbiting/api-app/server')
@@ -79,8 +60,6 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
     expect(await PG.hasOpenTransactions(pgdb, dbName)).toBeFalsy()
     await server.close()
     await db.drop()
-    // drop ES indices
-    await dropElasticsearch(esPrefix, { debug: false })
     global.instance = null
   }
 

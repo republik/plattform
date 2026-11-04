@@ -20,7 +20,11 @@ jest.mock('../transform/comment', () => ({
   makeCommentDeps: jest.fn(),
 }))
 
-import { parsePollInterval, upsertOrDeleteUser } from '../listener'
+import {
+  cleanupQueue,
+  parsePollInterval,
+  upsertOrDeleteUser,
+} from '../listener'
 
 const publicRow = {
   id: 'user-1',
@@ -92,5 +96,23 @@ describe('parsePollInterval', () => {
 
   it('uses a positive numeric value', () => {
     expect(parsePollInterval('15000')).toBe(15_000)
+  })
+})
+
+describe('cleanupQueue', () => {
+  it('deletes queue rows older than the retention window', async () => {
+    const deleteRows = jest.fn().mockResolvedValue(3)
+    const pgdb = {
+      public: { notifyTableChangeQueue: { delete: deleteRows } },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any
+
+    const now = new Date('2026-10-29T12:00:00.000Z')
+    const deleted = await cleanupQueue(pgdb, 24 * 60 * 60 * 1000, now)
+
+    expect(deleted).toBe(3)
+    expect(deleteRows).toHaveBeenCalledWith({
+      'createdAt <': new Date('2026-10-28T12:00:00.000Z'),
+    })
   })
 })

@@ -50,13 +50,6 @@ type mutations {
     type: String
     tag: String
   ): Boolean!
-
-  sendTestNotification(
-    commentId: ID
-    # repoId of document belonging to a format
-    repoId: ID
-    simulateAllPossibleSubscriptions: Boolean
-  ): Boolean!
 }
 
 type subscriptions {

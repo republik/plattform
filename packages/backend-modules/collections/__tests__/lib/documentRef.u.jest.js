@@ -1,5 +1,5 @@
-// Two import chains have to be cut for this to be a *unit* test; both stubs
-// keep the code actually under test real.
+// One import chain has to be cut for this to be a *unit* test; the stub keeps
+// the code actually under test real.
 //
 // The sanity package's index re-exports PublishNotificationWorker, which pulls
 // in the subscriptions module and its whole GraphQL resolver tree. Deep-require
@@ -12,23 +12,6 @@ jest.mock('@orbiting/backend-modules-sanity', () => ({
     '@orbiting/backend-modules-sanity/build/lib/legacyId.js',
   ),
 }))
-
-// `getParsedDocumentId` comes from the search module, which imports auth at load
-// time; that chain ends up validating Mailchimp env vars. Only `transformUser`
-// and `Roles` are touched during import, and never called here.
-jest.mock('@orbiting/backend-modules-auth', () => ({
-  transformUser: (user) => user,
-  Roles: {
-    userIsInRoles: () => false,
-    userIsMe: () => false,
-    ensureUserHasRole: () => {},
-  },
-}))
-
-// The search chain also `checkEnv`s at import time. Set it here rather than
-// relying on a developer's .env, so this stays a hermetic unit test.
-process.env.FRONTEND_BASE_URL =
-  process.env.FRONTEND_BASE_URL || 'http://localhost:3010'
 
 const {
   inputToColumns,

@@ -1,4 +1,4 @@
-const { getParsedDocumentId } = require('../../search/lib/Documents')
+const { getParsedDocumentId } = require('@orbiting/backend-modules-base/lib/legacyDocumentId')
 
 // Duplicated from @orbiting/backend-modules-sanity's lib/document.ts rather
 // than imported: that package already depends on this one (lib/article.js
@@ -39,14 +39,7 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
   if (type === 'Document') {
     const { repoId } = getParsedDocumentId(id)
     return (
-      // byRepoIdPreferSanity, not byRepoId: this resolver only ever needs a
-      // teaser (title/path) for display, so it prefers a repoId's Sanity
-      // copy the moment one exists, even if Elasticsearch also still has
-      // it -- unlike byRepoId's consumers (e.g. publish-notification
-      // content generation), which need the live Publikator copy regardless
-      // of whether Sanity has an imported snapshot too (see
-      // documents/loaders/Document.js for why that distinction matters).
-      loaders.Document.byRepoIdPreferSanity
+      loaders.Document.byRepoId
         .load(repoId)
         // `o.meta.repoId` (not the parsed input `repoId`) is the canonical
         // storage key — for a publikator document these are always equal;

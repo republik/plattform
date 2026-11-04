@@ -1,32 +1,23 @@
 /**
- * Lib to search mailbox and mailLog
+ * Lib to search mailLog
  */
 const {
   paginate: { pageini },
 } = require('@orbiting/backend-modules-utils')
 
-const { descending } = require('d3-array')
-const Promise = require('bluebird')
-
-const mailbox = require('./mailbox')
 const maillog = require('./maillog')
 
 /**
  * Returns a "connection" object with data nodes, pagination info and total
  * count of nodes
  */
-const getConnection = (user, args, { elastic, pgdb }) => {
+const getConnection = (user, args, { pgdb }) => {
   const countFn = async (args) => {
     const { after, before } = args
 
     const filters = after?.filters || before?.filters || args.filters || {}
 
-    const counts = await Promise.all([
-      mailbox.count({ user, filters }, elastic),
-      maillog.count({ user, filters }, pgdb),
-    ])
-
-    return counts.reduce((acc, count) => acc + count, 0)
+    return maillog.count({ user, filters }, pgdb)
   }
 
   const nodesFn = async (args) => {
@@ -35,15 +26,7 @@ const getConnection = (user, args, { elastic, pgdb }) => {
     const size = after?.first || before?.first || args.first || 10
     const filters = after?.filters || before?.filters || args.filters || {}
 
-    const nodes = await Promise.all([
-      await mailbox.find({ user, size, filters }, { after, before }, elastic),
-      await maillog.find({ user, size, filters }, { after, before }, pgdb),
-    ])
-
-    return nodes
-      .flat()
-      .sort((a, b) => descending(a.date, b.date))
-      .slice(0, size)
+    return maillog.find({ user, size, filters }, { after, before }, pgdb)
   }
 
   const pageInfoFn = (args, payload) => {

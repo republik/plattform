@@ -5,9 +5,6 @@ const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
 const {
-  NotifyListener: SearchNotifyListener,
-} = require('@orbiting/backend-modules-search')
-const {
   Listener: SearchTypesenseListener,
   graphql: searchTypesense,
 } = require('@orbiting/backend-modules-search-typesense')
@@ -16,7 +13,6 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
   graphql: redirections,
 } = require('@orbiting/backend-modules-redirections')
-const { graphql: search } = require('@orbiting/backend-modules-search')
 const {
   graphql: notifications,
 } = require('@orbiting/backend-modules-push-notifications')
@@ -40,9 +36,6 @@ const {
 } = require('@orbiting/backend-modules-referral-campaigns')
 const {
   graphql: nextReads,
-  ReadingPositionRefreshWorker,
-  Next7DaysFeedRefreshWorker,
-  Next20DaysCommentsFeedRefreshWorker,
   SanityReadingPositionRefreshWorker,
   SanityNext7DaysFeedRefreshWorker,
   SanityNext20DaysCommentsFeedRefreshWorker,
@@ -93,10 +86,6 @@ const {
   AccessScheduler,
   graphql: access,
 } = require('@orbiting/backend-modules-access')
-const {
-  PublicationWorker,
-  PublicationNotificationWorker,
-} = require('@orbiting/backend-modules-publikator/lib/workers')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const {
   MembershipOwnersWorker,
@@ -148,9 +137,6 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
     CockpitWorker,
-    ReadingPositionRefreshWorker,
-    Next7DaysFeedRefreshWorker,
-    Next20DaysCommentsFeedRefreshWorker,
     SanityReadingPositionRefreshWorker,
     SanityNext7DaysFeedRefreshWorker,
     SanityNext20DaysCommentsFeedRefreshWorker,
@@ -160,13 +146,6 @@ function setupQueue(context, monitorQueueState = undefined) {
     StatsCacheWorker,
     PublishNotificationWorker,
   ]
-
-  if (
-    PUBLICATION_SCHEDULER !== 'false' &&
-    (!DEV || PUBLICATION_SCHEDULER === 'true')
-  ) {
-    workers.push(PublicationWorker, PublicationNotificationWorker)
-  }
 
   if (
     MEMBERSHIP_SCHEDULER !== 'false' &&
@@ -196,12 +175,10 @@ function setupQueue(context, monitorQueueState = undefined) {
 const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
-  SEARCH_PG_LISTENER,
   SEARCH_TYPESENSE_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
-  PUBLICATION_SCHEDULER,
   DATABROOM_SCHEDULER,
   MAIL_SCHEDULER,
   SERVER = 'graphql',
@@ -239,7 +216,6 @@ const run = async (workerId, config) => {
     republikCrowdfundings,
     publikator,
     documents,
-    search,
     searchTypesense,
     redirections,
     discussions,
@@ -374,11 +350,6 @@ const runOnce = async () => {
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
 
-  let searchNotifyListener
-  if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
-    searchNotifyListener = await SearchNotifyListener.start(context)
-  }
-
   let searchTypesenseListener
   if (SEARCH_TYPESENSE_LISTENER && SEARCH_TYPESENSE_LISTENER !== 'false') {
     searchTypesenseListener = await SearchTypesenseListener.start(context)
@@ -453,30 +424,22 @@ const runOnce = async () => {
       'cockpit:refresh',
       '*/120 * * * *', // cron for every 120 minutes
     )
-    await queue.schedule(
-      'next_reads:reading_position',
-      '7 2,14 * * *', // twice daily: 02:07 and 14:07 UTC (night + midday/afternoon)
-    )
-    await queue.schedule(
-      'next_reads:feed:20days:refresh',
-      '37 */3 * * *', // every 3 hours, independent of reading_position
-    )
+    // Drop the persisted schedules of the removed Publikator next-reads workers
+    // (safe to delete once this has run in every environment).
+    await queue.unschedule('next_reads:reading_position')
+    await queue.unschedule('next_reads:feed:20days:refresh')
     await queue.schedule(
       'next_reads_sanity:reading_position',
-      '22 2,14 * * *', // twice daily, offset 15min from next_reads:reading_position
+      '22 2,14 * * *', // twice daily: 02:22 and 14:22 UTC
     )
     await queue.schedule(
       'next_reads_sanity:feed:20days:refresh',
-      '52 */3 * * *', // every 3 hours, offset from next_reads:feed:20days:refresh; independent of reading_position
+      '52 */3 * * *', // every 3 hours, independent of reading_position
     )
   }
 
-  if (
-    PUBLICATION_SCHEDULER !== 'false' &&
-    (!DEV || PUBLICATION_SCHEDULER === 'true')
-  ) {
-    await queue.schedule('scheduler:publication', '* * * * *')
-  }
+  // PublicationWorker is gone, drop its leftover cron entry
+  await queue.unschedule('scheduler:publication')
 
   if (
     MEMBERSHIP_SCHEDULER !== 'false' &&
@@ -496,7 +459,6 @@ const runOnce = async () => {
   const close = async () => {
     await Promise.all(
       [
-        searchNotifyListener && searchNotifyListener.close(),
         searchTypesenseListener && searchTypesenseListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
