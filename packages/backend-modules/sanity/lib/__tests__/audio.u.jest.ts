@@ -387,6 +387,27 @@ describe('recordAudioVersion', () => {
     )
   })
 
+  it('records onto the published document when documentId is a draft that no longer exists', async () => {
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'drafts.doc-1' ? failingChain : succeedingChain,
+    )
+    fetch.mockReset().mockResolvedValue(undefined)
+
+    await recordAudioVersion(
+      'drafts.doc-1',
+      { audioSourceMp3: 'https://x/a.mp3' },
+      { url: 'https://x/a.mp3', generatedAt: '2026-01-01T00:00:00.000Z' },
+      'hash-1',
+    )
+
+    expect(patch).toHaveBeenLastCalledWith('doc-1')
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+  })
+
   it('rethrows a non-not-found error without falling back to the draft', async () => {
     const otherError = Object.assign(new Error('boom'), { statusCode: 500 })
     const chain = chainable(jest.fn().mockRejectedValue(otherError))
@@ -489,6 +510,26 @@ describe('reportAudioGenerationError', () => {
     expect(loggerError).toHaveBeenCalledWith(
       expect.objectContaining({ draftId: 'drafts.doc-1' }),
       expect.stringContaining('falling back to the draft'),
+    )
+  })
+
+  it('patches the published document when documentId is a draft that no longer exists', async () => {
+    const failingChain = chainable(jest.fn().mockRejectedValue(notFoundError()))
+    const succeedingChain = chainable(jest.fn().mockResolvedValue(undefined))
+    patch.mockReset().mockImplementation((id: string) =>
+      id === 'drafts.doc-1' ? failingChain : succeedingChain,
+    )
+
+    await reportAudioGenerationError('drafts.doc-1', new Error('boom'))
+
+    expect(patch).toHaveBeenCalledTimes(2)
+    expect(patch).toHaveBeenLastCalledWith('doc-1')
+    expect(succeedingChain.commit).toHaveBeenCalledWith({
+      autoGenerateArrayKeys: true,
+    })
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.objectContaining({ publishedId: 'doc-1' }),
+      expect.stringContaining('patching the published document instead'),
     )
   })
 

@@ -56,6 +56,8 @@ function isUnrecoverableVersionError(err: unknown): boolean {
 //     redirect to, so fall back to the draft (always still there) and log
 //     loudly — this needs a human to notice and reconcile from the draft's
 //     history.
+//   - documentId is a `drafts.*` id whose draft is gone (published, then
+//     discarded): the published document is patched instead.
 // `doPatch` receives the id to target, so it can be applied to documentId,
 // the published id, the draft, or a combination.
 async function withDraftSync<T>(
@@ -92,6 +94,20 @@ async function withDraftSync<T>(
       // Falls through to the draft-mirror step below, same as any other
       // successful primary write — both the published doc and the draft
       // must get this write, not one or the other.
+    } else if (documentId === draftId && isDocumentNotFoundError(err)) {
+      // documentId already is the draft (the webhook URL was signed for a
+      // `drafts.*` id), so "falling back to the draft" below would just retry
+      // the same missing document — and, since Huebsch keeps redelivering a
+      // result we never successfully record, fail the same way every time.
+      // A draft disappears when its article gets published and the draft is
+      // discarded; the published document is the live target then.
+      const publishedId = publishedIdFor(documentId)
+      logger.error(
+        { documentId, publishedId, err },
+        `sanity audio: draft no longer exists when ${action} — ` +
+          'patching the published document instead',
+      )
+      return doPatch(publishedId)
     } else if (isUnrecoverableVersionError(err)) {
       logger.error(
         { documentId, draftId, err },

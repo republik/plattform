@@ -1,9 +1,10 @@
+import crypto from 'crypto'
 import { Request, Response } from 'express'
 // Importing this brings pino-http's global Express Request.log
 // augmentation into scope for this module's compilation.
 import type {} from '@orbiting/backend-modules-logger'
 import {
-  fetchAudioContentHash,
+  fetchAudioLinkState,
   markPendingVersionError,
   recordAudioVersion,
   reportAudioGenerationError,
@@ -75,21 +76,41 @@ export const processResult = async (
   contentHash: string,
   body: unknown,
 ) => {
-  // Idempotency: a webhook provider retrying a delivery (at-least-once
-  // semantics, or just not seeing our 204 fast enough) resends the exact
-  // same signed request — nothing here would otherwise notice, and
-  // recordAudioVersion has no dedup of its own, so each delivery would
-  // append its own "new" audio version for what is actually one generation.
-  // If this contentHash is already recorded, a previous delivery already
-  // handled this result — skip before doing any of the (wasteful) work
-  // below.
-  const existingHash = await fetchAudioContentHash(documentId)
-  if (existingHash === contentHash) {
+  // Idempotency: a retried delivery resends the exact same signed request,
+  // and recordAudioVersion has no dedup of its own, so each retry would append
+  // another audio version. Skip when this contentHash is already recorded
+  // with this very audio file.
+  //
+  // contentHash only identifies the article content, not the audio: Huebsch
+  // can re-render the same content (e.g. a pronunciation correction) and post
+  // it to the same URL, which is an update, not a duplicate. Sanity serves a
+  // file asset at `.../<sha1 of its bytes>.<ext>`, so the delivered bytes'
+  // sha1 is looked for in the stored URL.
+  const existing = await fetchAudioLinkState(documentId)
+  if (existing?.audioContentHash === contentHash) {
+    let alreadyRecorded = true
+    try {
+      const { audioFile } = await parseHuebschResult(body)
+      const sha1 = crypto
+        .createHash('sha1')
+        .update(Buffer.from(audioFile))
+        .digest('hex')
+      alreadyRecorded = Boolean(existing.audioSourceMp3?.includes(sha1))
+    } catch {
+      // A payload we can't read (e.g. Huebsch reporting a failed re-run) can't
+      // replace audio that was already recorded successfully for this hash.
+    }
+    if (alreadyRecorded) {
+      req.log.info(
+        { documentId, contentHash },
+        'huebsch webhook: already recorded this generation, skipping duplicate delivery',
+      )
+      return
+    }
     req.log.info(
       { documentId, contentHash },
-      'huebsch webhook: already recorded this generation, skipping duplicate delivery',
+      'huebsch webhook: same content hash but different audio, recording as an update',
     )
-    return
   }
 
   // Huebsch reporting a failed generation (parseHuebschResult throws on
