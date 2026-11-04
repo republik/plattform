@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const { ascending } = require('d3-array')
+const shaCompare = require('./shaCompare')
 
 module.exports = async ({
   pledgeId,
@@ -30,7 +31,7 @@ module.exports = async ({
     .update(paramsString)
     .digest('hex')
     .toUpperCase()
-  if (SHASIGN !== shasum) {
+  if (!shaCompare(SHASIGN, shasum)) {
     logger.error('SHASIGN not correct', {
       pledgeId,
       shasum,
