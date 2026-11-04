@@ -67,6 +67,12 @@ module.exports = {
     return doc.content
   },
   async meta(doc, { urlPrefix, searchString }, context) {
+    // The Document loader hands out Sanity-backed stubs (see
+    // loaders/Document.js toDocumentShape): `meta` only, no mdast `content`
+    // to derive the rest of the meta from.
+    if (!doc.content) {
+      return doc.meta
+    }
     const meta = await getMeta(doc)
     if (doc._all || doc._users) {
       metaUrlResolver(
