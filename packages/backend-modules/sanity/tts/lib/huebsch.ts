@@ -1,4 +1,110 @@
+import { isIP } from 'node:net'
+
 export class HuebschError extends Error {}
+
+const isPrivateIPv4 = (ip: string): boolean => {
+  const [a, b] = ip.split('.').map(Number)
+  return (
+    a === 0 || // "this" network
+    a === 10 ||
+    a === 127 || // loopback
+    (a === 100 && b >= 64 && b <= 127) || // CGNAT
+    (a === 169 && b === 254) || // link-local, cloud metadata (169.254.169.254)
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 0) || // IETF protocol assignments
+    (a === 192 && b === 168) ||
+    (a === 198 && (b === 18 || b === 19)) || // benchmarking
+    a >= 224 // multicast, reserved, broadcast
+  )
+}
+
+const isPrivateIPv6 = (ip: string): boolean => {
+  const v = ip.toLowerCase()
+  if (v === '::' || v === '::1') return true
+  // IPv4-mapped (::ffff:a.b.c.d or ::ffff:7f00:1)
+  const mapped = v.match(/^::ffff:(.+)$/)
+  if (mapped) {
+    const rest = mapped[1]
+    if (isIP(rest) === 4) return isPrivateIPv4(rest)
+    const hex = rest.split(':').map((h) => parseInt(h, 16))
+    if (hex.length === 2 && hex.every((n) => !Number.isNaN(n))) {
+      return isPrivateIPv4(
+        [hex[0] >> 8, hex[0] & 255, hex[1] >> 8, hex[1] & 255].join('.'),
+      )
+    }
+    return true
+  }
+  return (
+    /^f[cd]/.test(v) || // unique local fc00::/7
+    /^fe[89ab]/.test(v) || // link-local fe80::/10
+    /^ff/.test(v) // multicast
+  )
+}
+
+const BLOCKED_HOSTNAME_SUFFIXES = [
+  '.localhost',
+  '.local',
+  '.internal',
+  '.localdomain',
+  '.lan',
+  '.home.arpa',
+]
+
+/**
+ * Validates that the asset url from the (unsigned) Huebsch webhook body is
+ * safe to fetch server-side: https only, no credentials, no loopback /
+ * private / link-local / metadata addresses or obvious internal hostnames.
+ * If HUEBSCH_ASSET_HOSTS (comma separated hostnames) is set, the host must
+ * additionally be in that list (exact match or subdomain).
+ *
+ * Limitation: this checks literals only. A public hostname that resolves to a
+ * private IP (DNS rebinding / attacker-controlled DNS) is NOT caught here;
+ * set HUEBSCH_ASSET_HOSTS to close that gap.
+ */
+export const assertSafeAssetUrl = (value: string): URL => {
+  let url: URL
+  try {
+    url = new URL(value)
+  } catch {
+    throw new HuebschError('Huebsch asset url is not a valid url')
+  }
+
+  if (url.protocol !== 'https:') {
+    throw new HuebschError('Huebsch asset url must use https')
+  }
+  if (url.username || url.password) {
+    throw new HuebschError('Huebsch asset url must not contain credentials')
+  }
+
+  // WHATWG URL already normalizes decimal/octal/hex IPv4 forms to dotted quad
+  const host = url.hostname.toLowerCase().replace(/\.$/, '')
+  const bare = host.replace(/^\[|\]$/g, '')
+  const ipVersion = isIP(bare)
+
+  if (
+    (ipVersion === 4 && isPrivateIPv4(bare)) ||
+    (ipVersion === 6 && isPrivateIPv6(bare)) ||
+    (ipVersion === 0 &&
+      (host === 'localhost' ||
+        !host.includes('.') ||
+        BLOCKED_HOSTNAME_SUFFIXES.some((suffix) => host.endsWith(suffix))))
+  ) {
+    throw new HuebschError('Huebsch asset url points to a disallowed host')
+  }
+
+  const allowed = (process.env.HUEBSCH_ASSET_HOSTS ?? '')
+    .split(',')
+    .map((h) => h.trim().toLowerCase())
+    .filter(Boolean)
+  if (
+    allowed.length > 0 &&
+    !allowed.some((h) => host === h || host.endsWith(`.${h}`))
+  ) {
+    throw new HuebschError('Huebsch asset url host is not in the allowlist')
+  }
+
+  return url
+}
 
 // Huebsch's API/webhook responses use a documented Result pattern:
 //   { ok: true, val: ... }
@@ -145,7 +251,9 @@ export const parseHuebschResult = async (
     )
   }
 
-  const res = await fetchWithRetry(audioUrl)
+  const safeUrl = assertSafeAssetUrl(audioUrl)
+
+  const res = await fetchWithRetry(safeUrl.toString())
   const audioFile = await res.arrayBuffer()
 
   // Huebsch's Track payload reports `duration` in seconds (per its docs) —
@@ -173,7 +281,13 @@ const fetchWithRetry = async (
   let lastError: unknown
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      const res = await fetch(url)
+      // never follow redirects blindly, they could lead to internal hosts
+      const res = await fetch(url, { redirect: 'manual' })
+      if (res.status >= 300 && res.status < 400) {
+        throw new HuebschError(
+          `unexpected redirect (${res.status}) fetching ${url}`,
+        )
+      }
       if (!res.ok) {
         throw new Error(`response not ok with status ${res.status}`)
       }
