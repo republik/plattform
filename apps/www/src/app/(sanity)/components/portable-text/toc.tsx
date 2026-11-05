@@ -30,7 +30,7 @@ export function Toc({ value }: { value: TocType }) {
       <h3 className={css({ fontWeight: 'bold' })}>
         {value.title ?? 'Inhaltsverzeichnis'}
       </h3>
-      <ul id='menu'>
+      <ul id='table-of-content'>
         {value.headings?.map((heading) => {
           const plainText = toPlainText(heading as PortableTextBlock)
           const id = legacySlugify(plainText)

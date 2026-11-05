@@ -24,7 +24,7 @@ const contentParts = defineParts({
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
   orderedListItems: { selector: '& > ol li' },
-  menuItems: { selector: '& > ul#menu li' },
+  tocItems: { selector: '& > ul#table-of-content li' },
   interviewQuestion: { selector: '& > .interview-question' },
 })
 
@@ -103,7 +103,7 @@ export const editorialContentRecipe = defineRecipe({
         left: 0,
       },
     },
-    menuItems: {
+    tocItems: {
       pl: '0',
       pb: '2',
       _before: {
@@ -150,7 +150,7 @@ export const editorialContentRecipe = defineRecipe({
           ...readerScaledText('editorialParagraph'),
           fontWeight: 'bold',
         },
-        menuItems: readerScaledText('editorialParagraph'),
+        tocItems: readerScaledText('editorialParagraph'),
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
         interviewQuestion: { fontWeight: 'bold' },
@@ -167,7 +167,7 @@ export const editorialContentRecipe = defineRecipe({
           ...readerScaledText('editorialParagraph'),
           fontWeight: 'bold',
         },
-        menuItems: readerScaledText('editorialParagraph'),
+        tocItems: readerScaledText('editorialParagraph'),
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
         interviewQuestion: { fontWeight: 'bold' },
@@ -183,7 +183,7 @@ export const editorialContentRecipe = defineRecipe({
           ...readerScaledText('editorialParagraph'),
           fontWeight: 'medium',
         },
-        menuItems: readerScaledText('editorialParagraph'),
+        tocItems: readerScaledText('editorialParagraph'),
         unorderedListItems: readerScaledText('editorialParagraph'),
         orderedListItems: readerScaledText('editorialParagraph'),
         interviewQuestion: { fontWeight: 'medium' },
@@ -210,7 +210,7 @@ export const editorialContentRecipe = defineRecipe({
           ...readerScaledText('metaSubheading'),
           fontWeight: 'medium',
         },
-        menuItems: readerScaledText('editorialParagraph'),
+        tocItems: readerScaledText('editorialParagraph'),
         unorderedListItems: readerScaledText('metaParagraph'),
         orderedListItems: readerScaledText('metaParagraph'),
         interviewQuestion: { fontWeight: 'medium' },
@@ -231,7 +231,7 @@ export const editorialContentRecipe = defineRecipe({
           ...readerScaledText('metaSubheading'),
           fontWeight: 'medium',
         },
-        menuItems: readerScaledText('editorialParagraph'),
+        tocItems: readerScaledText('editorialParagraph'),
         unorderedListItems: readerScaledText('metaParagraph'),
         orderedListItems: readerScaledText('metaParagraph'),
         interviewQuestion: { fontWeight: 'medium' },
