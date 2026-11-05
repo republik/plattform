@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/backend-modules/contributors/migrations/sqls'
+const dir = 'packages/backend-modules/migrations/sqls/contributors'
 const file = '20250721150737-repo-contributors-link-table'
 
 exports.up = (db) =>

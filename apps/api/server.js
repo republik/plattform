@@ -40,9 +40,6 @@ const {
   SanityNext7DaysFeedRefreshWorker,
   SanityNext20DaysCommentsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
-const {
-  graphql: contributors,
-} = require('@orbiting/backend-modules-contributors')
 const { graphql: allowlist } = require('@orbiting/backend-modules-allowlist')
 
 const {
@@ -230,7 +227,6 @@ const run = async (workerId, config) => {
     referralCampaigns,
     paymentsGraphql,
     nextReads,
-    contributors,
     allowlist,
   ])
 

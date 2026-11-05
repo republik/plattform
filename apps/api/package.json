@@ -22,7 +22,6 @@
     "@orbiting/backend-modules-base64u": "*",
     "@orbiting/backend-modules-call-to-actions": "*",
     "@orbiting/backend-modules-collections": "*",
-    "@orbiting/backend-modules-contributors": "*",
     "@orbiting/backend-modules-databroom": "*",
     "@orbiting/backend-modules-dataloader": "*",
     "@orbiting/backend-modules-discussions": "*",
