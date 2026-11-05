@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/backend-modules/contributors/migrations/sqls'
+const dir = 'packages/backend-modules/migrations/sqls/contributors'
 const file = '20250703152810-create-contributors'
 
 exports.up = (db) =>
