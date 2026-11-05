@@ -18,7 +18,7 @@ import Link from '@/app/components/ui/link'
 import { AnswerText } from '../components/AnswerText'
 import PlainButton from './PlainButton'
 
-import { swissTime } from '@/lib/utils/format'
+import { formatDateTime } from '@/app/lib/util/time-format'
 import { HEADER_HEIGHT } from '../../../constants'
 import { useInNativeApp, postMessage } from '@/lib/withInNativeApp'
 import ShareOverlay from '../../../ActionBar/ShareOverlay'
@@ -86,8 +86,7 @@ export const styles = {
   }),
 }
 
-const dateTimeFormat = swissTime.format('%d. %B %Y %H:%M')
-const titleDate = (string) => dateTimeFormat(new Date(string))
+const titleDate = (string) => formatDateTime(new Date(string))
 
 export const SubmissionAuthor = ({
   displayAuthor,

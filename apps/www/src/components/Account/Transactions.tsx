@@ -1,5 +1,6 @@
 import { TransactionsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useTranslation } from '@/lib/withT'
+import { formatDate } from '@/app/lib/util/time-format'
 import { useQuery } from '@apollo/client'
 import { Loader } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
@@ -55,11 +56,7 @@ export function Transactions() {
                       key={id}
                     >
                       <td className={css({ py: '2' })}>
-                        {new Date(createdAt).toLocaleDateString('de-CH', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
+                        {formatDate(new Date(createdAt))}
                       </td>
                       <td className={css({ py: '2' })}>{label}</td>
                       <td className={css({ py: '2', textAlign: 'right' })}>
