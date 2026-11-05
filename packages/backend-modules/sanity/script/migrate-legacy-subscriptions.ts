@@ -33,8 +33,8 @@
 // dedupe in JS" and "one Sanity API call per repoId" problems apply at
 // whatever scale it does reach.
 //
-// Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-subscriptions
-//        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-subscriptions --confirm
+// Usage: pnpm --filter @orbiting/backend-modules-sanity run migrate-legacy-subscriptions
+//        pnpm --filter @orbiting/backend-modules-sanity run migrate-legacy-subscriptions --confirm
 
 import { PgDb } from '@orbiting/backend-modules-types'
 

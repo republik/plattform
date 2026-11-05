@@ -17,10 +17,10 @@ Simply run `docker compose up` in the root of the monorepo.
 
 ### In DEV
 
-- Make sure you ran `yarn install` in the root of the monorepo.
+- Make sure you ran `pnpm install` in the root of the monorepo.
 - Start the required external services with `docker compose up`.
-- Run `yarn dev:setup` for seeding the database and Elasticsearch.
-- Run `yarn dev` for running all apps.
+- Run `pnpm dev:setup` for seeding the database and Elasticsearch.
+- Run `pnpm dev` for running all apps.
 
 The GraphQL API is available on `localhost:5010/graphql`, and a GraphQL client can be found on `localhost:5010/graphql`.
 

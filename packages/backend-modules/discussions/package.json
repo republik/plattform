@@ -21,9 +21,9 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@republik/mdast-mail-templates": "*",
-    "@republik/mdast-react-render": "*",
-    "@republik/remark-preset": "*",
+    "@republik/mdast-mail-templates": "workspace:*",
+    "@republik/mdast-react-render": "workspace:*",
+    "@republik/remark-preset": "workspace:*",
     "d3-time-format": "^2.2.3",
     "dataloader": "^2.0.0",
     "glamor": "^2.20.40",
@@ -33,6 +33,6 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "workspace:*"
   }
 }

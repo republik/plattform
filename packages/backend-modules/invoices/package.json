@@ -25,6 +25,6 @@
     "swissqrbill": "^3.2.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "workspace:*"
   }
 }

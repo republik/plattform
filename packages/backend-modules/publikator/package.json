@@ -20,14 +20,14 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@orbiting/backend-modules-assets": "*",
-    "@orbiting/backend-modules-sanity": "*",
+    "@orbiting/backend-modules-assets": "workspace:*",
+    "@orbiting/backend-modules-sanity": "workspace:*",
     "@orbiting/graphql-list-fields": "^2.0.2",
-    "@republik/remark-preset": "*",
+    "@republik/remark-preset": "workspace:*",
     "@rocka/mp3-duration": "^2.0.0",
     "@types/bluebird": "^3.5.33",
     "apollo-fetch": "^0.7.0",
-    "apollo-modules-node": "*",
+    "apollo-modules-node": "workspace:*",
     "await-sleep": "0.0.1",
     "bluebird": "^3.7.2",
     "check-env": "^1.3.0",
@@ -52,7 +52,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-types": "workspace:*",
     "@types/debug": "^4.1.5",
     "nodemon": "^2.0.4",
     "ws": "^7.4.6"

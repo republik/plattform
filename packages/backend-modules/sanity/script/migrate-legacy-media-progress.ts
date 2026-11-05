@@ -32,8 +32,8 @@
 // wins, since it's the row about to be renamed anyway) and dropping the other,
 // rather than always preferring one side irrespective of progress.
 //
-// Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-media-progress
-//        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-media-progress --confirm
+// Usage: pnpm --filter @orbiting/backend-modules-sanity run migrate-legacy-media-progress
+//        pnpm --filter @orbiting/backend-modules-sanity run migrate-legacy-media-progress --confirm
 
 import { PgDb } from '@orbiting/backend-modules-types'
 

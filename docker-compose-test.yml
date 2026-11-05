@@ -57,7 +57,7 @@ services:
     entrypoint:
       [
         'launcher',
-        'yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import',
+        'pnpm migrate:db:create && pnpm migrate:up && pnpm migrate:db:import',
       ]
     depends_on:
       - elastic

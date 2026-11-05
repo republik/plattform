@@ -12,9 +12,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
     "graphql": "^16.11.0",
     "lodash.clone": "^4.5.0",

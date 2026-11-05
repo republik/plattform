@@ -9,7 +9,7 @@ Unfortunately we can also not currently accept external contributions to our cod
 
 ## What's inside?
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following apps and packages:
+This turborepo uses [pnpm](https://pnpm.io) as a package manager (enable it with `corepack enable`, the version is pinned in `package.json`). It includes the following apps and packages:
 
 ### Apps
 
@@ -51,7 +51,7 @@ This turborepo has some additional tools already setup for you:
 
 To get started you'll need:
 
-- yarn v1.22
+- pnpm (via `corepack enable`)
 - Node.js v24
 - Docker
 
@@ -99,9 +99,9 @@ docker compose up
 ```
 
 ```bash
-yarn install
-yarn build
-yarn dev:setup
+pnpm install
+pnpm build
+pnpm dev:setup
 ```
 
 ### Develop
@@ -115,7 +115,7 @@ docker compose up
 And in a second shell
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.
@@ -124,14 +124,14 @@ Please be patient on boot. It might take a minute for everything to compile and 
 
 If you don't want all apps to run when using the `dev` script, you can use the `filter` flag.
 (see the [Turborepo documentation](https://turbo.build/repo/docs/reference/command-line-reference#--filter))
-For example if you only want to run the republik frontend run `yarn dev --filter=@orbiting/www-app`.
+For example if you only want to run the republik frontend run `pnpm turbo run dev --filter=@orbiting/www-app`.
 
-In most cases you have certain dependencies that should be run as well, for example the styleguide if you're developing in the frontend. In that case simply append `...` directly after the filter, to ensure that the additionally to the filtered app, all dependencies are executed as well. (For example in www run: `yarn dev --filter=@orbiting/www-app...`)
+In most cases you have certain dependencies that should be run as well, for example the styleguide if you're developing in the frontend. In that case simply append `...` directly after the filter, to ensure that the additionally to the filtered app, all dependencies are executed as well. (For example in www run: `pnpm turbo run dev --filter=@orbiting/www-app...`)
 
 For start only frontend and api use:
 
 ```bash
-yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
+pnpm turbo run dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
 ```
 
 ### Commit Message Format
@@ -143,8 +143,6 @@ yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
 <BLANK LINE>
 <footer>
 ```
-
-You can use `yarn commit` to generate a message via an interactive prompt.
 
 **Types**
 
@@ -163,9 +161,9 @@ Don't care about developing the backend? Just want to test something against our
 
 ```
 # terminal 1
-yarn yaproxy
+pnpm yaproxy
 # terminal 2
-yarn dev:www
+pnpm dev:www
 ```
 
 (Obvious )Warning: whatever you do here is for realz, if you login to your account and change things they are changed on republik.ch!

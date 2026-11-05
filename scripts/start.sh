@@ -6,4 +6,4 @@ then
 else
   cd apps/$SERVER
 fi
-yarn start
+pnpm start

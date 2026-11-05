@@ -13,7 +13,7 @@
  * scripts/backfill-search.ts, moved here since it's ops tooling for backend
  * people, not editors).
  *
- * Usage: yarn workspace @orbiting/backend-modules-search-typesense run reindex
+ * Usage: pnpm --filter @orbiting/backend-modules-search-typesense run reindex
  *        -- --only comments,users
  *        -- --only articles
  */
@@ -214,7 +214,7 @@ const reindexArticles = async (
 }
 
 // The default when no --only flag is given -- kept as just comments/users so
-// a plain `yarn reindex` stays as fast/scoped as before articles support was
+// a plain `pnpm reindex` stays as fast/scoped as before articles support was
 // added. --only articles (or --only comments,users,articles) opts in.
 const DEFAULT_KINDS: CollectionKind[] = ['comments', 'users']
 

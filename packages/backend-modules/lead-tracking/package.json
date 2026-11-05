@@ -14,7 +14,7 @@
     "uuid": "^13.0.0",
     "pogi": "^2.11.1",
     "csv-parser": "^3.0.0",
-    "@orbiting/backend-modules-base": "*",
-    "@orbiting/backend-modules-env": "*"
+    "@orbiting/backend-modules-base": "workspace:*",
+    "@orbiting/backend-modules-env": "workspace:*"
   }
 }

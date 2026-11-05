@@ -48,8 +48,8 @@
 // application writes to any row already touched -- see
 // runOneOffMigration.ts for why.
 //
-// Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items
-//        yarn workspace @orbiting/backend-modules-sanity run migrate-legacy-collection-items --confirm
+// Usage: pnpm --filter @orbiting/backend-modules-sanity run migrate-legacy-collection-items
+//        pnpm --filter @orbiting/backend-modules-sanity run migrate-legacy-collection-items --confirm
 
 import { PgDb } from '@orbiting/backend-modules-types'
 

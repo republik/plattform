@@ -1,0 +1,41 @@
+packages:
+  - apps/*
+  - packages/*
+  - packages/mdast/*
+  - packages/backend-modules/*
+
+# formerly "resolutions" in package.json
+overrides:
+  '@types/node': '24'
+  '@types/react': ^19.3.0
+  '@types/react-dom': ^19.3.0
+  react: ^19.3.1
+  react-dom: ^19.3.1
+  typescript: ^5.6.2
+
+# formerly .yarnrc --install.ignore-engines
+engineStrict: false
+
+# pnpm does not run dependency install scripts unless allowed here
+allowBuilds:
+  '@sentry/cli': true
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+  # not needed: version banners / optional native speedups for testcontainers (ssh2)
+  '@apollo/protobufjs': false
+  core-js: false
+  cpu-features: false
+  protobufjs: false
+  ssh2: false
+  '@firebase/util': false
+  '@parcel/watcher': false
+  aws-sdk: false
+  yarn: false
+
+# backend-modules-test and a voting script require @orbiting/api-app, which
+# itself depends on all backend modules. Declaring it would create a cycle,
+# so expose it from the root node_modules instead.
+hoistWorkspacePackages: true
+publicHoistPattern:
+  - '@orbiting/api-app'

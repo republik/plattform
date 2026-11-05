@@ -36,8 +36,8 @@
 // Run this only after the frontend fix has been deployed, so it isn't
 // racing against new wrongly-keyed rows still being written.
 //
-// Usage: yarn workspace @orbiting/backend-modules-sanity run migrate-optimistic-media-progress
-//        yarn workspace @orbiting/backend-modules-sanity run migrate-optimistic-media-progress --confirm
+// Usage: pnpm --filter @orbiting/backend-modules-sanity run migrate-optimistic-media-progress
+//        pnpm --filter @orbiting/backend-modules-sanity run migrate-optimistic-media-progress --confirm
 
 import { PgDb } from '@orbiting/backend-modules-types'
 

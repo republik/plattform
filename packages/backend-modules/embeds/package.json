@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
-    "apollo-modules-node": "*",
+    "apollo-modules-node": "workspace:*",
     "autolinker": "^3.14.1",
     "cheerio": "^1.0.0-rc.3",
     "d3-array": "^2.4.0",

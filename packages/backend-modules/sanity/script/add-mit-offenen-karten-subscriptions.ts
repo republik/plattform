@@ -23,7 +23,7 @@
 // Dry-run by default; pass --confirm to commit. Runs as one transaction (the
 // affected row count is small: a few thousand subscriptions at most).
 //
-// Usage (against the compiled output, `yarn workspace @orbiting/backend-modules-sanity run build`):
+// Usage (against the compiled output, `pnpm --filter @orbiting/backend-modules-sanity run build`):
 //        node packages/backend-modules/sanity/build/script/add-mit-offenen-karten-subscriptions.js
 //        node packages/backend-modules/sanity/build/script/add-mit-offenen-karten-subscriptions.js --confirm
 

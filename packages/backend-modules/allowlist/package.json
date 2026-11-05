@@ -11,9 +11,9 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@orbiting/backend-modules-scalars": "*",
-    "@orbiting/backend-modules-types": "*",
-    "@orbiting/backend-modules-utils": "*",
-    "apollo-modules-node": "*"
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@orbiting/backend-modules-utils": "workspace:*",
+    "apollo-modules-node": "workspace:*"
   }
 }

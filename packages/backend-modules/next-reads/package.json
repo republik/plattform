@@ -9,11 +9,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@orbiting/backend-modules-scalars": "*",
-    "@orbiting/backend-modules-types": "*",
-    "@orbiting/backend-modules-job-queue": "*",
-    "@orbiting/backend-modules-sanity": "*",
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@orbiting/backend-modules-job-queue": "workspace:*",
+    "@orbiting/backend-modules-sanity": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "pogi": "^2.11.1"
   }
 }

@@ -5,7 +5,7 @@
  * creation for any kind whose alias already points at an existing
  * collection.
  *
- * Usage: yarn workspace @orbiting/backend-modules-search-typesense run bootstrap
+ * Usage: pnpm --filter @orbiting/backend-modules-search-typesense run bootstrap
  */
 require('@orbiting/backend-modules-env').config()
 

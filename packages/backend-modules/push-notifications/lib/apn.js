@@ -2,7 +2,7 @@
 
 const { deleteSessionForDevices } = require('./utils')
 
-const apn = require('apn')
+const apn = require('@parse/node-apn')
 const debug = require('debug')('notifications:publish:apn')
 
 const { SEND_NOTIFICATIONS, APN_KEY, APN_KEY_ID, APN_TEAM_ID, APN_BUNDLE_ID } =

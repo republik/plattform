@@ -18,7 +18,7 @@ For Postgres data, databroom is using a query stream and "on data" handler.
 
 ## Manual
 
-(Run `yarn` to compile TypeScript files.)
+(Run `pnpm install` to compile TypeScript files.)
 
 Check what databroom would do:
 
@@ -40,7 +40,7 @@ Depending on how often and how old your data is, it might take a while until com
 
 ### Manual
 
-1. Run `yarn run tsc -w` to re-compile changed files.
+1. Run `pnpm run tsc -w` to re-compile changed files.
 2. Run script at will (or with `nodemon`):
 
        node script/run.js --no-dry-run --no-nice --verbose
@@ -50,4 +50,4 @@ Depending on how often and how old your data is, it might take a while until com
 Scheduler requires backends server.
 
 1. Set `DATABROOM_SCHEDULER=true` in environment file.
-2. Run `yarn run dev` in backends root folder.
+2. Run `pnpm run dev` in backends root folder.

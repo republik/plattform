@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.13.8",
-    "@republik/eslint-config-frontend": "*",
+    "@republik/eslint-config-frontend": "workspace:*",
     "@types/node": "24",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

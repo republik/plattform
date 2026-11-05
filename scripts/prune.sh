@@ -4,15 +4,15 @@ SERVER=${SERVER:-api}
 if [ "$SERVER" = "styleguide" ]
 then
   echo "Running prune for styleguide"
-  npx turbo@1.10.12 prune --scope="@project-r/styleguide" -v
+  pnpm dlx turbo@1.13.4 prune --scope="@project-r/styleguide" -v
 else
   echo "Running prune for $SERVER-app"
-  npx turbo@1.10.12 prune --scope="@orbiting/$SERVER-app" -v
+  pnpm dlx turbo@1.13.4 prune --scope="@orbiting/$SERVER-app" -v
 fi
 
-if [ ! -f out/yarn.lock ]
+if [ ! -f out/pnpm-lock.yaml ]
 then
-  echo "⚠️ Early exit 1 because no yarn.lock was found in the out directory."
+  echo "⚠️ Early exit 1 because no pnpm-lock.yaml was found in the out directory."
   exit 1
 fi
 
@@ -22,10 +22,11 @@ then
   exit 1
 fi
 
-rm yarn.lock
+rm pnpm-lock.yaml
 rm -rf packages
 rm -rf apps
-mv out/yarn.lock ./
+mv out/pnpm-lock.yaml ./
+mv out/pnpm-workspace.yaml ./
 if [ -d out/packages ]
 then
   mv out/packages packages
@@ -34,5 +35,5 @@ if [ -d out/apps ]
 then
   mv out/apps apps
 fi
-# run yarn without frozen/immutable lockfile
-yarn
+# run install without frozen lockfile
+pnpm install --no-frozen-lockfile
