@@ -20,8 +20,8 @@
     "test:dev": "jest --watch"
   },
   "devDependencies": {
-    "@republik/mdast-react-render": "*",
-    "@republik/tsconfig": "*",
+    "@republik/mdast-react-render": "workspace:*",
+    "@republik/tsconfig": "workspace:*",
     "@swc/core": "^1.3.57",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",

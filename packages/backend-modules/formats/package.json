@@ -16,11 +16,8 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
-    "apollo-modules-node": "*",
+    "apollo-modules-node": "workspace:*",
     "d3-time-format": "^2.2.3"
   }
 }

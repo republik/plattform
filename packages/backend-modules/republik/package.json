@@ -22,10 +22,10 @@
     "db:seed:users": "cat ../auth/seeds/seeds.example.json | node ../auth/seeds/seed.js --truncate"
   },
   "dependencies": {
-    "@orbiting/backend-modules-assets": "*",
-    "@orbiting/backend-modules-translate": "*",
-    "@orbiting/backend-modules-lead-tracking": "*",
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-assets": "workspace:*",
+    "@orbiting/backend-modules-translate": "workspace:*",
+    "@orbiting/backend-modules-lead-tracking": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
     "d3-time": "^1.0.8",
@@ -44,6 +44,6 @@
     "zod": "^3.22.3"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "workspace:*"
   }
 }

@@ -14,7 +14,7 @@
     {
       "label": "Install depencencies",
       "type": "shell",
-      "command": "yarn",
+      "command": "pnpm install",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -27,7 +27,7 @@
     {
       "label": "dev:www",
       "type": "shell",
-      "command": "yarn turbo run dev --filter=@orbiting/www-app...",
+      "command": "pnpm turbo run dev --filter=@orbiting/www-app...",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -39,7 +39,7 @@
     {
       "label": "dev:admin",
       "type": "shell",
-      "command": "yarn turbo run dev --filter=@orbiting/admin-app...",
+      "command": "pnpm turbo run dev --filter=@orbiting/admin-app...",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -51,7 +51,7 @@
     {
       "label": "dev:api",
       "type": "shell",
-      "command": "yarn turbo run dev --filter=@orbiting/api-app... --concurrency=100",
+      "command": "pnpm turbo run dev --filter=@orbiting/api-app... --concurrency=100",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -63,7 +63,7 @@
     {
       "label": "proxy:staging",
       "type": "shell",
-      "command": "yarn yaproxy:staging",
+      "command": "pnpm yaproxy:staging",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -76,7 +76,7 @@
     {
       "label": "proxy:staging-shop",
       "type": "shell",
-      "command": "yarn yaproxy:staging-shop",
+      "command": "pnpm yaproxy:staging-shop",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -89,7 +89,7 @@
     {
       "label": "proxy:prod",
       "type": "shell",
-      "command": "yarn yaproxy",
+      "command": "pnpm yaproxy",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",

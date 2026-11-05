@@ -7,9 +7,9 @@
   "main": "build/index.js",
   "types": "build/@types",
   "dependencies": {
-    "@orbiting/backend-modules-scalars": "*",
-    "@orbiting/backend-modules-types": "*",
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-types": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "csv-parser": "^3.0.0",
     "zod": "^3.22.3"
   },

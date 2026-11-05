@@ -4,7 +4,7 @@
     {
       "name": "www",
       "cwd": "apps/www",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev"],
       "port": 3010
     }

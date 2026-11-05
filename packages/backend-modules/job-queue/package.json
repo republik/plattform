@@ -6,8 +6,8 @@
   "main": "build/index.js",
   "types": "build/@types",
   "dependencies": {
-    "@orbiting/backend-modules-types": "*",
-    "@orbiting/backend-modules-logger": "*",
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@orbiting/backend-modules-logger": "workspace:*",
     "pg-boss": "^10.3.3",
     "debug": "^4.3.5"
   },

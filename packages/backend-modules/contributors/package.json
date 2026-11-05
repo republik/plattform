@@ -5,11 +5,11 @@
   "main": "build/index.js",
   "types": "build/@types",
   "dependencies": {
-    "@orbiting/backend-modules-auth": "*",
-    "@orbiting/backend-modules-scalars": "*",
-    "@orbiting/backend-modules-types": "*",
-    "@orbiting/backend-modules-utils": "*",
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@orbiting/backend-modules-utils": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "is-uuid": "^1.0.2",
     "@aws-sdk/client-s3": "^3.846.0"
   },

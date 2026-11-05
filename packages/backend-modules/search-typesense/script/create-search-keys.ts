@@ -30,7 +30,7 @@
  * values into TYPESENSE_SEARCH_KEY and TYPESENSE_SEARCH_KEY_PUBLIC in that
  * environment's secrets.
  *
- * Usage: yarn workspace @orbiting/backend-modules-search-typesense run create-search-keys
+ * Usage: pnpm --filter @orbiting/backend-modules-search-typesense run create-search-keys
  */
 require('@orbiting/backend-modules-env').config()
 

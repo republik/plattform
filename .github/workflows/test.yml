@@ -25,10 +25,11 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js 24.x
         uses: actions/setup-node@v3
         with:
           node-version: 24.x
-          cache: 'yarn'
-      - run: yarn --frozen-lockfile
-      - run: yarn test
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test

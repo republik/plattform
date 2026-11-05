@@ -2,22 +2,11 @@
   "name": "@republik/plattform",
   "version": "0.0.0",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*",
-      "packages/mdast/*",
-      "packages/backend-modules/*"
-    ],
-    "nohoist": [
-      "**/zod"
-    ]
-  },
   "scripts": {
     "prepare": "turbo run prepare",
     "test": "turbo run test",
     "start": "scripts/start.sh",
-    "start:scheduler": "cd apps/api && yarn start:scheduler",
+    "start:scheduler": "pnpm --filter @orbiting/api-app start:scheduler",
     "build": "scripts/build.sh",
     "dev": "turbo run dev --parallel --concurrency=100",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",
@@ -28,7 +17,7 @@
     "heroku-prebuild": "scripts/prune.sh",
     "heroku-postbuild": "scripts/build.sh && scripts/heroku-postbuild.sh",
     "heroku-cleanup": "scripts/heroku-cleanup.sh",
-    "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn populate",
+    "dev:setup": "pnpm migrate:db:create && pnpm migrate:up && pnpm migrate:db:import && pnpm populate",
     "pull:images": "packages/backend-modules/publikator/script/copyImages.js",
     "populate:membershipStats:ages": "packages/backend-modules/republik/script/MembershipStats/ages/populate.js",
     "populate:revenueStats:segments": "packages/backend-modules/republik/script/RevenueStats/segments/populate.js",
@@ -39,7 +28,7 @@
     "populate:membershipStats:names": "packages/backend-modules/republik/script/MembershipStats/names/populate.js",
     "populate:membershipStats:geo": "packages/backend-modules/republik/script/MembershipStats/geo/populate.js",
     "populate:membershipStats:geoCities": "packages/backend-modules/republik/script/MembershipStats/geoCities/populate.js",
-    "populate": "yarn populate:membershipStats:geoCities; yarn populate:revenueStats:segments; yarn populate:collections:evolution; yarn populate:collections:last; yarn populate:discussions:evolution; yarn populate:discussions:last; yarn populate:membershipStats:ages; yarn populate:membershipStats:names; yarn populate:membershipStats:geo;",
+    "populate": "pnpm populate:membershipStats:geoCities; pnpm populate:revenueStats:segments; pnpm populate:collections:evolution; pnpm populate:collections:last; pnpm populate:discussions:evolution; pnpm populate:discussions:last; pnpm populate:membershipStats:ages; pnpm populate:membershipStats:names; pnpm populate:membershipStats:geo;",
     "migrate:db:create": "packages/backend-modules/migrations/script/db/create.js",
     "migrate:db:import": "packages/backend-modules/migrations/script/db/import.js",
     "migrate:create": "packages/backend-modules/migrations/script/create.js",
@@ -73,13 +62,5 @@
   "engines": {
     "node": "24"
   },
-  "packageManager": "yarn@1.22.10",
-  "resolutions": {
-    "@types/node": "24",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1",
-    "typescript": "^5.6.2"
-  }
+  "packageManager": "pnpm@12.16.1"
 }

@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  }
+  "homepage": "https://github.com/republik/plattform#readme"
 }

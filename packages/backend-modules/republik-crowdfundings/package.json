@@ -22,9 +22,9 @@
     "dev:postfinance:import": "concurrently 'tsc -w' 'sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development nodemon lib/scheduler/importPaymentsRunner.js'"
   },
   "dependencies": {
-    "@orbiting/backend-modules-referral-campaigns": "*",
-    "@orbiting/backend-modules-mailchimp": "*",
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-referral-campaigns": "workspace:*",
+    "@orbiting/backend-modules-mailchimp": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
     "dayjs": "^1.11.7",
@@ -43,7 +43,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-types": "workspace:*",
     "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.162",
     "@types/sharp": "^0.25.1",
