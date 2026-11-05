@@ -32,7 +32,7 @@ function getCommentHref(
   params.set('focus', commentId)
 
   const pathname =
-    discussion.document?.meta?.template === 'article' ? `/dialog${path}` : path
+    discussion.sanityDocument?.type === 'article' ? `/dialog${path}` : path
 
   return `${pathname}?${params}`
 }

@@ -118,25 +118,6 @@ export const notificationsQuery = gql`
               id
               title
               path
-              document {
-                id
-                meta {
-                  title
-                  path
-                  credits
-                  template
-                  ownDiscussion {
-                    id
-                    path
-                    closed
-                  }
-                  linkedDiscussion {
-                    id
-                    path
-                    closed
-                  }
-                }
-              }
             }
           }
           __typename
