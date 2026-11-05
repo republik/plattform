@@ -1,5 +1,10 @@
 module.exports = `
 
+enum OrderDirection {
+  ASC
+  DESC
+}
+
 enum AccessRole {
   ADMIN
   EDITOR
