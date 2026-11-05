@@ -1,24 +1,5 @@
 const { getMeta } = require('../../lib/meta')
-const {
-  processMembersOnlyZonesInContent,
-  processRepoImageUrlsInContent,
-  processRepoImageUrlsInMeta,
-  processEmbedImageUrlsInContent,
-  processNodeModifiersInContent,
-  processIfHasAccess,
-} = require('../../lib/process')
-const {
-  contentUrlResolver,
-  metaUrlResolver,
-} = require('../../lib/resolve')
-
 const getDocuments = require('./_queries/documents')
-
-const {
-  lib: {
-    webp: { addFormatAuto },
-  },
-} = require('@orbiting/backend-modules-assets')
 
 module.exports = {
   repoId(doc, _args, _context) {
@@ -37,53 +18,11 @@ module.exports = {
   type(doc) {
     return doc.type || 'mdast'
   },
-  async content(doc, { urlPrefix, searchString }, context) {
-    // we only do auto slugging when in a published documents context
-    // - this is easiest detectable by _all being present from documents resolver
-    // - alt check info.path for documents / document being the root
-    //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
-    if (doc._all || doc._users) {
-      contentUrlResolver(
-        doc,
-        doc._all,
-        doc._users,
-        undefined,
-        urlPrefix, // https://www.republik.ch bei Newslettern?
-        searchString,
-        context.user || null,
-      )
-
-      await Promise.all([
-        processRepoImageUrlsInContent(doc.content, addFormatAuto),
-        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
-      ])
-
-      processMembersOnlyZonesInContent(doc.content, context.user, doc._apiKey)
-      processNodeModifiersInContent(doc.content, context.user)
-      if (doc.meta.template !== 'article') {
-        processIfHasAccess(doc.content, context.user, doc._apiKey)
-      }
-    }
+  content(doc) {
     return doc.content
   },
-  async meta(doc, { urlPrefix, searchString }, context) {
-    const meta = await getMeta(doc)
-    if (doc._all || doc._users) {
-      metaUrlResolver(
-        meta,
-        doc._all,
-        doc._users,
-        undefined,
-        urlPrefix,
-        searchString,
-        context.user || null,
-        doc._apiKey,
-      )
-
-      await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
-    }
-
-    return meta
+  async meta(doc) {
+    return getMeta(doc)
   },
   async children(
     doc,
