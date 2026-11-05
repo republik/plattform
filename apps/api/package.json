@@ -41,7 +41,6 @@
     "@orbiting/backend-modules-migrations": "*",
     "@orbiting/backend-modules-next-reads": "*",
     "@orbiting/backend-modules-payments": "*",
-    "@orbiting/backend-modules-publikator": "*",
     "@orbiting/backend-modules-push-notifications": "*",
     "@orbiting/backend-modules-redirections": "*",
     "@orbiting/backend-modules-referral-campaigns": "*",

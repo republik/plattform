@@ -13,8 +13,6 @@ import { PUBLISH_NOTIFICATION_JOB_OPTIONS } from '../lib/workers/publishNotifica
 // nobody's really using it yet" for this one: the moment this enqueues, real
 // emails/push go out to real subscribers. Defaults to disabled so merging
 // this feature doesn't turn on live sends before the agreed launch date.
-// Mirrors the SANITY_SYNC_FROM_PUBLIKATOR_ENABLED pattern in
-// publikatorSync/index.ts.
 export const isPublishNotificationsEnabled = () =>
   isKillSwitchEnabled('SANITY_PUBLISH_NOTIFICATIONS_ENABLED')
 
@@ -68,8 +66,7 @@ export const publishNotificationHandler = async (
   // Spreads PUBLISH_NOTIFICATION_JOB_OPTIONS in rather than passing
   // singletonKey alone: Queue.send does `options ?? worker.options`, so any
   // explicit options object here replaces the worker's configured retry
-  // policy rather than merging with it. Mirrors publikatorSync/index.ts's
-  // commit-debounce singletonKey usage.
+  // policy rather than merging with it.
   await Queue.getInstance().send(
     'sanity:publish-notification',
     {

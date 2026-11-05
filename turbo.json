@@ -34,9 +34,6 @@
     "@orbiting/backend-modules-invoices#build": {
       "cache": false
     },
-    "@orbiting/backend-modules-publikator#build": {
-      "cache": false
-    },
     "@orbiting/backend-modules-republik#build": {
       "cache": false
     },
