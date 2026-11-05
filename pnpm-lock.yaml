@@ -2696,7 +2696,11 @@ importers:
 
   packages/backend-modules/translate: {}
 
-  packages/backend-modules/types: {}
+  packages/backend-modules/types:
+    dependencies:
+      pino:
+        specifier: ^9.14.0
+        version: 9.14.0
 
   packages/backend-modules/utils:
     dependencies:

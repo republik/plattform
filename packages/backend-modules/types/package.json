@@ -15,7 +15,9 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "dependencies": {},
+  "dependencies": {
+    "pino": "^9.14.0"
+  },
   "devDependencies": {},
   "files": [
     "tsconfig-backend.json"

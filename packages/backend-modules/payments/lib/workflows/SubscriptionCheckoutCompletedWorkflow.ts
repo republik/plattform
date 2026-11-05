@@ -131,9 +131,12 @@ export class SubscriptionCheckoutCompletedWorkflow
       extInvoiceId as string,
     )
     if (!stripeInvoice) {
-      this.logger.warn(`Invoice not found in Stripe`, {
-        externalId: extInvoiceId,
-      })
+      this.logger.warn(
+        {
+          externalId: extInvoiceId,
+        },
+        `Invoice not found in Stripe`,
+      )
       return undefined
     }
     const args = mapInvoiceArgs(company, stripeInvoice)
@@ -255,9 +258,12 @@ export class SubscriptionCheckoutCompletedWorkflow
       externalSubId,
     )
     if (!subscription) {
-      this.logger.warn(`Subscription not found in Stripe`, {
-        externalId: externalSubId,
-      })
+      this.logger.warn(
+        {
+          externalId: externalSubId,
+        },
+        `Subscription not found in Stripe`,
+      )
       return undefined
     }
 
