@@ -1,13 +1,16 @@
 # experiemntal script that is used as an heroku-prebuild
 SERVER=${SERVER:-api}
 
+# runs before dependencies are installed, so use the turbo version from package.json via dlx
+TURBO_VERSION=$(node -p "require('./package.json').devDependencies.turbo")
+
 if [ "$SERVER" = "styleguide" ]
 then
   echo "Running prune for styleguide"
-  pnpm dlx turbo@1.13.4 prune --scope="@project-r/styleguide" -v
+  pnpm dlx "turbo@$TURBO_VERSION" prune @project-r/styleguide -v
 else
   echo "Running prune for $SERVER-app"
-  pnpm dlx turbo@1.13.4 prune --scope="@orbiting/$SERVER-app" -v
+  pnpm dlx "turbo@$TURBO_VERSION" prune "@orbiting/$SERVER-app" -v
 fi
 
 if [ ! -f out/pnpm-lock.yaml ]

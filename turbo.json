@@ -1,10 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "envMode": "loose",
+  "globalDependencies": [".env.local", ".env"],
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-      "dotEnv": [
+      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.production.local",
         ".env.development.local",
         ".env.local",
@@ -13,6 +16,10 @@
         ".env"
       ]
     },
+    // These backend modules compile TypeScript in place (.js next to .ts, see
+    // each module's .gitignore), so their build output can't be described by
+    // an `outputs` glob. Caching is disabled so a cache hit never skips them.
+    // Modules that use `outDir: build` are covered by the `build/**` output above.
     "@orbiting/backend-modules-auth#build": {
       "cache": false
     },
@@ -40,9 +47,6 @@
     "@orbiting/backend-modules-republik#build": {
       "cache": false
     },
-    "@orbiting/backend-modules-payments#build": {
-      "cache": false
-    },
     "@orbiting/backend-modules-republik-crowdfundings#build": {
       "cache": false
     },
@@ -61,7 +65,8 @@
       "persistent": true,
       "dependsOn": ["^build", "build"],
       "outputs": ["dist/**", ".next/**"],
-      "dotEnv": [
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.production.local",
         ".env.development.local",
         ".env.local",
@@ -73,7 +78,8 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "dotEnv": [
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.development.local",
         ".env.local",
         ".env.development",
@@ -83,7 +89,13 @@
     "test": {
       "outputs": ["coverage/**"],
       "dependsOn": ["^build", "build"],
-      "dotEnv": [".env.test.local", ".env.local", ".env.test", ".env"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.test.local",
+        ".env.local",
+        ".env.test",
+        ".env"
+      ]
     },
     "@orbiting/backend-modules-test#test": {
       "cache": false
@@ -91,6 +103,5 @@
     "prepare": {
       "outputs": ["dist/**", "build/**"]
     }
-  },
-  "globalDotEnv": [".env.local", ".env"]
+  }
 }

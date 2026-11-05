@@ -8,7 +8,7 @@
     "start": "scripts/start.sh",
     "start:scheduler": "pnpm --filter @orbiting/api-app start:scheduler",
     "build": "scripts/build.sh",
-    "dev": "turbo run dev --parallel --concurrency=100",
+    "dev": "turbo run dev --concurrency=100",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",
     "dev:www-api": "turbo run dev --filter=@orbiting/www-app --filter=@orbiting/api-app --concurrency=100",
     "dev:api": "turbo run dev --filter=@orbiting/api-app... --concurrency=100",
@@ -56,7 +56,7 @@
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "prettier": "^2.5.1",
-    "turbo": "^1.13.0",
+    "turbo": "^2.11.10",
     "typescript": "^5.6.2",
     "yaproxy": "^1.0.2"
   },
