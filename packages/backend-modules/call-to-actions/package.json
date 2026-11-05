@@ -20,7 +20,9 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "@orbiting/backend-modules-types": "workspace:*"
+  },
   "dependencies": {
     "apollo-modules-node": "workspace:*",
     "dayjs": "^1.11.7"

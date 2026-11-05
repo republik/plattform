@@ -32,9 +32,9 @@
     "migrate:db:create": "packages/backend-modules/migrations/script/db/create.js",
     "migrate:db:import": "packages/backend-modules/migrations/script/db/import.js",
     "migrate:create": "packages/backend-modules/migrations/script/create.js",
-    "migrate:up": "DOTENV_CONFIG_PATH=apps/api/.env NODE_OPTIONS='-r dotenv/config' db-migrate up --migrations-dir packages/backend-modules/migrations/migrations",
-    "migrate:down": "DOTENV_CONFIG_PATH=apps/api/.env NODE_OPTIONS='-r dotenv/config' db-migrate down --migrations-dir packages/backend-modules/migrations/migrations --verbose",
-    "heroku:migrate:up": "db-migrate up --migrations-dir packages/backend-modules/migrations/migrations",
+    "migrate:up": "pnpm --filter @orbiting/backend-modules-migrations migrate:up",
+    "migrate:down": "pnpm --filter @orbiting/backend-modules-migrations migrate:down",
+    "heroku:migrate:up": "pnpm --filter @orbiting/backend-modules-migrations heroku:migrate:up",
     "db:seed": "packages/backend-modules/republik-crowdfundings/seeds/script/seed.js",
     "notifications:send": "cd packages/backend-modules/republik && node ../push-notifications/script/sendNotification.js",
     "auth:role:user": "node packages/backend-modules/auth/script/roleUser",
@@ -52,6 +52,7 @@
     "gen:module": "packages/backend-modules/gen-backend-module/index.js new backend-module"
   },
   "devDependencies": {
+    "@types/node": "24",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "prettier": "^2.5.1",

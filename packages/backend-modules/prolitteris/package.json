@@ -14,11 +14,11 @@
     "@orbiting/backend-modules-types": "workspace:*"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-env": "workspace:*",
     "@elastic/elasticsearch": "^8.12.2",
-    "ts-jest": "^29.1.2",
     "@faker-js/faker": "^8.4.1",
+    "@orbiting/backend-modules-env": "workspace:*",
     "@types/jest": "^29.5.12",
+    "ts-jest": "^29.1.2",
     "valibot": "^0.29.0",
     "yargs": "^17.7.2"
   }

@@ -19,7 +19,10 @@
   "scripts": {
     "migrate:db:create": "script/db/create.js",
     "migrate:db:import": "script/db/import.js",
-    "migrate:create": "script/create.js"
+    "migrate:create": "script/create.js",
+    "migrate:up": "DOTENV_CONFIG_PATH=../../../apps/api/.env NODE_OPTIONS='-r dotenv/config' db-migrate up --migrations-dir migrations",
+    "migrate:down": "DOTENV_CONFIG_PATH=../../../apps/api/.env NODE_OPTIONS='-r dotenv/config' db-migrate down --migrations-dir migrations --verbose",
+    "heroku:migrate:up": "db-migrate up --migrations-dir migrations"
   },
   "devDependencies": {
     "moment": "^2.26.0",

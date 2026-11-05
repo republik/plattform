@@ -30,6 +30,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@types/bluebird": "^3.5.42",
+    "@types/debug": "^4.1.13",
     "@types/jest": "^29.5.12",
     "ts-jest": "^29.1.2"
   }

@@ -16,5 +16,8 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/is-uuid": "^1.0.2"
   }
 }

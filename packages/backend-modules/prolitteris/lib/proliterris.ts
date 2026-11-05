@@ -94,7 +94,7 @@ export class ProLitterisAPI
     const res = await this.#doRequest('/rest/api/1/message', 'POST', msg)
 
     if (res && res.ok) {
-      const json = await res.json()
+      const json: any = await res.json()
       return {
         createdAt: json.createdAt,
         title: json.title,
@@ -103,7 +103,7 @@ export class ProLitterisAPI
         textLength: json.participants,
       }
     } else if (res && (res.status === 400 || res.status === 500)) {
-      const error = (await res.json()).error
+      const { error }: any = await res.json()
       return {
         code: error.code,
         message: error.message,

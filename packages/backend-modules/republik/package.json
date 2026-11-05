@@ -44,6 +44,11 @@
     "zod": "^3.22.3"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "workspace:*"
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@types/bluebird": "^3.5.42",
+    "@types/debug": "^4.1.13",
+    "@types/jest": "^29.5.12",
+    "@types/yargs": "^17.0.32",
+    "ts-jest": "^29.1.5"
   }
 }

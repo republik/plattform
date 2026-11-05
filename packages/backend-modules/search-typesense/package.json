@@ -32,7 +32,6 @@
     "@types/debug": "*",
     "@types/jest": "^29.5.12",
     "@types/lodash": "*",
-    "@types/node": "*",
     "ts-jest": "^29.1.2",
     "ts-node": "*",
     "typescript": "*"

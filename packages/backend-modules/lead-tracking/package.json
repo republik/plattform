@@ -16,5 +16,8 @@
     "csv-parser": "^3.0.0",
     "@orbiting/backend-modules-base": "workspace:*",
     "@orbiting/backend-modules-env": "workspace:*"
+  },
+  "devDependencies": {
+    "@orbiting/backend-modules-types": "workspace:*"
   }
 }

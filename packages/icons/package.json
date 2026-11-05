@@ -22,7 +22,10 @@
     "prepare": "pnpm build"
   },
   "devDependencies": {
+    "@republik/eslint-config-frontend": "workspace:*",
     "@svgr/cli": "^6.1.2",
+    "@types/react": "^19.3.0",
+    "nodemon": "^2.0.22",
     "tsup": "^8.5.0"
   },
   "peerDependencies": {

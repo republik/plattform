@@ -23,6 +23,7 @@
     "fast-glob": "^3.2.4"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "workspace:*"
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@types/yargs": "^17.0.32"
   }
 }

@@ -33,6 +33,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "workspace:*"
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@types/is-uuid": "^1.0.2"
   }
 }

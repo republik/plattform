@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
-    "@types/validator": "^13.7.4"
+    "@types/validator": "^13.7.4",
+    "@types/yargs": "^17.0.32"
   }
 }

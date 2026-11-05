@@ -54,6 +54,9 @@
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
     "@types/debug": "^4.1.5",
+    "@types/is-uuid": "^1.0.2",
+    "@types/uuid": "^8.3.4",
+    "@types/yargs": "^17.0.32",
     "nodemon": "^2.0.4",
     "ws": "^7.4.6"
   }
