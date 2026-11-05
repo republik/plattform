@@ -233,8 +233,8 @@ export const fetchAudioContentHash = (documentId: string) =>
     { perspective: 'raw', tag: 'audio.content-hash' },
   )
 
-// Same idempotency shape as fetchAudioContentHash above, for the Publikator
-// sync's legacy-audio link (see publikatorSync/legacyAudio.ts): that flow
+// Same idempotency shape as fetchAudioContentHash above, for the legacy-audio
+// link: that flow
 // needs both `audioContentHash` (never overwrite a real Sanity-native
 // generation) and the currently-stored `audioSourceMp3` (skip re-recording
 // an audioVersions entry when nothing about the link actually changed) —
@@ -390,8 +390,7 @@ export interface AudioVersion {
   // Optional: Studio's `audioVersion` schema itself only ever required
   // `url` — a version can point at an externally-hosted file with no
   // matching Sanity file asset (Studio's own backfill-audio-versions
-  // migration already does exactly this for pre-Sanity legacy audio; see
-  // publikatorSync/legacyAudio.ts for a live example of the same case).
+  // migration already does exactly this for pre-Sanity legacy audio).
   file?: { _type: 'file'; asset: { _type: 'reference'; _ref: string } }
   url: string
   durationMs?: number

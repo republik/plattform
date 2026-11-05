@@ -29,7 +29,6 @@
     "heroku-postbuild": "scripts/build.sh && scripts/heroku-postbuild.sh",
     "heroku-cleanup": "scripts/heroku-cleanup.sh",
     "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn populate",
-    "pull:images": "packages/backend-modules/publikator/script/copyImages.js",
     "populate:membershipStats:ages": "packages/backend-modules/republik/script/MembershipStats/ages/populate.js",
     "populate:revenueStats:segments": "packages/backend-modules/republik/script/RevenueStats/segments/populate.js",
     "populate:collections:evolution": "packages/backend-modules/collections/script/stats/evolution.js",

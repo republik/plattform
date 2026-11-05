@@ -75,7 +75,6 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
-  ...require('@orbiting/backend-modules-publikator/loaders'),
   ...require('@orbiting/backend-modules-payments').loaders,
 }
 
@@ -102,8 +101,6 @@ const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
 const { CockpitWorker } = require('./workers/cockpit')
 const {
   PublishNotificationWorker,
-  PublikatorSyncWorker,
-  isSyncFromPublikatorEnabled,
 } = require('@orbiting/backend-modules-sanity')
 const {
   parseFeatureHeader,
@@ -157,13 +154,6 @@ function setupQueue(context, monitorQueueState = undefined) {
     )
   }
 
-  // SANITY_SYNC (transition period, removable — see
-  // packages/backend-modules/sanity/lib/publikatorSync/index.ts). Registered
-  // only when enabled, so the queue is a no-op footprint otherwise.
-  if (isSyncFromPublikatorEnabled()) {
-    workers.push(PublikatorSyncWorker)
-  }
-
   queue.registerWorkers(workers)
 
   return queue
@@ -205,13 +195,9 @@ const run = async (workerId, config) => {
   const {
     graphql: republikCrowdfundings,
   } = require('@orbiting/backend-modules-republik-crowdfundings')
-  const {
-    graphql: publikator,
-  } = require('@orbiting/backend-modules-publikator')
 
   const graphqlSchema = merge(republik, [
     republikCrowdfundings,
-    publikator,
     documents,
     searchTypesense,
     redirections,
@@ -235,8 +221,6 @@ const run = async (workerId, config) => {
     paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
-    require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
-    require('@orbiting/backend-modules-publikator/express/webhook'),
     require('@orbiting/backend-modules-invoices/express'),
     // needed for the gender sheet import
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
