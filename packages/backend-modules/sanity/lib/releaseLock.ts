@@ -101,9 +101,13 @@ async function relock(client: SanityClient, releaseId: string, publishAt: string
     // This IS the failure mode that needs a human: the release is now
     // sitting unscheduled with nothing else watching it.
     console.error(
-      `RELEASE STUCK UNSCHEDULED: ${releaseId} could not be re-locked ` +
-        `after ${ACTION_ATTEMPTS} attempts (was due to publish at ${publishAt}). ` +
-        `Needs manual recovery.`,
+      // constant format string, values passed as arguments (not tainted format)
+      'RELEASE STUCK UNSCHEDULED: %s could not be re-locked ' +
+        'after %s attempts (was due to publish at %s). ' +
+        'Needs manual recovery.',
+      releaseId,
+      ACTION_ATTEMPTS,
+      publishAt,
       err,
     )
   }

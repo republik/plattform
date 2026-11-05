@@ -162,6 +162,9 @@ describe('withReleaseUnlock', () => {
       expect(schedule).toHaveBeenCalledTimes(3)
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('RELEASE STUCK UNSCHEDULED'),
+        expect.any(String),
+        expect.anything(),
+        expect.any(String),
         expect.any(Error),
       )
       consoleError.mockRestore()
