@@ -7,7 +7,6 @@ const {
 } = require('@orbiting/backend-modules-embeds')
 
 const modifiers = require('./modifiers')
-const { hasFullDocumentAccess } = require('./restrictions')
 
 const processRepoImageUrlsInMeta = async (mdast, fn) => {
   const fns = []
@@ -148,14 +147,6 @@ const processEmbedsInContent = async (mdast, fn, context) => {
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processMembersOnlyZonesInContent = (mdast, user, apiKey) => {
-  visit(mdast, 'zone', (node) => {
-    if (node.data?.membersOnly && !hasFullDocumentAccess(user, apiKey)) {
-      node.children = []
-    }
-  })
-}
-
 const processNodeModifiersInContent = (mdast, user) => {
   visit(mdast, 'zone', (node) => {
     node.data?.modifiers?.forEach?.(({ name, ...settings }) => {
@@ -167,36 +158,10 @@ const processNodeModifiersInContent = (mdast, user) => {
   })
 }
 
-const processIfHasAccess = (mdast, user, apiKey) => {
-  visit(mdast, 'zone', (node, index, parent) => {
-    if (node.identifier === 'IF' && node.data?.present === 'hasAccess') {
-      const elseIndex = node.children.findIndex(
-        ({ identifier }) => identifier === 'ELSE',
-      )
-
-      const children = hasFullDocumentAccess(user, apiKey)
-        ? node.children.filter((_, index) => index !== elseIndex)
-        : node.children.find((_, index) => index === elseIndex)?.children || []
-
-      // unwrap into parent children
-      parent.children = [
-        ...parent.children.slice(0, index),
-        ...children,
-        ...parent.children.slice(index + 1),
-      ]
-
-      // revisit entry index again as children may contain an IF block
-      return index
-    }
-  })
-}
-
 module.exports = {
   processRepoImageUrlsInContent,
   processEmbedImageUrlsInContent,
   processRepoImageUrlsInMeta,
   processEmbedsInContent,
-  processMembersOnlyZonesInContent,
   processNodeModifiersInContent,
-  processIfHasAccess,
 }

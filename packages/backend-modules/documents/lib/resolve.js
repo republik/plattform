@@ -5,7 +5,6 @@ const compact = require('lodash/compact')
 
 const { mdastToString } = require('@orbiting/backend-modules-utils')
 
-const { hasFullDocumentAccess } = require('./restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
 
@@ -303,49 +302,6 @@ const contentUrlResolver = (
   })
 }
 
-const metaUrlResolver = (
-  meta,
-  _all,
-  _users,
-  errors,
-  urlPrefix,
-  searchString,
-  user,
-  apiKey,
-) => {
-  const urlReplacer = createUrlReplacer(
-    _all,
-    _users,
-    errors,
-    urlPrefix,
-    searchString,
-  )
-
-  meta.series?.episodes?.forEach((episode, index) => {
-    if (
-      index <= 1 ||
-      !episode.document?.meta?.path ||
-      episode.document.meta.path === meta.path ||
-      user === undefined ||
-      hasFullDocumentAccess(user, apiKey)
-    ) {
-      return
-    }
-
-    episode.document = undefined
-  })
-
-  meta?.credits?.children
-    ?.filter((child) => child.type === 'link')
-    .forEach((child) => {
-      child.url = urlReplacer(child.url)
-    })
-
-  if (user === undefined || !hasFullDocumentAccess(user, apiKey)) {
-    meta.recommendations = null
-  }
-}
-
 const extractIdsFromNode = (node) => {
   const repos = []
   const users = []
@@ -429,7 +385,6 @@ module.exports = {
   extractUserUrl,
   createResolver,
   contentUrlResolver,
-  metaUrlResolver,
   metaFieldResolver,
   stringifyNode,
 }
