@@ -2,10 +2,20 @@ const useragent = require('useragent')
 
 const appRegex = /RepublikApp\/(\S+)/
 
-module.exports.detect = (ua) => {
-  if (!ua) {
+// useragent@2.3.0 has an unpatched ReDoS on long input and the User-Agent
+// header is attacker controlled (e.g. unauthenticated `echo` query).
+// Real user agents are well below this.
+const MAX_UA_LENGTH = 512
+
+const limit = (ua) => String(ua).slice(0, MAX_UA_LENGTH)
+
+module.exports.MAX_UA_LENGTH = MAX_UA_LENGTH
+
+module.exports.detect = (rawUa) => {
+  if (!rawUa) {
     return
   }
+  const ua = limit(rawUa)
 
   const info = useragent.parse(ua)
 
@@ -22,7 +32,7 @@ module.exports.detect = (ua) => {
 
 module.exports.isApp = (ua) => {
   if (ua) {
-    const match = ua.match(appRegex)
+    const match = limit(ua).match(appRegex)
     return !!match
   }
 
