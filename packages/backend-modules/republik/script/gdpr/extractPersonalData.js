@@ -451,12 +451,18 @@ Promise.props({ pgdb: PgDb.connect() })
         id: commentsPosted.map(({ discussionId }) => discussionId),
       })
       const discussionPreferences =
-        await pgdb.public.discussionPreferences.find({
-          discussionId: discussions.map(({ id }) => id),
-        })
-      const credentials = await pgdb.public.credentials.find({
-        id: discussionPreferences.map(({ credentialId }) => credentialId),
-      })
+        discussions.length > 0
+          ? await pgdb.public.discussionPreferences.find({
+              discussionId: discussions.map(({ id }) => id),
+            })
+          : []
+      const credentialIds = discussionPreferences
+        .map(({ credentialId }) => credentialId)
+        .filter(Boolean)
+      const credentials =
+        credentialIds.length > 0
+          ? await pgdb.public.credentials.find({ id: credentialIds })
+          : []
 
       await save(
         destination,
@@ -468,7 +474,7 @@ Promise.props({ pgdb: PgDb.connect() })
           )
           const discussionPreference = discussionPreferences.find(
             (discussionPreference) =>
-              discussionPreference.discussionId === discussion.id &&
+              discussionPreference.discussionId === discussion?.id &&
               discussionPreference.userId === user.id,
           )
           const credential =
@@ -479,8 +485,8 @@ Promise.props({ pgdb: PgDb.connect() })
             )
 
           return {
-            discussion_title: discussion.title,
-            discussion_path: discussion.path,
+            discussion_title: discussion?.title,
+            discussion_path: discussion?.path,
             ...pick(comment, [
               'createdAt',
               'updatedAt',
@@ -527,8 +533,8 @@ Promise.props({ pgdb: PgDb.connect() })
           )
 
           return {
-            discussion_title: discussion.title,
-            discussion_path: discussion.path,
+            discussion_title: discussion?.title,
+            discussion_path: discussion?.path,
             ...pick(comment, ['content', 'vote']),
           }
         }),
@@ -562,8 +568,8 @@ Promise.props({ pgdb: PgDb.connect() })
           )
 
           return {
-            discussion_title: discussion.title,
-            discussion_path: discussion.path,
+            discussion_title: discussion?.title,
+            discussion_path: discussion?.path,
             ...pick(comment, ['content', 'reportedAt']),
           }
         }),
@@ -652,18 +658,30 @@ Promise.props({ pgdb: PgDb.connect() })
         id: electionBallots.map(({ electionId }) => electionId),
       })
 
-      const electionCandidacies = await pgdb.public.electionCandidacies.find({
-        id: electionBallots.map(({ candidacyId }) => candidacyId),
-      })
+      const candidacyIds = electionBallots
+        .map(({ candidacyId }) => candidacyId)
+        .filter(Boolean)
+      const electionCandidacies =
+        candidacyIds.length > 0
+          ? await pgdb.public.electionCandidacies.find({ id: candidacyIds })
+          : []
 
       if (electionCandidacies.length > 0) {
-        const candidacyUsers = await pgdb.public.users.find({
-          id: electionCandidacies.map(({ userId }) => userId),
-        })
+        const candidacyUserIds = electionCandidacies
+          .map(({ userId }) => userId)
+          .filter(Boolean)
+        const candidacyUsers =
+          candidacyUserIds.length > 0
+            ? await pgdb.public.users.find({ id: candidacyUserIds })
+            : []
 
-        const candidacyComments = await pgdb.public.comments.find({
-          id: electionCandidacies.map(({ commentId }) => commentId),
-        })
+        const candidacyCommentIds = electionCandidacies
+          .map(({ commentId }) => commentId)
+          .filter(Boolean)
+        const candidacyComments =
+          candidacyCommentIds.length > 0
+            ? await pgdb.public.comments.find({ id: candidacyCommentIds })
+            : []
 
         electionCandidacies.forEach((cancidacy, index) => {
           electionCandidacies[index]._user = candidacyUsers.find(
@@ -689,11 +707,11 @@ Promise.props({ pgdb: PgDb.connect() })
           )
 
           return {
-            election_description: election.description,
-            election_slug: election.slug,
+            election_description: election?.description,
+            election_slug: election?.slug,
             ...pick(electionBallot, ['createdAt']),
             electionCandidacy_user_name:
-              electionCandidacy &&
+              electionCandidacy?._user &&
               [
                 electionCandidacy._user.firstName,
                 electionCandidacy._user.lastName,
@@ -701,7 +719,7 @@ Promise.props({ pgdb: PgDb.connect() })
                 .filter(Boolean)
                 .join(' '),
             electionCandidacy_comment_content:
-              electionCandidacy && electionCandidacy._comment.content,
+              electionCandidacy?._comment?.content,
           }
         }),
       )
@@ -848,17 +866,26 @@ Promise.props({ pgdb: PgDb.connect() })
         pledgeId: pledges.map(({ id }) => id),
       })
 
-      const packageOptions = await pgdb.public.packageOptions.find({
-        id: pledgeOptions.map(({ templateId }) => templateId),
-      })
+      const packageOptions =
+        pledgeOptions.length > 0
+          ? await pgdb.public.packageOptions.find({
+              id: pledgeOptions.map(({ templateId }) => templateId),
+            })
+          : []
 
-      const membershipRewards = await pgdb.public.membershipTypes.find({
-        rewardId: packageOptions.map(({ rewardId }) => rewardId),
-      })
+      const rewardIds = packageOptions
+        .map(({ rewardId }) => rewardId)
+        .filter(Boolean)
 
-      const goodieRewards = await pgdb.public.goodies.find({
-        rewardId: packageOptions.map(({ rewardId }) => rewardId),
-      })
+      const membershipRewards =
+        rewardIds.length > 0
+          ? await pgdb.public.membershipTypes.find({ rewardId: rewardIds })
+          : []
+
+      const goodieRewards =
+        rewardIds.length > 0
+          ? await pgdb.public.goodies.find({ rewardId: rewardIds })
+          : []
 
       await save(
         destination,
@@ -869,16 +896,16 @@ Promise.props({ pgdb: PgDb.connect() })
             (packageOption) => packageOption.id === pledgeOption.templateId,
           )
           const membershipReward = membershipRewards.find(
-            (reward) => reward.rewardId === packageOption.rewardId,
+            (reward) => reward.rewardId === packageOption?.rewardId,
           )
           const goodieReward = goodieRewards.find(
-            (reward) => reward.rewardId === packageOption.rewardId,
+            (reward) => reward.rewardId === packageOption?.rewardId,
           )
           const pledge = pledges.find(
             (pledge) => pledge.id === pledgeOption.pledgeId,
           )
           const package_ = packages.find(
-            (package_) => package_.id === pledge.packageId,
+            (package_) => package_.id === pledge?.packageId,
           )
 
           return {
@@ -895,12 +922,12 @@ Promise.props({ pgdb: PgDb.connect() })
               'periods',
               'total',
             ]),
-            package_name: package_.name,
-            pledge_donation: pledge.donation,
-            pledge_total: pledge.total,
-            pledge_status: pledge.status,
-            pledge_reason: pledge.reason,
-            pledge_messageToClaimers: pledge.messageToClaimers,
+            package_name: package_?.name,
+            pledge_donation: pledge?.donation,
+            pledge_total: pledge?.total,
+            pledge_status: pledge?.status,
+            pledge_reason: pledge?.reason,
+            pledge_messageToClaimers: pledge?.messageToClaimers,
           }
         }),
       )
@@ -910,12 +937,18 @@ Promise.props({ pgdb: PgDb.connect() })
      * payments
      */
 
-    const pledgePayments = await pgdb.public.pledgePayments.find({
-      pledgeId: pledges.map(({ id }) => id),
-    })
-    const payments = await pgdb.public.payments.find({
-      id: pledgePayments.map(({ paymentId }) => paymentId),
-    })
+    const pledgePayments =
+      pledges.length > 0
+        ? await pgdb.public.pledgePayments.find({
+            pledgeId: pledges.map(({ id }) => id),
+          })
+        : []
+    const payments =
+      pledgePayments.length > 0
+        ? await pgdb.public.payments.find({
+            id: pledgePayments.map(({ paymentId }) => paymentId),
+          })
+        : []
 
     await save(
       destination,
