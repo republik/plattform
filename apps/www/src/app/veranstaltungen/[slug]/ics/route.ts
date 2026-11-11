@@ -1,10 +1,10 @@
+import { dayjs } from '@/app/lib/util/time-format'
 import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
 } from '#graphql/cms/__generated__/gql/graphql'
 import { getCMSClient } from '@/app/lib/apollo/cms-client'
-import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { notFound } from 'next/navigation'
@@ -34,8 +34,8 @@ export async function GET(
   // Deterministic UUID
   const id = uuidV5(url, uuidV5.URL)
 
-  const start = dayjs(event.startAt)
-  const end = event.endAt ? dayjs(event.endAt) : start.add(1, 'hour')
+  const start = dayjs(event.startAt).tz()
+  const end = event.endAt ? dayjs(event.endAt).tz() : start.add(1, 'hour')
 
   // We assume that multi-day events are all-day.
   const allDay = !start.isSame(end, 'day')

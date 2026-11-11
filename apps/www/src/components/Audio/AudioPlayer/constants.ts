@@ -1,5 +1,3 @@
-import { timeFormat } from 'd3-time-format'
-
 export const ZINDEX_AUDIOPLAYER_ICONS = 6
 export const ZINDEX_AUDIOPLAYER_SCRUB = 3
 export const ZINDEX_AUDIOPLAYER_PROGRESS = 2
@@ -14,6 +12,3 @@ export const progressbarStyle = {
   right: 0,
 }
 export const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
-
-export const hoursDurationFormat = timeFormat('%-H:%M:%S')
-export const minutesDurationFormat = timeFormat('%-M:%S')

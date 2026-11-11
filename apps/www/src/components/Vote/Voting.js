@@ -8,7 +8,7 @@ import {
   Radio,
   RawHtml,
 } from '@project-r/styleguide'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import withMe from '@/lib/apollo/withMe'
 import voteT from './voteT'
 import { gql } from '@apollo/client'
@@ -67,8 +67,6 @@ const styles = {
   }),
 }
 
-const messageDateFormat = timeFormat('%e. %B %Y')
-
 const Voting = compose(
   voteT,
   withMe,
@@ -126,7 +124,7 @@ const Voting = compose(
       dangerousDisabledHTML =
         messages.thankyou ||
         vt('vote/voting/thankyou', {
-          submissionDate: messageDateFormat(new Date(voting.userSubmitDate)),
+          submissionDate: formatDate(new Date(voting.userSubmitDate)),
         })
     } else if (Date.now() > new Date(voting.endDate)) {
       dangerousDisabledHTML = messages.ended || vt('vote/voting/ended')
@@ -134,7 +132,7 @@ const Voting = compose(
       dangerousDisabledHTML =
         messages.notSignedIn ||
         vt('vote/voting/notSignedIn', {
-          beginDate: timeFormat('%d.%m.%Y')(new Date(voting.beginDate)),
+          beginDate: formatDate(new Date(voting.beginDate)),
         })
       showSignIn = true
     } else if (!voting.userIsEligible) {
