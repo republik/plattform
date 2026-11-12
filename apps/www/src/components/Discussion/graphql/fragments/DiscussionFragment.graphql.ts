@@ -10,25 +10,6 @@ import {
 export type DiscussionFragmentType = {
   id: string
   title: Nullable<string>
-  document: {
-    id: string
-    meta: {
-      path: Nullable<string>
-      twitterImage: Nullable<string>
-      template: Nullable<string>
-      publishDate: Nullable<DateTime>
-      ownDiscussion: Nullable<{
-        id: string
-        path: Nullable<string>
-        closed: boolean
-      }>
-      linkedDiscussion: Nullable<{
-        id: string
-        path: Nullable<string>
-        closed: boolean
-      }>
-    }
-  }
   path: Nullable<string>
   closed: boolean
   collapsed: boolean

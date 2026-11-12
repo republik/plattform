@@ -65,24 +65,6 @@ const getPublicUser = gql`
             id
             title
             path
-            document {
-              id
-              meta {
-                title
-                path
-                template
-                ownDiscussion {
-                  id
-                  path
-                  closed
-                }
-                linkedDiscussion {
-                  id
-                  path
-                  closed
-                }
-              }
-            }
           }
           createdAt
         }
