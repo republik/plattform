@@ -10,6 +10,7 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { AutomaticRecommendations } from '@/app/(sanity)/components/next-reads/automatic-recommendations'
 import { EditorsRecommendations } from '@/app/(sanity)/components/next-reads/editors-recommendations'
+import { GiftPaynote } from '@/app/(sanity)/components/paynotes/gift-paynote'
 import PaynoteInline from '@/app/(sanity)/components/paynotes/paynote/paynote-inline'
 import { WelcomeBanner } from '@/app/(sanity)/components/paynotes/paynotes-in-trial/welcome'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
@@ -102,6 +103,7 @@ export default async function ArticleDocument({
           </p>
 
           <ArticleTopActions article={article} />
+          <GiftPaynote />
 
           <div className={css({ display: 'flex', gap: '2' })}>
             <EditLink documentId={article._id} documentType='article' />
@@ -110,6 +112,7 @@ export default async function ArticleDocument({
 
           <ContentWall
             readingAccess={readingAccess}
+            documentId={documentId}
             excerpt={
               <ArticlePortableText value={article.content?.slice(0, 3)} />
             }
@@ -122,6 +125,7 @@ export default async function ArticleDocument({
           <ArticleBottomActions article={article} />
 
           <PaynoteInline />
+          <GiftPaynote />
 
           <FollowArticle
             seriesId={seriesId}

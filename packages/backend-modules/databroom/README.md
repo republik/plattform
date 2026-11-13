@@ -9,6 +9,7 @@
 This pacakge provides tooling to keep tables tidy. It deletes obsolete or expired data. Actions are split into "jobs":
 - postgres/accessEvents: Deletes event rows older than 90 days
 - postgres/consents: Sets attribute `ip` to `null` if row is older than 365 days
+- postgres/giftArticleLinks: Sets attribute `granter_user_id` to `null` once a link has expired, deletes the row 90 days after expiry
 - postgres/mailLog: Deletes data in attribute `info` but `message.subject` and `template` in rows older than 90 days
 - postgres/paymentsLog: Deletes event rows older than 90 days
 

@@ -16,9 +16,12 @@ import { notFound, permanentRedirect, redirect } from 'next/navigation'
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
   params,
+  searchParams,
 }: PageProps<'/[...path]'>): Promise<Metadata> {
   const { path } = await params
   const slug = `/${path.join('/')}`
+  // A gift link is shared as `<slug>?gift=<token>`; its preview says so.
+  const isGift = !!(await searchParams).gift
 
   const data = await sanityClientFetch(
     SEO_QUERY,

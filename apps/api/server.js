@@ -41,6 +41,9 @@ const {
   SanityNext20DaysCommentsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
 const { graphql: allowlist } = require('@orbiting/backend-modules-allowlist')
+const {
+  graphql: giftArticles,
+} = require('@orbiting/backend-modules-gift-articles')
 
 const {
   graphql: paymentsGraphql,
@@ -214,6 +217,7 @@ const run = async (workerId, config) => {
     paymentsGraphql,
     nextReads,
     allowlist,
+    giftArticles,
   ])
 
   // middlewares
