@@ -18,13 +18,15 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "dependencies": {
     "node-iso11649": "^2.1.2",
     "swissqrbill": "^3.2.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "*",
+    "ts-jest": "^29.1.5"
   }
 }
