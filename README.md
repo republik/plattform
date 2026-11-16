@@ -168,6 +168,17 @@ yarn dev:www
 
 (Obvious )Warning: whatever you do here is for realz, if you login to your account and change things they are changed on republik.ch!
 
+## Data protection inventory
+
+[`docs/datenschutz/inventar.md`](docs/datenschutz/inventar.md) lists the personal data stored by this platform (Art. 12 DSG): for each data source it lists the tables, the kinds of data, purpose, responsibility and retention.
+
+Keep it up to date in the same PR whenever a database change touches personal data:
+
+- a migration creates, renames or drops a table: add, rename or remove it in the `Tabellen:` line of the matching section (tables without personal data go under «Ohne Personenbezug»)
+- a migration adds a column that holds a new kind of personal data: add it under **Daten** (and **Besonders schützenswert** if applicable)
+- a retention or deletion job (e.g. databroom) is added or changed: update **Löschfrist**
+- data is sent to a new external service: update **Quelle & Speicherort**
+
 ## Deployment
 
 The environment variable `SERVER` is used to determine which app to build and run on deploy. If `SERVER` is missing the api app is run.
