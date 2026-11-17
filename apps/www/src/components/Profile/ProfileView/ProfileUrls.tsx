@@ -1,44 +1,35 @@
 import ProfileUrlIcon from '../Common/ProfileUrlIcon'
+import { parseProfileUrl } from '../Common/profileUrlPlatform'
 import { IconButton } from '@project-r/styleguide'
 
 const ProfileUrlLabel = (url: string) => {
-  try {
-    if (/bsky\.app/.test(url)) {
-      try {
-        return url?.match(/\/profile\/([^/\s]+)/)[1] ?? 'Bluesky'
-      } catch (e) {
-        return 'Bluesky'
-      }
-    } else if (/facebook\.com/.test(url)) {
-      return 'Facebook'
-    } else if (/x\.com/.test(url)) {
-      try {
-        return url?.match(/x\.com\/([^/\s]+)/)[1] ?? 'X'
-      } catch (e) {
-        return 'X'
-      }
-    } else if (/threema\.id/.test(url)) {
-      try {
-        return url?.match(/\/threema\.id\/([^/\s]+)/)[1] ?? 'Threema'
-      } catch (e) {
-        return 'Threema'
-      }
-    } else if (/signal\.me/.test(url)) {
-      return 'Signal'
-    } else if (/linkedin\.com/.test(url)) {
-      return 'LinkedIn'
-    } else if (/\/@.+@/.test(url) || /mastodon/.test(url)) {
-      try {
-        return url?.match(/@[A-Za-z0-9]+/)[0] ?? 'Mastodon'
-      } catch (e) {
-        return 'Mastodon'
-      }
-    } else {
-      const urlObject = new URL(url)
-      return urlObject.host ?? url
-    }
-  } catch (e) {
+  const parsed = parseProfileUrl(url)
+  if (!parsed) {
     return url
+  }
+  const { platform, url: urlObject } = parsed
+  const pathSegments = urlObject.pathname.split('/').filter(Boolean)
+
+  switch (platform) {
+    case 'bluesky': {
+      const handle =
+        pathSegments[0] === 'profile' ? pathSegments[1] : undefined
+      return handle || 'Bluesky'
+    }
+    case 'facebook':
+      return 'Facebook'
+    case 'x':
+      return pathSegments[0] || 'X'
+    case 'threema':
+      return pathSegments[0] || 'Threema'
+    case 'signal':
+      return 'Signal'
+    case 'linkedin':
+      return 'LinkedIn'
+    case 'mastodon':
+      return urlObject.pathname.match(/@[A-Za-z0-9_]+/)?.[0] ?? 'Mastodon'
+    default:
+      return urlObject.host || url
   }
 }
 
