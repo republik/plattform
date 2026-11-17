@@ -53,7 +53,7 @@ export function ShareAction({
         ref={triggerRef}
         className={actionStyle}
         onClick={() => {
-          trackEvent({ action: 'shareNative', name: url })
+          trackEvent({ action: 'share', name: url })
           postMessage({
             type: 'share',
             payload: { title, url, subject: emailSubject, dialogTitle: 'Teilen' },
@@ -101,7 +101,12 @@ export function ShareAction({
   ]
 
   return (
-    <Menu.Root modal={false}>
+    <Menu.Root
+      modal={false}
+      onOpenChange={(open) => {
+        if (open) trackEvent({ action: 'share', name: url })
+      }}
+    >
       <Menu.Trigger ref={triggerRef} aria-label='Teilen' className={actionStyle}>
         <ShareIcon size={ACTION_ICON_SIZE} />
         <span className={actionLabelStyle}>Teilen</span>
