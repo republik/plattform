@@ -19,7 +19,7 @@ export default async function DocumentPreviewPage({
   }
 
   return data._type === 'article' ? (
-    <ArticleDocument article={data} />
+    <ArticleDocument article={data} isPreview />
   ) : data._type === 'page' ? (
     <PageDocument page={data} />
   ) : null
