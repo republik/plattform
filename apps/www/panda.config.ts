@@ -20,7 +20,7 @@ export default defineConfig({
 
   // Files where CSS is extracted from
   // NOTE: must include any component packages that are imported in the app
-  include: ['./{pages,components,src}/**/*.{js,jsx,ts,tsx}'],
+  include: ['./src/**/*.{js,jsx,ts,tsx}'],
 
   // Files to exclude
   exclude: [],

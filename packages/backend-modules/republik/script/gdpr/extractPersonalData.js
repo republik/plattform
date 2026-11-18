@@ -14,11 +14,6 @@ const Promise = require('bluebird')
 const { csvFormat } = require('d3-dsv')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
-
-const {
-  findPublished,
-} = require('@orbiting/backend-modules-search/lib/Documents')
 
 const argv = yargs
   .option('userId', {
@@ -69,6 +64,17 @@ const save = async (destination, name, explanation, _rows = []) => {
   )
 }
 
+const saveFile = async (destination, name, explanation, buffer) => {
+  fileCount++
+
+  const filename = `${String(fileCount).padStart(2, '0')}-${name}`
+  readMeExplanations.push(`/${filename}:\n\n\t${explanation}`)
+
+  console.log(path.resolve(destination, filename))
+
+  fs.writeFileSync(path.resolve(destination, filename), buffer)
+}
+
 const saveReadMe = async (destination) => {
   fs.writeFileSync(
     path.resolve(destination, 'README.txt'),
@@ -83,28 +89,10 @@ ${readMeExplanations.join('\n\n')}
   )
 }
 
-const getMetas = (repoIds, { elastic }) =>
-  Promise.map(
-    repoIds,
-    async (repoId) => {
-      console.log(`fetching "${repoId}"...`)
-      const docs = await findPublished(elastic, repoId)
-
-      if (docs.length === 0) {
-        return false
-      }
-
-      const { meta } = docs[0]
-
-      return meta
-    },
-    { concurrency: 2 },
-  )
-
-Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
+Promise.props({ pgdb: PgDb.connect() })
   .then(async (connections) => {
     const { userId, destination } = argv
-    const { pgdb, elastic } = connections
+    const { pgdb } = connections
 
     if (!(await fs.existsSync(destination))) {
       fs.mkdirSync(destination, { recursive: true })
@@ -166,6 +154,32 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         },
       ],
     )
+
+    /**
+     * portrait
+     *
+     * The portrait is a public JPEG on S3, only the current one is kept (see
+     * assets/lib/Portrait.js). A failed download must not abort the export.
+     */
+    if (user.portraitUrl) {
+      try {
+        const response = await fetch(user.portraitUrl, {
+          signal: AbortSignal.timeout(30000),
+        })
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        await saveFile(
+          destination,
+          'portrait.jpeg',
+          'Profilbild',
+          Buffer.from(await response.arrayBuffer()),
+        )
+      } catch (e) {
+        console.log(`portrait could not be downloaded: ${e.message}`)
+      }
+    }
 
     /**
      * userAttributes
@@ -363,11 +377,6 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         id: collectionDocumentItems.map(({ collectionId }) => collectionId),
       })
 
-      const metas = await getMetas(
-        collectionDocumentItems.map(({ repoId }) => repoId),
-        { elastic },
-      )
-
       await save(
         destination,
         'collectionDocumentItems',
@@ -377,17 +386,11 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             (collection) =>
               collection.id === collectionDocumentItem.collectionId,
           )
-          const meta = metas.find(
-            (meta) => meta.repoId === collectionDocumentItem.repoId,
-          )
-
           return {
             collection_name: collection.name,
-            ...(meta && {
-              document_meta_title: meta.title,
-              document_meta_path: meta.path,
-            }),
             ...pick(collectionDocumentItem, [
+              'repoId',
+              'sanityId',
               'data.max.data',
               'data.nodeId',
               'data.percentage',
@@ -448,12 +451,18 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         id: commentsPosted.map(({ discussionId }) => discussionId),
       })
       const discussionPreferences =
-        await pgdb.public.discussionPreferences.find({
-          discussionId: discussions.map(({ id }) => id),
-        })
-      const credentials = await pgdb.public.credentials.find({
-        id: discussionPreferences.map(({ credentialId }) => credentialId),
-      })
+        discussions.length > 0
+          ? await pgdb.public.discussionPreferences.find({
+              discussionId: discussions.map(({ id }) => id),
+            })
+          : []
+      const credentialIds = discussionPreferences
+        .map(({ credentialId }) => credentialId)
+        .filter(Boolean)
+      const credentials =
+        credentialIds.length > 0
+          ? await pgdb.public.credentials.find({ id: credentialIds })
+          : []
 
       await save(
         destination,
@@ -465,7 +474,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
           )
           const discussionPreference = discussionPreferences.find(
             (discussionPreference) =>
-              discussionPreference.discussionId === discussion.id &&
+              discussionPreference.discussionId === discussion?.id &&
               discussionPreference.userId === user.id,
           )
           const credential =
@@ -476,8 +485,8 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             )
 
           return {
-            discussion_title: discussion.title,
-            discussion_path: discussion.path,
+            discussion_title: discussion?.title,
+            discussion_path: discussion?.path,
             ...pick(comment, [
               'createdAt',
               'updatedAt',
@@ -524,8 +533,8 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
           )
 
           return {
-            discussion_title: discussion.title,
-            discussion_path: discussion.path,
+            discussion_title: discussion?.title,
+            discussion_path: discussion?.path,
             ...pick(comment, ['content', 'vote']),
           }
         }),
@@ -559,8 +568,8 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
           )
 
           return {
-            discussion_title: discussion.title,
-            discussion_path: discussion.path,
+            discussion_title: discussion?.title,
+            discussion_path: discussion?.path,
             ...pick(comment, ['content', 'reportedAt']),
           }
         }),
@@ -649,18 +658,30 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         id: electionBallots.map(({ electionId }) => electionId),
       })
 
-      const electionCandidacies = await pgdb.public.electionCandidacies.find({
-        id: electionBallots.map(({ candidacyId }) => candidacyId),
-      })
+      const candidacyIds = electionBallots
+        .map(({ candidacyId }) => candidacyId)
+        .filter(Boolean)
+      const electionCandidacies =
+        candidacyIds.length > 0
+          ? await pgdb.public.electionCandidacies.find({ id: candidacyIds })
+          : []
 
       if (electionCandidacies.length > 0) {
-        const candidacyUsers = await pgdb.public.users.find({
-          id: electionCandidacies.map(({ userId }) => userId),
-        })
+        const candidacyUserIds = electionCandidacies
+          .map(({ userId }) => userId)
+          .filter(Boolean)
+        const candidacyUsers =
+          candidacyUserIds.length > 0
+            ? await pgdb.public.users.find({ id: candidacyUserIds })
+            : []
 
-        const candidacyComments = await pgdb.public.comments.find({
-          id: electionCandidacies.map(({ commentId }) => commentId),
-        })
+        const candidacyCommentIds = electionCandidacies
+          .map(({ commentId }) => commentId)
+          .filter(Boolean)
+        const candidacyComments =
+          candidacyCommentIds.length > 0
+            ? await pgdb.public.comments.find({ id: candidacyCommentIds })
+            : []
 
         electionCandidacies.forEach((cancidacy, index) => {
           electionCandidacies[index]._user = candidacyUsers.find(
@@ -686,11 +707,11 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
           )
 
           return {
-            election_description: election.description,
-            election_slug: election.slug,
+            election_description: election?.description,
+            election_slug: election?.slug,
             ...pick(electionBallot, ['createdAt']),
             electionCandidacy_user_name:
-              electionCandidacy &&
+              electionCandidacy?._user &&
               [
                 electionCandidacy._user.firstName,
                 electionCandidacy._user.lastName,
@@ -698,7 +719,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
                 .filter(Boolean)
                 .join(' '),
             electionCandidacy_comment_content:
-              electionCandidacy && electionCandidacy._comment.content,
+              electionCandidacy?._comment?.content,
           }
         }),
       )
@@ -845,17 +866,26 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         pledgeId: pledges.map(({ id }) => id),
       })
 
-      const packageOptions = await pgdb.public.packageOptions.find({
-        id: pledgeOptions.map(({ templateId }) => templateId),
-      })
+      const packageOptions =
+        pledgeOptions.length > 0
+          ? await pgdb.public.packageOptions.find({
+              id: pledgeOptions.map(({ templateId }) => templateId),
+            })
+          : []
 
-      const membershipRewards = await pgdb.public.membershipTypes.find({
-        rewardId: packageOptions.map(({ rewardId }) => rewardId),
-      })
+      const rewardIds = packageOptions
+        .map(({ rewardId }) => rewardId)
+        .filter(Boolean)
 
-      const goodieRewards = await pgdb.public.goodies.find({
-        rewardId: packageOptions.map(({ rewardId }) => rewardId),
-      })
+      const membershipRewards =
+        rewardIds.length > 0
+          ? await pgdb.public.membershipTypes.find({ rewardId: rewardIds })
+          : []
+
+      const goodieRewards =
+        rewardIds.length > 0
+          ? await pgdb.public.goodies.find({ rewardId: rewardIds })
+          : []
 
       await save(
         destination,
@@ -866,16 +896,16 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             (packageOption) => packageOption.id === pledgeOption.templateId,
           )
           const membershipReward = membershipRewards.find(
-            (reward) => reward.rewardId === packageOption.rewardId,
+            (reward) => reward.rewardId === packageOption?.rewardId,
           )
           const goodieReward = goodieRewards.find(
-            (reward) => reward.rewardId === packageOption.rewardId,
+            (reward) => reward.rewardId === packageOption?.rewardId,
           )
           const pledge = pledges.find(
             (pledge) => pledge.id === pledgeOption.pledgeId,
           )
           const package_ = packages.find(
-            (package_) => package_.id === pledge.packageId,
+            (package_) => package_.id === pledge?.packageId,
           )
 
           return {
@@ -892,12 +922,12 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
               'periods',
               'total',
             ]),
-            package_name: package_.name,
-            pledge_donation: pledge.donation,
-            pledge_total: pledge.total,
-            pledge_status: pledge.status,
-            pledge_reason: pledge.reason,
-            pledge_messageToClaimers: pledge.messageToClaimers,
+            package_name: package_?.name,
+            pledge_donation: pledge?.donation,
+            pledge_total: pledge?.total,
+            pledge_status: pledge?.status,
+            pledge_reason: pledge?.reason,
+            pledge_messageToClaimers: pledge?.messageToClaimers,
           }
         }),
       )
@@ -907,12 +937,18 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
      * payments
      */
 
-    const pledgePayments = await pgdb.public.pledgePayments.find({
-      pledgeId: pledges.map(({ id }) => id),
-    })
-    const payments = await pgdb.public.payments.find({
-      id: pledgePayments.map(({ paymentId }) => paymentId),
-    })
+    const pledgePayments =
+      pledges.length > 0
+        ? await pgdb.public.pledgePayments.find({
+            pledgeId: pledges.map(({ id }) => id),
+          })
+        : []
+    const payments =
+      pledgePayments.length > 0
+        ? await pgdb.public.payments.find({
+            id: pledgePayments.map(({ paymentId }) => paymentId),
+          })
+        : []
 
     await save(
       destination,
@@ -935,19 +971,281 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     /**
      * stripeCustomers
      */
-    const stripeCustomers = await pgdb.public.stripeCustomers.find({
+    // The same Stripe customer can be in public.stripeCustomers (id = Stripe
+    // customer id, with cached payment methods) and in payments.stripeCustomers
+    // (customerId, company). Merge them so each customer is exported once.
+    const companies = await pgdb.public.companies.findAll()
+    const stripeCustomersById = new Map()
+
+    const legacyStripeCustomers = await pgdb.public.stripeCustomers.find({
       userId,
+    })
+    legacyStripeCustomers.forEach((stripeCustomer) => {
+      stripeCustomersById.set(stripeCustomer.id, {
+        company: companies.find(({ id }) => id === stripeCustomer.companyId)
+          ?.name,
+        ...pick(stripeCustomer, ['createdAt', 'updatedAt']),
+        cache: stripeCustomer.cache?.paymentMethods?.map((paymentMethod) =>
+          pick(paymentMethod, ['card', 'status', 'isDefault']),
+        ),
+      })
+    })
+
+    const stripeCustomers = await pgdb.payments.stripeCustomers.find({ userId })
+    stripeCustomers.forEach((stripeCustomer) => {
+      stripeCustomersById.set(stripeCustomer.customerId, {
+        ...stripeCustomersById.get(stripeCustomer.customerId),
+        ...pick(stripeCustomer, ['company', 'createdAt', 'updatedAt']),
+      })
     })
 
     await save(
       destination,
       'stripeCustomers',
       'verbundene Zahlungsmittel wie Kreditkarte bei Stripe. "cache" sind zwischengespeicherte Informationen von Stripe.',
-      stripeCustomers.map((payment) => ({
-        ...pick(payment, ['createdAt', 'updatedAt']),
-        cache: payment.cache?.paymentMethods.map((paymentMethod) =>
-          pick(paymentMethod, ['card', 'status', 'isDefault']),
-        ),
+      Array.from(stripeCustomersById.values()),
+    )
+
+    /**
+     * paymentSources
+     */
+    const paymentSources = await pgdb.public.paymentSources.find({ userId })
+
+    await save(
+      destination,
+      'paymentSources',
+      'gespeicherte Zahlungsquellen (ältere Zahlungsabwicklung)',
+      paymentSources.map((paymentSource) =>
+        pick(paymentSource, ['method', 'pspPayload', 'createdAt', 'updatedAt']),
+      ),
+    )
+
+    /**
+     * payments.subscriptions, payments.subscriptionCancellations,
+     * payments.subscription_upgrades
+     *
+     * A cancellation is stored twice: as columns on the subscription and as a
+     * row in subscriptionCancellations. Both are merged into one row per
+     * subscription.
+     */
+    const paymentsSubscriptions = await pgdb.payments.subscriptions.find({
+      userId,
+    })
+    const subscriptionCancellations =
+      paymentsSubscriptions.length > 0
+        ? await pgdb.payments.subscriptionCancellations.find({
+            subscriptionId: paymentsSubscriptions.map(({ id }) => id),
+          })
+        : []
+
+    await save(
+      destination,
+      'payments-subscriptions',
+      'Abonnemente (neue Zahlungsabwicklung) inkl. Kündigungen',
+      paymentsSubscriptions.map((subscription) => {
+        const cancellation = subscriptionCancellations.find(
+          ({ subscriptionId, revokedAt }) =>
+            subscriptionId === subscription.id && !revokedAt,
+        )
+
+        return {
+          ...pick(subscription, [
+            'company',
+            'type',
+            'status',
+            'currentPeriodStart',
+            'currentPeriodEnd',
+            'cancelAtPeriodEnd',
+            'cancelAt',
+            'canceledAt',
+            'endedAt',
+            'createdAt',
+            'updatedAt',
+          ]),
+          cancellationReason:
+            cancellation?.category ?? subscription.cancellationReason,
+          cancellationComment:
+            cancellation?.reason ?? subscription.cancellationComment,
+          cancellationFeedback: subscription.cancellationFeedback,
+          cancelledViaSupport: cancellation?.cancelledViaSupport,
+        }
+      }),
+    )
+
+    const subscriptionUpgrades = await pgdb.payments.subscription_upgrades.find(
+      { user_id: userId },
+    )
+    await save(
+      destination,
+      'payments-subscription-upgrades',
+      'Upgrades von Abonnementen',
+      subscriptionUpgrades.map((upgrade) =>
+        pick(upgrade, [
+          'company',
+          'subscription_type',
+          'status',
+          'scheduled_start',
+          'upgrade_config',
+          'created_at',
+          'updated_at',
+        ]),
+      ),
+    )
+
+    /**
+     * payments.invoices, payments.charges, payments.orders,
+     * payments.orderLineItems
+     *
+     * Invoices (with their items and charges) and orders (with their line
+     * items) are exported separately. An order refers to its invoice by the
+     * invoice's hrId.
+     */
+    const invoices = await pgdb.payments.invoices.find({ userId })
+    const orders = await pgdb.payments.orders.find({ userId })
+    const charges =
+      invoices.length > 0
+        ? await pgdb.payments.charges.find({
+            invoiceId: invoices.map(({ id }) => id),
+          })
+        : []
+
+    await save(
+      destination,
+      'payments-invoices',
+      'Rechnungen (neue Zahlungsabwicklung) mit Positionen und Zahlungen (charges)',
+      invoices.map((invoice) => ({
+        ...pick(invoice, [
+          'company',
+          'hrId',
+          'total',
+          'totalBeforeDiscount',
+          'totalDiscountAmount',
+          'totalExcludingTax',
+          'totalTaxAmount',
+          'status',
+          'items',
+          'discounts',
+          'periodStart',
+          'periodEnd',
+          'createdAt',
+          'updatedAt',
+        ]),
+        charges: charges
+          .filter(({ invoiceId }) => invoiceId === invoice.id)
+          .map((charge) =>
+            pick(charge, [
+              'paid',
+              'amount',
+              'amountCaptured',
+              'amountRefunded',
+              'status',
+              'paymentMethodType',
+              'fullyRefunded',
+              'description',
+              'failureMessage',
+              'createdAt',
+            ]),
+          ),
+      })),
+    )
+
+    const orderLineItems =
+      orders.length > 0
+        ? await pgdb.payments.orderLineItems.find({
+            orderId: orders.map(({ id }) => id),
+          })
+        : []
+
+    await save(
+      destination,
+      'payments-orders',
+      'Bestellungen (neue Zahlungsabwicklung) mit Positionen',
+      orders.map((order) => ({
+        ...pick(order, ['company', 'status', 'createdAt', 'updatedAt']),
+        invoiceHrId: invoices.find(({ id }) => id === order.invoiceId)?.hrId,
+        lineItems: orderLineItems
+          .filter(({ orderId }) => orderId === order.id)
+          .map((lineItem) =>
+            pick(lineItem, [
+              'description',
+              'quantity',
+              'price',
+              'priceSubtotal',
+              'taxAmount',
+              'discountAmount',
+            ]),
+          ),
+      })),
+    )
+
+    /**
+     * payments.giftVouchers
+     */
+    const giftVouchers = await pgdb.payments.giftVouchers.find({
+      or: [
+        { redeemedBy: userId },
+        ...(orders.length > 0 ? [{ orderId: orders.map(({ id }) => id) }] : []),
+      ],
+    })
+
+    await save(
+      destination,
+      'payments-giftVouchers',
+      'gekaufte oder eingelöste Geschenkgutscheine',
+      giftVouchers.map((giftVoucher) =>
+        pick(giftVoucher, [
+          'issuedBy',
+          'redeemedForCompany',
+          'redeemedAt',
+          'createdAt',
+        ]),
+      ),
+    )
+
+    /**
+     * newsletter_signups
+     */
+    const newsletterSignups = await pgdb.public.newsletter_signups.find({
+      user_id: userId,
+    })
+
+    await save(
+      destination,
+      'newsletter-signups',
+      'Newsletter-Anmeldungen',
+      newsletterSignups.map((signup) =>
+        pick(signup, ['newsletter', 'requested_at', 'confirmed_at']),
+      ),
+    )
+
+    /**
+     * questionnaireSubmissions
+     */
+    const questionnaireSubmissions =
+      await pgdb.public.questionnaireSubmissions.find({ userId })
+    const submittedQuestionnaires =
+      questionnaireSubmissions.length > 0
+        ? await pgdb.public.questionnaires.find({
+            id: questionnaireSubmissions.map(
+              ({ questionnaireId }) => questionnaireId,
+            ),
+          })
+        : []
+
+    await save(
+      destination,
+      'questionnaireSubmissions',
+      'Abgaben von Fragebögen',
+      questionnaireSubmissions.map((submission) => ({
+        questionnaire_slug: submittedQuestionnaires.find(
+          ({ id }) => id === submission.questionnaireId,
+        )?.slug,
+        ...pick(submission, [
+          'createdAt',
+          'updatedAt',
+          'anonymized',
+          'pseudonym',
+        ]),
       })),
     )
 
@@ -1090,9 +1388,8 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     return connections
   })
   .then(async (connections) => {
-    const { pgdb, elastic } = connections
+    const { pgdb } = connections
     await pgdb.close()
-    await elastic.close()
   })
   .catch((e) => {
     console.log(e)

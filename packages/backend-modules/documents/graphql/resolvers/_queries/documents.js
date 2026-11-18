@@ -1,38 +1,8 @@
-const _ = require('lodash')
-const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
+const emptyDocumentConnection = require('../../../lib/emptyDocumentConnection')
 
-module.exports = async (__, args, context, info) => {
-  const docsConnection = await search(
-    null,
-    {
-      first: args.first,
-      after: args.after,
-      before: args.before,
-      apiKey: args.apiKey,
-      unrestricted:
-        args.unrestricted !== undefined
-          ? args.unrestricted
-          : args.template === 'section'
-          ? true
-          : undefined,
-      filter: {
-        ..._.omit(args, ['first', 'after', 'before', 'unrestricted', 'apiKey']),
-        type: 'Document',
-      },
-      sort: {
-        key: 'publishedAt',
-        direction: 'DESC',
-      },
-    },
-    context,
-    info,
-  )
-
-  // transform SearchConnection to DocumentConnection
-  return {
-    ...docsConnection,
-    nodes: docsConnection.nodes
-      .filter((node) => node.type === 'Document')
-      .map((node) => node.entity),
-  }
-}
+// Legacy (publikator) documents were served from Elasticsearch, which is gone:
+// no GraphQL `Document` can be produced anymore. Kept as the one place
+// `document`, `documents`, `Document.linkedDocuments` and `DocumentZone.document`
+// resolve through, so they answer "nothing found" instead of failing. Content
+// lives in Sanity, which clients read directly.
+module.exports = async () => emptyDocumentConnection

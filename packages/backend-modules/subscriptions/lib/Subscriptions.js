@@ -1,10 +1,6 @@
 const { getObjectByIdAndType } = require('./genericObject')
 const Promise = require('bluebird')
 const { uuidForObject } = require('@orbiting/backend-modules-utils')
-const {
-  hasFullDocumentAccess,
-  includesUnrestrictedChildRepoId,
-} = require('@orbiting/backend-modules-documents/lib/restrictions')
 const uniq = require('lodash/uniq')
 const { ascending } = require('d3-array')
 const { parse, Source } = require('graphql')
@@ -321,22 +317,9 @@ const getSubscriptionsForUserAndObjects = (
     )
 }
 
-const subscriptionIsEligibleForNotifications = async (
-  subscription,
-  context,
-) => {
-  const [user, object] = await Promise.all([
-    getSubject(subscription, context),
-    getObject(subscription, context),
-  ])
-  if (object && object.__typename === 'Document') {
-    return (
-      hasFullDocumentAccess(user) ||
-      includesUnrestrictedChildRepoId([object.objectId])
-    )
-  }
-  return true
-}
+// Document access is no longer restricted per subscription (content lives in
+// Sanity), so every subscription is eligible.
+const subscriptionIsEligibleForNotifications = async () => true
 
 const filterEligibleSubscriptions = (subscriptions, context) => {
   return Promise.filter(subscriptions, (sub) =>

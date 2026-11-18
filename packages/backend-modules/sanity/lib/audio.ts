@@ -56,6 +56,8 @@ function isUnrecoverableVersionError(err: unknown): boolean {
 //     redirect to, so fall back to the draft (always still there) and log
 //     loudly — this needs a human to notice and reconcile from the draft's
 //     history.
+//   - documentId is a `drafts.*` id whose draft is gone (published, then
+//     discarded): the published document is patched instead.
 // `doPatch` receives the id to target, so it can be applied to documentId,
 // the published id, the draft, or a combination.
 async function withDraftSync<T>(
@@ -92,6 +94,20 @@ async function withDraftSync<T>(
       // Falls through to the draft-mirror step below, same as any other
       // successful primary write — both the published doc and the draft
       // must get this write, not one or the other.
+    } else if (documentId === draftId && isDocumentNotFoundError(err)) {
+      // documentId already is the draft (the webhook URL was signed for a
+      // `drafts.*` id), so "falling back to the draft" below would just retry
+      // the same missing document — and, since Huebsch keeps redelivering a
+      // result we never successfully record, fail the same way every time.
+      // A draft disappears when its article gets published and the draft is
+      // discarded; the published document is the live target then.
+      const publishedId = publishedIdFor(documentId)
+      logger.error(
+        { documentId, publishedId, err },
+        `sanity audio: draft no longer exists when ${action} — ` +
+          'patching the published document instead',
+      )
+      return doPatch(publishedId)
     } else if (isUnrecoverableVersionError(err)) {
       logger.error(
         { documentId, draftId, err },
@@ -109,6 +125,14 @@ async function withDraftSync<T>(
     try {
       await doPatch(draftId)
     } catch (err) {
+      if (isDocumentNotFoundError(err)) {
+        // Normal for a published article whose draft was discarded.
+        logger.info(
+          { documentId, draftId },
+          `sanity audio: no draft to mirror ${action} onto`,
+        )
+        return result
+      }
       logger.error(
         { documentId, draftId, err },
         `sanity audio: failed to mirror ${action} onto the draft (the ` +
@@ -209,8 +233,8 @@ export const fetchAudioContentHash = (documentId: string) =>
     { perspective: 'raw', tag: 'audio.content-hash' },
   )
 
-// Same idempotency shape as fetchAudioContentHash above, for the Publikator
-// sync's legacy-audio link (see publikatorSync/legacyAudio.ts): that flow
+// Same idempotency shape as fetchAudioContentHash above, for the legacy-audio
+// link: that flow
 // needs both `audioContentHash` (never overwrite a real Sanity-native
 // generation) and the currently-stored `audioSourceMp3` (skip re-recording
 // an audioVersions entry when nothing about the link actually changed) —
@@ -366,8 +390,7 @@ export interface AudioVersion {
   // Optional: Studio's `audioVersion` schema itself only ever required
   // `url` — a version can point at an externally-hosted file with no
   // matching Sanity file asset (Studio's own backfill-audio-versions
-  // migration already does exactly this for pre-Sanity legacy audio; see
-  // publikatorSync/legacyAudio.ts for a live example of the same case).
+  // migration already does exactly this for pre-Sanity legacy audio).
   file?: { _type: 'file'; asset: { _type: 'reference'; _ref: string } }
   url: string
   durationMs?: number

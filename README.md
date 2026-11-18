@@ -14,22 +14,22 @@ This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package ma
 ### Apps
 
 - `www`: providing the public frontend
-- `publikator`: providing publication management interface
 - `admin`: providing the customer management interface
 - `api`: providing the graphql api
-- `assets`: fetching, compressing and resizing assets
 
-The frontends are Next.js apps, the backends use Express.js.
+The frontends are Next.js apps, the backend uses Express.js.
 
 ### Packages
 
 - `styleguide`: a React component library shared by all frontends and used by the `api` to render newsletters
-- `backend-modules/*`: packages used by the `api` and `assets` server
+- `backend-modules/*`: packages used by the `api` server
 - `mdast/*`: packages used to work with mdast (previously in it's own [monorepo](https://github.com/orbiting/mdast))
-- `eslint-config-*`: multiple eslint configurations which are used accross our apps
+- `eslint-config-*`: eslint configurations (backend and frontend) which are used across our apps
 - `nextjs-apollo-client`: a reusable Nextjs / Apollo Client setup
 - `tsconfig`: a package to store shared typescript configurations
 - `icons`: A package to make SVG-files available as react.js components to be used across our frontends.
+- `slate-react`: a set of React components for building customizable rich-text editors
+- `theme`: shared theme for the frontends
 
 All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 
@@ -37,7 +37,7 @@ All packages and apps support [TypeScript](https://www.typescriptlang.org/) and 
 
 The logo and fonts are the property of their owners (logo—Project R, GT America—GrilliType and Rubis—Nootype), and may not be reproduced without permission.
 
-The `www`, `publikator` app and `styleguide` are BSD-3-Clause licensed. The `api`, `assets` app and all `backend-modules` are AGPL-3.0 licensed. See respective license files in subfolders.
+The `www` app and `styleguide` are BSD-3-Clause licensed. The `api` app and all `backend-modules` are AGPL-3.0 licensed. See respective license files in subfolders.
 
 ### Utilities
 
@@ -143,8 +143,6 @@ yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
 <BLANK LINE>
 <footer>
 ```
-
-You can use `yarn commit` to generate a message via an interactive prompt.
 
 **Types**
 

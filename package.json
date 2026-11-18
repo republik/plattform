@@ -28,9 +28,7 @@
     "heroku-prebuild": "scripts/prune.sh",
     "heroku-postbuild": "scripts/build.sh && scripts/heroku-postbuild.sh",
     "heroku-cleanup": "scripts/heroku-cleanup.sh",
-    "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn pull:elasticsearch --flush && yarn populate",
-    "pull:elasticsearch": "packages/backend-modules/search/script/pullElasticsearch.js",
-    "pull:images": "packages/backend-modules/publikator/script/copyImages.js",
+    "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn populate",
     "populate:membershipStats:ages": "packages/backend-modules/republik/script/MembershipStats/ages/populate.js",
     "populate:revenueStats:segments": "packages/backend-modules/republik/script/RevenueStats/segments/populate.js",
     "populate:collections:evolution": "packages/backend-modules/collections/script/stats/evolution.js",
@@ -79,6 +77,7 @@
     "@types/node": "24",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "handlebars": "^4.7.10",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "typescript": "^5.6.2"

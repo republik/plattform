@@ -30,7 +30,6 @@ All defined in `apps/api/.env.example`, all `false`/unset unless explicitly set 
 
 | Flag | Gates | Disabled behavior |
 |---|---|---|
-| `SANITY_SYNC_FROM_PUBLIKATOR_ENABLED` | The whole publikatorSync mirror: commit/publish/unpublish → Sanity draft/published doc, including legacy Huebsch audio linking | No-op, nothing enqueued |
 | `SANITY_PUBLISH_NOTIFICATIONS_ENABLED` | Real emails/push for Sanity article publishes | Webhook accepts the call, logs, enqueues nothing |
 | `SANITY_REDIRECTS_ENABLED` | Writing real production redirects from Studio slug changes | Webhook accepts the call, logs, writes nothing |
 | `SANITY_DISCUSSIONS_ENABLED` | Discussion create/update webhook | Returns an explicit 503 (not faked success — Studio only calls this once per discussion and relies on the returned id, so pretending to succeed would leave the link permanently missing) |
@@ -39,12 +38,11 @@ All defined in `apps/api/.env.example`, all `false`/unset unless explicitly set 
 
 Two operational notes, both called out in the `.env.example` comments themselves:
 
-- `SANITY_SYNC_FROM_PUBLIKATOR_ENABLED` and `SANITY_PUBLISH_NOTIFICATIONS_ENABLED` **must be set identically in both the web and scheduler processes** — one enqueues, the other performs. A mismatch means jobs get queued but never processed, or vice versa.
+- `SANITY_PUBLISH_NOTIFICATIONS_ENABLED` **must be set identically in both the web and scheduler processes** — one enqueues, the other performs. A mismatch means jobs get queued but never processed, or vice versa.
 - These are independent, single-purpose switches, not one master toggle. Suggested order:
-  1. `SANITY_SYNC_FROM_PUBLIKATOR_ENABLED=true` first — drafts start mirroring, can be previewed/tested without any user-facing effect.
-  2. `SANITY_REDIRECTS_ENABLED`, `SANITY_DISCUSSIONS_ENABLED`, `SANITY_AUDIO_GENERATION_ENABLED` once Studio's production webhooks are confirmed live and the corresponding write paths have been smoke-tested.
-  3. `SANITY_PUBLISH_NOTIFICATIONS_ENABLED` last, at or right before the actual cutover — this is the one that emails real subscribers.
-  4. `SANITY_DOCUMENT_REFS_ENABLED` only once the frontend ships a `... on SanityDocumentRef` fragment.
+  1. `SANITY_REDIRECTS_ENABLED`, `SANITY_DISCUSSIONS_ENABLED`, `SANITY_AUDIO_GENERATION_ENABLED` once Studio's production webhooks are confirmed live and the corresponding write paths have been smoke-tested.
+  2. `SANITY_PUBLISH_NOTIFICATIONS_ENABLED` last, at or right before the actual cutover — this is the one that emails real subscribers.
+  3. `SANITY_DOCUMENT_REFS_ENABLED` only once the frontend ships a `... on SanityDocumentRef` fragment.
 
 ## Recommended, not launch-blocking
 
@@ -60,7 +58,5 @@ Two operational notes, both called out in the `.env.example` comments themselves
 ## Verifying after deploy
 
 1. Confirm the three migrations applied (`SELECT * FROM next_reads_sanity.discussion_refs LIMIT 1;` shouldn't error; `\d "collectionDocumentItems"` should show `sanityId` and the validated constraint).
-2. With `SANITY_SYNC_FROM_PUBLIKATOR_ENABLED=true`, make a small Publikator edit and confirm a matching Sanity draft appears.
-3. Trigger a `syntheticReadAloud` webhook completion (or wait for a real one) and confirm the resulting Sanity draft/published doc picks up `audioSourceMp3` without a manual re-edit.
-4. Watch logs for `sanity sync: legacy audio link failed` / `syntheticReadAloud webhook: failed to enqueue Sanity resync` — these are expected to stay silent; any repeated occurrence means the audio side-channel is unhealthy (it won't block publishing, but audio linking silently won't happen either).
-5. Before flipping `SANITY_PUBLISH_NOTIFICATIONS_ENABLED`, use the studio subscriber-count endpoint on a real article to sanity-check the recipient count looks right.
+2. Trigger a `syntheticReadAloud` webhook completion (or wait for a real one) and confirm the resulting Sanity draft/published doc picks up `audioSourceMp3` without a manual re-edit.
+3. Before flipping `SANITY_PUBLISH_NOTIFICATIONS_ENABLED`, use the studio subscriber-count endpoint on a real article to sanity-check the recipient count looks right.

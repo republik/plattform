@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/backend-modules/publikator/migrations/sqls'
+const dir = 'packages/backend-modules/migrations/sqls/publikator'
 const file = '20251201115735-commits_repo_created_at_idx'
 
 exports.up = (db) =>

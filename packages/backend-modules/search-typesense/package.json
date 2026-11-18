@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-search-typesense",
-  "description": "Typesense search integration for comments, users, and (bulk reindex only) articles, running in parallel to the Elasticsearch based @orbiting/backend-modules-search",
+  "description": "Typesense search integration for comments, users, and (bulk reindex only) articles",
   "version": "0.1.0",
   "private": true,
   "main": "build/index.js",

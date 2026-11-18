@@ -37,9 +37,6 @@
     "DISPLAY_AUTHOR_SECRET": {
       "required": true
     },
-    "DOCUMENTS_RESTRICT_TO_ROLES": {
-      "required": true
-    },
     "APOLLO_KEY": "",
     "ERROR_PAGE_URL": {
       "required": true

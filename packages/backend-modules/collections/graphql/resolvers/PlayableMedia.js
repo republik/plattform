@@ -1,4 +1,6 @@
-const { COLLECTION_NAME: PROGRESS_COLLECTION_NAME } = require('../../lib/ProgressOptOut')
+const {
+  COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
+} = require('../../lib/ProgressOptOut')
 
 module.exports = {
   async userProgress({ mediaId }, args, context) {

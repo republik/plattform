@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 import { extent } from 'd3-array'
-import { timeMonth } from 'd3-time'
 import compose from 'lodash/flowRight'
 import Router, { withRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -20,6 +19,11 @@ import {
 } from '@project-r/styleguide'
 
 import Frame from '@/components/Frame'
+import {
+  dayjs,
+  formatDateTime,
+  formatMonthKey,
+} from '@/app/lib/util/time-format'
 import { countFormat } from '@/lib/utils/format'
 
 import { RawStatus } from '@/components/Crowdfunding/Status'
@@ -31,7 +35,6 @@ import TestimonialList from '@/components/Testimonial/List'
 import { createGetStaticProps } from '@/lib/apollo/helpers'
 import withMe from '@/lib/apollo/withMe'
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
-import { swissTime } from '@/lib/utils/format'
 import withInNativeApp from '@/lib/withInNativeApp'
 
 import { getCMSClientBase } from '@/app/lib/apollo/cms-client-base'
@@ -152,11 +155,6 @@ const styles = {
 
 const numMembersNeeded = 33000
 
-const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
-
-const YEAR_MONTH_FORMAT = '%Y-%m'
-const formatYearMonthKey = swissTime.format(YEAR_MONTH_FORMAT)
-
 // https://ultradashboard.republik.ch/question/506
 const bucketsBefore = [
   { key: '2017-04', presale: 9703 },
@@ -250,7 +248,7 @@ const Page = ({
             return map
           }, {})
 
-          const currentKey = formatYearMonthKey(new Date())
+          const currentKey = formatMonthKey(new Date())
           const lastBucket = buckets[buckets.length - 1]
           const currentBucket =
             buckets.find((bucket) => bucket.key === currentKey) || lastBucket
@@ -595,13 +593,13 @@ export default EnhancedPage
 
 export const getStaticProps = createGetStaticProps(
   async (client, { draftMode, params }) => {
-    const currentMonth = timeMonth.floor(new Date())
+    const currentMonth = dayjs().tz().startOf('month')
     const [apiData, datoCMSData] = await Promise.all([
       client.query({
         query: statusQuery,
         variables: {
-          prev: formatYearMonthKey(timeMonth.offset(currentMonth, -1)),
-          max: formatYearMonthKey(timeMonth.offset(currentMonth, 3)),
+          prev: formatMonthKey(currentMonth.subtract(1, 'month')),
+          max: formatMonthKey(currentMonth.add(3, 'month')),
           accessToken: params?.token,
         },
         errorPolicy: 'all',

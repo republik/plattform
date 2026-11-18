@@ -16,7 +16,7 @@ module.exports = async (_, { mediaId, secs }, context) => {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  if ((await ProgressOptOut.status(me.id, context))) {
+  if (await ProgressOptOut.status(me.id, context)) {
     throw new Error(t('api/collections/progress/notEnabled'))
   }
 

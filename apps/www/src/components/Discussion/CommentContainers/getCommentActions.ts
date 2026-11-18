@@ -1,11 +1,8 @@
-import { timeFormat } from 'd3-time-format'
+import { formatDate, formatTime } from '@/app/lib/util/time-format'
 import { EyeOff, Pencil, Star } from 'lucide-react'
 import { Dispatch, SetStateAction } from 'react'
 import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphql'
 import { UnpublishCommentHandler } from '../hooks/actions/useUnpublishCommentHandler'
-
-const dateFormat = timeFormat('%d.%m.%Y')
-const hmFormat = timeFormat('%H:%M')
 
 type Options = {
   comment: CommentFragmentType
@@ -30,8 +27,8 @@ function getCommentActions({ t, comment, roles, actions }: Options) {
       icon: Star,
       label: comment.featuredAt
         ? t('styleguide/CommentActions/featured', {
-            date: dateFormat(new Date(comment.featuredAt)),
-            time: hmFormat(new Date(comment.featuredAt)),
+            date: formatDate(new Date(comment.featuredAt)),
+            time: formatTime(new Date(comment.featuredAt)),
           })
         : t('styleguide/CommentActions/feature'),
       onClick: async () => {

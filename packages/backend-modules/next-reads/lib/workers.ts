@@ -5,55 +5,11 @@ import {
   legacySanityId,
 } from '@orbiting/backend-modules-sanity'
 
-export class ReadingPositionRefreshWorker extends BaseWorker<object> {
-  readonly queue = 'next_reads:reading_position'
-
-  async perform(_jobs: Job<unknown>[]): Promise<void> {
-    await this.context.pgdb.run(`
-      REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads.reading_progress_last_6_months;
-    `)
-
-    await Queue.getInstance().send('next_reads:feed:7days:refresh', {})
-
-    return
-  }
-}
-
-export class Next7DaysFeedRefreshWorker extends BaseWorker<object> {
-  readonly queue = 'next_reads:feed:7days:refresh'
-
-  async perform(_jobs: Job<unknown>[]): Promise<void> {
-    await this.context.pgdb.run(`
-      REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads.readings_in_the_last_7_days;
-    `)
-
-    return
-  }
-}
-
-export class Next20DaysCommentsFeedRefreshWorker extends BaseWorker<object> {
-  readonly queue = 'next_reads:feed:20days:refresh'
-
-  async perform(_jobs: Job<unknown>[]): Promise<void> {
-    await this.context.pgdb.run(`
-      REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads.readings_and_comments_20_days;
-    `)
-
-    return
-  }
-}
-
-// Mirrors ReadingPositionRefreshWorker/Next7DaysFeedRefreshWorker/
-// Next20DaysCommentsFeedRefreshWorker's split above: refreshing
-// reading_progress_last_6_months and the two feed views it feeds on
-// independent, unordered cron schedules let a dependent refresh run against
-// a stale or mid-refresh base view, and was a contributor to a recurring
-// nightly DB pool exhaustion incident on the legacy (Publikator) side (see
-// that split's own history). Same fix here, before the Sanity side ever
-// carries real traffic: reading_position chains into the 7-day feed refresh
-// on success; the 20-day-comments feed (slower-changing base data, but
-// comment activity itself moves faster) stays on its own independent
-// schedule instead of being bundled into the same refresh call.
+// reading_position chains into the 7-day feed refresh on success, so a
+// dependent refresh never runs against a stale or mid-refresh base view (split
+// refreshes on independent cron schedules contributed to a recurring nightly
+// DB pool exhaustion). The 20-day-comments feed (slower-changing base data, but
+// comment activity itself moves faster) stays on its own independent schedule.
 export class SanityReadingPositionRefreshWorker extends BaseWorker<object> {
   readonly queue = 'next_reads_sanity:reading_position'
 

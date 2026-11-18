@@ -1,4 +1,4 @@
-const fetchAudioContentHash = jest.fn()
+const fetchAudioLinkState = jest.fn()
 const markPendingVersionError = jest.fn().mockResolvedValue(undefined)
 const recordAudioVersion = jest.fn().mockResolvedValue(undefined)
 const reportAudioGenerationSuccess = jest.fn().mockResolvedValue(undefined)
@@ -6,7 +6,7 @@ const reportAudioGenerationError = jest.fn().mockResolvedValue(undefined)
 const uploadAudioAsset = jest.fn()
 
 jest.mock('../../lib/audio', () => ({
-  fetchAudioContentHash: (...args: unknown[]) => fetchAudioContentHash(...args),
+  fetchAudioLinkState: (...args: unknown[]) => fetchAudioLinkState(...args),
   markPendingVersionError: (...args: unknown[]) => markPendingVersionError(...args),
   recordAudioVersion: (...args: unknown[]) => recordAudioVersion(...args),
   reportAudioGenerationSuccess: (...args: unknown[]) =>
@@ -35,7 +35,7 @@ function fakeReq() {
 
 describe('processResult (huebsch webhook idempotency)', () => {
   beforeEach(() => {
-    fetchAudioContentHash.mockReset()
+    fetchAudioLinkState.mockReset()
     markPendingVersionError.mockReset().mockResolvedValue(undefined)
     recordAudioVersion.mockReset().mockResolvedValue(undefined)
     reportAudioGenerationSuccess.mockReset().mockResolvedValue(undefined)
@@ -44,19 +44,57 @@ describe('processResult (huebsch webhook idempotency)', () => {
     parseHuebschResult.mockReset()
   })
 
-  it('skips a duplicate delivery when this contentHash is already recorded', async () => {
-    fetchAudioContentHash.mockResolvedValue('hash-abc')
+  // sha1 of Buffer.from([1, 2, 3])
+  const SHA1 = '7037807198c22a7d2b0807371d763779a84fdfcf'
+
+  it('skips a duplicate delivery when this contentHash and audio file are already recorded', async () => {
+    fetchAudioLinkState.mockResolvedValue({
+      audioContentHash: 'hash-abc',
+      audioSourceMp3: `https://cdn.sanity.io/files/p/d/${SHA1}.mp3`,
+    })
+    parseHuebschResult.mockResolvedValue({ audioFile: new Uint8Array([1, 2, 3]) })
 
     await processResult(fakeReq(), 'drafts.doc-1', 'my-slug', 'hash-abc', {})
 
-    expect(parseHuebschResult).not.toHaveBeenCalled()
     expect(uploadAudioAsset).not.toHaveBeenCalled()
     expect(recordAudioVersion).not.toHaveBeenCalled()
     expect(reportAudioGenerationSuccess).not.toHaveBeenCalled()
   })
 
+  it('records a re-rendered audio file even when the contentHash is unchanged', async () => {
+    fetchAudioLinkState.mockResolvedValue({
+      audioContentHash: 'hash-abc',
+      audioSourceMp3: 'https://cdn.sanity.io/files/p/d/0000000000000000000000000000000000000000.mp3',
+    })
+    parseHuebschResult.mockResolvedValue({
+      audioFile: new Uint8Array([1, 2, 3]),
+      chapters: undefined,
+      durationMs: 12000,
+    })
+    uploadAudioAsset.mockResolvedValue({ _id: 'file-asset-1', url: 'https://x/a.mp3' })
+
+    await processResult(fakeReq(), 'doc-1', 'my-slug', 'hash-abc', {})
+
+    expect(recordAudioVersion).toHaveBeenCalledTimes(1)
+    expect(reportAudioGenerationSuccess).toHaveBeenCalledWith('doc-1')
+  })
+
+  it('skips an unreadable payload when this contentHash is already recorded', async () => {
+    fetchAudioLinkState.mockResolvedValue({
+      audioContentHash: 'hash-abc',
+      audioSourceMp3: 'https://x/a.mp3',
+    })
+    parseHuebschResult.mockRejectedValue(new Error('failed generation'))
+
+    await processResult(fakeReq(), 'doc-1', 'my-slug', 'hash-abc', { ok: false })
+
+    expect(recordAudioVersion).not.toHaveBeenCalled()
+    expect(markPendingVersionError).not.toHaveBeenCalled()
+    expect(reportAudioGenerationError).not.toHaveBeenCalled()
+  })
+
   it('processes a genuinely new result when the hash differs (or is absent)', async () => {
-    fetchAudioContentHash.mockResolvedValue(undefined)
+    fetchAudioLinkState.mockResolvedValue(undefined)
     parseHuebschResult.mockResolvedValue({
       audioFile: new Uint8Array([1, 2, 3]),
       chapters: undefined,
@@ -74,7 +112,7 @@ describe('processResult (huebsch webhook idempotency)', () => {
   })
 
   it('passes the contentHash through so recordAudioVersion can resolve its own pending placeholder', async () => {
-    fetchAudioContentHash.mockResolvedValue(undefined)
+    fetchAudioLinkState.mockResolvedValue(undefined)
     parseHuebschResult.mockResolvedValue({
       audioFile: new Uint8Array([1, 2, 3]),
       chapters: undefined,
@@ -89,7 +127,7 @@ describe('processResult (huebsch webhook idempotency)', () => {
   })
 
   it('marks the matching placeholder as errored when Huebsch reports a failed generation, without rethrowing', async () => {
-    fetchAudioContentHash.mockResolvedValue(undefined)
+    fetchAudioLinkState.mockResolvedValue(undefined)
     const failure = new Error('huebsch reported a failed generation')
     parseHuebschResult.mockRejectedValue(failure)
 

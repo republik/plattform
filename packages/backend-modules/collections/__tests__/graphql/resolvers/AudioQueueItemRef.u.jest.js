@@ -1,8 +1,14 @@
 // See ../../lib/documentRef.u.jest.js for why these chains are cut.
 jest.mock('@orbiting/backend-modules-sanity', () => ({
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/document.js'),
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/legacyId.js'),
-  ...jest.requireActual('@orbiting/backend-modules-sanity/build/lib/mediaId.js'),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/document.js',
+  ),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/legacyId.js',
+  ),
+  ...jest.requireActual(
+    '@orbiting/backend-modules-sanity/build/lib/mediaId.js',
+  ),
 }))
 
 jest.mock('@orbiting/backend-modules-auth', () => ({

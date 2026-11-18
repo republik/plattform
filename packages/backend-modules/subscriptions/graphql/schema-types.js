@@ -90,10 +90,6 @@ extend type Discussion {
   ): SubscriptionConnection!
 }
 
-extend input PublishSettings {
-  notifyFilters: [EventObjectType!]
-}
-
 type Subscription {
   id: ID!
   object: SubscriptionObject

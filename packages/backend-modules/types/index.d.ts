@@ -12,7 +12,6 @@ export type { PgDb }
 export type Branded<T, B> = T & Brand<B>
 
 export interface ConnectionContext {
-  elastic: any
   pgdb: PgDb
   redis: any
   pubsub: any

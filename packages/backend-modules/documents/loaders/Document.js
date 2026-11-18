@@ -1,5 +1,4 @@
 const createDataLoader = require('@orbiting/backend-modules-dataloader')
-const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
 const {
   isSanityRef,
   fromSanityRef,
@@ -7,6 +6,8 @@ const {
   publishedId,
   legacySanityId,
   fetchDocumentsByIds,
+  fetchArticlesByPaths,
+  countArticlesByContributorUserIds,
 } = require('@orbiting/backend-modules-sanity')
 
 // Wraps a generic Sanity document into the minimal shape callers of this
@@ -45,185 +46,73 @@ const toDocumentShape = (documentRef, doc) => ({
   __typename: 'Document',
 })
 
-module.exports = (context) => ({
-  byId: createDataLoader(
-    (ids) =>
-      search(
-        null,
-        {
-          filter: {
-            ids,
-            type: 'Document',
-          },
-          first: ids.length * 2,
-          unrestricted: true,
-        },
-        context,
-      ).then((connection) => connection.nodes.map((node) => node.entity)),
-    null,
-    (key, rows) => rows.find((row) => row.id === key),
-  ),
+// Resolves repoIds, raw Sanity ids and `sanity:` refs against Sanity only, in
+// one query. Returns a row (or nothing) per key, in `keys` order.
+//
+// A plain key can be a raw Sanity _id (a brand-new sanity-native follow/
+// bookmark -- the frontend doesn't know about the `sanity:` prefix), which is
+// canonicalized to the prefixed form, or a legacy repoId whose content has
+// since moved to Sanity (its Sanity `_id` is derived from the repoId by the
+// one-time import, see sanity/lib/legacyId.ts), which keeps the legacy value as
+// `meta.repoId`.
+const resolveViaSanity = async (keys, tag) => {
+  const plainKeys = keys.filter((key) => !isSanityRef(key))
+
+  const sanityDocs = await fetchDocumentsByIds(
+    [
+      ...keys.filter(isSanityRef).map(fromSanityRef),
+      ...plainKeys,
+      ...plainKeys.map(legacySanityId).filter(Boolean),
+    ],
+    { tag },
+  )
+  const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
+  const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
+
+  return keys.map((key) => {
+    if (isSanityRef(key)) {
+      const doc = sanityDocFor(fromSanityRef(key))
+      return doc && toDocumentShape(key, doc)
+    }
+
+    const directDoc = sanityDocFor(key)
+    if (directDoc) return toDocumentShape(toSanityRef(key), directDoc)
+
+    const legacyDoc = sanityDocFor(legacySanityId(key))
+    return legacyDoc ? toDocumentShape(key, legacyDoc) : null
+  })
+}
+
+// Elasticsearch no longer serves documents: every loader below reads Sanity.
+const stripSlash = (path) => (path || '').replace(/^\//, '')
+
+module.exports = () => ({
+  // Keyed by repoId, raw Sanity `_id` or `sanity:` ref. An unresolved key
+  // simply means "no such document".
   byRepoId: createDataLoader(
-    async (repoIds) => {
-      const sanityRefKeys = repoIds.filter(isSanityRef)
-      const plainKeys = repoIds.filter((id) => !isSanityRef(id))
-
-      const esRows = plainKeys.length
-        ? await search(
-            null,
-            {
-              filter: {
-                repoId: plainKeys,
-                type: 'Document',
-              },
-              first: plainKeys.length * 2,
-              unrestricted: true,
-            },
-            context,
-          ).then((connection) => connection.nodes.map((node) => node.entity))
-        : []
-
-      // A plain key ES didn't match might be a brand-new Sanity id (the
-      // frontend doesn't know about the `sanity:` prefix yet) or a legacy
-      // repoId whose content has since moved to Sanity (its Sanity `_id` is
-      // deterministically derived from the repoId by the one-time import —
-      // see sanity/lib/legacyId.ts).
-      const unmatchedPlainKeys = plainKeys.filter(
-        (id) => !esRows.some((row) => row.meta.repoId === id),
-      )
-
-      // Every id this batch could possibly match is *computed*, never resolved,
-      // so all of them — the explicitly-prefixed keys plus both rescue
-      // candidates per unmatched plain key — go into a single Sanity query.
-      // This is a dataloader; asking per key would make its Sanity path N+1 by
-      // construction, on the branch that grows as content migrates.
-      const sanityDocs = await fetchDocumentsByIds(
-        [
-          ...sanityRefKeys.map(fromSanityRef),
-          ...unmatchedPlainKeys,
-          ...unmatchedPlainKeys.map(legacySanityId).filter(Boolean),
-        ],
-        { tag: 'documents.by-repo-id' },
-      )
-      const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
-      const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
-
-      // Explicitly-prefixed keys are already known to be Sanity-backed.
-      const directSanityRows = sanityRefKeys.map((key) => {
-        const doc = sanityDocFor(fromSanityRef(key))
-        return doc && toDocumentShape(key, doc)
-      })
-
-      const rescuedRows = unmatchedPlainKeys.map((key) => {
-        // Case 1: `key` is itself a raw Sanity _id (a brand-new sanity-native
-        // follow/bookmark — the frontend doesn't know about the `sanity:`
-        // prefix). Canonicalize to the prefixed form so a caller writing this
-        // back (e.g. a fresh `subscribe`) stores the form future reads will hit
-        // via the fast, ES-skipping path above.
-        const directDoc = sanityDocFor(key)
-        if (directDoc) return toDocumentShape(toSanityRef(key), directDoc)
-
-        // Case 2: `key` is a legacy repoId whose content has since moved
-        // to Sanity. Keep `meta.repoId` as the legacy value — this only
-        // needs to keep an *existing* stored row resolvable; rewriting it
-        // to the new canonical form is the migration script's job, not a
-        // side effect of a read.
-        const legacyDoc = sanityDocFor(legacySanityId(key))
-        return legacyDoc && toDocumentShape(key, legacyDoc)
-      })
-
-      return [
-        ...esRows,
-        ...directSanityRows.filter(Boolean),
-        ...rescuedRows.filter(Boolean),
-      ]
-    },
+    async (repoIds) =>
+      (await resolveViaSanity(repoIds, 'documents.by-repo-id')).filter(Boolean),
     null,
     (key, rows) => rows.find((row) => row.meta.repoId === key),
   ),
-  // Same repoId/Sanity-ref resolution as `byRepoId`, but with priority
-  // reversed: a repoId whose content exists in Sanity resolves to that
-  // (deliberately not gated on whether Elasticsearch also still has it --
-  // Studio's one-time import already covers most repos, and ES isn't purged
-  // on import, so `byRepoId`'s "ES wins if present" would otherwise keep
-  // resolving already-migrated content as if it hadn't moved). Only falls
-  // back to the Elasticsearch/Publikator copy for a repoId Sanity has
-  // nothing for yet.
-  //
-  // Deliberately its own loader, not a change to `byRepoId` itself:
-  // `byRepoId` is shared by consumers that need the *live*, actively-edited
-  // Publikator copy regardless of whether Sanity also has an imported
-  // snapshot -- notably publikator/lib/Notifications.js's `notifyPublish`,
-  // which reads `doc.meta.shortTitle`/`doc.meta.description` off it to build
-  // real push/email content; this loader's Sanity-backed rows only ever
-  // carry `toDocumentShape`'s minimal title/path. Flipping `byRepoId`
-  // itself would silently degrade that content for every repo Studio has
-  // ever imported. This loader is for Notification.object/Subscription.object
-  // display only (see subscriptions/lib/genericObject.js), which only needs
-  // a teaser and wants to point at Sanity as soon as it can -- collapse this
-  // into `byRepoId` once Publikator is fully retired and nothing needs the
-  // live-Publikator-first behavior anymore.
-  byRepoIdPreferSanity: createDataLoader(
-    async (repoIds) => {
-      const sanityRefKeys = repoIds.filter(isSanityRef)
-      const plainKeys = repoIds.filter((id) => !isSanityRef(id))
-
-      const sanityDocs = await fetchDocumentsByIds(
-        [
-          ...sanityRefKeys.map(fromSanityRef),
-          ...plainKeys,
-          ...plainKeys.map(legacySanityId).filter(Boolean),
-        ],
-        { tag: 'documents.by-repo-id-prefer-sanity' },
-      )
-      const sanityDocById = new Map(sanityDocs.map((doc) => [doc._id, doc]))
-      const sanityDocFor = (id) => id && sanityDocById.get(publishedId(id))
-
-      const directSanityRows = sanityRefKeys.map((key) => {
-        const doc = sanityDocFor(fromSanityRef(key))
-        return doc && toDocumentShape(key, doc)
-      })
-
-      const plainKeyResults = plainKeys.map((key) => {
-        // Case 1: `key` is itself a raw Sanity _id (a brand-new sanity-native
-        // follow/bookmark).
-        const directDoc = sanityDocFor(key)
-        if (directDoc) return toDocumentShape(toSanityRef(key), directDoc)
-
-        // Case 2: `key` is a repoId Sanity already has content for --
-        // prefer it over Elasticsearch even if ES still has a copy too.
-        const legacyDoc = sanityDocFor(legacySanityId(key))
-        if (legacyDoc) return toDocumentShape(key, legacyDoc)
-
-        // Case 3: nothing in Sanity for this repoId yet -- resolved below
-        // via Elasticsearch.
-        return null
-      })
-
-      const missingKeys = plainKeys.filter((key, i) => !plainKeyResults[i])
-
-      const esRows = missingKeys.length
-        ? await search(
-            null,
-            {
-              filter: {
-                repoId: missingKeys,
-                type: 'Document',
-              },
-              first: missingKeys.length * 2,
-              unrestricted: true,
-            },
-            context,
-          ).then((connection) => connection.nodes.map((node) => node.entity))
-        : []
-
-      return [
-        ...directSanityRows.filter(Boolean),
-        ...plainKeyResults.filter(Boolean),
-        ...esRows,
-      ]
-    },
+  // Published articles by path, as the Document stub (title/path only).
+  byPath: createDataLoader(
+    async (paths) =>
+      (await fetchArticlesByPaths(paths, { tag: 'documents.by-path' })).map(
+        (doc) => toDocumentShape(toSanityRef(doc._id), doc),
+      ),
     null,
-    (key, rows) => rows.find((row) => row.meta.repoId === key),
+    (key, rows) =>
+      rows.find((row) => stripSlash(row.meta.path) === stripSlash(key)),
+  ),
+  // Number of published articles a user contributed to, `{ userId, count }`.
+  // Users without a contributor document have no row.
+  articleCountByUserId: createDataLoader(
+    (userIds) =>
+      countArticlesByContributorUserIds(userIds, {
+        tag: 'documents.article-count-by-user-id',
+      }),
+    null,
+    (key, rows) => rows.find((row) => row.userId === key),
   ),
 })

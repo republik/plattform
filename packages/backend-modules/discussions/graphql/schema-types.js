@@ -117,6 +117,9 @@ type Discussion {
   # set if this is the discussion of a document
   document: Document
 
+  # set if this is the discussion of a Sanity document
+  sanityDocument: SanityDocumentRef
+
   # path to use if no document is linked
   path: String
 

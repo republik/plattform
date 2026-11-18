@@ -42,9 +42,7 @@ module.exports = {
         )
       }
       if (args.excludeRepoId) {
-        items = items.filter(
-          (item) => args.excludeRepoId !== item.repoId
-        )
+        items = items.filter((item) => args.excludeRepoId !== item.repoId)
       }
       return paginate(args, items)
     }

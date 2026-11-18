@@ -1,68 +1,22 @@
 /**
- * Independent Postgres LISTEN/NOTIFY consumer for the Typesense search
- * integration. This mirrors the *pattern* used by
- * @orbiting/backend-modules-search/lib/NotifyListener.js (LISTEN change,
- * cascadeUpdateConfig) but is a fully separate, independent implementation:
- * it does not import from, share state with, or modify that file.
+ * Postgres LISTEN/NOTIFY consumer for the Typesense search integration.
  *
- * ## Why this doesn't consume `notifyTableChangeQueue` the way
- * ## NotifyListener.js does
+ * The `change` notification payload only carries `{table, op}`, the row id
+ * is only available in `notifyTableChangeQueue`. On a notification (or on a
+ * periodic safety-net timer, in case one is missed across a brief
+ * disconnect) this listener peeks rows newer than a per-table, in-memory
+ * watermark (`createdAt > lastSeenAt[table]`) and uses the returned ids to
+ * re-fetch fresh rows directly from the source tables before transforming
+ * and upserting into Typesense. The watermark advances only once that work
+ * has succeeded, so a transient Typesense failure gets the batch retried
+ * rather than skipped.
  *
- * NotifyListener.js's flow is: on notification -> SELECT ... FOR UPDATE
- * SKIP LOCKED a batch of matching queue rows -> process them -> DELETE
- * those exact rows. That delete is what makes the queue table workable as
- * a queue: rows are removed once handled.
- *
- * That pattern assumes exactly ONE consumer per logical queue. It is NOT
- * safe for two independent consumers to run the same
- * "claim (lock) + process + delete" cycle against the same physical
- * `notifyTableChangeQueue` table:
- *  - `FOR UPDATE SKIP LOCKED` guarantees no two consumers process the
- *    *same* row concurrently, but it does NOT guarantee both consumers
- *    each get a chance to see every row -- whichever consumer's SELECT
- *    runs first claims (locks) the batch, processes it, and DELETEs it.
- *  - Once a row is deleted by one consumer, it is gone. A second,
- *    independent consumer (this listener) racing against the existing ES
- *    listener would non-deterministically miss rows that the ES listener
- *    claimed and deleted first (and vice versa).
- *  - The trigger payload (see notify_table_change() in
- *    20180511090046-add-notify-table-change-function-up.sql) only carries
- *    `{table, op}` on the NOTIFY channel itself -- no row id. The id is
- *    only available by reading `notifyTableChangeQueue`. So we cannot
- *    avoid touching that table entirely if we want to know *which* row(s)
- *    changed without re-scanning entire source tables.
- *
- * The chosen, safe alternative implemented here: this listener treats
- * `notifyTableChangeQueue` as **read-only**. On a `change` notification (or
- * on a periodic safety-net timer, in case a notification is ever missed
- * across a brief disconnect) it *peeks* (plain SELECT, no locking, no
- * delete) rows newer than a per-table, in-memory watermark
- * (`createdAt > lastSeenAt[table]`) and uses the returned ids to re-fetch
- * fresh rows directly from the source tables before transforming + upserting
- * into Typesense. The watermark advances only once that work has succeeded,
- * so a transient Typesense failure gets the batch retried rather than
- * skipped. It never deletes or locks queue rows, so it cannot race the
- * existing ES listener's delete, and the ES listener remains the sole owner
- * of queue cleanup.
- *
- * Known trade-off (please read before relying on this in a new
- * environment): because we only ever peek, there is a narrow race window
- * where the ES listener could claim + delete a queue row before this
- * listener's peek query executes, causing this listener to miss it. In
- * practice both listeners receive the Postgres NOTIFY at essentially the
- * same time and query immediately, so the window is small, and the
- * periodic safety-net poll (SEARCH_TYPESENSE_LISTENER_POLL_INTERVAL_MS,
- * default 60s) bounds the damage of any single missed event to at most one
- * poll interval, since the row's `(table, op)` unique constraint keeps
- * bumping `createdAt` on repeated writes. This listener's correctness also
- * assumes *some* consumer (today: the ES NotifyListener) keeps deleting
- * queue rows -- if SEARCH_PG_LISTENER is ever turned off while this
- * listener runs alone, `notifyTableChangeQueue` will grow unbounded, since
- * nothing deletes rows anymore. That is a pre-existing characteristic of
- * the shared queue table (it was only ever designed for one consumer), not
- * something introduced by this listener. The robust long-term fix would be
- * a dedicated queue table (and triggers) for this listener, added via a
- * new migration -- out of scope for this change.
+ * Rows are not deleted as they are processed. Instead a periodic cleanup
+ * (`cleanupQueue`) drops rows older than the retention window, for all
+ * tables: nothing else consumes this queue anymore. The retention window
+ * bounds how long a failing batch can be retried, so keep it well above
+ * the poll interval. The `(id, op)` unique index keeps repeated writes to
+ * one row from growing the table between cleanups.
  */
 import debugFn from 'debug'
 import get from 'lodash/get'
@@ -106,6 +60,27 @@ const POLL_INTERVAL_MS = parsePollInterval(
 )
 
 const QUEUE_BATCH_LIMIT = 10_000
+
+const DEFAULT_CLEANUP_INTERVAL_MS = 60 * 60 * 1000
+const DEFAULT_QUEUE_RETENTION_MS = 7 * 24 * 60 * 60 * 1000
+
+const parsePositiveNumber = (
+  raw: string | undefined,
+  fallback: number,
+): number => {
+  const parsed = Number(raw)
+  return !raw || !Number.isFinite(parsed) || parsed <= 0 ? fallback : parsed
+}
+
+const CLEANUP_INTERVAL_MS = parsePositiveNumber(
+  process.env.SEARCH_TYPESENSE_QUEUE_CLEANUP_INTERVAL_MS,
+  DEFAULT_CLEANUP_INTERVAL_MS,
+)
+
+const QUEUE_RETENTION_MS = parsePositiveNumber(
+  process.env.SEARCH_TYPESENSE_QUEUE_RETENTION_MS,
+  DEFAULT_QUEUE_RETENTION_MS,
+)
 
 interface CascadeRule {
   source: string
@@ -187,6 +162,23 @@ const peekQueue = async (
       limit: QUEUE_BATCH_LIMIT,
     },
   )
+}
+
+/**
+ * Deletes queue rows older than the retention window, whatever their table.
+ * Returns the number of deleted rows.
+ */
+export const cleanupQueue = async (
+  pgdb: PgDb,
+  retentionMs: number = QUEUE_RETENTION_MS,
+  now: Date = new Date(),
+): Promise<number> => {
+  const cutoff = new Date(now.getTime() - retentionMs)
+  const deleted = await pgdb.public.notifyTableChangeQueue.delete({
+    'createdAt <': cutoff,
+  })
+  debug('cleaned up queue rows', { deleted, cutoff })
+  return deleted
 }
 
 const maxCreatedAt = (rows: QueueRow[], fallback: Date): Date =>
@@ -469,9 +461,26 @@ const start = async ({
     interestingTables.forEach(schedule)
   }, POLL_INTERVAL_MS)
 
+  const runCleanup = async () => {
+    try {
+      await cleanupQueue(pgdb)
+    } catch (error) {
+      logger.error(
+        { error },
+        'search-typesense listener failed to clean up queue',
+      )
+    }
+  }
+
+  // The first pass runs right away so a long-neglected table gets trimmed
+  // on the first deploy instead of an hour later.
+  void runCleanup()
+  const cleanupTimer = setInterval(runCleanup, CLEANUP_INTERVAL_MS)
+
   const close = async () => {
     closing = true
     clearInterval(pollTimer)
+    clearInterval(cleanupTimer)
     workQueue.length = 0
     if (runPromise) {
       await runPromise

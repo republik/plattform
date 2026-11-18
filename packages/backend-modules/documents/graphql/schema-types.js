@@ -212,6 +212,8 @@ type DocumentConnection {
 }
 
 extend type User {
+  # Only totalCount is meaningful (published Sanity articles the user
+  # contributed to), nodes is always empty.
   documents(
     feed: Boolean
     first: Int

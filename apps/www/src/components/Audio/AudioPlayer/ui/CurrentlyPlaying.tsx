@@ -1,11 +1,12 @@
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { AudioQueueItemContent } from '@/app/(sanity)/groq/audio-queue-items-query'
 import { AudioQueueItem } from '@/components/Audio/types/AudioQueueItem'
+import { formatDate } from '@/app/lib/util/time-format'
 import { fontStyles } from '@project-r/styleguide'
 import { IconDownload } from '@republik/icons'
 import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
-import { audioCoverStyle, dateFormatter, formatMinutes } from '../shared'
-import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
+import { audioCoverStyle, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
 
@@ -24,7 +25,6 @@ const styles = {
   metaWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    gap: 12,
     ...fontStyles.sansSerifRegular12,
     color: token.var('colors.text'),
   }),
@@ -67,9 +67,9 @@ const CurrentlyPlaying = ({
           )}
 
           <div {...styles.metaWrapper}>
-            <span>
-              {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}
-            </span>
+            {publishDate && (
+              <span>{formatDate(new Date(Date.parse(publishDate)))}・</span>
+            )}
             <span>{formatMinutes((audioDurationMs ?? 0) / 1000)}min</span>
           </div>
         </div>

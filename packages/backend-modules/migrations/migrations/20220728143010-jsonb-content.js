@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/backend-modules/publikator/migrations/sqls'
+const dir = 'packages/backend-modules/migrations/sqls/publikator'
 const file = '20220728143010-jsonb-content'
 
 exports.up = (db) => run(db, dir, `${file}-up.sql`)

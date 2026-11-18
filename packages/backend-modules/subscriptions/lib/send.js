@@ -61,7 +61,7 @@ const send = async (args, context) => {
         eventObjectType: event.objectType,
         eventObjectId: event.objectId,
         userId: user.id,
-        // simulated for sendTestNotification
+        // simulated subscriptions have no row to reference
         subscriptionId:
           subscription && !subscription.simulated ? subscription.id : null,
         channels: getChannelsForUser(user, subscription),

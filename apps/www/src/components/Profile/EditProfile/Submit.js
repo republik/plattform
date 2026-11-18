@@ -39,7 +39,6 @@ const Submit = ({ me, user, t, state, setState, update }) => {
     try {
       const urlObj = new URL(urlWithProtocol)
       urlObj.search = '' // Clear query parameters
-      urlObj.hash = '' // Clear hash/fragment
       return urlObj.toString()
     } catch (e) {
       // If URL parsing fails, return the URL with protocol

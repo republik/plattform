@@ -4,13 +4,11 @@ import compose from 'lodash/flowRight'
 import { Interaction } from '@project-r/styleguide'
 
 import { Item } from '../../List'
-import { timeFormat } from '@/lib/utils/format'
+import { formatDate } from '@/app/lib/util/time-format'
 import Revoke from './Revoke'
 import withT from '@/lib/withT'
 
 const { Emphasis } = Interaction
-
-const dayFormat = timeFormat('%e. %B %Y')
 
 const Grants = ({ grant, givingMemberships, revokeAccess, t }) => {
   const elements = {
@@ -22,17 +20,17 @@ const Grants = ({ grant, givingMemberships, revokeAccess, t }) => {
     ),
     beginBefore: (
       <Emphasis key={`grant-before-${grant.id}`}>
-        {dayFormat(new Date(grant.beginBefore))}
+        {formatDate(new Date(grant.beginBefore))}
       </Emphasis>
     ),
     beginAt: grant.beginAt && (
       <Emphasis key={`grant-begin-${grant.id}`}>
-        {dayFormat(new Date(grant.beginAt))}
+        {formatDate(new Date(grant.beginAt))}
       </Emphasis>
     ),
     endAt: grant.endAt && (
       <Emphasis key={`grant-end-${grant.id}`}>
-        {dayFormat(new Date(grant.endAt))}
+        {formatDate(new Date(grant.endAt))}
       </Emphasis>
     ),
   }

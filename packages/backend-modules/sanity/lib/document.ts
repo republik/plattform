@@ -166,3 +166,54 @@ export const fetchDiscussionRefsByIds = (
         { perspective: 'published', tag },
       )
     : Promise.resolve([])
+
+// Published articles by their path. A legacy publikator path ("/2020/01/01/
+// slug") and a Sanity slug differ at most by the leading slash, so both
+// spellings are matched. Returns only the articles that exist, in no
+// particular order -- callers index by `slug.current`.
+export const fetchArticlesByPaths = (
+  paths: string[],
+  { tag }: SharedFetchOptions,
+) => {
+  const slugs = paths.flatMap((path) => {
+    const bare = path.replace(/^\//, '')
+    return [bare, `/${bare}`]
+  })
+
+  return slugs.length
+    ? sanityClient({ useCdn: true }).fetch<GenericDocument[]>(
+        `*[_type == "article" && defined(publishDate) && slug.current in $slugs]{ _id, _type, title, slug, publishDate }`,
+        { slugs },
+        { perspective: 'published', tag },
+      )
+    : Promise.resolve([])
+}
+
+export interface ContributorArticleCount {
+  userId: string
+  count: number
+}
+
+// Number of published articles per contributor, keyed by the Postgres user a
+// contributor is linked to. Mirrors www's ARTICLES_BY_AUTHOR_COUNT_QUERY, but
+// batched. Users without a contributor document are simply absent.
+export const countArticlesByContributorUserIds = (
+  userIds: string[],
+  { tag }: SharedFetchOptions,
+) =>
+  userIds.length
+    ? sanityClient({ useCdn: true }).fetch<ContributorArticleCount[]>(
+        `*[_type == "contributor" && userId in $userIds]{
+          userId,
+          "count": count(*[
+            _type == "article" &&
+            defined(slug.current) &&
+            defined(publishDate) &&
+            references(^._id) &&
+            ^._id in contributors[].contributor._ref
+          ])
+        }`,
+        { userIds },
+        { perspective: 'published', tag },
+      )
+    : Promise.resolve([])

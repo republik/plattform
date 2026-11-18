@@ -1,21 +1,21 @@
-import { useMemo } from 'react'
-import { css } from 'glamor'
-import { useRouter } from 'next/router'
-import compose from 'lodash/flowRight'
+import SignIn from '@/components/Auth/SignIn'
+import { Content } from '@/components/Frame'
 
 import withMe from '@/lib/apollo/withMe'
+import { formatDate, formatTime } from '@/app/lib/util/time-format'
 import withT from '@/lib/withT'
-import { timeFormat } from '@/lib/utils/format'
-import { Content } from '@/components/Frame'
-import SignIn from '@/components/Auth/SignIn'
 
 import {
+  fontStyles,
   Interaction,
   Label,
-  fontStyles,
-  useColorContext,
   plainButtonRule,
+  useColorContext,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 
 const styles = {
   p: css({
@@ -30,9 +30,6 @@ const styles = {
 }
 
 const { H3 } = Interaction
-
-const hourFormat = timeFormat('%H:%M')
-const dayFormat = timeFormat('%-d. %B %Y')
 
 export const Item = withT(
   ({ t, highlighted, title, createdAt, children, compact }) => {
@@ -51,8 +48,8 @@ export const Item = withT(
           <>
             <Label>
               {t('account/item/label', {
-                formattedDate: dayFormat(createdAt),
-                formattedTime: hourFormat(createdAt),
+                formattedDate: formatDate(createdAt),
+                formattedTime: formatTime(createdAt),
               })}
             </Label>
             <br />

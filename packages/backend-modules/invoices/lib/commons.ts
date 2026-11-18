@@ -296,28 +296,105 @@ export async function resolvePayment(
   }
 }
 
-function getCountryCode(string: string): string {
-  switch (string.trim().toLowerCase()) {
-    case 'deutschland':
-      return 'DE'
-    case 'frankreich':
-      return 'FR'
-    case 'italia':
-    case 'italien':
-      return 'IT'
-    case 'liechtenstein':
-      return 'LI'
-    case 'niederlande':
-      return 'NL'
-    case 'österreich':
-      return 'AT'
-    case 'spanien':
-      return 'ES'
-    case 'usa':
-      return 'US'
-    default:
-      return 'CH'
+// Country is free text in the addresses table ("Schweiz", "CH", "sweden",
+// "Suisse", "BRD", ...). Resolve it to an ISO 3166-1 alpha-2 code via the
+// country names Intl knows in the languages our users enter, plus a few
+// aliases.
+const COUNTRY_LOCALES = ['de', 'en', 'fr', 'it']
+const COUNTRY_ALIASES: Record<string, string> = {
+  brd: 'DE',
+  bundesrepublik: 'DE',
+  usa: 'US',
+  uk: 'GB',
+  england: 'GB',
+}
+
+// Deprecated codes Intl still names (e.g. FX = "Metropolitan France" would
+// otherwise shadow FR)
+const DEPRECATED_COUNTRY_CODES = new Set([
+  'AN',
+  'BU',
+  'CS',
+  'DD',
+  'FX',
+  'NT',
+  'SU',
+  'TP',
+  'YD',
+  'YU',
+  'ZR',
+])
+
+let countryCodeByName: Map<string, string> | undefined
+
+function getCountryCodeByName(): Map<string, string> {
+  if (countryCodeByName) {
+    return countryCodeByName
   }
+
+  const map = new Map<string, string>()
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+  for (const locale of COUNTRY_LOCALES) {
+    const names = new Intl.DisplayNames([locale], { type: 'region' })
+
+    for (const a of letters) {
+      for (const b of letters) {
+        const code = `${a}${b}`
+        const name = names.of(code)
+
+        if (name && name !== code && !DEPRECATED_COUNTRY_CODES.has(code)) {
+          for (const key of [name.toLowerCase(), code.toLowerCase()]) {
+            if (!map.has(key)) {
+              map.set(key, code)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  countryCodeByName = map
+  return map
+}
+
+function getCountryCode(string: string | undefined): string {
+  const name = (string || '').normalize('NFKC').trim().toLowerCase()
+
+  if (!name) {
+    return 'CH'
+  }
+
+  const code = COUNTRY_ALIASES[name] || getCountryCodeByName().get(name)
+
+  if (!code) {
+    throw new Error(`Unknown country: ${string}`)
+  }
+
+  return code
+}
+
+// Swiss QR bills accept structured addresses only (address type "S"):
+// street and building number are separate fields. A trailing number
+// ("12", "12a", "5bis", "12-14") is the building number, everything before
+// it is the street. swissqrbill falls back to the unstructured type "K"
+// if buildingNumber is undefined, so an empty string is returned if there
+// is no number (e.g. "Hauptstrasse").
+const BUILDING_NUMBER_REGEX =
+  /^(.+?)[\s,]+(\d+[a-z]{0,3}(?:\s?[-/]\s?\d+[a-z]{0,3})?)$/i
+
+export function splitStreet(line1: string): {
+  address: string
+  buildingNumber: string
+} {
+  const value = line1.trim().replace(/\s+/g, ' ')
+  const [, address, buildingNumber] = value.match(BUILDING_NUMBER_REGEX) || []
+
+  if (!address) {
+    return { address: value, buildingNumber: '' }
+  }
+
+  return { address, buildingNumber }
 }
 
 export function getReference(hrid: string, pretty?: boolean): string {
@@ -374,7 +451,7 @@ export function getSwissQrBillData(payment: PaymentResolved): types.Data {
     creditor: {
       account,
       name: creditorAddress.name,
-      address: creditorAddress.line1,
+      ...splitStreet(creditorAddress.line1),
       zip: creditorAddress.postalCode,
       city: creditorAddress.city,
       country: getCountryCode(creditorAddress.country),
@@ -384,7 +461,7 @@ export function getSwissQrBillData(payment: PaymentResolved): types.Data {
         name: debtorAddress.organization
           ? `${debtorAddress.organization}, ${debtorAddress.name}`
           : debtorAddress.name,
-        address: debtorAddress.line1,
+        ...splitStreet(debtorAddress.line1),
         zip: debtorAddress.postalCode,
         city: debtorAddress.city,
         country: getCountryCode(debtorAddress.country),

@@ -1,8 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {
-  removeItem,
-  publikatorOnly,
-} = require('../../../lib/AudioQueue')
+const { removeItem, publikatorOnly } = require('../../../lib/AudioQueue')
 
 module.exports = async (_, args, context) => {
   const { id } = args

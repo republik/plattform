@@ -1,5 +1,7 @@
+import Link from '@/app/components/ui/link'
 import { useSanityArticles } from '@/lib/use-sanity-data'
-import { timeFormat } from '@/lib/utils/format'
+import { DateGroup } from '@/app/components/date-group/date-group'
+import { groupByDate } from '@/app/components/date-group/group-by-date'
 import withT from '@/lib/withT'
 import {
   A,
@@ -12,23 +14,14 @@ import {
   RawHtml,
   useColorContext,
 } from '@project-r/styleguide'
-import { nest } from 'd3-collection'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import Link from '@/app/components/ui/link'
 import { useMemo } from 'react'
-import DateLabel from '../Feed/DateLabel'
 import InfiniteScroll from '../Frame/InfiniteScroll'
 import CommentNotification from './CommentNotification'
 import DocumentNotification from './DocumentNotification'
-import SanityDocumentNotification from './SanityDocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
-
-const dateFormat = timeFormat('%A,\n%d.%m.%Y')
-
-const groupByDate = nest().key((n) => {
-  return dateFormat(new Date(n.createdAt))
-})
+import SanityDocumentNotification from './SanityDocumentNotification'
 
 const styles = {
   container: css({
@@ -209,10 +202,14 @@ export default compose(
             currentCount={nodes.length}
             loadMoreStyles={styles.more}
           >
-            {groupByDate.entries(nodes).map(({ key, values }, i, all) => {
+            {groupByDate(nodes, (node) => node.createdAt).map((group) => {
               return (
-                <DateLabel key={i} label={key}>
-                  {values.map((node, j) => {
+                <DateGroup
+                  key={group.key}
+                  label={group.label}
+                  labelLg={group.labelLg}
+                >
+                  {group.items.map((node, j) => {
                     if (
                       !node.object ||
                       (node.object.__typename === 'Comment' &&
@@ -270,7 +267,7 @@ export default compose(
                       />
                     )
                   })}
-                </DateLabel>
+                </DateGroup>
               )
             })}
           </InfiniteScroll>

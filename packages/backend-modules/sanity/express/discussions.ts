@@ -65,10 +65,8 @@ export const discussionsHandler =
         allowedRoles,
       }
 
-      // Safety net for content published before publikatorSync's own
-      // synchronous discussion-linking existed (see
-      // ../lib/publikatorSync/discussionRef.ts), or any other case that
-      // slips through it: without this, a `Discussion.create` call arriving
+      // Safety net for content that was never linked to its legacy
+      // discussion: without this, a `Discussion.create` call arriving
       // with no `id` would insert a brand-new, orphaned row even when a
       // legacy discussion already exists for this path. The Sanity
       // discussion schema's own comment states "the backend identifies a
