@@ -31,14 +31,56 @@ const isMastodon = (hostname: string, pathname: string) =>
   hostname.split('.').some((label) => label.includes('mastodon')) ||
   /^\/@[^/@]+@[^/@]+/.test(pathname)
 
+const detectPlatform = (url: URL): ProfileUrlPlatform | null => {
+  const hostname = url.hostname.toLowerCase()
+
+  const match = PLATFORM_DOMAINS.find(([, domains]) =>
+    domains.some((domain) => matchesDomain(hostname, domain)),
+  )
+  if (match) {
+    return match[0]
+  }
+  if (isMastodon(hostname, url.pathname)) {
+    return 'mastodon'
+  }
+  return null
+}
+
+const getLabel = (platform: ProfileUrlPlatform | null, url: URL): string => {
+  const pathSegments = url.pathname.split('/').filter(Boolean)
+
+  switch (platform) {
+    case 'bluesky': {
+      const handle =
+        pathSegments[0] === 'profile' ? pathSegments[1] : undefined
+      return handle || 'Bluesky'
+    }
+    case 'facebook':
+      return 'Facebook'
+    case 'x':
+      return pathSegments[0] || 'X'
+    case 'threema':
+      return pathSegments[0] || 'Threema'
+    case 'signal':
+      return 'Signal'
+    case 'linkedin':
+      return 'LinkedIn'
+    case 'mastodon':
+      return url.pathname.match(/@[A-Za-z0-9_]+/)?.[0] ?? 'Mastodon'
+    default:
+      return url.host || url.href
+  }
+}
+
 export type ParsedProfileUrl = {
   platform: ProfileUrlPlatform | null
-  url: URL
+  label: string
 }
 
 /**
- * Parses a profile URL and determines the platform from its hostname.
- * Returns null if the URL can't be parsed.
+ * Parses a profile URL, determines the platform from its hostname and
+ * derives a display label (e.g. the handle). Returns null if the URL
+ * can't be parsed.
  */
 export const parseProfileUrl = (url: string): ParsedProfileUrl | null => {
   let parsed: URL
@@ -47,16 +89,6 @@ export const parseProfileUrl = (url: string): ParsedProfileUrl | null => {
   } catch (e) {
     return null
   }
-  const hostname = parsed.hostname.toLowerCase()
-
-  const match = PLATFORM_DOMAINS.find(([, domains]) =>
-    domains.some((domain) => matchesDomain(hostname, domain)),
-  )
-  if (match) {
-    return { platform: match[0], url: parsed }
-  }
-  if (isMastodon(hostname, parsed.pathname)) {
-    return { platform: 'mastodon', url: parsed }
-  }
-  return { platform: null, url: parsed }
+  const platform = detectPlatform(parsed)
+  return { platform, label: getLabel(platform, parsed) }
 }
