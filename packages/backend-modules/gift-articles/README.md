@@ -31,10 +31,11 @@ payload = {"d":"<published Sanity _id>","e":<expiry, unix seconds>}
 ```
 
 - `lib/links.js` (`signGiftToken`) signs the payload with
-  `GIFT_LINK_PRIVATE_KEY`, an Ed25519 key in PEM form. The key never leaves
+  `GIFT_LINK_PRIVATE_KEY`, an Ed25519 key given as
+  one line of base64 (DER, PKCS#8; no PEM header). The key never leaves
   the API: whoever holds it can unlock any article.
-- www checks the signature with the matching `GIFT_LINK_PUBLIC_KEY` in a server
-  action (`apps/www/src/app/(sanity)/components/paynotes/verify-gift-token.ts`)
+- www checks the signature with the matching `GIFT_LINK_PUBLIC_KEY` in the
+  route `/api/gift-token` (`apps/www/src/app/api/gift-token/verify.ts`)
   before it reads the payload, then compares `d` with the article on screen and
   `e` with the clock. Changing either breaks the signature.
 - The article is identified by its Sanity id, not by its path: a slug can
@@ -43,10 +44,11 @@ payload = {"d":"<published Sanity _id>","e":<expiry, unix seconds>}
   normalises whatever the client sends (`sanity:<id>`, `drafts.<id>`, or a
   bare `_id`) down to the published id.
 
-Generate a key pair with:
+Both keys are one line of base64 (DER), without PEM header. Generate a pair
+with:
 
 ```bash
-node -e "const {privateKey,publicKey}=require('crypto').generateKeyPairSync('ed25519');console.log(privateKey.export({type:'pkcs8',format:'pem'}));console.log(publicKey.export({type:'spki',format:'pem'}))"
+node -e "const {privateKey,publicKey}=require('crypto').generateKeyPairSync('ed25519');console.log('GIFT_LINK_PRIVATE_KEY='+privateKey.export({type:'pkcs8',format:'der'}).toString('base64'));console.log('GIFT_LINK_PUBLIC_KEY='+publicKey.export({type:'spki',format:'der'}).toString('base64'))"
 ```
 
 ## Retention

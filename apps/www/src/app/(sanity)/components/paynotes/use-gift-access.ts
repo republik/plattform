@@ -1,5 +1,6 @@
 'use client'
 
+import type { VerifiedGiftToken } from '@/app/api/gift-token/types'
 import { useEffect, useMemo, useState } from 'react'
 import {
   getGiftAccess,
@@ -8,7 +9,13 @@ import {
   storeGiftAttribution,
   type GiftAccess,
 } from './gift-access'
-import { verifyGiftToken } from './verify-gift-token'
+
+async function verifyGiftToken(
+  token: string,
+): Promise<VerifiedGiftToken | null> {
+  const res = await fetch(`/api/gift-token?token=${encodeURIComponent(token)}`)
+  return res.ok ? res.json() : null
+}
 
 export type GiftAccessState = {
   /** Redeemed link for the current article, live or run out. */
@@ -31,7 +38,7 @@ const NO_GIFT: GiftAccessState = {
  *
  * The token comes from the URL the recipient followed, the document id from
  * the article itself (see `ContentWall`). The token's signature is checked on
- * the server (`verifyGiftToken`), and access is granted only for the article
+ * the server (`/api/gift-token`), and access is granted only for the article
  * the signed token names, so editing the URL can't move it to another piece
  * or push its expiry out.
  */
