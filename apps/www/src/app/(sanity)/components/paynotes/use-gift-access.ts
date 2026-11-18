@@ -1,7 +1,5 @@
 'use client'
 
-import { ValidateGiftTokenDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
 import { useEffect, useMemo, useState } from 'react'
 import {
   getGiftAccess,
@@ -10,6 +8,7 @@ import {
   storeGiftAttribution,
   type GiftAccess,
 } from './gift-access'
+import { verifyGiftToken } from './verify-gift-token'
 
 export type GiftAccessState = {
   /** Redeemed link for the current article, live or run out. */
@@ -31,43 +30,44 @@ const NO_GIFT: GiftAccessState = {
  * unlocked by one.
  *
  * The token comes from the URL the recipient followed, the document id from
- * the article itself (see `ContentWall`). Access is granted only for the
- * article the token names, so editing the URL can't move it to another piece.
+ * the article itself (see `ContentWall`). The token's signature is checked on
+ * the server (`verifyGiftToken`), and access is granted only for the article
+ * the signed token names, so editing the URL can't move it to another piece
+ * or push its expiry out.
  */
 export function useGiftAccess(
   token: string | null,
   documentId: string | null,
 ): GiftAccessState {
-  const { data } = useQuery(ValidateGiftTokenDocument, {
-    variables: { token: token as string },
-    skip: !token,
-  })
-
   // localStorage isn't reactive, so redemptions bump this to re-read it.
   const [redemptions, setRedemptions] = useState(0)
 
   useEffect(() => {
-    const result = data?.validateGiftToken
-    if (!token || !result) {
+    if (!token) {
       return
     }
-
-    // Stored even when it has run out, so a later visit still says so.
-    storeGiftAccess({
-      token,
-      documentId: result.documentId,
-      expiresAt: result.expiresAt,
-      granter: result.granter
-        ? {
-            name: result.granter.name,
-            portrait: result.granter.portrait ?? null,
-            hasPublicProfile: result.granter.hasPublicProfile,
-          }
-        : null,
-    })
-    storeGiftAttribution(token, result.documentId)
-    setRedemptions((n) => n + 1)
-  }, [data, token])
+    let cancelled = false
+    verifyGiftToken(token)
+      .then((result) => {
+        if (cancelled || !result) {
+          return
+        }
+        // Stored even when it has run out, so a later visit still says so.
+        storeGiftAccess({
+          token,
+          documentId: result.documentId,
+          expiresAt: result.expiresAt,
+        })
+        storeGiftAttribution(token, result.documentId)
+        setRedemptions((n) => n + 1)
+      })
+      .catch(() => {
+        // Treated like an invalid link: the article stays behind its wall.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [token])
 
   return useMemo(() => {
     const giftAccess = getGiftAccess(documentId)

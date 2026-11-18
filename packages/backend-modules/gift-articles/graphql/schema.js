@@ -1,17 +1,10 @@
 module.exports = `
 schema {
-  query: queries
   mutation: mutations
 }
 
-type queries {
-  validateGiftToken(token: String!): GiftTokenValidation
-}
-
 type mutations {
-  createGiftArticleLink(
-    documentId: ID!
-    documentPath: String!
-  ): GiftArticleLink!
+  "Signed gift link (URL) for the article, valid for at least 14 days"
+  createGiftArticleLink(documentId: ID!, documentPath: String!): String!
 }
 `

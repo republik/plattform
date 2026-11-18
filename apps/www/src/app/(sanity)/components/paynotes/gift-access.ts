@@ -3,18 +3,11 @@ import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 const GIFT_ACCESS_KEY = 'republik-gift-access'
 const UTM_STORAGE_KEY = 'republik-utm'
 
-export type GiftGranter = {
-  name: string
-  portrait: string | null
-  hasPublicProfile: boolean
-}
-
 export type GiftAccess = {
   token: string
   /** Sanity document ref, as `collectionsDocumentId()` builds it. */
   documentId: string
   expiresAt: string
-  granter: GiftGranter | null
 }
 
 /**

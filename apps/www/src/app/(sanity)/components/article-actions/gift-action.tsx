@@ -68,11 +68,11 @@ function GiftAction({
     CreateGiftArticleLinkDocument,
     { variables: { documentId, documentPath: path } },
   )
-  const giftUrl = data?.createGiftArticleLink.url ?? null
+  const giftUrl = data?.createGiftArticleLink ?? null
 
-  // Idempotent: the backend hands back the member's existing live link for
-  // this article. Runs when the menu opens, so every target below already has
-  // a real href by the time it is clicked.
+  // Idempotent: the backend signs the same payload all day long, so sharing
+  // the article again hands out the same link. Runs when the menu opens, so
+  // every target below already has a real href by the time it is clicked.
   const mintLink = async (): Promise<string | null> => {
     // Closing and reopening the menu while the request is still out would
     // otherwise send a second one.
@@ -81,7 +81,7 @@ function GiftAction({
     }
     try {
       const result = await createLink()
-      return result.data?.createGiftArticleLink.url ?? null
+      return result.data?.createGiftArticleLink ?? null
     } catch {
       // Surfaced through `error` below.
       return null

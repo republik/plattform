@@ -14,7 +14,6 @@ import {
 } from 'next/navigation'
 import { createContext, Suspense, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'
-import type { GiftAccess } from './gift-access'
 import { useGiftAccess } from './use-gift-access'
 
 export type PaynoteKindType =
@@ -50,8 +49,6 @@ type PaynotesContextValues = {
   setReadingAccess: (readingAccess: Article['readingAccess']) => void
   /** Sanity document ref of the article on screen, set by `ContentWall`. */
   setGiftDocumentId: (documentId: string | null) => void
-  /** The redeemed gift link for that article, if there is one. */
-  giftAccess: GiftAccess | null
   paynoteInlineHeight: number
   setPaynoteInlineHeight: (height: number) => void
 }
@@ -127,7 +124,7 @@ export const PaynotesProvider = ({ children }) => {
     useState<Article['readingAccess']>('REGWALL')
 
   const [giftDocumentId, setGiftDocumentId] = useState<string | null>(null)
-  const { giftAccess, hasGiftAccess, giftExpired } = useGiftAccess(
+  const { hasGiftAccess, giftExpired } = useGiftAccess(
     searchParams?.get('gift') ?? null,
     giftDocumentId,
   )
@@ -295,7 +292,6 @@ export const PaynotesProvider = ({ children }) => {
         setDocumentTypeForPaynotes,
         setReadingAccess,
         setGiftDocumentId,
-        giftAccess,
         paynoteInlineHeight,
         setPaynoteInlineHeight,
       }}

@@ -4,67 +4,57 @@ Lets paying members hand out a shareable link for a single article. Whoever
 opens it reads that one article without a paywall for 14 days, without needing
 an account.
 
+The module stores nothing. A gift link is a signed token naming the article and
+the expiry; neither the granter nor the recipient is recorded anywhere.
+
 ## Rules
 
 - Only signed-in users with the `member` role can create a link. The action bar
   narrows that further and only offers the button to readers with an active
   membership or magazine subscription — the `member` role on its own also
   covers trial and "Abo teilen" readers. That narrowing is currently
-  client-side only; see the note under *Open questions*.
+  client-side only; see the note under _Open questions_.
 - There is no limit on how many articles a member may gift.
-- A link lives **14 days**. Sharing the same article again while its link is
-  still live hands out that same link; once it has run out, the next share
-  mints a fresh one.
-- Once a link has run out it is unlinked from its granter, and 90 days later
-  deleted — see *Retention*.
-- `validateGiftToken` is public — recipients redeem links without signing in.
+- A link runs until the end of the UTC day 14 days after it was created, so
+  for at least 14 and under 15 days.
+- Every share of an article on the same day produces the same link, whoever
+  shares it: the payload is the same, and Ed25519 signatures are
+  deterministic.
+- A single link can't be revoked. Replacing the key pair invalidates all of
+  them at once.
 
-## Database
+## Token
 
-One table, created by migration `20260922120000-gift-articles`:
+```
+?gift=<base64url(payload)>.<base64url(signature)>
+payload = {"d":"<published Sanity _id>","e":<expiry, unix seconds>}
+```
 
-### `gift_article_links`
+- `lib/links.js` (`signGiftToken`) signs the payload with
+  `GIFT_LINK_PRIVATE_KEY`, an Ed25519 key in PEM form. The key never leaves
+  the API: whoever holds it can unlock any article.
+- www checks the signature with the matching `GIFT_LINK_PUBLIC_KEY` in a server
+  action (`apps/www/src/app/(sanity)/components/paynotes/verify-gift-token.ts`)
+  before it reads the payload, then compares `d` with the article on screen and
+  `e` with the clock. Changing either breaks the signature.
+- The article is identified by its Sanity id, not by its path: a slug can
+  change, and a granter reading the draft and a recipient reading the
+  published version have to end up with the same token. `toStoredDocumentId`
+  normalises whatever the client sends (`sanity:<id>`, `drafts.<id>`, or a
+  bare `_id`) down to the published id.
 
-snake_case, unlike most of this schema — this table gets queried by hand and in
-Metabase, where camelCase identifiers have to be quoted every time. The
-resolvers map to the camelCase GraphQL fields.
+Generate a key pair with:
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | uuid (PK) | |
-| `granter_user_id` | uuid (FK → users) | ON DELETE CASCADE; `NULL` once the link has run out |
-| `document_id` | text | bare, published Sanity `_id` — same value as `collectionDocumentItems."sanityId"` |
-| `document_path` | text | slug snapshot, only used to build the link's URL |
-| `token` | text (UNIQUE) | `crypto.randomUUID()`, travels as the `?gift=` query param |
-| `created_at` | timestamptz | defaults to `now()` |
-| `expires_at` | timestamptz | `created_at + 14 days` |
-
-The article is identified by its Sanity id, not by its path: a slug can change,
-and a granter reading the draft and a recipient reading the published version
-have to land on the same row. `lib/links.js` normalises whatever the client
-sends (`sanity:<id>`, `drafts.<id>`, or a bare `_id`) down to the published id,
-and hands it back out over GraphQL as the `sanity:`-prefixed ref the frontend's
-`collectionsDocumentId()` builds.
-
-No foreign key on `document_id` — Sanity documents don't live in this database.
+```bash
+node -e "const {privateKey,publicKey}=require('crypto').generateKeyPairSync('ed25519');console.log(privateKey.export({type:'pkcs8',format:'pem'}));console.log(publicKey.export({type:'spki',format:'pem'}))"
+```
 
 ## Retention
 
-Who handed out which article is only needed while the link is live: to hand
-the granter the same link again, and to show their name to the recipient.
-The databroom job `postgres/giftArticleLinks` (daily, 03:00 UTC) therefore:
-
-- sets `granter_user_id` to `NULL` on every link past `expires_at`. The
-  anonymous row stays, so a recipient opening it is still told the gift ran
-  out;
-- deletes the row 90 days after `expires_at`, the same window after which the
-  frontend forgets a redeemed link (`FORGET_AFTER_MS` in `gift-access.ts`).
-  `validateGiftToken` then answers `null`, as for an unknown token.
-
-Account deletion (the `deleteUser` mutation and `republik/script/gdpr/deleteUsers.js`)
-removes a user's links along with all other rows that reference `users`, and
-`ON DELETE CASCADE` covers a hard-deleted user. Both rely on the foreign key on
-`granter_user_id`, and on `gift_article_links` staying off their keep lists.
+There is no table, so there is nothing to clean up, and account deletion has
+nothing to remove. The recipient's browser keeps a redeemed link in
+localStorage for 90 days after it expires (`FORGET_AFTER_MS` in
+`gift-access.ts`), so a returning reader is told the gift ran out.
 
 ## Attribution
 
@@ -72,33 +62,20 @@ Gift-to-conversion tracking piggybacks on the existing UTM mechanism. When a
 recipient opens a gift link, the frontend writes `gift_token` and
 `gift_document_id` into the `republik-utm` sessionStorage key. Those values
 ride along in the conversion payload and end up in the `meta` JSONB of trials,
-pledges and newsletter signups, exactly as UTM parameters already do. No
-dedicated conversion table. Once a link has run out, its `gift_token` no
-longer leads back to a granter; `gift_document_id` still names the article.
+pledges and newsletter signups, exactly as UTM parameters already do. The token
+names the article and the expiry, never the granter.
 
 ## GraphQL API
 
-### Queries
-
-**`validateGiftToken(token: String!): GiftTokenValidation`** — public. `null`
-for an unknown token. Otherwise `valid` says whether the link is still live,
-and `documentId` / `documentPath` / `expiresAt` are reported either way, so the
-frontend can tell "this link ran out" from "this link is for another article".
-`granter` is only set for a live link; the name is the granter's own only when
-their profile is public, otherwise "Ein Republik-Mitglied".
-
 ### Mutations
 
-**`createGiftArticleLink(documentId: ID!, documentPath: String!): GiftArticleLink!`**
-— requires the `member` role. Returns the member's existing live link for the
-article if there is one, otherwise creates one. Runs in a transaction behind
-`pg_advisory_xact_lock(hashtext('gift-article:' + userId))`, so two action bars
-on the same page can't mint two tokens for one article.
+**`createGiftArticleLink(documentId: ID!, documentPath: String!): String!`**
+— requires the `member` role. Signs the article and returns the gift link's
+URL; no database access.
 
 ## Open questions
 
-The monthly per-member cap this module originally had was removed before the
-port. Together with the role-only server-side gate, that means a trial reader
-who calls `createGiftArticleLink` directly can mint unlimited links, even
-though the UI never offers them the button. If that matters, the gate belongs
-in the mutation — an active-membership check rather than a role check.
+Together with the role-only server-side gate, there being no cap means a trial
+reader who calls `createGiftArticleLink` directly can mint unlimited links,
+even though the UI never offers them the button. If that matters, the gate
+belongs in the mutation — an active-membership check rather than a role check.

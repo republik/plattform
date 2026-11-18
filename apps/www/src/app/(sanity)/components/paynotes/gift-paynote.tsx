@@ -3,8 +3,6 @@
 import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
-import Image from 'next/image'
-import type { ReactNode } from 'react'
 import { usePaynotes } from './paynotes-context'
 
 /**
@@ -14,12 +12,10 @@ import { usePaynotes } from './paynotes-context'
  */
 function GiftPaynoteBlock({
   headline,
-  portrait,
   body,
   uiComponent,
 }: {
   headline: string
-  portrait?: ReactNode
   body: string
   uiComponent: string
 }) {
@@ -47,7 +43,6 @@ function GiftPaynoteBlock({
           textAlign: 'center',
         })}
       >
-        {portrait}
         <h2
           className={css({
             textStyle: { base: 'h3Serif', sm: 'h2Serif' },
@@ -77,43 +72,17 @@ function GiftPaynoteBlock({
  * link. The text above it stays readable; this is the invitation that follows.
  */
 export function GiftPaynote() {
-  const { paynoteKind, giftAccess } = usePaynotes()
+  const { paynoteKind } = usePaynotes()
 
   if (paynoteKind !== 'GIFT_PAYNOTE') {
     return null
   }
 
-  // Without a public profile the backend sends a stand-in name and no
-  // portrait, and the headline drops the "von ...".
-  const granter = giftAccess?.granter
-  const granterName = granter?.hasPublicProfile ? granter.name : null
-
+  // Links don't say who handed them out, so neither does the paynote.
   return (
     <EventTrackingContext category='GiftPaynote'>
       <GiftPaynoteBlock
-        headline={
-          granterName
-            ? `Dieser Artikel wurde Ihnen von ${granterName} geschenkt`
-            : 'Dieser Artikel wurde Ihnen geschenkt'
-        }
-        portrait={
-          granterName &&
-          granter.portrait && (
-            <Image
-              src={granter.portrait}
-              unoptimized
-              alt='Portraitbild'
-              width={128}
-              height={128}
-              className={css({
-                borderRadius: 'full',
-                width: '64px',
-                height: '64px',
-                objectFit: 'cover',
-              })}
-            />
-          )
-        }
+        headline='Ein Republik-Mitglied hat Ihnen diesen Artikel geschenkt'
         body='Gefällt Ihnen, was Sie lesen? Werden Sie Mitglied und erhalten Sie unbegrenzten Zugang zu allen Artikeln.'
         uiComponent='gift-paynote'
       />
