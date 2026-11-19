@@ -1,5 +1,10 @@
 const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { toStoredDocumentId, createGiftToken } = require('../../../lib/links')
+const {
+  isSanityRef,
+  fromSanityRef,
+  publishedIdFor,
+} = require('@orbiting/backend-modules-sanity')
+const { createGiftToken } = require('../../../lib/links')
 
 module.exports = async (_, { documentId }, context) => {
   const { req, user: me } = context
@@ -7,7 +12,11 @@ module.exports = async (_, { documentId }, context) => {
   ensureSignedIn(req)
   Roles.ensureUserHasRole(me, 'member')
 
-  const sanityId = toStoredDocumentId(documentId)
+  if (!isSanityRef(documentId)) {
+    throw new Error('Ungültige Dokument-ID.')
+  }
+
+  const sanityId = publishedIdFor(fromSanityRef(documentId))
   if (!sanityId) {
     throw new Error('Ungültige Dokument-ID.')
   }

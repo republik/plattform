@@ -1,14 +1,6 @@
 const crypto = require('crypto')
-const {
-  isSanityRef,
-  fromSanityRef,
-  publishedId,
-} = require('@orbiting/backend-modules-sanity')
 
 const GIFT_LINK_TTL_DAYS = 14
-
-const toStoredDocumentId = (input) =>
-  publishedId(isSanityRef(input) ? fromSanityRef(input) : input)
 
 const giftLinkExpiry = (now = new Date()) => {
   const ttlEnd = new Date(now.getTime() + GIFT_LINK_TTL_DAYS * 864e5)
@@ -57,6 +49,5 @@ const createGiftToken = ({ documentId, now = new Date() }) =>
   signGiftToken({ documentId, expiresAt: giftLinkExpiry(now) })
 
 module.exports = {
-  toStoredDocumentId,
   createGiftToken,
 }
