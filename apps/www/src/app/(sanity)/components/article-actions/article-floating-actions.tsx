@@ -11,6 +11,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { BookmarkAction } from './bookmark-action'
 import { collectionsDocumentId } from './document-id'
+import { ShareOrGiftAction } from './gift-action'
 import { MENU_SIDE_OFFSET } from './menu-style'
 import {
   ReadStatus,
@@ -346,7 +347,8 @@ export function ArticleFloatingActions({
         <div {...slotProps('actions')}>
           <ReadingProgressAction stored={progress.percent} />
           <BookmarkAction documentId={documentId} />
-          <ShareAction
+          <ShareOrGiftAction
+            documentId={documentId}
             align='center'
             menuOffsetX={shareMenuOffset.x}
             menuSideOffset={shareMenuOffset.side}

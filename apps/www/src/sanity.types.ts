@@ -932,6 +932,7 @@ export type Article = {
   mdast?: Mdast
   publikatorMeta?: LegacyMeta
   notificationTrigger?: string
+  scheduledReleaseId?: string
   mailchimpSyncTrigger?: string
   mailchimpSyncResult?: {
     status?: string
@@ -1254,6 +1255,10 @@ export type Newsletter = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  hideEmailHeader?: boolean
+  headerBackgroundColor?: string
+  headerImageHeight?: number
+  footerAddress?: string
   url?: string
   order?: number
   archived?: boolean
