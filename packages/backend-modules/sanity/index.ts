@@ -15,6 +15,7 @@ export {
   isSanityRef,
   fromSanityRef,
   publishedId,
+  publishedIdFor,
   legacySanityId,
   fetchDocumentById,
   fetchDocumentsByIds,
