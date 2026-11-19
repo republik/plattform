@@ -22,7 +22,8 @@ node -e "const {privateKey,publicKey}=require('crypto').generateKeyPairSync('ed2
 
 ## Mutation
 
-**`createGiftArticleLink(documentId: ID!, documentPath: String!): String!`**
+**`createGiftArticleToken(documentId: ID!): String!`**
 
 - Requires the `member` role.
-- Signs the article and returns the gift link's URL; no database access.
+- Signs the article and returns the token; no database access. The frontend appends it to the article URL as
+  `?gift=<token>`.

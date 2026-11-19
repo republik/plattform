@@ -4,7 +4,7 @@ schema {
 }
 
 type mutations {
-  "Signed gift link (URL) for the article, valid for at least 14 days"
-  createGiftArticleLink(documentId: ID!, documentPath: String!): String!
+  "Signed gift token for the article, valid for at least 14 days. The frontend appends it to the article URL as \`?gift=<token>\`."
+  createGiftArticleToken(documentId: ID!): String!
 }
 `

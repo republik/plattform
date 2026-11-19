@@ -5,8 +5,6 @@ const {
   publishedId,
 } = require('@orbiting/backend-modules-sanity')
 
-const { FRONTEND_BASE_URL } = process.env
-
 const GIFT_LINK_TTL_DAYS = 14
 
 const toStoredDocumentId = (input) =>
@@ -55,12 +53,10 @@ const signGiftToken = ({ documentId, expiresAt }) => {
   return `${payload}.${signature}`
 }
 
-const createGiftLink = ({ documentId, documentPath, now = new Date() }) => {
-  const token = signGiftToken({ documentId, expiresAt: giftLinkExpiry(now) })
-  return `${FRONTEND_BASE_URL}${documentPath}?gift=${token}`
-}
+const createGiftToken = ({ documentId, now = new Date() }) =>
+  signGiftToken({ documentId, expiresAt: giftLinkExpiry(now) })
 
 module.exports = {
   toStoredDocumentId,
-  createGiftLink,
+  createGiftToken,
 }

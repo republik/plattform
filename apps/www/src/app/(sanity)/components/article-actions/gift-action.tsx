@@ -1,11 +1,12 @@
 'use client'
 
-import { CreateGiftArticleLinkDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { CreateGiftArticleTokenDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { Spinner } from '@/app/components/ui/spinner'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { useMe } from '@/lib/context/MeContext'
 import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
@@ -28,6 +29,16 @@ const noteStyle = css({
   paddingX: '5',
   textStyle: 'sans',
 })
+
+/** The article URL with the signed token, as recipients open it. */
+function toGiftUrl(path: string, token: string | null | undefined) {
+  if (!token) {
+    return null
+  }
+  const url = new URL(path, PUBLIC_BASE_URL)
+  url.searchParams.set('gift', token)
+  return url.toString()
+}
 
 export type ShareOrGiftActionProps = ShareActionProps & {
   documentId: string
@@ -64,11 +75,11 @@ function GiftAction({
   const trackEvent = useTrackEvent()
   const [linkCopied, setLinkCopied] = useState(false)
 
-  const [createLink, { data, loading, error }] = useMutation(
-    CreateGiftArticleLinkDocument,
-    { variables: { documentId, documentPath: path } },
+  const [createToken, { data, loading, error }] = useMutation(
+    CreateGiftArticleTokenDocument,
+    { variables: { documentId } },
   )
-  const giftUrl = data?.createGiftArticleLink ?? null
+  const giftUrl = toGiftUrl(path, data?.createGiftArticleToken)
 
   // Idempotent: the backend signs the same payload all day long, so sharing
   // the article again hands out the same link. Runs when the menu opens, so
@@ -80,8 +91,8 @@ function GiftAction({
       return giftUrl
     }
     try {
-      const result = await createLink()
-      return result.data?.createGiftArticleLink ?? null
+      const result = await createToken()
+      return toGiftUrl(path, result.data?.createGiftArticleToken)
     } catch {
       // Surfaced through `error` below.
       return null
