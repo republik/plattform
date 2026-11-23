@@ -25,15 +25,16 @@ import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-f
 import { LoginPopup } from '@/app/components/auth/login/login-popup'
 import Link from '@/app/components/ui/link'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
-import { draftMode } from 'next/headers'
 import { Suspense } from 'react'
 
 export default async function ArticleDocument({
   article,
+  isPreview,
 }: {
   article: ArticleDocumentType
+  isPreview?: boolean
 }) {
   const {
     slug,
@@ -51,28 +52,34 @@ export default async function ArticleDocument({
   const seriesId = articleCollection?.series && articleCollection?._id
   const documentId = collectionsDocumentId(article)
 
-  const isDraftMode = (await draftMode()).isEnabled
-
   return (
     <EventTrackingContext category='Article'>
-      <LoginPopup />
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
-      <WelcomeBanner />
-      {!isDraftMode && (
-        <ProlitterisTracking
-          sanityId={article._id}
-          repoId={repoId}
-          path={slug}
-        />
+      {!isPreview && (
+        <>
+          <LoginPopup />
+          <WelcomeBanner />
+          <ProlitterisTracking
+            sanityId={article._id}
+            repoId={repoId}
+            path={slug}
+          />
+        </>
       )}
       <ArticleActionsProvider>
         <article
           // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
           data-force-theme={theme?.darkMode ? 'dark' : undefined}
-          className={editorialContent({
-            theme: theme?.name,
-          })}
+          className={cx(
+            editorialContent({
+              theme: theme?.name,
+            }),
+            isPreview &&
+              css({
+                pb: '16',
+              }),
+          )}
         >
           {cover && (
             <EditorialImage value={cover}>
@@ -101,27 +108,43 @@ export default async function ArticleDocument({
             <InlinePortableText value={byline} />
           </p>
 
-          <ArticleTopActions article={article} />
+          {isPreview ? (
+            <div
+              className={css({
+                pointerEvents: 'none',
+              })}
+            >
+              <ArticleTopActions article={article} />
+            </div>
+          ) : (
+            <ArticleTopActions article={article} />
+          )}
 
           <div className={css({ display: 'flex', gap: '2' })}>
             <EditLink documentId={article._id} documentType='article' />
             <TeaserSmallPreviewLink documentId={article._id} />
           </div>
 
-          <ContentWall
-            readingAccess={readingAccess}
-            excerpt={
-              <ArticlePortableText value={article.content?.slice(0, 3)} />
-            }
-            fullContent={<ArticlePortableText value={article.content} />}
-          />
+          {isPreview ? (
+            <ArticlePortableText value={article.content} />
+          ) : (
+            <>
+              <ContentWall
+                readingAccess={readingAccess}
+                excerpt={
+                  <ArticlePortableText value={article.content?.slice(0, 3)} />
+                }
+                fullContent={<ArticlePortableText value={article.content} />}
+              />
 
-          {/* End of the text: everything below is outside the measured region. */}
-          <ReadingPositionTracker documentId={documentId} />
+              {/* End of the text: everything below is outside the measured region. */}
+              <ReadingPositionTracker documentId={documentId} />
 
-          <ArticleBottomActions article={article} />
+              <ArticleBottomActions article={article} />
 
-          <PaynoteInline />
+              <PaynoteInline />
+            </>
+          )}
 
           <FollowArticle
             seriesId={seriesId}
@@ -137,11 +160,15 @@ export default async function ArticleDocument({
           />
         </article>
 
-        <Suspense>
-          <AutomaticRecommendations currentDocumentId={article._id} />
-        </Suspense>
+        {!isPreview && (
+          <>
+            <Suspense>
+              <AutomaticRecommendations currentDocumentId={article._id} />
+            </Suspense>
 
-        <ArticleFloatingActions article={article} />
+            <ArticleFloatingActions article={article} />
+          </>
+        )}
       </ArticleActionsProvider>
     </EventTrackingContext>
   )
