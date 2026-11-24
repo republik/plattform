@@ -1,0 +1,3 @@
+mutation CreateGiftArticleToken($documentId: ID!) {
+  createGiftArticleToken(documentId: $documentId)
+}

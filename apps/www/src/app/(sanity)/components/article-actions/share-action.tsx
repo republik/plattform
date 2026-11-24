@@ -6,21 +6,14 @@ import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import type * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { IconLogoTelegram, IconLogoThreema, IconLogoWhatsApp } from '@republik/icons'
 import copyToClipboard from 'clipboard-copy'
-import { Facebook, Link, Mail, Share as ShareIcon } from 'lucide-react'
+import { Link, Share as ShareIcon } from 'lucide-react'
 import { useState, type Ref } from 'react'
 import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
 import { MENU_SIDE_OFFSET } from './menu-style'
+import { getShareTargets } from './share-targets'
 
-export function ShareAction({
-  title,
-  path,
-  align = 'end',
-  menuOffsetX = 0,
-  menuSideOffset = MENU_SIDE_OFFSET,
-  triggerRef,
-}: {
+export type ShareActionProps = {
   title: string
   path: string
   /** Where the menu sits relative to the trigger. */
@@ -37,7 +30,16 @@ export function ShareAction({
    */
   menuSideOffset?: number
   triggerRef?: Ref<HTMLButtonElement>
-}) {
+}
+
+export function ShareAction({
+  title,
+  path,
+  align = 'end',
+  menuOffsetX = 0,
+  menuSideOffset = MENU_SIDE_OFFSET,
+  triggerRef,
+}: ShareActionProps) {
   const url = new URL(path, PUBLIC_BASE_URL).toString()
   const emailSubject = `Republik: ${title}`
   const { isNativeApp } = usePlatformInformation()
@@ -67,38 +69,7 @@ export function ShareAction({
     )
   }
 
-  const shareLinks = [
-    {
-      name: 'facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      icon: Facebook,
-      label: 'Facebook',
-    },
-    {
-      name: 'whatsapp',
-      href: `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`,
-      icon: IconLogoWhatsApp,
-      label: 'WhatsApp',
-    },
-    {
-      name: 'threema',
-      href: `https://threema.id/compose?text=${encodeURIComponent(url)}`,
-      icon: IconLogoThreema,
-      label: 'Threema',
-    },
-    {
-      name: 'telegram',
-      href: `https://t.me/share/url?url=${encodeURIComponent(url)}`,
-      icon: IconLogoTelegram,
-      label: 'Telegram',
-    },
-    {
-      name: 'mail',
-      href: `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(url)}`,
-      icon: Mail,
-      label: 'E-Mail',
-    },
-  ]
+  const shareLinks = getShareTargets(url, emailSubject)
 
   return (
     <Menu.Root modal={false}>

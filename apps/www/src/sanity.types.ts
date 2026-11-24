@@ -1254,6 +1254,10 @@ export type Newsletter = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  hideEmailHeader?: boolean
+  headerBackgroundColor?: string
+  headerImageHeight?: number
+  footerAddress?: string
   url?: string
   order?: number
   archived?: boolean

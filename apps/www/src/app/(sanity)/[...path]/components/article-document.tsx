@@ -10,6 +10,7 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { AutomaticRecommendations } from '@/app/(sanity)/components/next-reads/automatic-recommendations'
 import { EditorsRecommendations } from '@/app/(sanity)/components/next-reads/editors-recommendations'
+import { GiftPaynote } from '@/app/(sanity)/components/paynotes/gift-paynote'
 import PaynoteInline from '@/app/(sanity)/components/paynotes/paynote/paynote-inline'
 import { WelcomeBanner } from '@/app/(sanity)/components/paynotes/paynotes-in-trial/welcome'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
@@ -25,16 +26,15 @@ import type { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-f
 import { LoginPopup } from '@/app/components/auth/login/login-popup'
 import Link from '@/app/components/ui/link'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css, cx } from '@republik/theme/css'
+import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
+import { draftMode } from 'next/headers'
 import { Suspense } from 'react'
 
 export default async function ArticleDocument({
   article,
-  isPreview,
 }: {
   article: ArticleDocumentType
-  isPreview?: boolean
 }) {
   const {
     slug,
@@ -52,34 +52,28 @@ export default async function ArticleDocument({
   const seriesId = articleCollection?.series && articleCollection?._id
   const documentId = collectionsDocumentId(article)
 
+  const isDraftMode = (await draftMode()).isEnabled
+
   return (
     <EventTrackingContext category='Article'>
+      <LoginPopup />
       <Theme theme={theme} />
       {seriesId && <SeriesMenu slug={slug} />}
-      {!isPreview && (
-        <>
-          <LoginPopup />
-          <WelcomeBanner />
-          <ProlitterisTracking
-            sanityId={article._id}
-            repoId={repoId}
-            path={slug}
-          />
-        </>
+      <WelcomeBanner />
+      {!isDraftMode && (
+        <ProlitterisTracking
+          sanityId={article._id}
+          repoId={repoId}
+          path={slug}
+        />
       )}
       <ArticleActionsProvider>
         <article
           // Puts the whole app in dark mode (see the `dark` condition in preset-republik.ts).
           data-force-theme={theme?.darkMode ? 'dark' : undefined}
-          className={cx(
-            editorialContent({
-              theme: theme?.name,
-            }),
-            isPreview &&
-              css({
-                pb: '16',
-              }),
-          )}
+          className={editorialContent({
+            theme: theme?.name,
+          })}
         >
           {cover && (
             <EditorialImage value={cover}>
@@ -108,43 +102,30 @@ export default async function ArticleDocument({
             <InlinePortableText value={byline} />
           </p>
 
-          {isPreview ? (
-            <div
-              className={css({
-                pointerEvents: 'none',
-              })}
-            >
-              <ArticleTopActions article={article} />
-            </div>
-          ) : (
-            <ArticleTopActions article={article} />
-          )}
+          <ArticleTopActions article={article} />
+          <GiftPaynote />
 
           <div className={css({ display: 'flex', gap: '2' })}>
             <EditLink documentId={article._id} documentType='article' />
             <TeaserSmallPreviewLink documentId={article._id} />
           </div>
 
-          {isPreview ? (
-            <ArticlePortableText value={article.content} />
-          ) : (
-            <>
-              <ContentWall
-                readingAccess={readingAccess}
-                excerpt={
-                  <ArticlePortableText value={article.content?.slice(0, 3)} />
-                }
-                fullContent={<ArticlePortableText value={article.content} />}
-              />
+          <ContentWall
+            readingAccess={readingAccess}
+            documentId={documentId}
+            excerpt={
+              <ArticlePortableText value={article.content?.slice(0, 3)} />
+            }
+            fullContent={<ArticlePortableText value={article.content} />}
+          />
 
-              {/* End of the text: everything below is outside the measured region. */}
-              <ReadingPositionTracker documentId={documentId} />
+          {/* End of the text: everything below is outside the measured region. */}
+          <ReadingPositionTracker documentId={documentId} />
 
-              <ArticleBottomActions article={article} />
+          <ArticleBottomActions article={article} />
 
-              <PaynoteInline />
-            </>
-          )}
+          <PaynoteInline />
+          <GiftPaynote />
 
           <FollowArticle
             seriesId={seriesId}
@@ -160,15 +141,11 @@ export default async function ArticleDocument({
           />
         </article>
 
-        {!isPreview && (
-          <>
-            <Suspense>
-              <AutomaticRecommendations currentDocumentId={article._id} />
-            </Suspense>
+        <Suspense>
+          <AutomaticRecommendations currentDocumentId={article._id} />
+        </Suspense>
 
-            <ArticleFloatingActions article={article} />
-          </>
-        )}
+        <ArticleFloatingActions article={article} />
       </ArticleActionsProvider>
     </EventTrackingContext>
   )
