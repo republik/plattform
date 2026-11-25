@@ -7,25 +7,19 @@ import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { Gift, Link } from 'lucide-react'
 import { useState } from 'react'
-import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
+import {
+  ACTION_ICON_SIZE,
+  actionLabelStyle,
+  actionStyle,
+  noteStyle,
+} from './action-style'
 import { type ShareActionProps } from './share-action'
 import { getShareTargets } from './share-targets'
 
 const GIFT_LABEL = 'Verschenken'
-
-const noteStyle = css({
-  color: 'textSoft',
-  fontSize: 'xs',
-  lineHeight: 1.4,
-  paddingBottom: '2',
-  paddingTop: '1',
-  paddingX: '5',
-  textStyle: 'sans',
-})
 
 /** The article URL with the signed token, as recipients open it. */
 function toGiftUrl(path: string, token: string | null | undefined) {
@@ -123,7 +117,8 @@ export function GiftAction({
       </Menu.Trigger>
       <Menu.Content title={GIFT_LABEL}>
         <p className={noteStyle}>
-          Wer diesen Link öffnet, liest den Artikel 14 Tage lang ohne Abo.
+          Gewähre freien Zugang zu diesem Beitrag. In zwei Wochen ist der Link
+          abgelaufen.
         </p>
         {error ? (
           <p className={noteStyle}>
@@ -166,6 +161,19 @@ function GiftShareTargets({
 
   return (
     <>
+      <Menu.Item asChild>
+        <a
+          className={menuItemStyle}
+          href={url}
+          onClick={(e) => {
+            e.preventDefault()
+            onCopy()
+          }}
+        >
+          <Link size={ACTION_ICON_SIZE} />
+          {linkCopied ? 'Link kopiert' : 'Link kopieren'}
+        </a>
+      </Menu.Item>
       {getShareTargets(url, emailSubject).map(
         ({ name, href, icon: Icon, label }) => (
           <Menu.Item asChild key={name}>
@@ -184,19 +192,6 @@ function GiftShareTargets({
           </Menu.Item>
         ),
       )}
-      <Menu.Item asChild>
-        <a
-          className={menuItemStyle}
-          href={url}
-          onClick={(e) => {
-            e.preventDefault()
-            onCopy()
-          }}
-        >
-          <Link size={ACTION_ICON_SIZE} />
-          {linkCopied ? 'Link kopiert' : 'Link kopieren'}
-        </a>
-      </Menu.Item>
     </>
   )
 }

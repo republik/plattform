@@ -25,6 +25,14 @@ export function getShareTargets(
   const encodedUrl = encodeURIComponent(url)
   return [
     {
+      name: 'mail',
+      href: `mailto:?subject=${encodeURIComponent(
+        emailSubject,
+      )}&body=${encodedUrl}`,
+      icon: Mail,
+      label: 'E-Mail',
+    },
+    {
       name: 'facebook',
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
       icon: Facebook,
@@ -47,14 +55,6 @@ export function getShareTargets(
       href: `https://t.me/share/url?url=${encodedUrl}`,
       icon: IconLogoTelegram,
       label: 'Telegram',
-    },
-    {
-      name: 'mail',
-      href: `mailto:?subject=${encodeURIComponent(
-        emailSubject,
-      )}&body=${encodedUrl}`,
-      icon: Mail,
-      label: 'E-Mail',
     },
   ]
 }
