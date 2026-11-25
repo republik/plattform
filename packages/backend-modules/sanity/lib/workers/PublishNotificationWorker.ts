@@ -110,6 +110,19 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
 
     let event: any
 
+    // Each subscriber gets at most one notification per publish: someone
+    // following both a collection and an author (or two collections, or two
+    // co-authors) is only included in the first group that reaches them.
+    // Collections go first, so their Format-branded notification wins over
+    // the author one. sendNotification itself does no deduplication -- it
+    // inserts and sends one notification per user it's handed.
+    const notifiedUserIds = new Set<string>()
+    const takeUnnotified = (subscribers: any[]) => {
+      const fresh = subscribers.filter((u) => !notifiedUserIds.has(u.id))
+      fresh.forEach((u) => notifiedUserIds.add(u.id))
+      return fresh
+    }
+
     // One sendNotification call per articleCollection group, so followers
     // of different collections each see a notification branded with the
     // collection they actually follow — mirrors publikator's per-format loop.
@@ -118,7 +131,13 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
       'objectDocumentId',
     )
     for (const collectionId of Object.keys(subscribersByCollectionId)) {
-      const subscribers = subscribersByCollectionId[collectionId]
+      const subscribers = takeUnnotified(
+        subscribersByCollectionId[collectionId],
+      )
+      // An empty send would still create an event row (or attach nothing).
+      if (!subscribers.length) {
+        continue
+      }
 
       // Push heading: "Neuer Beitrag in «Format»", the Format being the
       // article's `heading`, else the title of the collection this group
@@ -195,6 +214,16 @@ export class PublishNotificationWorker extends BaseWorker<PublishNotificationPay
       authorSubscribers,
       'objectUserId',
     )
+    // Deduplicated before the author loads below, so authors whose followers
+    // were all already notified via a collection aren't fetched at all.
+    for (const authorId of Object.keys(subscribersByAuthorId)) {
+      const subscribers = takeUnnotified(subscribersByAuthorId[authorId])
+      if (subscribers.length) {
+        subscribersByAuthorId[authorId] = subscribers
+      } else {
+        delete subscribersByAuthorId[authorId]
+      }
+    }
     const authorIds = Object.keys(subscribersByAuthorId)
     // Loaded up front so DataLoader gets to batch them into one query —
     // awaiting inside the send loop would enqueue each key only after the

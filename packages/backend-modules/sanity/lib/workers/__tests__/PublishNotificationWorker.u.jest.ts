@@ -126,3 +126,102 @@ describe('PublishNotificationWorker collection notifications', () => {
     expect(content.mail({ email: 'a@b.ch' }).subject).toBe('Der Teaser')
   })
 })
+
+describe('PublishNotificationWorker recipient deduplication', () => {
+  const userById = jest.fn((id: string) =>
+    Promise.resolve({ id, name: `Author ${id}`, slug: id, _raw: {} }),
+  )
+
+  const runWith = async (recipients: {
+    collectionSubscribers: any[]
+    authorSubscribers: any[]
+  }) => {
+    fetchArticleForNotification.mockResolvedValue({
+      _id: 'article-1',
+      title: block('Der Titel'),
+      articleCollections: [
+        { collection: { _id: 'c1', title: 'Sammlung 1' } },
+        { collection: { _id: 'c2', title: 'Sammlung 2' } },
+      ],
+    })
+    resolveNotificationRecipients.mockResolvedValue(recipients)
+    const worker = new PublishNotificationWorker(
+      {} as any,
+      {} as any,
+      {
+        t,
+        loaders: { User: { byId: { load: userById } } },
+      } as any,
+    )
+    await worker.perform([
+      {
+        data: {
+          $version: 'v1',
+          documentId: 'article-1',
+          notificationTrigger: 'test',
+        },
+      } as any,
+    ])
+    return sendNotification.mock.calls.map(([args]) =>
+      args.users.map((u: any) => u.id),
+    )
+  }
+
+  const collectionSub = (userId: string, collectionId: string) => ({
+    id: userId,
+    __subscription: { objectDocumentId: toSanityRef(collectionId) },
+  })
+  const authorSub = (userId: string, authorId: string) => ({
+    id: userId,
+    __subscription: { objectUserId: authorId },
+  })
+
+  const originalBaseUrl = process.env.FRONTEND_BASE_URL
+  beforeAll(() => {
+    // The author send builds profile URLs against it.
+    process.env.FRONTEND_BASE_URL = 'https://example.test/'
+  })
+  afterAll(() => {
+    if (originalBaseUrl === undefined) {
+      delete process.env.FRONTEND_BASE_URL
+    } else {
+      process.env.FRONTEND_BASE_URL = originalBaseUrl
+    }
+  })
+
+  beforeEach(() => {
+    sendNotification.mockClear()
+    userById.mockClear()
+  })
+
+  it('skips the author notification for a user already notified via a collection', async () => {
+    const sends = await runWith({
+      collectionSubscribers: [collectionSub('u1', 'c1')],
+      authorSubscribers: [authorSub('u1', 'a1'), authorSub('u2', 'a1')],
+    })
+
+    expect(sends).toEqual([['u1'], ['u2']])
+  })
+
+  it('notifies a user following two collections or two authors only once', async () => {
+    const sends = await runWith({
+      collectionSubscribers: [
+        collectionSub('u1', 'c1'),
+        collectionSub('u1', 'c2'),
+      ],
+      authorSubscribers: [authorSub('u2', 'a1'), authorSub('u2', 'a2')],
+    })
+
+    expect(sends).toEqual([['u1'], ['u2']])
+  })
+
+  it('sends nothing and loads no author when every follower was already notified', async () => {
+    const sends = await runWith({
+      collectionSubscribers: [collectionSub('u1', 'c1')],
+      authorSubscribers: [authorSub('u1', 'a1')],
+    })
+
+    expect(sends).toEqual([['u1']])
+    expect(userById).not.toHaveBeenCalled()
+  })
+})
