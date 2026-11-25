@@ -242,9 +242,6 @@ function Content({ children, title, className, style }: MenuContentProps) {
           style={style}
         >
           {children}
-          <DropdownMenu.Arrow
-            className={css({ fill: 'background', boxShadow: 'md' })}
-          />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     )
