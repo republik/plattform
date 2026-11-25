@@ -2,6 +2,7 @@
 import type { ArticlePortableTextBlockType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { Spinner } from '@/app/components/ui/spinner'
 import { css, cva } from '@republik/theme/css'
+import { stegaClean } from 'next-sanity'
 import Script from 'next/script'
 import { useState } from 'react'
 const figureStyle = cva({
@@ -32,22 +33,30 @@ export function StoryComponent({
 }) {
   const [error, setError] = useState<string | null>(null)
 
-  if (!value.url) {
+  // In preview (draft mode) Sanity stega-encodes strings with invisible
+  // characters. These values are used as a custom-element tag name, a script
+  // URL, JSON and a style variant, so they must be cleaned: a stega-encoded tag
+  // name never matches the name the script registers, so the element is never
+  // upgraded and the loading spinner stays forever.
+  const url = stegaClean(value.url)
+  const tagname = stegaClean(value.tagname)
+  const size = stegaClean(value.size)
+  const dataJson = stegaClean(value.componentData?.code) ?? '{}'
+
+  if (!url) {
     return null
   }
 
-  const Component = value.tagname as any
+  const Component = tagname as any
 
   if (!error && !Component) {
-    setError(`Invalid component name: ${value.tagname}`)
+    setError(`Invalid component name: ${tagname}`)
   }
-
-  const dataJson = value.componentData?.code ?? '{}'
 
   return (
     <div
       data-story-component={`${Component}`}
-      className={figureStyle({ size: value.size })}
+      className={figureStyle({ size })}
     >
       {error && (
         <div
@@ -75,11 +84,11 @@ export function StoryComponent({
       </Component>
       <Script
         type='module'
-        src={value.url}
+        src={url}
         strategy='lazyOnload'
         onError={(e) => {
           console.error(
-            `Story Component '${Component}' could not be loaded from '${value.url}'`,
+            `Story Component '${Component}' could not be loaded from '${url}'`,
             e,
           )
           setError('Beim Laden dieser Komponente ist ein Fehler aufgetreten.')
