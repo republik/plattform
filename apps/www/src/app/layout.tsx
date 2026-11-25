@@ -1,6 +1,7 @@
 import CampaignPaynote from '@/app/(sanity)/components/paynotes/campaign/campaign-paynote'
 import { PaynoteOverlay } from '@/app/(sanity)/components/paynotes/paynote/paynote-overlay'
 import { PaynotesProvider } from '@/app/(sanity)/components/paynotes/paynotes-context'
+import { IpAllowlistBanner } from '@/app/components/ip-allowlist-banner'
 import { NativeAppMessageSync } from '@/app/components/native-app'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
@@ -71,6 +72,7 @@ export default async function RootLayout({
                     <AudioQueueProvider>
                       <AudioProvider>
                         <PaynotesProvider>
+                          <IpAllowlistBanner />
                           {children}
                           <NativeAppMessageSync />
                           <AudioPlayerOrchestrator />

@@ -1,3 +1,5 @@
+'use client'
+
 import { useMe } from '@/lib/context/MeContext'
 
 export function IpAllowlistBanner() {
