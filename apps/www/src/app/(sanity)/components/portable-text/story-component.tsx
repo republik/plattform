@@ -5,6 +5,7 @@ import { css, cva } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import Script from 'next/script'
 import { useState } from 'react'
+
 const figureStyle = cva({
   base: {
     '& > figcaption': {
@@ -26,6 +27,7 @@ const figureStyle = cva({
     },
   },
 })
+
 export function StoryComponent({
   value,
 }: {
@@ -33,11 +35,6 @@ export function StoryComponent({
 }) {
   const [error, setError] = useState<string | null>(null)
 
-  // In preview (draft mode) Sanity stega-encodes strings with invisible
-  // characters. These values are used as a custom-element tag name, a script
-  // URL, JSON and a style variant, so they must be cleaned: a stega-encoded tag
-  // name never matches the name the script registers, so the element is never
-  // upgraded and the loading spinner stays forever.
   const url = stegaClean(value.url)
   const tagname = stegaClean(value.tagname)
   const size = stegaClean(value.size)
