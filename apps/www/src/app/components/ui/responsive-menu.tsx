@@ -1,21 +1,21 @@
 'use client'
 
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
+import { iosAppSafeAreaBottomPaddingStyle } from '@/app/lib/styles/ios-app-safe-area'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Slot } from '@radix-ui/react-slot'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { css, cx } from '@republik/theme/css'
 import {
+  type ComponentPropsWithoutRef,
   createContext,
   forwardRef,
+  type ReactNode,
   useContext,
   useEffect,
   useState,
-  type ComponentPropsWithoutRef,
-  type ReactNode,
 } from 'react'
-import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
-import { iosAppSafeAreaBottomPaddingStyle } from '@/app/lib/styles/ios-app-safe-area'
 
 /**
  * Same breakpoint as Panda's default `md` token (768px) and the legacy
@@ -51,7 +51,6 @@ function useIsDesktopMenu() {
 
 const menuPanelStyle = css({
   backgroundColor: 'background.overlay',
-  borderRadius: 'lg',
   boxShadow: 'overlay',
   color: 'text',
   minWidth: '12rem',
@@ -102,14 +101,14 @@ const drawerOverlayStyle = css({
 // notch adds to the margin rather than just replacing it, unlike `max()`).
 const drawerContentStyle = css({
   backgroundColor: 'background.overlay',
-  borderRadius: 'lg',
+  // borderRadius: 'lg',
   // `overlay` is a directional shadow (projects upward only) meant for a
   // flush-bottom sheet — on this floating, all-sides-rounded card it read as
   // a hard line across just the top edge. `md` is a symmetric ambient shadow.
   boxShadow: 'md',
   color: 'text',
-  marginX: '3',
-  marginBottom: 'calc(token(spacing.3) + env(safe-area-inset-bottom, 0px))',
+  // marginX: '3',
+  paddingBottom: 'env(safe-area-inset-bottom, 0px)',
   maxHeight: '80dvh',
   overflow: 'hidden',
   willChange: 'transform',
@@ -283,6 +282,7 @@ function Content({
           style={style}
         >
           {children}
+          <DropdownMenu.Arrow className={css({ fill: 'background' })} />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     )
