@@ -9,10 +9,7 @@ import { BookmarkAction } from '@/app/(sanity)/components/article-actions/bookma
 import { useReadingPosition } from '@/app/(sanity)/components/article-actions/continue-reading-action'
 import { DiscussionAction } from '@/app/(sanity)/components/article-actions/discussion-action'
 import { collectionsDocumentId } from '@/app/(sanity)/components/article-actions/document-id'
-import {
-  MENU_SIDE_OFFSET,
-  menuTriggerStyle,
-} from '@/app/(sanity)/components/article-actions/menu-style'
+import { menuTriggerStyle } from '@/app/(sanity)/components/article-actions/menu-style'
 import { PlayAction } from '@/app/(sanity)/components/article-actions/play-action'
 import type { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
@@ -75,12 +72,7 @@ export function TeaserActions({ teaser }: { teaser: TeaserListItemType }) {
             >
               <EllipsisVertical size={ACTION_ICON_SIZE} />
             </Menu.Trigger>
-            <Menu.Content
-              align='end'
-              sideOffset={MENU_SIDE_OFFSET}
-              collisionPadding={16}
-              title='Weitere Aktionen'
-            >
+            <Menu.Content title='Weitere Aktionen'>
               <Menu.Item asChild>
                 <AddToPlaylistAction
                   audioItem={audioItem}
