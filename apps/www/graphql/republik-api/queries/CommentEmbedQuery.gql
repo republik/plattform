@@ -13,12 +13,9 @@ query CommentEmbed($id: ID!) {
       id
       title
       path
-      document {
+      sanityDocument {
         id
-        meta {
-          template
-          path
-        }
+        type
       }
     }
   }
