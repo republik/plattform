@@ -1,11 +1,5 @@
-import { token } from '@republik/theme/tokens'
 import { css } from '@republik/theme/css'
-
-/**
- * Gap between a menu and its trigger. Wide enough that the menu reads as its own
- * surface next to the floating action bar, which shares its background.
- */
-export const MENU_SIDE_OFFSET = 16
+import { token } from '@republik/theme/tokens'
 
 export const menuTriggerStyle = css({
   cursor: 'pointer',

@@ -1,21 +1,18 @@
 'use client'
 
-import { CreateGiftArticleTokenDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+// import { CreateGiftArticleTokenDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { Menu, menuItemStyle } from '@/app/components/ui/responsive-menu'
 import { Spinner } from '@/app/components/ui/spinner'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
-import { useMe } from '@/lib/context/MeContext'
-import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { Gift, Link } from 'lucide-react'
 import { useState } from 'react'
 import { ACTION_ICON_SIZE, actionLabelStyle, actionStyle } from './action-style'
-import { MENU_SIDE_OFFSET } from './menu-style'
-import { ShareAction, type ShareActionProps } from './share-action'
+import { type ShareActionProps } from './share-action'
 import { getShareTargets } from './share-targets'
 
 const GIFT_LABEL = 'Verschenken'
@@ -44,30 +41,10 @@ export type ShareOrGiftActionProps = ShareActionProps & {
   documentId: string
 }
 
-/**
- * Members hand the article out as a gift; everyone else just shares it.
- */
-export function ShareOrGiftAction({
-  documentId,
-  ...shareProps
-}: ShareOrGiftActionProps) {
-  const { isMember, hasActiveMembership } = useMe()
-
-  if (!isMember || !hasActiveMembership) {
-    return <ShareAction {...shareProps} />
-  }
-
-  return <GiftAction documentId={documentId} {...shareProps} />
-}
-
-function GiftAction({
+export function GiftAction({
   documentId,
   title,
   path,
-  align = 'end',
-  menuOffsetX = 0,
-  menuSideOffset = MENU_SIDE_OFFSET,
-  triggerRef,
 }: ShareOrGiftActionProps) {
   const emailSubject = `Republik: ${title}`
   const { isNativeApp } = usePlatformInformation()
@@ -75,15 +52,16 @@ function GiftAction({
   const trackEvent = useTrackEvent()
   const [linkCopied, setLinkCopied] = useState(false)
 
-  const [createToken, { data, loading, error }] = useMutation(
+  /*const [createToken, { data, loading, error }] = useMutation(
     CreateGiftArticleTokenDocument,
     { variables: { documentId } },
   )
+  */
+  const loading = false
+  const error = false
+  const data = { createGiftArticleToken: '1234' }
   const giftUrl = toGiftUrl(path, data?.createGiftArticleToken)
 
-  // Idempotent: the backend signs the same payload all day long, so sharing
-  // the article again hands out the same link. Runs when the menu opens, so
-  // every target below already has a real href by the time it is clicked.
   const mintLink = async (): Promise<string | null> => {
     // Closing and reopening the menu while the request is still out would
     // otherwise send a second one.
@@ -91,8 +69,9 @@ function GiftAction({
       return giftUrl
     }
     try {
-      const result = await createToken()
-      return toGiftUrl(path, result.data?.createGiftArticleToken)
+      /*const result = await createToken()
+      return toGiftUrl(path, result.data?.createGiftArticleToken)*/
+      return toGiftUrl(path, data?.createGiftArticleToken)
     } catch {
       // Surfaced through `error` below.
       return null
@@ -103,7 +82,6 @@ function GiftAction({
   if (isNativeApp) {
     return (
       <button
-        ref={triggerRef}
         className={actionStyle}
         disabled={loading}
         onClick={async () => {
@@ -139,25 +117,11 @@ function GiftAction({
         }
       }}
     >
-      <Menu.Trigger
-        ref={triggerRef}
-        aria-label={GIFT_LABEL}
-        className={actionStyle}
-      >
+      <Menu.Trigger aria-label={GIFT_LABEL} className={actionStyle}>
         <Gift size={ACTION_ICON_SIZE} />
         <span className={actionLabelStyle}>{GIFT_LABEL}</span>
       </Menu.Trigger>
-      <Menu.Content
-        align={align}
-        sideOffset={menuSideOffset}
-        collisionPadding={16}
-        title={GIFT_LABEL}
-        style={
-          menuOffsetX
-            ? { transform: `translateX(${menuOffsetX}px)` }
-            : undefined
-        }
-      >
+      <Menu.Content title={GIFT_LABEL}>
         <p className={noteStyle}>
           Wer diesen Link öffnet, liest den Artikel 14 Tage lang ohne Abo.
         </p>

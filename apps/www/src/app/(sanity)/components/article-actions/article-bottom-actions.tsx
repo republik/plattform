@@ -12,8 +12,9 @@ import {
 import { BookmarkAction } from './bookmark-action'
 import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
-import { ShareOrGiftAction } from './gift-action'
-import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
+import { GiftAction } from './gift-action'
+import { menuTriggerStyle } from './menu-style'
+import { ShareAction } from './share-action'
 
 export type ArticleBottomActionsProps = {
   article: ArticleDocumentType
@@ -41,7 +42,8 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
       })}
     >
       <BookmarkAction documentId={documentId} />
-      <ShareOrGiftAction documentId={documentId} title={title} path={path} />
+      <ShareAction title={title} path={path} />
+      <GiftAction documentId={documentId} title={title} path={path} />
       <DiscussionAction
         path={path}
         backendDiscussionId={article.discussion?.backendDiscussionId}
@@ -57,12 +59,7 @@ export function ArticleBottomActions({ article }: ArticleBottomActionsProps) {
           >
             <EllipsisVertical size={ACTION_ICON_SIZE} />
           </Menu.Trigger>
-          <Menu.Content
-            align='end'
-            sideOffset={MENU_SIDE_OFFSET}
-            collisionPadding={16}
-            title='Weitere Aktionen'
-          >
+          <Menu.Content title='Weitere Aktionen'>
             <Menu.Item asChild>
               <AddToPlaylistAction
                 audioItem={article.audioItem}
