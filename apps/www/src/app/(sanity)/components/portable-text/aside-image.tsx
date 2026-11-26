@@ -2,9 +2,9 @@ import { getImageDimensions } from '@/app/(sanity)/lib/image-dimensions'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import type { AsideImage } from '@/sanity.types'
 import { css } from '@republik/theme/css'
+import { Image } from 'next-sanity/image'
 import { useId } from 'react'
 import { Caption } from './caption'
-import { Image } from 'next-sanity/image'
 
 export function AsideImage({
   image,
@@ -26,6 +26,9 @@ export function AsideImage({
         marginBottom: '15px',
         padding: 0,
         width: '100%',
+        '& > figcaption': {
+          mt: '1',
+        },
       })}
       // role=group signals the grouping to legacy screen readers and browsers that don't understand the <figure> semantics
       role='group'

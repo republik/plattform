@@ -2,9 +2,9 @@ import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/t
 import { InlineTeaser } from '@/app/(sanity)/components/teaser/inline'
 import { SERIES_NAV_QUERY } from '@/app/(sanity)/groq/series-nav-query'
 import { sanityClientFetch } from '@/app/(sanity)/lib/fetch'
-import { Infobox } from '@/app/components/ui/infobox'
 import type { SeriesNav } from '@/sanity.types'
 import { css } from '@republik/theme/css'
+import { infoboxContent } from '@republik/theme/recipes'
 
 export async function SeriesNav({
   value,
@@ -27,9 +27,21 @@ export async function SeriesNav({
 
   return (
     <>
-      <Infobox title={series.title}>
+      <h2
+        className={css({
+          borderColor: 'current',
+          borderStyle: 'solid',
+          borderTopWidth: '1px',
+          py: '2',
+          mb: '2',
+          textStyle: 'h3Sans',
+        })}
+      >
+        {series.title}
+      </h2>
+      <div className={infoboxContent()}>
         {!compact && <p>{series.description}</p>}
-      </Infobox>
+      </div>
       <div
         className={css({
           mt: '4',
