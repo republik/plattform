@@ -1,11 +1,6 @@
 'use client'
 
 import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
-import {
-  HERBST26_HEADLINE,
-  HERBST26_MINI_NOTE,
-  isHerbst26Active,
-} from '@/app/(sanity)/components/paynotes/herbst26'
 import { usePaynotes } from '@/app/(sanity)/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
@@ -60,7 +55,7 @@ function MiniPaynoteMessage({
         {words.map((word) => {
           return word === '{PRICE_MONTHLY}' ? (
             <span key={word} className={css({ whiteSpace: 'nowrap' })}>
-              <del>CHF 22.–</del> CHF 11.–{' '}
+              <del>CHF 24.–</del> CHF 11.–{' '}
             </span>
           ) : (
             <Fragment key={word}>{word} </Fragment>
@@ -100,7 +95,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   const { me, trialStatus } = useMe()
   const { setPaynoteInlineHeight } = usePaynotes()
   const { scrollYProgress } = useScroll()
-  const isHerbst26 = isHerbst26Active()
 
   useMotionValueEvent(scrollYProgress, 'change', (progress) => {
     if (progress > ARTICLE_SCROLL_THRESHOLD) {
@@ -116,47 +110,33 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   })
 
   useEffect(() => {
-    if ((paynotes || isHerbst26) && scrollThresholdReached) {
+    if (paynotes && scrollThresholdReached) {
       if (isExpanded) {
         setVariant('paynote')
         setExpanded(true)
         trackEvent({
           action: 'Opened on scroll',
-          paynoteTitle: isHerbst26
-            ? HERBST26_HEADLINE
-            : paynotes?.paynote.title,
+          paynoteTitle: paynotes?.paynote.title,
         })
       }
     }
-  }, [isExpanded, scrollThresholdReached, trackEvent, paynotes, isHerbst26])
+  }, [isExpanded, scrollThresholdReached, trackEvent, paynotes])
 
   const paynote = paynotes?.paynote
 
-  // Herbst-26 special: fixed copy everywhere, the CMS paynote is not used and
-  // we don't wait for it either.
-  const title = isHerbst26 ? HERBST26_HEADLINE : paynote?.title
-  const miniMessage = isHerbst26
-    ? HERBST26_MINI_NOTE
-    : paynotes?.miniPaynote.message
+  const title = paynote?.title
+  const miniMessage = paynotes?.miniPaynote.message
 
-  // Outside the window this is exactly the previous `if (!paynotes)` guard.
-  if (!isHerbst26 && !paynotes) {
+  if (!paynotes) {
     return null
   }
 
-  const showCmsPaynote = !isHerbst26 && variant === 'paynote' && !!paynote
+  const showCmsPaynote = variant === 'paynote' && !!paynote
 
-  const paynoteVariantForAnalytics = isHerbst26
-    ? HERBST26_MINI_NOTE
-    : variant === 'paynote'
-    ? paynote?.title
-    : miniMessage
+  const paynoteVariantForAnalytics =
+    variant === 'paynote' ? paynote?.title : miniMessage
 
-  const trackedPaynoteTitle = isHerbst26
-    ? HERBST26_HEADLINE
-    : variant === 'paynote'
-    ? paynote?.title
-    : undefined
+  const trackedPaynoteTitle = variant === 'paynote' ? paynote?.title : undefined
 
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
@@ -263,7 +243,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                     lineHeight: 1.4,
                   })}
                 >
-                  {isHerbst26 || variant === 'paynote' ? (
+                  {variant === 'paynote' ? (
                     <span
                       className={css({
                         backgroundColor: 'text.marketingAccent',
@@ -381,17 +361,13 @@ export function PaynoteOverlay() {
   const pathname = usePathname()
 
   const showOverlay =
-    paynoteKind === 'OVERLAY_OPEN' ||
-    paynoteKind === 'OVERLAY_CLOSED' ||
-    paynoteKind === 'HERBST26'
+    paynoteKind === 'OVERLAY_OPEN' || paynoteKind === 'OVERLAY_CLOSED'
 
   return showOverlay ? (
     <EventTrackingContext category='PaynoteOverlay'>
       <PaynoteOverlayDialog
         key={pathname}
-        isExpanded={
-          paynoteKind === 'OVERLAY_OPEN' || paynoteKind === 'HERBST26'
-        }
+        isExpanded={paynoteKind === 'OVERLAY_OPEN'}
       />
     </EventTrackingContext>
   ) : null

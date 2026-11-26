@@ -7585,7 +7585,7 @@
     },
     {
       "key": "regwall/offers/cta",
-      "value": "Abo ab CHF 22.– / Monat"
+      "value": "Abo ab CHF 24.– / Monat"
     },
     {
       "key": "regwall/offers/cancellable",
@@ -7617,7 +7617,7 @@
     },
     {
       "key": "paywall/offers/yearly/description",
-      "value": "Danach 240.- jährlich. Jederzeit kündbar."
+      "value": "Danach 260.- jährlich. Jederzeit kündbar."
     },
     {
       "key": "paywall/offers/monthly/duration",
@@ -7625,7 +7625,7 @@
     },
     {
       "key": "paywall/offers/monthly/description",
-      "value": "Danach 22.- monatlich. Jederzeit kündbar."
+      "value": "Danach 24.- monatlich. Jederzeit kündbar."
     },
     {
       "key": "paywall/offers/cta",

@@ -117,7 +117,7 @@ function OffersForm({
                   borderRadius: 16,
                 })}
               >
-                Sie sparen 14&thinsp;%
+                Sie sparen 19&thinsp;%
               </span>
               <OfferOptionRadio
                 name='product'
@@ -140,7 +140,7 @@ function OffersForm({
                       })}
                     >
                       <span className={css({ fontSize: 'l' })}>CHF </span>
-                      240
+                      260
                     </del>
                     222.–&thinsp;/&thinsp;{t('paywall/offers/yearly/duration')}
                   </span>
@@ -178,7 +178,7 @@ function OffersForm({
                       })}
                     >
                       <span className={css({ fontSize: 'l' })}>CHF </span>
-                      22
+                      24
                     </del>
                     11.–&thinsp;/&thinsp;{t('paywall/offers/monthly/duration')}
                   </span>
