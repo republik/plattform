@@ -370,7 +370,9 @@ async function createNewPromos(stripe: Stripe, company: CompanyName, promos: New
         amount_off: promo.amountOff,
         currency: 'chf',
         duration: 'once',
-        redeem_by: promo.expiresAt,
+        // no redeem_by: upgrades registered in December apply the coupon when
+        // their schedule starts (possibly in 2027); the promotion code's
+        // expires_at already stops new use after 31.12.
         metadata: METADATA,
       }),
     )

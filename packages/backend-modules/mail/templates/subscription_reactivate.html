@@ -55,7 +55,7 @@
                     </p>
                     <p>
                       Die von Ihnen angegebene Kreditkarte belasten wir
-                      monatlich mit CHF 22.–.<br />
+                      {{#if subscription_price}}monatlich mit {{subscription_price}}.{{else}}monatlich zum regulären Preis des Monats-Abos.{{/if}}<br />
                       Ihre
                       <a href="{{link_account_abos_goto}}">persönliche Übersicht zu Ihrem Abonnement finden Sie hier</a>.
                     </p>
