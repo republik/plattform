@@ -16,7 +16,11 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { Subscription } from '../types'
 import { SubscriptionService } from '../services/SubscriptionService'
 import { UpgradeService } from '../services/UpgradeService'
-import { couponToDiscount, promotionToDiscount } from './utils'
+import {
+  activeDefaultPromotionCode,
+  couponToDiscount,
+  promotionToDiscount,
+} from './utils'
 import { randomUUID } from 'node:crypto'
 import { InvoiceService } from '../services/InvoiceService'
 import {
@@ -433,6 +437,16 @@ export class CheckoutSessionBuilder {
       const promotion = await this.paymentService.getPromotionByCode(
         this.offer.company,
         promoCode,
+      )
+      if (promotion)
+        return { type: 'PROMO', value: promotionToDiscount(promotion) }
+    }
+
+    const defaultPromoCode = activeDefaultPromotionCode(this.offer)
+    if (defaultPromoCode) {
+      const promotion = await this.paymentService.getPromotionByCode(
+        this.offer.company,
+        defaultPromoCode,
       )
       if (promotion)
         return { type: 'PROMO', value: promotionToDiscount(promotion) }

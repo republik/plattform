@@ -326,6 +326,14 @@ export type BaseOffer = {
   requiresLogin: boolean
   requiresAddress: boolean
   allowPromotions: boolean
+  /**
+   * Promotion code applied automatically when the customer brings no (valid)
+   * promo code of their own. Only active before `validUntil`.
+   */
+  defaultPromotion?: {
+    code: string
+    validUntil: Date
+  }
   metaData?: {
     [name: string]: string | number | null
   }

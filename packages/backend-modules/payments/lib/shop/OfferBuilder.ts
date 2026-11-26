@@ -11,7 +11,7 @@ import {
 } from '../types'
 import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
-import { promotionToDiscount } from './utils'
+import { activeDefaultPromotionCode, promotionToDiscount } from './utils'
 import { OfferService } from '../services/OfferService'
 
 export class OfferBuilder {
@@ -194,7 +194,16 @@ export class OfferBuilder {
         offer.company,
         this.promoCode,
       )
-      return promotion ? promotionToDiscount(promotion) : null
+      if (promotion) return promotionToDiscount(promotion)
+    }
+
+    const defaultPromoCode = activeDefaultPromotionCode(offer)
+    if (defaultPromoCode) {
+      const promotion = await this.paymentService.getPromotionByCode(
+        offer.company,
+        defaultPromoCode,
+      )
+      if (promotion) return promotionToDiscount(promotion)
     }
 
     return null
