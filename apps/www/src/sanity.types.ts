@@ -814,7 +814,6 @@ export type InfoBox = {
   collapsible?: boolean
   size?: 'float' | 'breakout'
   figureSize?: 'S' | 'M' | 'L'
-  figureFloat?: boolean
 }
 
 export type AuthorBlock = {
@@ -1254,6 +1253,10 @@ export type Newsletter = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  hideEmailHeader?: boolean
+  headerBackgroundColor?: string
+  headerImageHeight?: number
+  footerAddress?: string
   url?: string
   order?: number
   archived?: boolean
@@ -2973,7 +2976,6 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
             collapsible?: boolean
             size?: 'breakout' | 'float'
             figureSize?: 'L' | 'M' | 'S'
-            figureFloat?: boolean
             markDefs: null
           }
         | {
@@ -3703,7 +3705,6 @@ export type DOCUMENT_BY_SLUG_QUERY_RESULT =
                   collapsible?: boolean
                   size?: 'breakout' | 'float'
                   figureSize?: 'L' | 'M' | 'S'
-                  figureFloat?: boolean
                   markDefs: null
                 }
               | {
@@ -4570,7 +4571,6 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
             collapsible?: boolean
             size?: 'breakout' | 'float'
             figureSize?: 'L' | 'M' | 'S'
-            figureFloat?: boolean
             markDefs: null
           }
         | {
@@ -5300,7 +5300,6 @@ export type DOCUMENT_BY_ID_QUERY_RESULT =
                   collapsible?: boolean
                   size?: 'breakout' | 'float'
                   figureSize?: 'L' | 'M' | 'S'
-                  figureFloat?: boolean
                   markDefs: null
                 }
               | {
@@ -5904,7 +5903,6 @@ export type PAGE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
           collapsible?: boolean
           size?: 'breakout' | 'float'
           figureSize?: 'L' | 'M' | 'S'
-          figureFloat?: boolean
           markDefs: null
         }
       | {
@@ -6570,7 +6568,6 @@ export type ARTICLE_PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
         collapsible?: boolean
         size?: 'breakout' | 'float'
         figureSize?: 'L' | 'M' | 'S'
-        figureFloat?: boolean
         markDefs: null
       }
     | {

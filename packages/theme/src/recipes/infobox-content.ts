@@ -2,7 +2,6 @@ import { defineParts, defineRecipe } from '@pandacss/dev'
 
 const contentParts = defineParts({
   root: { selector: '&' },
-  title: { selector: '& .infobox-title' },
   paragraphs: { selector: '& > p' },
   subheadings: { selector: '& > h2:not(.infobox-title)' },
   unorderedLists: { selector: '& > ul' },
@@ -17,19 +16,11 @@ const infoboxText = {
   fontSize: { base: 'base', md: 'l' },
 }
 
-export const infoboxRecipe = defineRecipe({
-  className: 'infobox',
+export const infoboxContentRecipe = defineRecipe({
+  className: 'infobox-content',
   description: 'Styles for infobox',
 
   base: contentParts({
-    title: {
-      borderColor: 'current',
-      borderStyle: 'solid',
-      borderTopWidth: '1px',
-      py: '2',
-      mb: '2',
-      textStyle: 'h3Sans',
-    },
     paragraphs: {
       ...infoboxText,
       ml: '0',
