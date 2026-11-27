@@ -31,18 +31,10 @@ function toGiftUrl(path: string, token: string | null | undefined) {
   return url.toString()
 }
 
-export type ShareOrGiftActionProps = ShareActionProps & {
-  documentId: string
-}
-
-export function GiftAction({
-  documentId,
-  title,
-  path,
-}: ShareOrGiftActionProps) {
+// TODO: make sure the link gen actually works both in gifts and from the share action
+// This is its own component so we can also display it in the share action menu
+export function GiftActionMenu({ documentId, title, path }: ShareActionProps) {
   const emailSubject = `Republik: ${title}`
-  const { isNativeApp } = usePlatformInformation()
-  const postMessage = usePostMessage()
   const trackEvent = useTrackEvent()
   const [linkCopied, setLinkCopied] = useState(false)
 
@@ -53,6 +45,52 @@ export function GiftAction({
   */
   const loading = false
   const error = false
+  const data = { createGiftArticleToken: '1234' }
+  const giftUrl = toGiftUrl(path, data?.createGiftArticleToken)
+
+  return (
+    <>
+      <p className={noteStyle}>
+        Gewähre freien Zugang zu diesem Beitrag. In zwei Wochen ist der Link
+        abgelaufen.
+      </p>
+      {error ? (
+        <p className={noteStyle}>
+          Der Geschenk-Link konnte nicht erstellt werden. Bitte versuchen Sie es
+          später noch einmal.
+        </p>
+      ) : !giftUrl ? (
+        <div className={menuItemStyle} aria-live='polite'>
+          <Spinner size='small' />
+          Link wird erstellt …
+        </div>
+      ) : (
+        <GiftShareTargets
+          url={giftUrl}
+          emailSubject={emailSubject}
+          linkCopied={linkCopied}
+          onCopy={() => {
+            trackEvent({ action: 'giftButton:copyLink', name: giftUrl })
+            copyToClipboard(giftUrl).then(() => setLinkCopied(true))
+          }}
+        />
+      )}
+    </>
+  )
+}
+
+export function GiftAction({ documentId, title, path }: ShareActionProps) {
+  const emailSubject = `Republik: ${title}`
+  const { isNativeApp } = usePlatformInformation()
+  const postMessage = usePostMessage()
+  const trackEvent = useTrackEvent()
+
+  /*const [createToken, { data, loading, error }] = useMutation(
+    CreateGiftArticleTokenDocument,
+    { variables: { documentId } },
+  )
+  */
+  const loading = false
   const data = { createGiftArticleToken: '1234' }
   const giftUrl = toGiftUrl(path, data?.createGiftArticleToken)
 
@@ -89,6 +127,8 @@ export function GiftAction({
             payload: {
               title,
               url,
+              message:
+                'Gewähre freien Zugang zu diesem Beitrag. In zwei Wochen ist der Link abgelaufen.',
               subject: emailSubject,
               dialogTitle: GIFT_LABEL,
             },
@@ -103,44 +143,13 @@ export function GiftAction({
   }
 
   return (
-    <Menu.Root
-      modal={false}
-      onOpenChange={(open) => {
-        if (open) {
-          mintLink()
-        }
-      }}
-    >
+    <Menu.Root modal={false}>
       <Menu.Trigger aria-label={GIFT_LABEL} className={actionStyle}>
         <Gift size={ACTION_ICON_SIZE} />
         <span className={actionLabelStyle}>{GIFT_LABEL}</span>
       </Menu.Trigger>
       <Menu.Content title={GIFT_LABEL}>
-        <p className={noteStyle}>
-          Gewähre freien Zugang zu diesem Beitrag. In zwei Wochen ist der Link
-          abgelaufen.
-        </p>
-        {error ? (
-          <p className={noteStyle}>
-            Der Geschenk-Link konnte nicht erstellt werden. Bitte versuchen Sie
-            es später noch einmal.
-          </p>
-        ) : !giftUrl ? (
-          <div className={menuItemStyle} aria-live='polite'>
-            <Spinner size='small' />
-            Link wird erstellt …
-          </div>
-        ) : (
-          <GiftShareTargets
-            url={giftUrl}
-            emailSubject={emailSubject}
-            linkCopied={linkCopied}
-            onCopy={() => {
-              trackEvent({ action: 'giftButton:copyLink', name: giftUrl })
-              copyToClipboard(giftUrl).then(() => setLinkCopied(true))
-            }}
-          />
-        )}
+        <GiftActionMenu title={title} path={path} documentId={documentId} />
       </Menu.Content>
     </Menu.Root>
   )

@@ -54,7 +54,7 @@ export const pillStyle = css({
 
 export const noteStyle = css({
   color: 'textSoft',
-  fontSize: 'xs',
+  fontSize: 's',
   lineHeight: 1.4,
   paddingBottom: '2',
   paddingTop: '1',
