@@ -15,6 +15,7 @@ import { OfferService } from './OfferService'
 import { activeOffers } from '../shop'
 import { Company, DiscountOption, Subscription } from '../types'
 import { LineItem } from '../shop/CheckoutSessionBuilder'
+import { lookupKeysForItems, priceForItem } from '../shop/utils'
 
 type SubscriptionUpgrade = {
   status: string
@@ -428,15 +429,16 @@ export class UpgradeService {
     this.offerService.isValidOffer(args.offerId)
     const companyName = this.offerService.getOfferMerchant(args.offerId)
 
-    const lookupKeys = this.offerService
-      .getOfferItems(args.offerId)
-      .map((i) => i.lookupKey)
+    const offerItems = this.offerService.getOfferItems(args.offerId) ?? []
 
     const prices = await this.paymentService.getPrices(
       companyName,
-      lookupKeys ?? [],
+      lookupKeysForItems(offerItems),
     )
-    const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
+    const items: Item[] = offerItems.flatMap((offerItem) => {
+      const p = priceForItem(prices, offerItem)
+      return p ? [{ price: p.id, quantity: 1 }] : []
+    })
     const additionalItems: LineItem[] = []
 
     if (

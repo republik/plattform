@@ -8,6 +8,7 @@ const { getPaymentMethodForCompany } = require('./paymentMethod')
 
 module.exports = async ({
   plan,
+  price, // optional, takes precedence over plan
   userId,
   companyId,
   platformPaymentMethodId, // optional
@@ -34,7 +35,7 @@ module.exports = async ({
 
   const subscription = {
     customer: customer.id,
-    items: [{ plan }],
+    items: [price ? { price } : { plan }],
     metadata,
     expand: ['latest_invoice', 'latest_invoice.payment_intent'],
     discounts,

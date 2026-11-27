@@ -25,6 +25,8 @@ const keyToEnvMap = {
   PROJECT_R_YEARLY_GIFT_COUPON: 'PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON',
   PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS:
     'PAYMENTS_PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS',
+  PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS_2027:
+    'PAYMENTS_PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS_2027',
   PROJECT_R_DONATION_PRODUCT_ID: 'PAYMENTS_PROJECT_R_DONATION_PRODUCT_ID',
 } as const
 
@@ -54,6 +56,11 @@ const configSchema = z.object({
   PROJECT_R_3_MONTH_GIFT_COUPON: z.string().min(1),
   PROJECT_R_YEARLY_GIFT_COUPON: z.string().min(1),
   PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS: z
+    .string()
+    .default('')
+    .transform((s) => (s ? s.split(';') : [])),
+  // price change 2027: reduced coupons for the 260 price, used from 01.01.2027
+  PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS_2027: z
     .string()
     .default('')
     .transform((s) => (s ? s.split(';') : [])),

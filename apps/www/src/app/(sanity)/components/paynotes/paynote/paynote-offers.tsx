@@ -1,10 +1,6 @@
 'use client'
 
 import { OfferOptionRadio } from '@/app/kampagne/components/campaign-offer-options'
-import {
-  HERBST26_PROMO_CODE,
-  isHerbst26Active,
-} from '@/app/(sanity)/components/paynotes/herbst26'
 import { Button } from '@/app/components/ui/button'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
@@ -23,7 +19,6 @@ export function Offers({
 }) {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
   const utmParams = getUTMSessionStorage()
-  const isHerbst26 = isHerbst26Active()
   const trackEvent = useTrackEvent()
 
   const { isNativeApp } = usePlatformInformation()
@@ -42,14 +37,7 @@ export function Offers({
         })
       }}
     >
-      <input
-        type='hidden'
-        hidden
-        name='promo_code'
-        value={
-          isHerbst26 && option === 'YEARLY' ? HERBST26_PROMO_CODE : 'EINSTIEG'
-        }
-      />
+      <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
       {Object.entries(utmParams).map(([k, v]) => {
         return <input type='hidden' hidden key={k} name={k} value={v} />
       })}
@@ -89,7 +77,7 @@ export function Offers({
                   mr: '1',
                 })}
               >
-                22.–
+                24.–
               </del>
               <span className={css({ fontWeight: 'bold' })}>
                 11.– für einen Monat
@@ -125,10 +113,10 @@ export function Offers({
                     mr: '1',
                   })}
                 >
-                  240.–
+                  260.–
                 </del>
                 <span className={css({ fontWeight: 'bold' })}>
-                  {isHerbst26 ? '160.– für ein Jahr' : '222.– für ein Jahr'}
+                  222.– für ein Jahr
                 </span>
               </span>
               <span
@@ -141,7 +129,7 @@ export function Offers({
                   fontSize: 's',
                 })}
               >
-                {isHerbst26 ? '39' : '12'}&thinsp;% günstiger als ein Monats-Abo
+                19&thinsp;% günstiger als ein Monats-Abo
               </span>
             </span>
           </OfferOptionRadio>
@@ -155,8 +143,8 @@ export function Offers({
           })}
         >
           {option === 'YEARLY'
-            ? 'Unlimitierter Zugang. 240.– jährlich nach dem ersten Jahr. Jederzeit kündbar.'
-            : 'Unlimitierter Zugang. 22.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
+            ? 'Unlimitierter Zugang. 260.– jährlich nach dem ersten Jahr. Jederzeit kündbar.'
+            : 'Unlimitierter Zugang. 24.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
         </div>
 
         <Button type='submit'>Jetzt abonnieren</Button>

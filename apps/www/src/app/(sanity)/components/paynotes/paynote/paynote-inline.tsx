@@ -1,9 +1,5 @@
 'use client'
 
-import {
-  HERBST26_HEADLINE,
-  isHerbst26Active,
-} from '@/app/(sanity)/components/paynotes/herbst26'
 import { Offers } from '@/app/(sanity)/components/paynotes/paynote/paynote-offers'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useMe } from '@/lib/context/MeContext'
@@ -18,29 +14,21 @@ function PaynoteInline() {
   const { paynoteKind } = usePaynotes()
   const paynotes = usePaynoteVariants()
   const { trialStatus } = useMe()
-  const isHerbst26 = isHerbst26Active()
 
-  // During the Herbst-26 special the inline paynote runs alongside the overlay.
-  if (paynoteKind !== 'PAYNOTE_INLINE' && paynoteKind !== 'HERBST26') {
+  if (paynoteKind !== 'PAYNOTE_INLINE') {
     return null
   }
 
-  // Outside the window this is exactly the previous `if (!paynotes)` guard.
-  if (!isHerbst26 && !paynotes) {
+  if (!paynotes) {
     return null
   }
 
-  const paynote = paynotes?.paynote
-
-  // Herbst-26 special: fixed copy, the CMS paynote is not used and we don't
-  // wait for it either.
-  const showCmsPaynote = !isHerbst26 && !!paynote
-  const title = isHerbst26 ? HERBST26_HEADLINE : paynote?.title
-
-  // Both branches are literal css() calls so Panda can extract them statically.
-  const accentBackground = isHerbst26
-    ? css({ backgroundColor: 'text.marketingAccent' })
-    : css({ backgroundColor: 'background.marketingAccent' })
+  const paynote = paynotes.paynote
+  const showCmsPaynote = !!paynote
+  const title = paynote?.title
+  const accentBackground = css({
+    backgroundColor: 'background.marketingAccent',
+  })
 
   return (
     <EventTrackingContext category='PaynoteInline'>
@@ -106,12 +94,8 @@ function PaynoteInline() {
 
           <Offers
             additionalShopParams={{
-              // NOTE: the non-special value below is a pre-existing
-              // copy-paste bug; during the special both surfaces are live at
-              // once, so they have to be distinguishable.
-              rep_ui_component: isHerbst26
-                ? 'paynote-inline'
-                : 'paynote-overlay',
+              // NOTE: pre-existing copy-paste value, kept for analytics continuity
+              rep_ui_component: 'paynote-overlay',
               rep_paynote_title: title,
               rep_trial_status: trialStatus,
               ...getMeteringData('rep_'),

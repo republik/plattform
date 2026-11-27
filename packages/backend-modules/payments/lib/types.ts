@@ -289,6 +289,9 @@ export type OfferAvailability =
 export type PriceDefinition = {
   type: 'PRICE'
   lookupKey: string
+  // used when no active price has lookupKey (e.g. ABO_2026 -> ABO while the
+  // 2027 prices are not switched on yet)
+  fallbackLookupKey?: string
   taxRateId?: string
 }
 export type DiscountDefinition = { type: 'DISCOUNT'; coupon: string }
@@ -326,6 +329,14 @@ export type BaseOffer = {
   requiresLogin: boolean
   requiresAddress: boolean
   allowPromotions: boolean
+  /**
+   * Promotion code applied automatically when the customer brings no (valid)
+   * promo code of their own. Only active before `validUntil`.
+   */
+  defaultPromotion?: {
+    code: string
+    validUntil: Date
+  }
   metaData?: {
     [name: string]: string | number | null
   }

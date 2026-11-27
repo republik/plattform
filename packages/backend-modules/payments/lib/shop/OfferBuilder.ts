@@ -11,7 +11,12 @@ import {
 } from '../types'
 import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
-import { promotionToDiscount } from './utils'
+import {
+  activeDefaultPromotionCode,
+  lookupKeysForItems,
+  priceForItem,
+  promotionToDiscount,
+} from './utils'
 import { OfferService } from '../services/OfferService'
 
 export class OfferBuilder {
@@ -97,9 +102,7 @@ export class OfferBuilder {
   }
 
   private async fetchPrices() {
-    const lookupKeys = this.offers.flatMap((o) =>
-      o.items.map((i) => i.lookupKey),
-    )
+    const lookupKeys = this.offers.flatMap((o) => lookupKeysForItems(o.items))
 
     this.priceData = await this.paymentService.getPrices(
       this.offers[0].company,
@@ -108,9 +111,7 @@ export class OfferBuilder {
   }
 
   private async buildOfferData(offer: Offer): Promise<OfferAPIResult> {
-    const price = this.priceData!.find(
-      (p) => p.lookup_key === offer.items[0]?.lookupKey,
-    )!
+    const price = priceForItem(this.priceData!, offer.items[0])!
 
     const discount = await this.resolveDiscount(offer)
     const availability = await this.resolveAvailability(offer)
@@ -194,7 +195,16 @@ export class OfferBuilder {
         offer.company,
         this.promoCode,
       )
-      return promotion ? promotionToDiscount(promotion) : null
+      if (promotion) return promotionToDiscount(promotion)
+    }
+
+    const defaultPromoCode = activeDefaultPromotionCode(offer)
+    if (defaultPromoCode) {
+      const promotion = await this.paymentService.getPromotionByCode(
+        offer.company,
+        defaultPromoCode,
+      )
+      if (promotion) return promotionToDiscount(promotion)
     }
 
     return null

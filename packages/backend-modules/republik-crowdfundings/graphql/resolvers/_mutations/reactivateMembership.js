@@ -1,11 +1,13 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { formatPriceChf } = require('@orbiting/backend-modules-formats')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 
 const { throwError } = require('../../../lib/payments/stripe/Errors')
 const createCache = require('../../../lib/cache')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const getSubscription = require('../../../lib/payments/stripe/getSubscription')
+const getClients = require('../../../lib/payments/stripe/clients')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 
 module.exports = async (_, args, context) => {
@@ -78,8 +80,21 @@ module.exports = async (_, args, context) => {
           pgdb: transaction,
         })
       } else {
+        // Use the current price behind the lookup key (e.g. MONTHLY_ABO → 24.–
+        // after the 2027 price change). The plan/price ID MONTHLY_ABO is the
+        // old 22.– price and stays that way.
+        const { stripe } = (await getClients(transaction)).accountForCompanyId(
+          membershipType.companyId,
+        )
+        const { data: currentPrices } = await stripe.prices.list({
+          lookup_keys: [membershipType.name],
+          active: true,
+          limit: 1,
+        })
+
         newSubscription = await createSubscription({
           plan: membershipType.name,
+          price: currentPrices[0]?.id,
           userId: membership.userId,
           companyId: membershipType.companyId,
           metadata: {
@@ -93,6 +108,10 @@ module.exports = async (_, args, context) => {
         // this could go to the webhookHandler if we would not preactivate
         // the membership below
         try {
+          // monthly amount of the new subscription (price change 2027: not hardcoded)
+          const amount =
+            newSubscription?.items?.data?.[0]?.price?.unit_amount ??
+            newSubscription?.plan?.amount
           await sendMailTemplate(
             {
               to: user.email,
@@ -104,6 +123,10 @@ module.exports = async (_, args, context) => {
                   content: [user.firstName, user.lastName]
                     .filter(Boolean)
                     .join(' '),
+                },
+                {
+                  name: 'subscription_price',
+                  content: amount ? formatPriceChf(amount / 100) : '',
                 },
               ],
             },

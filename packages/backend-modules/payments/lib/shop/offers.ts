@@ -2,6 +2,35 @@ import { Offer, OfferId, SubscriptionOffer } from '../types'
 import { getConfig } from '../config'
 import { GIFTS_ENABLED } from '../constants'
 
+// Price change 2027: new prices apply to new purchases from 01.12.2026.
+// Until 01.01.2027 everyone without their own (valid) promo code gets the
+// transition discount PREIS2026, so the first period costs at most the old
+// price (22 / 240). Only applied if the promo code exists in Stripe.
+const PRICE_CHANGE_2027_EFFECTIVE = new Date('2027-01-01T00:00:00+01:00')
+
+const PRICE_CHANGE_2027_TRANSITION = {
+  code: 'PREIS2026',
+  validUntil: PRICE_CHANGE_2027_EFFECTIVE,
+}
+
+const isBeforePriceChange2027 = (now: Date = new Date()) =>
+  now < PRICE_CHANGE_2027_EFFECTIVE
+
+// reduced membership coupons: old set until 31.12.2026, new (+20) set from 01.01.2027
+function reducedMembershipCoupons(): string[] {
+  const config = getConfig()
+  if (isBeforePriceChange2027()) {
+    return config.PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS
+  }
+  if (config.PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS_2027.length === 0) {
+    console.warn(
+      'PAYMENTS_PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS_2027 not set – falling back to the old reduced coupons',
+    )
+    return config.PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS
+  }
+  return config.PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS_2027
+}
+
 export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
   {
     id: 'YEARLY' as OfferId,
@@ -14,6 +43,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     suggestedDonations: [60_00, 120_00, 240_00],
     allowPromotions: true,
+    defaultPromotion: PRICE_CHANGE_2027_TRANSITION,
   },
   {
     id: 'YEARLY_REDUCED' as OfferId,
@@ -23,15 +53,26 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
-    items: [
-      {
-        type: 'PRICE',
-        lookupKey: 'ABO',
-      },
-    ],
-    discountOptions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
-      (couponId) => ({ type: 'DISCOUNT', coupon: couponId }),
-    ),
+    // Price change 2027: in December the reduced offer stays on the old 240
+    // price with the old reduced coupons; from 01.01.2027 it uses the new 260
+    // price with the new (+20) coupons. The reduced price itself is unchanged.
+    get items() {
+      return [
+        {
+          type: 'PRICE' as const,
+          lookupKey: isBeforePriceChange2027() ? 'ABO_2026' : 'ABO',
+          // ABO_2026 only exists once the 2027 prices are switched on
+          // (price-change-2027-switch.ts --to 2027); until then ABO is 240
+          fallbackLookupKey: isBeforePriceChange2027() ? 'ABO' : undefined,
+        },
+      ]
+    },
+    get discountOptions() {
+      return reducedMembershipCoupons().map((couponId) => ({
+        type: 'DISCOUNT' as const,
+        coupon: couponId,
+      }))
+    },
     allowPromotions: false,
   },
   {
@@ -81,6 +122,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     requiresLogin: true,
     requiresAddress: false,
     allowPromotions: true,
+    defaultPromotion: PRICE_CHANGE_2027_TRANSITION,
     items: [
       {
         type: 'PRICE',

@@ -16,7 +16,13 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { Subscription } from '../types'
 import { SubscriptionService } from '../services/SubscriptionService'
 import { UpgradeService } from '../services/UpgradeService'
-import { couponToDiscount, promotionToDiscount } from './utils'
+import {
+  activeDefaultPromotionCode,
+  couponToDiscount,
+  promotionToDiscount,
+  lookupKeysForItems,
+  priceForItem,
+} from './utils'
 import { randomUUID } from 'node:crypto'
 import { InvoiceService } from '../services/InvoiceService'
 import {
@@ -438,6 +444,16 @@ export class CheckoutSessionBuilder {
         return { type: 'PROMO', value: promotionToDiscount(promotion) }
     }
 
+    const defaultPromoCode = activeDefaultPromotionCode(this.offer)
+    if (defaultPromoCode) {
+      const promotion = await this.paymentService.getPromotionByCode(
+        this.offer.company,
+        defaultPromoCode,
+      )
+      if (promotion)
+        return { type: 'PROMO', value: promotionToDiscount(promotion) }
+    }
+
     return null
   }
 
@@ -464,12 +480,16 @@ export class CheckoutSessionBuilder {
 
     const prices = await this.paymentService.getPrices(
       this.offer.company,
-      this.offer.items.map((i) => i.lookupKey),
+      lookupKeysForItems(this.offer.items),
     )
 
-    return prices.map((p): LineItem => {
-      const item = this.offer.items.find((i) => i.lookupKey === p.lookup_key)
-      const taxRates = item?.taxRateId ? [item.taxRateId] : undefined
+    const resolved = this.offer.items.flatMap((item) => {
+      const price = priceForItem(prices, item)
+      return price ? [{ item, p: price }] : []
+    })
+
+    return resolved.map(({ item, p }): LineItem => {
+      const taxRates = item.taxRateId ? [item.taxRateId] : undefined
 
       if (p.id) {
         return {

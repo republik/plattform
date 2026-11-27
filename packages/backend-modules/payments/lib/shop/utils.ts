@@ -1,7 +1,7 @@
 import { PgDb } from 'pogi'
 import { User } from '@orbiting/backend-modules-types'
 import Stripe from 'stripe'
-import { Discount, Promotion } from '../types'
+import { Discount, Offer, PriceDefinition, Promotion } from '../types'
 import { SUBSCRIPTION_PRODUCTS } from '../constants'
 
 export async function hasHadMembership(userId: string, pgdb: PgDb) {
@@ -51,6 +51,18 @@ export function requiredCustomFields(
   }
 
   return []
+}
+
+/**
+ * Returns the code of the offer's default promotion if it is currently active.
+ */
+export function activeDefaultPromotionCode(
+  offer: Pick<Offer, 'defaultPromotion'>,
+  now: Date = new Date(),
+): string | null {
+  const promo = offer.defaultPromotion
+  if (!promo) return null
+  return now < promo.validUntil ? promo.code : null
 }
 
 export function promotionToDiscount(
@@ -109,4 +121,24 @@ export function getAboPriceItem(
       i.pricing?.price_details?.product as string,
     )
   }
+}
+
+/** All lookup keys to fetch for the given items, incl. fallbacks */
+export function lookupKeysForItems(items: PriceDefinition[]): string[] {
+  return items.flatMap((i) =>
+    i.fallbackLookupKey ? [i.lookupKey, i.fallbackLookupKey] : [i.lookupKey],
+  )
+}
+
+/** The price for an item: its lookup key, otherwise its fallback lookup key */
+export function priceForItem<T extends { lookup_key: string | null }>(
+  prices: T[],
+  item: PriceDefinition,
+): T | undefined {
+  return (
+    prices.find((p) => p.lookup_key === item.lookupKey) ??
+    (item.fallbackLookupKey
+      ? prices.find((p) => p.lookup_key === item.fallbackLookupKey)
+      : undefined)
+  )
 }
