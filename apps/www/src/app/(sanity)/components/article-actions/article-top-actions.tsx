@@ -14,7 +14,8 @@ import { useArticleActions } from './article-actions-context'
 import { BookmarkAction } from './bookmark-action'
 import { DiscussionAction } from './discussion-action'
 import { collectionsDocumentId } from './document-id'
-import { MENU_SIDE_OFFSET, menuTriggerStyle } from './menu-style'
+import { GiftAction } from './gift-action'
+import { menuTriggerStyle } from './menu-style'
 import { OpenInSanityAction } from './open-in-sanity'
 import { PdfDownloadAction, PdfDownloadDialog } from './pdf-download-action'
 import { PlayAction } from './play-action'
@@ -58,6 +59,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
       <PlayAction audioItem={article.audioItem} />
       <BookmarkAction documentId={documentId} />
       <ShareAction title={title} path={path} />
+      <GiftAction documentId={documentId} title={title} path={path} />
       <DiscussionAction
         path={path}
         backendDiscussionId={article.discussion?.backendDiscussionId}
@@ -71,12 +73,7 @@ export function ArticleTopActions({ article }: ArticleTopActionsProps) {
         >
           <EllipsisVertical size={ACTION_ICON_SIZE} />
         </Menu.Trigger>
-        <Menu.Content
-          align='end'
-          sideOffset={MENU_SIDE_OFFSET}
-          collisionPadding={16}
-          title='Weitere Aktionen'
-        >
+        <Menu.Content title='Weitere Aktionen'>
           <Menu.Item asChild>
             <OpenInSanityAction
               documentId={article._id}

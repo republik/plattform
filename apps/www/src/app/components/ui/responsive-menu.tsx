@@ -1,21 +1,21 @@
 'use client'
 
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
+import { iosAppSafeAreaBottomPaddingStyle } from '@/app/lib/styles/ios-app-safe-area'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Slot } from '@radix-ui/react-slot'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { css, cx } from '@republik/theme/css'
 import {
+  type ComponentPropsWithoutRef,
   createContext,
   forwardRef,
+  type ReactNode,
   useContext,
   useEffect,
   useState,
-  type ComponentPropsWithoutRef,
-  type ReactNode,
 } from 'react'
-import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
-import { iosAppSafeAreaBottomPaddingStyle } from '@/app/lib/styles/ios-app-safe-area'
 
 /**
  * Same breakpoint as Panda's default `md` token (768px) and the legacy
@@ -51,15 +51,11 @@ function useIsDesktopMenu() {
 
 const menuPanelStyle = css({
   backgroundColor: 'background.overlay',
-  borderRadius: 'lg',
   boxShadow: 'overlay',
   color: 'text',
   minWidth: '12rem',
+  maxWidth: '18rem',
   paddingY: '2',
-  // Radix portals menu content to <body> without a z-index of its own, so it
-  // would paint below anything that establishes a stacking context — the
-  // floating action bar (20), the sticky header (100), and the paynote
-  // overlay (9998-9999) among them.
   zIndex: 10000,
   _stateOpen: { animation: 'fadeIn' },
   _stateClosed: { animation: 'fadeOut' },
@@ -84,31 +80,11 @@ const drawerOverlayStyle = css({
 // content up), whereas a margin on the overlay itself — `position: fixed;
 // inset: 0` — would shrink the overlay's own box away from the bottom edge,
 // exposing whatever sits behind it there instead of the backdrop.
-
-// Split from the scrolling content below: Safari is known to drop/flatten a
-// `transform` animation (and sometimes the `border-radius` clip) on an
-// element that also manages its own scrollable overflow. Keeping this outer
-// element free of `overflow`/scrolling — animation and radius live here,
-// scrolling lives on `drawerScrollStyle` — sidesteps that. `willChange`
-// additionally forces Safari to give it its own compositing layer, so the
-// slide isn't absorbed into the overlay's simultaneous fade.
-//
-// The viewport margin (NYT-style floating sheet, not a flush-edge one) lives
-// here as the item's own `margin` rather than as `padding` on the overlay
-// grid container — on Safari, the grid-container-padding version measured
-// correctly in the DOM but rendered with no visible bottom gap. `calc() +
-// env(..., 0px)` is the WebKit-documented safe-area pattern (additive, so a
-// notch adds to the margin rather than just replacing it, unlike `max()`).
 const drawerContentStyle = css({
   backgroundColor: 'background.overlay',
-  borderRadius: 'lg',
-  // `overlay` is a directional shadow (projects upward only) meant for a
-  // flush-bottom sheet — on this floating, all-sides-rounded card it read as
-  // a hard line across just the top edge. `md` is a symmetric ambient shadow.
   boxShadow: 'md',
   color: 'text',
-  marginX: '3',
-  marginBottom: 'calc(token(spacing.3) + env(safe-area-inset-bottom, 0px))',
+  paddingBottom: 'env(safe-area-inset-bottom, 0px)',
   maxHeight: '80dvh',
   overflow: 'hidden',
   willChange: 'transform',
@@ -153,7 +129,6 @@ export const menuItemStyle = css({
   textAlign: 'left',
   textDecoration: 'none',
   textStyle: 'sans',
-  // `!` wins over `actionStyle`'s `width: fit-content` — see pdf-download-action.tsx.
   width: 'full!',
   '&[data-highlighted], &:hover': {
     backgroundColor: 'hover',
@@ -246,28 +221,13 @@ const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
 
 type MenuContentProps = {
   children: ReactNode
-  /** Desktop-only: where the dropdown panel sits relative to the trigger. Ignored on mobile's full-width drawer. */
-  align?: ComponentPropsWithoutRef<typeof DropdownMenu.Content>['align']
-  /** Desktop-only: gap from the trigger. Ignored on mobile. */
-  sideOffset?: number
-  /** Desktop-only. Ignored on mobile. */
-  collisionPadding?: number
-  /** Visible heading for the mobile drawer. When omitted, an accessible-only title is used instead — Radix requires one either way. */
   title?: string
   className?: string
   /** Desktop-only: e.g. `ShareAction`'s `menuOffsetX` nudges the anchored dropdown sideways. Ignored on mobile — the drawer's own slide animation owns `transform`, and the panel always stretches full-width regardless of trigger position. */
   style?: React.CSSProperties
 }
 
-function Content({
-  children,
-  align = 'end',
-  sideOffset = 16,
-  collisionPadding = 16,
-  title,
-  className,
-  style,
-}: MenuContentProps) {
+function Content({ children, title, className, style }: MenuContentProps) {
   const { isDesktop } = useMenuContext('Content')
   const { isIOSApp } = usePlatformInformation()
 
@@ -275,9 +235,9 @@ function Content({
     return (
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          align={align}
-          sideOffset={sideOffset}
-          collisionPadding={collisionPadding}
+          align='end'
+          sideOffset={16}
+          collisionPadding={16}
           className={cx(menuPanelStyle, className)}
           style={style}
         >

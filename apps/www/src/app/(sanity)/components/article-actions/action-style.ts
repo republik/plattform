@@ -51,3 +51,13 @@ export const pillStyle = css({
     padding: 0,
   },
 })
+
+export const noteStyle = css({
+  color: 'textSoft',
+  fontSize: 's',
+  lineHeight: 1.4,
+  paddingBottom: '2',
+  paddingTop: '1',
+  paddingX: '5',
+  textStyle: 'sans',
+})
