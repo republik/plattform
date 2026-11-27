@@ -129,7 +129,7 @@ export function Offers({
                   fontSize: 's',
                 })}
               >
-                Sie sparen 19&thinsp;%
+                19&thinsp;% günstiger als ein Monats-Abo
               </span>
             </span>
           </OfferOptionRadio>
