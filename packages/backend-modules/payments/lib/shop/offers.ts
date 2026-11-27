@@ -61,6 +61,9 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
         {
           type: 'PRICE' as const,
           lookupKey: isBeforePriceChange2027() ? 'ABO_2026' : 'ABO',
+          // ABO_2026 only exists once the 2027 prices are switched on
+          // (price-change-2027-switch.ts --to 2027); until then ABO is 240
+          fallbackLookupKey: isBeforePriceChange2027() ? 'ABO' : undefined,
         },
       ]
     },

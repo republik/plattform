@@ -20,6 +20,7 @@ import {
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
   REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES,
 } from '../constants'
+import { lookupKeysForItems, priceForItem } from './utils'
 
 const logger = createLogger('payments:gifts')
 
@@ -671,15 +672,16 @@ export class GiftShop {
     this.#offerService.isValidOffer(args.offerId)
     const companyName = this.#offerService.getOfferMerchant(args.offerId)
 
-    const lookupKeys = this.#offerService
-      .getOfferItems(args.offerId)
-      .map((i) => i.lookupKey)
+    const offerItems = this.#offerService.getOfferItems(args.offerId) ?? []
 
     const prices = await this.#paymentService.getPrices(
       companyName,
-      lookupKeys ?? [],
+      lookupKeysForItems(offerItems),
     )
-    const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
+    const items: Item[] = offerItems.flatMap((offerItem) => {
+      const p = priceForItem(prices, offerItem)
+      return p ? [{ price: p.id, quantity: 1 }] : []
+    })
 
     return items
   }

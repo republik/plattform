@@ -20,6 +20,8 @@ import {
   activeDefaultPromotionCode,
   couponToDiscount,
   promotionToDiscount,
+  lookupKeysForItems,
+  priceForItem,
 } from './utils'
 import { randomUUID } from 'node:crypto'
 import { InvoiceService } from '../services/InvoiceService'
@@ -478,12 +480,16 @@ export class CheckoutSessionBuilder {
 
     const prices = await this.paymentService.getPrices(
       this.offer.company,
-      this.offer.items.map((i) => i.lookupKey),
+      lookupKeysForItems(this.offer.items),
     )
 
-    return prices.map((p): LineItem => {
-      const item = this.offer.items.find((i) => i.lookupKey === p.lookup_key)
-      const taxRates = item?.taxRateId ? [item.taxRateId] : undefined
+    const resolved = this.offer.items.flatMap((item) => {
+      const price = priceForItem(prices, item)
+      return price ? [{ item, p: price }] : []
+    })
+
+    return resolved.map(({ item, p }): LineItem => {
+      const taxRates = item.taxRateId ? [item.taxRateId] : undefined
 
       if (p.id) {
         return {

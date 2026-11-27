@@ -289,6 +289,9 @@ export type OfferAvailability =
 export type PriceDefinition = {
   type: 'PRICE'
   lookupKey: string
+  // used when no active price has lookupKey (e.g. ABO_2026 -> ABO while the
+  // 2027 prices are not switched on yet)
+  fallbackLookupKey?: string
   taxRateId?: string
 }
 export type DiscountDefinition = { type: 'DISCOUNT'; coupon: string }

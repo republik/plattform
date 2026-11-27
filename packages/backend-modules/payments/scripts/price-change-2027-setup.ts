@@ -4,6 +4,11 @@
  * Creates the new list prices and the adjusted coupons/promotion codes for
  * the price change (new shop prices from 01.12.2026). See price-change-2027.md.
  *
+ * Everything is created in advance and stays OFF: the new prices get the
+ * lookup keys ABO_2027 / MONTHLY_ABO_2027, the new promotion codes (incl.
+ * PREIS2026) are created inactive. The shop keeps selling 2026 prices until
+ * price-change-2027-switch.ts --to 2027 is run (on 01.12.2026).
+ *
  * SAFETY
  *   - Dry run by default. Pass --apply to write.
  *   - Live keys (sk_live_ / rk_live_) are refused unless --live is passed AND
@@ -14,7 +19,7 @@
  *
  * USAGE
  *   PROJECT_R_STRIPE_API_KEY=sk_test_… REPUBLIK_STRIPE_API_KEY=sk_test_… \
- *     deno -RNE --unstable-sloppy-imports price-change-2027-setup.ts [--apply] [--live]
+ *     node price-change-2027-setup.ts [--apply] [--live]
  *
  *   Optional (coupons without promotion code, used by gifts):
  *     PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON, PAYMENTS_REPUBLIK_3_MONTH_GIFT_COUPON
@@ -33,8 +38,8 @@ type CompanyName = 'PROJECT_R' | 'REPUBLIK'
 type PriceChange = {
   lookupKey: string
   newAmount: number
-  // lookup key the *old* price gets after the transfer (e.g. for reduced offers)
-  oldPriceNewLookupKey?: string
+  // lookup key of the new price until the switch (price-change-2027-switch.ts)
+  newLookupKey: string
 }
 
 type PromoChange = {
@@ -75,9 +80,9 @@ const PLAN: CompanyPlan[] = [
     name: 'PROJECT_R',
     envKey: 'PROJECT_R_STRIPE_API_KEY',
     prices: [
-      // 240 -> 260; old price stays active and gets lookup key ABO_2026
-      // (YEARLY_REDUCED uses it until 31.12.2026)
-      { lookupKey: 'ABO', newAmount: 260_00, oldPriceNewLookupKey: 'ABO_2026' },
+      // 240 -> 260, created as ABO_2027; the switch moves ABO to it and gives
+      // the old price ABO_2026 (YEARLY_REDUCED in December)
+      { lookupKey: 'ABO', newAmount: 260_00, newLookupKey: 'ABO_2027' },
     ],
     promos: [
       { code: 'EINSTIEG', newAmountOff: 38_00 }, // 260 - 38 = 222
@@ -101,7 +106,7 @@ const PLAN: CompanyPlan[] = [
   {
     name: 'REPUBLIK',
     envKey: 'REPUBLIK_STRIPE_API_KEY',
-    prices: [{ lookupKey: 'MONTHLY_ABO', newAmount: 24_00 }],
+    prices: [{ lookupKey: 'MONTHLY_ABO', newAmount: 24_00, newLookupKey: 'MONTHLY_ABO_2027' }],
     promos: [
       { code: 'EINSTIEG', newAmountOff: 13_00 }, // 24 - 13 = 11
       { code: 'EINSTIEG24', newAmountOff: 13_00 },
@@ -173,15 +178,20 @@ async function changePrices(stripe: Stripe, company: CompanyName, changes: Price
       log(company, `no price with lookup key ${change.lookupKey} – skipping`)
       continue
     }
-    if (current.unit_amount === change.newAmount) {
-      log(company, `${change.lookupKey} already at ${change.newAmount} (${current.id}) – skipping`)
+    if (current.metadata?.campaign === METADATA.campaign) {
+      log(company, `${change.lookupKey} is already the 2027 price (${current.id}) – skipping`)
+      continue
+    }
+    const { data: prepared } = await stripe.prices.list({ lookup_keys: [change.newLookupKey], limit: 1 })
+    if (prepared[0]) {
+      assertMode(prepared[0])
+      log(company, `${change.newLookupKey} already exists (${prepared[0].id}, ${prepared[0].unit_amount}) – skipping`)
       continue
     }
 
-    log(company, `price ${change.lookupKey}: ${current.unit_amount} -> ${change.newAmount}`, {
+    log(company, `new price ${change.newLookupKey}: ${change.newAmount} (current ${change.lookupKey}: ${current.unit_amount})`, {
       currentPriceId: current.id,
       product: current.product,
-      oldPriceNewLookupKey: change.oldPriceNewLookupKey,
     })
     if (!APPLY) continue
 
@@ -198,32 +208,16 @@ async function changePrices(stripe: Stripe, company: CompanyName, changes: Price
           : undefined,
         tax_behavior: current.tax_behavior ?? undefined,
         nickname: `${current.nickname ?? change.lookupKey} (ab 2027)`,
-        lookup_key: change.lookupKey,
-        transfer_lookup_key: true,
-        metadata: { ...current.metadata, ...METADATA },
+        // not the live lookup key yet – price-change-2027-switch.ts moves it
+        lookup_key: change.newLookupKey,
+        // replaces: lets price-change-2027-switch.ts find the old price again
+        metadata: { ...current.metadata, ...METADATA, replaces: current.id },
       }),
     )
 
-    if (change.oldPriceNewLookupKey) {
-      assertMode(
-        await stripe.prices.update(current.id, {
-          lookup_key: change.oldPriceNewLookupKey,
-          transfer_lookup_key: true,
-        }),
-      )
-    }
-
-    result.push({ lookupKey: change.lookupKey, oldPriceId: current.id, newPriceId: created.id })
+    result.push({ lookupKey: change.newLookupKey, oldPriceId: current.id, newPriceId: created.id })
   }
   return result
-}
-
-async function listActivePromotionCodes(stripe: Stripe) {
-  const codes: Stripe.PromotionCode[] = []
-  for await (const pc of stripe.promotionCodes.list({ active: true, limit: 100 })) {
-    codes.push(assertMode(pc))
-  }
-  return codes
 }
 
 function couponCreateParams(old: Stripe.Coupon, newAmountOff: number): Stripe.CouponCreateParams {
@@ -245,9 +239,22 @@ function couponCreateParams(old: Stripe.Coupon, newAmountOff: number): Stripe.Co
   }
 }
 
+async function listAllPromotionCodes(stripe: Stripe) {
+  const codes: Stripe.PromotionCode[] = []
+  for await (const pc of stripe.promotionCodes.list({ limit: 100 })) {
+    codes.push(assertMode(pc))
+  }
+  return codes
+}
+
 async function changePromos(stripe: Stripe, company: CompanyName, changes: PromoChange[]) {
   const result: Record<string, unknown>[] = []
-  const active = await listActivePromotionCodes(stripe)
+  const all = await listAllPromotionCodes(stripe)
+  const prepared = new Set(
+    all.filter((pc) => pc.metadata?.campaign === METADATA.campaign).map((pc) => pc.metadata?.replaces),
+  )
+  // the original codes: active and not created by this script
+  const active = all.filter((pc) => pc.active && pc.metadata?.campaign !== METADATA.campaign)
   // codes sharing an old coupon (EINSTIEG + EINSTIEG24) get one shared new coupon
   const newCouponByOldCoupon = new Map<string, string>()
 
@@ -256,18 +263,22 @@ async function changePromos(stripe: Stripe, company: CompanyName, changes: Promo
       typeof change.code === 'string' ? pc.code === change.code : change.code.test(pc.code),
     )
     if (matches.length === 0) {
-      log(company, `no active promotion code matching ${change.code} – skipping`)
+      log(company, `no active original promotion code matching ${change.code} – skipping`)
       continue
     }
 
     for (const pc of matches) {
       const oldCoupon = pc.coupon
+      if (prepared.has(pc.id)) {
+        log(company, `${pc.code}: 2027 code already prepared – skipping`)
+        continue
+      }
       if (oldCoupon.amount_off === change.newAmountOff) {
         log(company, `${pc.code} already at ${change.newAmountOff} off – skipping`)
         continue
       }
 
-      log(company, `promo ${pc.code}: coupon ${oldCoupon.id} ${oldCoupon.amount_off} -> ${change.newAmountOff} off`, {
+      log(company, `promo ${pc.code}: prepare inactive code, coupon ${oldCoupon.id} ${oldCoupon.amount_off} -> ${change.newAmountOff} off`, {
         duration: oldCoupon.duration,
         duration_in_months: oldCoupon.duration_in_months,
       })
@@ -282,12 +293,13 @@ async function changePromos(stripe: Stripe, company: CompanyName, changes: Promo
         newCouponByOldCoupon.set(oldCoupon.id, newCouponId)
       }
 
-      // a code can only be active once -> deactivate old, then create new
-      assertMode(await stripe.promotionCodes.update(pc.id, { active: false }))
+      // created inactive: a code can only be active once, the switch script
+      // deactivates the old one and activates this one
       const newPc = assertMode(
         await stripe.promotionCodes.create({
           coupon: newCouponId,
           code: pc.code,
+          active: false,
           expires_at: pc.expires_at ?? undefined,
           max_redemptions: pc.max_redemptions ?? undefined,
           restrictions: {
@@ -355,13 +367,14 @@ async function changeCoupons(stripe: Stripe, company: CompanyName, changes: Coup
 async function createNewPromos(stripe: Stripe, company: CompanyName, promos: NewPromo[]) {
   const result: Record<string, unknown>[] = []
   for (const promo of promos) {
-    const existing = await stripe.promotionCodes.list({ code: promo.code, active: true, limit: 1 })
-    if (existing.data[0]) {
-      assertMode(existing.data[0])
-      log(company, `promo ${promo.code} already exists (${existing.data[0].id}) – skipping`)
+    const existing = (await stripe.promotionCodes.list({ code: promo.code, limit: 100 })).data
+      .map(assertMode)
+      .find((pc) => pc.metadata?.campaign === METADATA.campaign)
+    if (existing) {
+      log(company, `promo ${promo.code} already exists (${existing.id}, active: ${existing.active}) – skipping`)
       continue
     }
-    log(company, `new promo ${promo.code}: «${promo.couponName}» ${promo.amountOff} off once, expires ${new Date(promo.expiresAt * 1000).toISOString()}`)
+    log(company, `new promo ${promo.code} (inactive until the switch): «${promo.couponName}» ${promo.amountOff} off once, expires ${new Date(promo.expiresAt * 1000).toISOString()}`)
     if (!APPLY) continue
 
     const coupon = assertMode(
@@ -380,6 +393,7 @@ async function createNewPromos(stripe: Stripe, company: CompanyName, promos: New
       await stripe.promotionCodes.create({
         coupon: coupon.id,
         code: promo.code,
+        active: false,
         expires_at: promo.expiresAt,
         metadata: METADATA,
       }),
